@@ -4,4 +4,4 @@
 
 ### Added 
 
-- Initial classes
+- Initial setup of projects with OpenGL + SDL2 game loop with empty scene and moving camera.
