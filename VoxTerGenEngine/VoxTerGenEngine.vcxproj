@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{f652088f-a65f-41a9-9d09-aef1349dc6e4}</ProjectGuid>
-    <RootNamespace>VoxTerGen</RootNamespace>
+    <ProjectGuid>{4690f704-36f9-433f-b92d-e20f87a2289f}</ProjectGuid>
+    <RootNamespace>VoxTerGenEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -73,14 +73,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)include;$(ProjectDir)include/external</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)libs/SDL2/x64;$(ProjectDir)libs/SDL2_image/x64;$(ProjectDir)libs/SDL2_mixer/x64;$(ProjectDir)libs/SDL2_ttf/x64</LibraryPath>
-    <IntDir>$(SolutionDir)build\$(Configuration)\$(Platform)\obj\</IntDir>
-    <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)$(ProjectName)\build\$(Configuration)\$(Platform)\obj\</IntDir>
+    <OutDir>$(SolutionDir)$(ProjectName)\build\$(Configuration)\$(Platform)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)include;$(ProjectDir)include/external</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)libs/SDL2/x64;$(ProjectDir)libs/SDL2_image/x64;$(ProjectDir)libs/SDL2_mixer/x64;$(ProjectDir)libs/SDL2_ttf/x64</LibraryPath>
-    <IntDir>$(SolutionDir)build\$(Configuration)\$(Platform)\obj\</IntDir>
-    <OutDir>$(SolutionDir)build\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)$(ProjectName)\build\$(Configuration)\$(Platform)\obj\</IntDir>
+    <OutDir>$(SolutionDir)$(ProjectName)\build\$(Configuration)\$(Platform)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -186,6 +186,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Constants.hpp" />
     <ClInclude Include="include\core\Application.hpp" />
     <ClInclude Include="include\external\glad\glad\glad.h" />
     <ClInclude Include="include\external\glad\KHR\khrplatform.h" />
@@ -528,12 +529,14 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\external\SDL2_mixer\SDL_mixer.h" />
     <ClInclude Include="include\external\SDL2_ttf\SDL_ttf.h" />
     <ClInclude Include="include\external\stb_image.h" />
+    <ClInclude Include="include\Game.hpp" />
     <ClInclude Include="include\graphics\Camera.hpp" />
     <ClInclude Include="include\graphics\Shader.hpp" />
     <ClInclude Include="include\graphics\ShaderProgram.hpp" />
     <ClInclude Include="include\graphics\Texture2D.hpp" />
     <ClInclude Include="include\input\CameraController.hpp" />
     <ClInclude Include="include\input\InputManager.hpp" />
+    <ClInclude Include="include\Logger.hpp" />
     <ClInclude Include="include\utils\Constants.hpp" />
     <ClInclude Include="include\utils\Logger.hpp" />
     <ClInclude Include="include\utils\MathUtils.hpp" />
