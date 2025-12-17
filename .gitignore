@@ -1,0 +1,62 @@
+# -------------------------
+# Build outputs
+# -------------------------
+build/
+Debug/
+Release/
+x64/
+*.obj
+*.o
+*.pdb
+*.idb
+*.ilk
+*.tlog
+*.lastbuildstate
+
+# -------------------------
+# Visual Studio files
+# -------------------------
+*.user
+*.suo
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+.vs/
+
+# -------------------------
+# Visual Studio Code
+# -------------------------
+.vscode/
+
+# -------------------------
+# CMake files (optional if you generate)
+# -------------------------
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# -------------------------
+# Temporary files / OS files
+# -------------------------
+*.log
+*.tmp
+*.bak
+*.swp
+*.DS_Store
+Thumbs.db
+desktop.ini
+*~
+log.txt
+
+# -------------------------
+# Third-party binaries
+# -------------------------
+# Ignore DLLs and libs
+libs/
+
+# -------------------------
+# External headers (keep them!)
+# -------------------------
+# Do NOT ignore anything in include/external/
+# They are needed to compile the project

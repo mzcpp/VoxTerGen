@@ -1,0 +1,76 @@
+# -------------------------------------------------------------
+# Line endings
+# -------------------------------------------------------------
+
+# Normalize all text files to LF in the repo, CRLF on checkout
+* text=auto eol=lf
+
+# -------------------------------------------------------------
+# C++ source/header files (explicit for safety)
+# -------------------------------------------------------------
+*.c      text eol=lf
+*.cpp    text eol=lf
+*.cxx    text eol=lf
+*.h      text eol=lf
+*.hpp    text eol=lf
+*.hxx    text eol=lf
+*.inl    text eol=lf
+
+# -------------------------------------------------------------
+# Scripts
+# -------------------------------------------------------------
+*.sh     text eol=lf
+*.bash   text eol=lf
+*.py     text eol=lf
+*.bat    text eol=crlf
+*.cmd    text eol=crlf
+
+# -------------------------------------------------------------
+# Project files (keep CRLF because Visual Studio prefers it)
+# -------------------------------------------------------------
+*.sln        text eol=crlf
+*.vcxproj    text eol=crlf
+*.filters    text eol=crlf
+*.props      text eol=crlf
+*.targets    text eol=crlf
+
+# -------------------------------------------------------------
+# Binary files (never modified by Git)
+# -------------------------------------------------------------
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.bmp     binary
+*.gif     binary
+*.tga     binary
+*.dds     binary
+
+*.wav     binary
+*.mp3     binary
+*.ogg     binary
+
+*.ttf     binary
+*.otf     binary
+
+*.dll     binary
+*.lib     binary
+*.pdb     binary
+*.exe     binary
+
+*.zip     binary
+*.7z      binary
+
+# -------------------------------------------------------------
+# Shaders (treated as text)
+# -------------------------------------------------------------
+*.vert    text eol=lf
+*.frag    text eol=lf
+*.geom    text eol=lf
+*.comp    text eol=lf
+*.shader  text eol=lf
+
+# -------------------------------------------------------------
+# CMake files
+# -------------------------------------------------------------
+CMakeLists.txt   text eol=lf
+*.cmake          text eol=lf
