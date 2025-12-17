@@ -19,4 +19,4 @@ VoxTerGen is a research-driven voxel engine created for a master's thesis focuse
 ## License
 This project is released under [Your License].  
 Font "VT323" by ParaType, licensed under the SIL Open Font License.
-
+Texture pack by Acaitart, licensed under the CC-BY license.
