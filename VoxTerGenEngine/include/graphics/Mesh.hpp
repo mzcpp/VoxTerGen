@@ -7,5 +7,5 @@ private:
 public:
 };
 
-#endif
+#endif // MESH_HPP
 

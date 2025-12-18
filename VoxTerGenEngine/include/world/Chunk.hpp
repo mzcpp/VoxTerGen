@@ -7,4 +7,4 @@ private:
 public:
 };
 
-#endif
+#endif // CHUNK_HPP

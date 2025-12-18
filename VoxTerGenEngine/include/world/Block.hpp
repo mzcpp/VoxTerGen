@@ -7,5 +7,5 @@ private:
 public:
 };
 
-#endif
+#endif // BLOCK_HPP
 

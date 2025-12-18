@@ -7,4 +7,4 @@ private:
 public:
 };
 
-#endif
+#endif // WORLD_HPP
