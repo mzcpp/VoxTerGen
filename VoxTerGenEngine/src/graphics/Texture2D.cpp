@@ -1,5 +1,6 @@
 #include "graphics/Texture2D.hpp"
 #include "utils/Logger.hpp"
+
 #include "stb_image.h"
 
 #include <glad/glad/glad.h>
@@ -35,7 +36,9 @@ namespace TextureUtils
 
     Texture2D::Texture2D(std::string_view path, bool sRGB, bool generate_mipmaps,
         GLenum wrap_s, GLenum wrap_t, GLenum min_filter, GLenum mag_filter) 
-        : type_(TextureType::Texture2D), target_(GL_TEXTURE_2D)
+        : 
+        type_(TextureType::Texture2D), 
+        target_(GL_TEXTURE_2D)
     {
         glCreateTextures(GL_TEXTURE_2D, 1, &texture_id_);
         int n_components = 0;
@@ -58,7 +61,7 @@ namespace TextureUtils
 
         DetermineFormats(n_components, sRGB, &internal_format_, &data_format_);
 
-        int levels = generate_mipmaps ? 1 + static_cast<int>(std::floor(std::log2(std::max(width_, height_)))) : 1;
+        const int levels = generate_mipmaps ? 1 + static_cast<int>(std::floor(std::log2(std::max(width_, height_)))) : 1;
         
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glTextureStorage2D(texture_id_, levels, internal_format_, width_, height_);
@@ -93,7 +96,7 @@ namespace TextureUtils
 
         glCreateTextures(GL_TEXTURE_2D, 1, &texture_id_);
         
-        int levels = generate_mipmaps ? 1 + static_cast<int>(std::floor(std::log2(std::max(width_, height_)))) : 1;
+        const int levels = generate_mipmaps ? 1 + static_cast<int>(std::floor(std::log2(std::max(width_, height_)))) : 1;
         
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glTextureStorage2D(texture_id_, levels, internal_format_, width_, height_);
@@ -150,14 +153,17 @@ namespace TextureUtils
             height_ = h;
         }
 
-        int levels = generate_mipmaps ? 1 + static_cast<int>(std::floor(std::log2(std::max(width_, height_)))) : 1;
+        const int levels = generate_mipmaps ? 1 + static_cast<int>(std::floor(std::log2(std::max(width_, height_)))) : 1;
         
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glTextureStorage3D(texture_id_, levels, internal_format_, width_, height_, 6);
 
         for (std::size_t i = 0; i < paths.size(); i++)
         {
-            int tw, th, comp;
+            int tw = 0;
+            int th = 0;
+            int comp = 0;
+
             std::unique_ptr<stbi_uc, decltype(&stbi_image_free)> img(stbi_load(paths[i].data(), &tw, &th, &comp, 0), stbi_image_free);
 
             if (!img)

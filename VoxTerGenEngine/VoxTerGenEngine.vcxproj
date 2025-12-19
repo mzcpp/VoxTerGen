@@ -179,15 +179,16 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\external\glad\glad.c" />
     <ClCompile Include="src\graphics\Camera.cpp" />
     <ClCompile Include="src\graphics\Mesh.cpp" />
-    <ClCompile Include="src\graphics\MeshRenderer.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\ShaderProgram.cpp" />
     <ClCompile Include="src\graphics\Texture2D.cpp" />
     <ClCompile Include="src\input\CameraController.cpp" />
     <ClCompile Include="src\input\InputManager.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\render\MeshRenderer.cpp" />
     <ClCompile Include="src\world\Block.cpp" />
     <ClCompile Include="src\world\Chunk.cpp" />
+    <ClCompile Include="src\world\ChunkManager.cpp" />
     <ClCompile Include="src\world\World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -537,18 +538,19 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\Game.hpp" />
     <ClInclude Include="include\graphics\Camera.hpp" />
     <ClInclude Include="include\graphics\Mesh.hpp" />
-    <ClInclude Include="include\graphics\MeshRenderer.hpp" />
     <ClInclude Include="include\graphics\Shader.hpp" />
     <ClInclude Include="include\graphics\ShaderProgram.hpp" />
     <ClInclude Include="include\graphics\Texture2D.hpp" />
     <ClInclude Include="include\input\CameraController.hpp" />
     <ClInclude Include="include\input\InputManager.hpp" />
     <ClInclude Include="include\Logger.hpp" />
+    <ClInclude Include="include\render\MeshRenderer.hpp" />
     <ClInclude Include="include\utils\Constants.hpp" />
     <ClInclude Include="include\utils\Logger.hpp" />
     <ClInclude Include="include\utils\MathUtils.hpp" />
     <ClInclude Include="include\world\Block.hpp" />
     <ClInclude Include="include\world\Chunk.hpp" />
+    <ClInclude Include="include\world\ChunkManager.hpp" />
     <ClInclude Include="include\world\World.hpp" />
   </ItemGroup>
   <ItemGroup>

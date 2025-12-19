@@ -4,4 +4,5 @@
 
 ### Added 
 
-- Initial setup of projects with OpenGL + SDL2 game loop with empty scene and moving camera.
+- Initial setup of projects with OpenGL + SDL2.
+- Standard game loop with empty scene and moving camera implemented.

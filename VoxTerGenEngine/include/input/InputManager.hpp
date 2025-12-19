@@ -1,9 +1,9 @@
 #ifndef INPUT_MANAGER_HPP
 #define INPUT_MANAGER_HPP
 
-#include <SDL2/SDL.h>
-
 #include <glm/glm.hpp>
+
+#include <SDL2/SDL.h>
 
 #include <unordered_map>
 

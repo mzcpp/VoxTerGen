@@ -49,6 +49,16 @@ namespace Constants
     } // namespace Engine
 
     /**
+     * @brief Chunk-related data such as width, depth and height.
+     */
+    namespace Chunk
+    {
+        inline constexpr int width = 16;
+        inline constexpr int depth = 16;
+        inline constexpr int height = 128;
+    } // namespace Chunk
+
+    /**
      * @brief Math-related constants.
      */
     namespace Math

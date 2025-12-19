@@ -3,10 +3,11 @@
 
 #include "utils/Constants.hpp"
 
+#include <glm/glm.hpp>
+
 #include <cmath>
 #include <limits>
 #include <type_traits>
-#include <glm/glm.hpp>
 
 /**
  * @brief Checks if a floating-point number is approximately zero.

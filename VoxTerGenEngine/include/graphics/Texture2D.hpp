@@ -2,6 +2,7 @@
 #define TEXTURE_2D_HPP
 
 #include <glad/glad.h>
+
 #include <string_view>
 #include <span>
 

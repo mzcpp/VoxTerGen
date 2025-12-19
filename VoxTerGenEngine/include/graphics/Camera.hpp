@@ -5,10 +5,7 @@
 
 #include <glm/glm.hpp>
 
-#include <cstdint>
 #include <array>
-#include <iostream>
-#include <iomanip>
 
 /**
  * @brief Represents a plane in 3D space.
@@ -90,6 +87,11 @@ public:
      * @brief Stores the camera's state for interpolation in the next frame.
      */
     void PreTick();
+
+	/**
+	 * @brief Resets flags at the end of frame.
+	 */
+	void EndTick();
 
     /**
      * @brief Updates the camera state for the current frame.
