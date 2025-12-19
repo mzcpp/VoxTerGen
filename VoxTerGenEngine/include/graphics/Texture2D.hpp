@@ -8,7 +8,16 @@
 
 namespace TextureUtils
 {
-    enum class TextureType { Texture2D, CubeMap };
+    /**
+     * @brief Identifies the type of texture.
+     *
+     * Used to distinguish between standard 2D textures and cubemap textures.
+     */
+    enum class TextureType 
+    { 
+        Texture2D, 
+        CubeMap 
+    };
 
     constexpr GLenum DEFAULT_WRAP_S = GL_REPEAT;
     constexpr GLenum DEFAULT_WRAP_T = GL_REPEAT;
