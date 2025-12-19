@@ -5,10 +5,7 @@
 
 #include <glm/glm.hpp>
 
-#include <cstdint>
 #include <array>
-#include <iostream>
-#include <iomanip>
 
 /**
  * @brief Represents a plane in 3D space.

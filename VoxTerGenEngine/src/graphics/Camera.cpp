@@ -9,7 +9,6 @@
 
 #include <algorithm>
 
-
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
 	: 
 	position_(position), 
@@ -37,6 +36,11 @@ void Camera::PreTick()
 	prev_position_ = position_;
 	prev_yaw_ = yaw_;
 	prev_pitch_ = pitch_;
+}
+
+void Camera::EndTick()
+{
+	moving_ = false;
 }
 
 void Camera::Tick(float aspect_ratio)

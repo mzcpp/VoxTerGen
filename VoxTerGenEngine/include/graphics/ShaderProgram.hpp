@@ -2,9 +2,9 @@
 #define SHADERPROGRAM_H
 
 #include <glad/glad.h>
-#include <glm/glm.hpp>
 
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <filesystem>
 #include <type_traits>

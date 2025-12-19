@@ -148,7 +148,6 @@ void Application::Run()
 void Application::HandleEvents()
 {
 	SDL_Event e;
-	camera_.SetMoving(false);
 
 	while (SDL_PollEvent(&e) != 0)
 	{
@@ -186,7 +185,6 @@ void Application::HandleEvents()
 		{
 			camera_controller_.ApplyZoom(input_manager_);
 		}
-
 	}
 }
 
@@ -202,11 +200,10 @@ void Application::Render(float alpha)
 	glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	std::array<std::vector<glm::mat4>, 6> model_matrices;
-	std::array<std::vector<std::uint8_t>, 6> color_masks;
-
 	const glm::mat4 interpolated_view = camera_.InterpolatedViewMatrix(alpha);
 	const glm::mat4 proj = camera_.ProjectionMatrix();
+
+	camera_.EndTick();
 
 	SDL_GL_SwapWindow(window_);
 }

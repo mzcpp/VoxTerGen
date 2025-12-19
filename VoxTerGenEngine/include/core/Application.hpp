@@ -1,13 +1,9 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
+#include "input/InputManager.hpp"
 #include "graphics/Camera.hpp"
 #include "input/CameraController.hpp"
-#include "input/InputManager.hpp"
-
-#include <SDL2/SDL.h>
-
-#include <memory>
 
 struct SDL_Window;
 struct TTF_Font;

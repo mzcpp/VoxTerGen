@@ -3,6 +3,8 @@
 
 #include "utils/Constants.hpp"
 
+#include <glm/glm.hpp>
+
 #include <cmath>
 #include <limits>
 #include <type_traits>
