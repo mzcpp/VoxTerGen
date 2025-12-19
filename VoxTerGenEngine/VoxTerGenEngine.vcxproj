@@ -179,6 +179,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\external\glad\glad.c" />
     <ClCompile Include="src\graphics\Camera.cpp" />
     <ClCompile Include="src\graphics\Mesh.cpp" />
+    <ClCompile Include="src\graphics\MeshRenderer.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\ShaderProgram.cpp" />
     <ClCompile Include="src\graphics\Texture2D.cpp" />
@@ -536,6 +537,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\Game.hpp" />
     <ClInclude Include="include\graphics\Camera.hpp" />
     <ClInclude Include="include\graphics\Mesh.hpp" />
+    <ClInclude Include="include\graphics\MeshRenderer.hpp" />
     <ClInclude Include="include\graphics\Shader.hpp" />
     <ClInclude Include="include\graphics\ShaderProgram.hpp" />
     <ClInclude Include="include\graphics\Texture2D.hpp" />

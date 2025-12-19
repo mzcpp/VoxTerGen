@@ -195,7 +195,6 @@ void Application::Tick()
 	camera_.PreTick();
 	camera_controller_.ApplyInput(input_manager_, static_cast<float>(Constants::Engine::tick_dt), aspect_ratio_);
 	camera_.Tick(aspect_ratio_);
-
 }
 
 void Application::Render(float alpha)

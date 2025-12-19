@@ -57,6 +57,9 @@
     <ClCompile Include="src\world\Block.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\MeshRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Constants.hpp">
@@ -1131,6 +1134,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\world\Block.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\MeshRenderer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

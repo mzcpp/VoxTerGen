@@ -10,6 +10,12 @@
 #include <iostream>
 #include <iomanip>
 
+/**
+ * @brief Represents a plane in 3D space.
+ *
+ * A Plane is defined by a normal vector and a distance from the origin.
+ * It is primarily used for view-frustum representation and culling.
+ */
 struct Plane
 {
 	glm::vec3 normal_;
