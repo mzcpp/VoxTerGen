@@ -63,6 +63,7 @@ public:
      * Transfers ownership of the shader program from another instance.
      *
      * @param other ShaderProgram instance to move from.
+     * 
      * @return Reference to this ShaderProgram.
      */
     ShaderProgram& operator=(ShaderProgram&& other) noexcept;
@@ -121,6 +122,7 @@ private:
      * Caches uniform locations to avoid repeated OpenGL queries.
      *
      * @param name Name of the uniform variable.
+     * 
      * @return Location of the uniform variable, or -1 if not found.
      */
     [[nodiscard]] GLint GetUniformLocation(std::string_view name) const noexcept;
