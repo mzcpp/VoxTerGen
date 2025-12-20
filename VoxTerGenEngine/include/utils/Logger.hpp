@@ -86,6 +86,7 @@ public:
 
 	/**
 	 * @brief Enables or disables console logging.
+	 * 
 	 * @param e True to enable, false to disable
 	 */
 	static void EnableConsole(bool e)
@@ -96,6 +97,7 @@ public:
 
 	/**
 	 * @brief Enables or disables file logging.
+	 * 
 	 * @param e True to enable, false to disable
 	 */
 	static void EnableFile(bool e)
@@ -106,6 +108,7 @@ public:
 
 	/**
 	 * @brief Gets the current UTC time as a formatted string.
+	 * 
 	 * @return Formatted timestamp string
 	 */
 	static std::string GetCurrentDateTimeUTC()
@@ -117,6 +120,7 @@ public:
 
 	/**
 	 * @brief Gets the current local time as a formatted string.
+	 * 
 	 * @return Formatted timestamp string
 	 */
 	static std::string GetCurrentDateTimeLocal()
@@ -129,6 +133,7 @@ public:
 
 	/**
 	 * @brief Logs a message at the INFO level.
+	 * 
 	 * @tparam Args Format argument types
 	 * @param fmt Format string
 	 * @param args Arguments for formatting
@@ -141,6 +146,7 @@ public:
 
 	/**
 	 * @brief Logs a message at a specified log level.
+	 * 
 	 * @tparam Args Format argument types
 	 * @param level Log level
 	 * @param fmt Format string
@@ -186,7 +192,9 @@ public:
 private:
 	/**
 	 * @brief Converts a LogLevel enum to its string representation.
+	 * 
 	 * @param level Log level
+	 * 
 	 * @return Corresponding string
 	 */
 	static std::string_view LogLevelToString(LogLevel level)

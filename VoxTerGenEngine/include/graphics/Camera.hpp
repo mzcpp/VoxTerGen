@@ -124,6 +124,7 @@ public:
      * @brief Checks whether a point is inside the camera's view frustum.
      *
      * @param point Point in world space
+	 * 
      * @return True if the point is inside the frustum, false otherwise
      */
     bool PointInsideFrustum(const glm::vec3& point) const;
