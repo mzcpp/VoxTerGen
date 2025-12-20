@@ -104,6 +104,7 @@ public:
      * @brief Returns an interpolated view matrix between previous and current camera states.
      *
      * @param alpha Interpolation factor (0 = previous, 1 = current)
+	 * 
      * @return Interpolated view matrix
      */
     glm::mat4 InterpolatedViewMatrix(float alpha) const;
@@ -192,12 +193,14 @@ public:
 	// Setters
 	/**
 	 * @brief Enables or disables camera movement.
+	 * 
 	 * @param value True to enable movement, false to disable
 	 */
 	void EnableMovement(bool value) { enabled_movement_ = value; }
 
 	/**
 	 * @brief Sets whether the camera is currently moving.
+	 * 
 	 * @param value True if moving, false otherwise
 	 */
 	void SetMoving(bool value) { moving_ = value; }

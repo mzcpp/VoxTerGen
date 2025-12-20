@@ -15,6 +15,7 @@
  * @tparam T Floating-point type
  * @param a Value to check
  * @param epsilon Tolerance (default: Constants::Math::float_epsilon)
+ * 
  * @return true if |a| <= epsilon, false otherwise
  */
 template <typename T, typename std::enable_if_t<std::is_floating_point<T>::value, bool> = true>
@@ -30,6 +31,7 @@ inline bool FloatingPointNearZero(T a, T epsilon = static_cast<T>(Constants::Mat
  * @param a First value
  * @param b Second value
  * @param epsilon Relative tolerance (default: Constants::Math::float_epsilon)
+ * 
  * @return true if the numbers are considered equal, false otherwise
  */
 template <typename T, typename std::enable_if_t<std::is_floating_point<T>::value, bool> = true>
@@ -45,6 +47,7 @@ inline bool FloatingPointSame(T a, T b, T epsilon = static_cast<T>(Constants::Ma
  * @param a First value
  * @param b Second value
  * @param epsilon Relative tolerance (default: Constants::Math::float_epsilon)
+ * 
  * @return true if a > b by more than epsilon, false otherwise
  */
 template <typename T, typename std::enable_if_t<std::is_floating_point<T>::value, bool> = true>
@@ -60,6 +63,7 @@ inline bool FloatingPointGreaterThan(T a, T b, T epsilon = static_cast<T>(Consta
  * @param a First value
  * @param b Second value
  * @param epsilon Relative tolerance (default: Constants::Math::float_epsilon)
+ * 
  * @return true if a < b by more than epsilon, false otherwise
  */
 template <typename T, typename std::enable_if_t<std::is_floating_point<T>::value, bool> = true>
@@ -73,6 +77,7 @@ inline bool FloatingPointLessThan(T a, T b, T epsilon = static_cast<T>(Constants
  *
  * @tparam T Numeric type
  * @param val Value to check
+ * 
  * @return -1 if val < 0, 0 if val == 0, 1 if val > 0
  */
 template <typename T>
@@ -87,6 +92,7 @@ inline constexpr int Sgn(T val)
  * @param a First vector
  * @param b Second vector
  * @param eps Tolerance (default: Constants::Math::float_epsilon)
+ * 
  * @return true if vectors are approximately equal, false otherwise
  */
 inline bool Vec3Equal(const glm::vec3& a, const glm::vec3& b, float eps = Constants::Math::float_epsilon)
