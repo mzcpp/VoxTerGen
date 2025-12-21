@@ -3,7 +3,8 @@
 
 #include "utils/Constants.hpp"
 
-#include <glm/glm.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 #include <array>
 
@@ -26,7 +27,7 @@ class Camera
 	friend class CameraController;
 
 private:
-	glm::vec3 position_;
+	glm::dvec3 position_;
 	glm::vec3 front_;
 	glm::vec3 up_;
 	glm::vec3 right_;
@@ -45,7 +46,7 @@ private:
 	
 	std::array<Plane, 6> frustum_planes_;
 	
-	glm::vec3 prev_position_;
+	glm::dvec3 prev_position_;
 	float prev_yaw_;
 	float prev_pitch_;
 
