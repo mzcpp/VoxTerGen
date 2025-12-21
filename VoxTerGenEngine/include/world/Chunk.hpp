@@ -4,7 +4,8 @@
 #include "world/Block.hpp"
 #include "utils/Constants.hpp"
 
-#include <glm/glm.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 #include <array>
 #include <functional>
@@ -44,7 +45,7 @@ private:
 	};
 
 	std::unique_ptr<std::array<Block, Constants::Chunk::size>> chunk_;
-	glm::ivec3 chunk_coords_;
+	glm::ivec2 world_coords_;
 
 public:
 	/**
@@ -52,7 +53,7 @@ public:
      * 
 	 * @param chunk_coords The coordinates of the chunk in chunk space
 	 */
-	explicit Chunk(glm::ivec3 chunk_coords);
+	explicit Chunk(glm::ivec2 world_coords);
 
     /**
      * @brief Returns a reference to the block at the given coordinates.
@@ -151,7 +152,7 @@ public:
      *
      * @return Chunk coordinates
      */
-    glm::ivec3 ChunkCoords() const { return chunk_coords_; }
+    glm::ivec2 ChunkCoords() const { return world_coords_; }
 
     /**
      * @brief Returns a const reference to the internal block array.

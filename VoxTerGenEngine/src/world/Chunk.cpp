@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <memory>
 
-Chunk::Chunk(glm::ivec3 chunk_coords) : chunk_coords_(chunk_coords)
+Chunk::Chunk(glm::ivec2 world_coords) : world_coords_(world_coords)
 {
 	chunk_ = std::make_unique<std::array<Block, Constants::Chunk::size>>();
 }

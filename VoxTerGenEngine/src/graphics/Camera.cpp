@@ -56,7 +56,7 @@ void Camera::Tick(float aspect_ratio)
 
 glm::mat4 Camera::InterpolatedViewMatrix(float alpha) const
 {
-	const glm::vec3 interp_pos = glm::mix(prev_position_, position_, alpha);
+	const glm::vec3 interp_pos = glm::vec3(glm::mix(prev_position_, position_, alpha));
 	const float interp_yaw = glm::mix(prev_yaw_, yaw_, alpha);
 	const float interp_pitch = glm::mix(prev_pitch_, pitch_, alpha);
 
@@ -71,7 +71,7 @@ glm::mat4 Camera::InterpolatedViewMatrix(float alpha) const
 
 void Camera::UpdateSimulationMatrices(float aspect_ratio)
 {
-	view_ = glm::lookAt(position_, position_ + front_, up_);
+	view_ = glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f) + front_, up_);
 	projection_ = glm::perspective(glm::radians(zoom_), aspect_ratio, near_plane_, far_plane_);
 	view_proj_ = projection_ * view_;
 }
@@ -185,7 +185,7 @@ bool Camera::PointInsideFrustum(const glm::vec3& point) const
 bool Camera::SanityCheckFrustum() const
 {
 	const glm::vec3 point = 
-		position_ + 
+		glm::vec3(0.0f) +
 		(front_ * ((Constants::Camera::far_plane - Constants::Camera::near_plane) / 2.0f));
 		
 	if (!PointInsideFrustum(point))

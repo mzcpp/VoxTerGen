@@ -1,7 +1,7 @@
 #ifndef INPUT_MANAGER_HPP
 #define INPUT_MANAGER_HPP
 
-#include <glm/glm.hpp>
+#include <glm/vec2.hpp>
 
 #include <SDL2/SDL.h>
 
