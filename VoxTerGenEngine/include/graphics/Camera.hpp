@@ -149,61 +149,23 @@ public:
     void PrintFrustumPlanes() const;
 	
 	// Getters
-	/** @brief Returns the view matrix. */
 	glm::mat4 ViewMatrix() const { return view_; }
-
-	/** @brief Returns the projection matrix. */
 	glm::mat4 ProjectionMatrix() const { return projection_; }
-
-	/** @brief Returns the camera position. */
 	glm::dvec3 Pos() const { return position_; }
-
-	/** @brief Returns the camera front vector. */
 	glm::vec3 Front() const { return front_; }
-
-	/** @brief Returns the camera up vector. */
 	glm::vec3 Up() const { return up_; }
-
-	/** @brief Returns the camera right vector. */
 	glm::vec3 Right() const { return right_; }
-
-	/** @brief Returns the world up vector. */
 	glm::vec3 WorldUp() const { return world_up_; }
-
-	/** @brief Returns the yaw angle in degrees. */
 	float Yaw() const { return yaw_; }
-
-	/** @brief Returns the pitch angle in degrees. */
 	float Pitch() const { return pitch_; }
-
-	/** @brief Returns the zoom factor (field of view). */
 	float Zoom() const { return zoom_; }
-
-	/** @brief Returns the frustum planes. */
 	const std::array<Plane, 6>& GetFrustumPlanes() const { return frustum_planes_; }
-
-	/** @brief Returns whether movement is enabled. */
 	bool EnabledMovement() const { return enabled_movement_; }
-
-	/** @brief Returns whether the camera has changed since last update. */
 	bool Changed() const { return changed_; }
-
-	/** @brief Returns whether the camera is currently moving. */
 	bool Moving() const { return moving_; }
 
 	// Setters
-	/**
-	 * @brief Enables or disables camera movement.
-	 * 
-	 * @param value True to enable movement, false to disable
-	 */
 	void EnableMovement(bool value) { enabled_movement_ = value; }
-
-	/**
-	 * @brief Sets whether the camera is currently moving.
-	 * 
-	 * @param value True if moving, false otherwise
-	 */
 	void SetMoving(bool value) { moving_ = value; }
 
 private:

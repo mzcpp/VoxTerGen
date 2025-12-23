@@ -52,12 +52,11 @@ public:
      */
     bool IsTransparent() const { return type_ == BlockType::Water; }
 
-    /**
-     * @brief Returns the block type.
-     *
-     * @return The BlockType of this block
-     */
+    // Getters
     BlockType Type() const { return type_; }
+
+    // Setters
+    void SetType(BlockType type) { type_ = type; }
 };
 
 #endif // BLOCK_HPP

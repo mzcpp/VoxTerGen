@@ -4,6 +4,7 @@
 #include "input/InputManager.hpp"
 #include "graphics/Camera.hpp"
 #include "input/CameraController.hpp"
+#include "core/Engine.hpp"
 
 struct SDL_Window;
 struct TTF_Font;
@@ -40,6 +41,8 @@ private:
 	InputManager input_manager_;
 	Camera camera_;
 	CameraController camera_controller_;
+
+	Engine engine_;
 
 	bool running_;
 

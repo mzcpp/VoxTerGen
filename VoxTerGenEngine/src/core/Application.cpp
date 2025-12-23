@@ -203,8 +203,9 @@ void Application::Render(float alpha)
 	const glm::mat4 interpolated_view = camera_.InterpolatedViewMatrix(alpha);
 	const glm::mat4 proj = camera_.ProjectionMatrix();
 
-	camera_.EndTick();
+	//
 
+	camera_.EndTick();
 	SDL_GL_SwapWindow(window_);
 }
 
@@ -346,9 +347,9 @@ bool Application::InitOpenGL()
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
 	glEnable(GL_MULTISAMPLE);
-	//glCullFace(GL_BACK);
-	//glFrontFace(GL_CCW);
 	glDepthFunc(GL_LESS);
 
 	/* V-Sync */
