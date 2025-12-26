@@ -21,14 +21,16 @@ struct ivec2_hash
 class ChunkManager
 {
 private:
-	std::unordered_map<glm::ivec2, Chunk, ivec2_hash> chunks_;
+	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, ivec2_hash> chunks_;
 
 public:
 	ChunkManager();
 
 	//Block& NeighborAt(glm::ivec2 chunk_coord, int x, int y, int z, Direction dir) const;
 
-	std::unordered_map<glm::ivec2, Chunk, ivec2_hash>& Chunks() { return chunks_; }
+	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
+
+	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, ivec2_hash>& Chunks() { return chunks_; }
 
 	//Chunk& ChunkAt(glm::ivec2 chunk_coord);
 };
