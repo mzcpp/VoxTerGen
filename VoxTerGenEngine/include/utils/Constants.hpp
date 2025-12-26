@@ -57,6 +57,7 @@ namespace Constants
         inline constexpr int depth = 16;
         inline constexpr int height = 128;
         inline constexpr int size = width * depth * height;
+        inline constexpr int default_radius = 1;
     } // namespace Chunk
 
     /**

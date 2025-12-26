@@ -44,7 +44,7 @@ private:
 		glm::ivec3{ 0, 0, 1 }, glm::ivec3{ 0, 0, -1 }
 	};
 
-	std::unique_ptr<std::array<Block, Constants::Chunk::size>> chunk_;
+	std::array<Block, Constants::Chunk::size> chunk_;
 	glm::ivec2 world_coords_;
 
 public:
@@ -159,7 +159,7 @@ public:
      *
      * @return Array of blocks
      */
-    const std::array<Block, Constants::Chunk::size>& Data() const { return *chunk_; }
+    const std::array<Block, Constants::Chunk::size>& Data() const { return chunk_; }
 
 private:
     /**
