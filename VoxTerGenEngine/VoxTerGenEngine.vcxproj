@@ -541,6 +541,8 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\input\CameraController.hpp" />
     <ClInclude Include="include\input\InputManager.hpp" />
     <ClInclude Include="include\Logger.hpp" />
+    <ClInclude Include="include\mesh\MeshBuilder.hpp" />
+    <ClInclude Include="include\mesh\Vertex.hpp" />
     <ClInclude Include="include\render\MeshRenderer.hpp" />
     <ClInclude Include="include\utils\Constants.hpp" />
     <ClInclude Include="include\utils\Logger.hpp" />
