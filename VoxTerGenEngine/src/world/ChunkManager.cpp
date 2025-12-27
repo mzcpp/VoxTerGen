@@ -12,6 +12,7 @@ std::size_t ivec2_hash::operator()(const glm::ivec2& vec) const noexcept
 
 ChunkManager::ChunkManager()
 {
+	InitChunks(Constants::Chunk::default_radius);
 }
 
 void ChunkManager::InitChunks(int chunk_radius)

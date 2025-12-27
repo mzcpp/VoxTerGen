@@ -152,7 +152,7 @@ public:
      *
      * @return Chunk coordinates
      */
-    glm::ivec2 ChunkCoords() const { return world_coords_; }
+    glm::ivec2 WorldCoords() const { return world_coords_; }
 
     /**
      * @brief Returns a const reference to the internal block array.
