@@ -1,6 +1,6 @@
 #include "mesh/MeshBuilder.hpp"
 
-Mesh MeshBuilder::BuildMesh(const Chunk& chunk, std::function<Block(int, int, int)> neighbor_query)
+Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, std::function<Block(int, int, int)> neighbor_query)
 {
 	Mesh result;
 
