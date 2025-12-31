@@ -16,9 +16,6 @@
 #include <string>
 #include <algorithm>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 Application::Application() :
 	initialized_image_(false),
 	initialized_ttf_(false),
@@ -242,7 +239,7 @@ bool Application::CreateWindow()
 		SDL_WINDOWPOS_CENTERED,
 		Constants::Window::screen_width,
 		Constants::Window::screen_height,
-		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
 	);
 
 	if (window_ == nullptr)
@@ -277,9 +274,17 @@ bool Application::CreateOpenGLContext()
 		return false;
 	}
 
-	if (!GLAD_GL_VERSION_4_6)
+	if (GLVersion.major < Constants::OpenGL::required_gl_major ||
+		(GLVersion.major == Constants::OpenGL::required_gl_major &&
+			GLVersion.minor < Constants::OpenGL::required_gl_minor))
 	{
-		Logger::Log(LogLevel::CRITICAL, "GLAD did NOT load 4.6 function set!");
+		Logger::Log(
+			LogLevel::CRITICAL,
+			"OpenGL {}.{} required, but {}.{} loaded",
+			Constants::OpenGL::required_gl_major,
+			Constants::OpenGL::required_gl_minor,
+			GLVersion.major,
+			GLVersion.minor);
 		return false;
 	}
 
