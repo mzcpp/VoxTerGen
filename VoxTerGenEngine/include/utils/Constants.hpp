@@ -24,7 +24,7 @@ namespace Constants
     namespace OpenGL
     {
         inline constexpr int required_gl_major = 4;
-        inline constexpr int required_gl_minor = 6;
+        inline constexpr int required_gl_minor = 5;
         inline constexpr int double_buffer = 1;
         inline constexpr int depth_size = 24;
     } // namespace OpenGL

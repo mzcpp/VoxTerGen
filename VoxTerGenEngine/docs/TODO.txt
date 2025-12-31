@@ -1,0 +1,14 @@
+mesh - naive, greedy
+render mesh
+
+
+SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix
+
+opengl/glad correct version check when init
+
+tick rate - 20/60?
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+vsync
