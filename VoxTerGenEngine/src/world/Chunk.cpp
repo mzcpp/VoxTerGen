@@ -23,7 +23,7 @@ const Block& Chunk::BlockAt(int x, int y, int z, bool check_index) const
 		throw std::out_of_range("Index coordinate(s) out of range!");
 	}
 
-	return chunk_[Index(x, y, z)];
+	return blocks_[Index(x, y, z)];
 }
 
 glm::ivec3 Chunk::Pos(int index) const
@@ -89,7 +89,7 @@ void Chunk::Fill(std::function<Block(int, int, int)> filler)
 		{
 			for (int x = 0; x < Constants::Chunk::width; ++x)
 			{
-				chunk_[Index(x, y, z)] = filler(x, y, z);
+				blocks_[Index(x, y, z)] = filler(x, y, z);
 			}
 		}
 	}

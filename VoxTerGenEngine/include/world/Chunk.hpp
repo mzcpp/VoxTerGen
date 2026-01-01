@@ -44,7 +44,7 @@ private:
 		glm::ivec3{ 0, 0, 1 }, glm::ivec3{ 0, 0, -1 }
 	};
 
-	std::array<Block, Constants::Chunk::size> chunk_;
+	std::array<Block, Constants::Chunk::size> blocks_;
 	glm::ivec2 world_coords_;
 
 public:
@@ -152,14 +152,14 @@ public:
      *
      * @return Chunk coordinates
      */
-    glm::ivec2 WorldCoords() const { return world_coords_; }
+    const glm::ivec2& WorldCoords() const { return world_coords_; }
 
     /**
      * @brief Returns a const reference to the internal block array.
      *
      * @return Array of blocks
      */
-    const std::array<Block, Constants::Chunk::size>& Data() const { return chunk_; }
+    const std::array<Block, Constants::Chunk::size>& Blocks() const { return blocks_; }
 
 private:
     /**
