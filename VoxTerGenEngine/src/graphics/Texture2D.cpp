@@ -1,6 +1,7 @@
 #include "graphics/Texture2D.hpp"
 #include "utils/Logger.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 #include <glad/glad/glad.h>
