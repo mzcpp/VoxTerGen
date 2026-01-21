@@ -23,7 +23,7 @@ enum class BlockType : uint8_t
  * Encapsulates the block type and provides utility methods
  * to query properties like solidity and transparency.
  */
-class Block final
+class Block
 {
 private:
     BlockType type_;

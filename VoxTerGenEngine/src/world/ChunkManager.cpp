@@ -19,13 +19,13 @@ void ChunkManager::InitChunks(int chunk_radius)
 {
 	const int chunk_square_size = 2 * chunk_radius + 1;
 
-	const glm::ivec3 start_coords = { 0 - chunk_radius, 0, 0 - chunk_radius };
+	glm::ivec3 start_coords = { 0 - chunk_radius, 0, 0 - chunk_radius };
 
-	for (int chunk_z = start_coords.z; chunk_z < chunk_square_size; ++chunk_z)
+	for (int z = 0; z < chunk_square_size; ++z)
 	{
-		for (int chunk_x = start_coords.x; chunk_x < chunk_square_size; ++chunk_x)
+		for (int x = 0; x < chunk_square_size; ++x)
 		{
-			const glm::ivec2 world_coords = { chunk_x, chunk_z };
+			const glm::ivec2 world_coords = { start_coords.x + x, start_coords.z + z };
 			std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(world_coords);
 			InitChunkBlocks(*chunk);
 			chunks_.emplace(world_coords, std::move(chunk));
