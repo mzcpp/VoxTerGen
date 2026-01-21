@@ -9,3 +9,5 @@ opengl/glad correct version check when init
 tick rate - 20/60?
 
 vsync
+
+cubemap

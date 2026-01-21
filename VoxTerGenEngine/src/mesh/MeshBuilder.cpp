@@ -7,6 +7,7 @@ Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, std::function<Block(int, in
 
 	for (const Block& block : chunk.Blocks())
 	{
+
 	}
 
 	return result;
