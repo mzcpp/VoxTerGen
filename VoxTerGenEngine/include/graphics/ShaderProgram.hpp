@@ -105,7 +105,75 @@ public:
         GLint location = GetUniformLocation(name);
         using U = std::remove_cv_t<std::remove_reference_t<T>>;
 
-        // Implementation omitted (template code)
+        // Fundamental types
+        if constexpr (std::is_same_v<U, bool>)
+        {
+            glUniform1i(location, static_cast<GLint>(value));
+        }
+        else if constexpr (std::is_same_v<U, int>)
+        {
+            glUniform1i(location, value);
+        }
+        else if constexpr (std::is_same_v<U, std::uint8_t>)
+        {
+            glUniform1ui(location, static_cast<GLuint>(value));
+        }
+        else if constexpr (std::is_same_v<U, unsigned int> || std::is_same_v<U, std::uint32_t>)
+        {
+            glUniform1ui(location, value);
+        }
+        else if constexpr (std::is_same_v<U, float>)
+        {
+            glUniform1f(location, value);
+        }
+
+        // Vectors
+        else if constexpr (std::is_same_v<U, glm::vec2>)
+        {
+            glUniform2fv(location, 1, &value[0]);
+        }
+        else if constexpr (std::is_same_v<U, glm::vec3>)
+        {
+            glUniform3fv(location, 1, &value[0]);
+        }
+        else if constexpr (std::is_same_v<U, glm::vec4>)
+        {
+            glUniform4fv(location, 1, &value[0]);
+        }
+
+        // Int vectors
+        else if constexpr (std::is_same_v<U, glm::ivec2>)
+        {
+            glUniform2iv(location, 1, &value[0]);
+        }
+        else if constexpr (std::is_same_v<U, glm::ivec3>)
+        {
+            glUniform3iv(location, 1, &value[0]);
+        }
+        else if constexpr (std::is_same_v<U, glm::ivec4>)
+        {
+            glUniform4iv(location, 1, &value[0]);
+        }
+
+        // Matrices
+        else if constexpr (std::is_same_v<U, glm::mat2>)
+        {
+            glUniformMatrix2fv(location, 1, GL_FALSE, &value[0][0]);
+        }
+        else if constexpr (std::is_same_v<U, glm::mat3>)
+        {
+            glUniformMatrix3fv(location, 1, GL_FALSE, &value[0][0]);
+        }
+        else if constexpr (std::is_same_v<U, glm::mat4>)
+        {
+            glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
+        }
+
+        // Unsupported type
+        else
+        {
+            static_assert(sizeof(U) == 0, "ShaderProgram::Set() does not support this type.");
+        }
     }
 
 private:

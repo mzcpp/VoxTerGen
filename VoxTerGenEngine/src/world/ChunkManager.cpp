@@ -18,8 +18,7 @@ ChunkManager::ChunkManager()
 void ChunkManager::InitChunks(int chunk_radius)
 {
 	const int chunk_square_size = 2 * chunk_radius + 1;
-
-	glm::ivec3 start_coords = { 0 - chunk_radius, 0, 0 - chunk_radius };
+	const glm::ivec3 start_coords = { 0 - chunk_radius, 0, 0 - chunk_radius };
 
 	for (int z = 0; z < chunk_square_size; ++z)
 	{
@@ -43,7 +42,7 @@ void ChunkManager::InitChunkBlocks(Chunk& chunk)
 		{
 			for (int x = 0; x < Constants::Chunk::width; ++x)
 			{
-				chunk.BlockAt(x, y, z).SetType(BlockType::Stone);
+				chunk.BlockAt(x, y, z).SetType(BlockType::Air);
 			}
 		}
 	}
