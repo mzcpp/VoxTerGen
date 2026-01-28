@@ -31,6 +31,8 @@ void ChunkManager::InitChunks(int chunk_radius)
 			chunks_.emplace(world_coords, std::move(chunk));
 		}
 	}
+
+	// test NeighborAt here
 }
 
 void ChunkManager::InitChunkBlocks(Chunk& chunk)
