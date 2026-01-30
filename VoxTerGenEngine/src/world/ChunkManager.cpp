@@ -3,6 +3,8 @@
 #include "core/Settings.hpp"
 #include "utils/Logger.hpp"
 
+#include <cassert>
+
 std::size_t ivec2_hash::operator()(const glm::ivec2& vec) const noexcept
 {
 	const std::size_t h1 = std::hash<int>{}(vec.x);
@@ -31,7 +33,99 @@ void ChunkManager::InitChunks(int chunk_radius)
 		}
 	}
 
-	// test NeighborAt here
+	// TEST CASES, CHUNK RADIUS 1 REQUIRED, 3x3x3 chunks
+
+	// neighbors of first block of first chunk
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 0, 0, 0, Direction::PosX).IsSolid()); // air
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 0, 0, 0, Direction::PosY).IsSolid()); // air
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 0, 0, 0, Direction::PosZ).IsSolid()); // air
+
+	// setting them to stone
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(1, 0, 0).SetType(BlockType::Stone);
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(0, 1, 0).SetType(BlockType::Stone);
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(0, 0, 1).SetType(BlockType::Stone);
+
+	// checking again
+	assert(NeighborAt({ start_coords.x, start_coords.z }, 0, 0, 0, Direction::PosX).IsSolid());
+	assert(NeighborAt({ start_coords.x, start_coords.z }, 0, 0, 0, Direction::PosY).IsSolid());
+	assert(NeighborAt({ start_coords.x, start_coords.z }, 0, 0, 0, Direction::PosZ).IsSolid());
+
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 0, 0, 0, Direction::NegX).IsSolid()); // no chunk there
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 0, 0, 0, Direction::NegY).IsSolid()); // no chunk there
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 0, 0, 0, Direction::NegZ).IsSolid()); // no chunk there
+
+
+	chunks_.at({ start_coords.x + 1, start_coords.z })->BlockAt(0, 0, 0).SetType(BlockType::Stone);
+	chunks_.at({ start_coords.x, start_coords.z + 1 })->BlockAt(0, 0, 0).SetType(BlockType::Stone);
+
+	assert(NeighborAt({ start_coords.x, start_coords.z }, Constants::Chunk::width - 1, 0, 0, Direction::PosX).IsSolid()); // should be stone
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, Constants::Chunk::width - 1, 0, 0, Direction::NegY).IsSolid()); // no chunk
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, Constants::Chunk::width - 1, 0, 0, Direction::NegZ).IsSolid()); // no chunk
+
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 0, Constants::Chunk::height - 1, 0, Direction::NegX).IsSolid()); // no chunk
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 0, Constants::Chunk::height - 1, 0, Direction::PosY).IsSolid()); // no chunk
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 0, Constants::Chunk::height - 1, 0, Direction::NegZ).IsSolid()); // no chunk
+
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 0, 0, Constants::Chunk::depth - 1, Direction::NegX).IsSolid()); // no chunk
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 0, 0, Constants::Chunk::depth - 1, Direction::NegY).IsSolid()); // no chunk
+	assert(NeighborAt({ start_coords.x, start_coords.z }, 0, 0, Constants::Chunk::depth - 1, Direction::PosZ).IsSolid()); // should be stone
+
+	// checking neighbors of center block of the first chunks
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(2, 1, 1).SetType(BlockType::Stone);
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(1, 2, 1).SetType(BlockType::Stone);
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(1, 1, 2).SetType(BlockType::Stone);
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(0, 1, 1).SetType(BlockType::Stone);
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(1, 0, 1).SetType(BlockType::Stone);
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(1, 1, 0).SetType(BlockType::Stone);
+	assert(NeighborAt({ start_coords.x, start_coords.z }, 1, 1, 1, Direction::PosX).IsSolid());
+	assert(NeighborAt({ start_coords.x, start_coords.z }, 1, 1, 1, Direction::PosY).IsSolid());
+	assert(NeighborAt({ start_coords.x, start_coords.z }, 1, 1, 1, Direction::PosZ).IsSolid());
+	assert(NeighborAt({ start_coords.x, start_coords.z }, 1, 1, 1, Direction::NegX).IsSolid());
+	assert(NeighborAt({ start_coords.x, start_coords.z }, 1, 1, 1, Direction::NegY).IsSolid());
+	assert(NeighborAt({ start_coords.x, start_coords.z }, 1, 1, 1, Direction::NegZ).IsSolid());
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(2, 1, 1).SetType(BlockType::Air);
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(1, 2, 1).SetType(BlockType::Air);
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(1, 1, 2).SetType(BlockType::Air);
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(0, 1, 1).SetType(BlockType::Air);
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(1, 0, 1).SetType(BlockType::Air);
+	chunks_.at({ start_coords.x, start_coords.z })->BlockAt(1, 1, 0).SetType(BlockType::Air);
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 1, 1, 1, Direction::PosX).IsSolid());
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 1, 1, 1, Direction::PosY).IsSolid());
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 1, 1, 1, Direction::PosZ).IsSolid());
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 1, 1, 1, Direction::NegX).IsSolid());
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 1, 1, 1, Direction::NegY).IsSolid());
+	assert(!NeighborAt({ start_coords.x, start_coords.z }, 1, 1, 1, Direction::NegZ).IsSolid());
+
+	// CENTERS OF SIDES OF THE MIDDLE CHUNK
+	// set to stone in neighboring chunks
+	chunks_.at({ start_coords.x + 1, start_coords.z })->BlockAt(1, 1, 2).SetType(BlockType::Stone);
+	chunks_.at({ start_coords.x, start_coords.z + 1 })->BlockAt(2, 1, 1).SetType(BlockType::Stone);
+	chunks_.at({ start_coords.x + 1, start_coords.z + 2 })->BlockAt(1, 1, 0).SetType(BlockType::Stone);
+	chunks_.at({ start_coords.x + 2, start_coords.z + 1 })->BlockAt(0, 1, 1).SetType(BlockType::Stone);
+
+	// check
+	assert(NeighborAt({ start_coords.x + 1, start_coords.z + 1 }, 1, 1, 0, Direction::NegZ).IsSolid());
+	assert(NeighborAt({ start_coords.x + 1, start_coords.z + 1 }, 0, 1, 1, Direction::NegX).IsSolid());
+	assert(!NeighborAt({ start_coords.x + 1, start_coords.z + 1 }, 1, 0, 1, Direction::NegY).IsSolid()); // no chunk
+
+	assert(NeighborAt({ start_coords.x + 1, start_coords.z + 1 }, 2, 1, 1, Direction::PosX).IsSolid());
+	assert(!NeighborAt({ start_coords.x + 1, start_coords.z + 1 }, 1, 2, 1, Direction::PosY).IsSolid()); // no chunk
+	assert(NeighborAt({ start_coords.x + 1, start_coords.z + 1 }, 1, 1, 2, Direction::PosZ).IsSolid());
+
+	// set back to air in neighboring chunks
+	chunks_.at({ start_coords.x + 1, start_coords.z })->BlockAt(1, 1, 2).SetType(BlockType::Air);
+	chunks_.at({ start_coords.x, start_coords.z + 1 })->BlockAt(2, 1, 1).SetType(BlockType::Air);
+	chunks_.at({ start_coords.x + 1, start_coords.z + 2 })->BlockAt(1, 1, 0).SetType(BlockType::Air);
+	chunks_.at({ start_coords.x + 2, start_coords.z + 1 })->BlockAt(0, 1, 1).SetType(BlockType::Air);
+	
+	// check again
+	assert(!NeighborAt({ start_coords.x + 1, start_coords.z + 1 }, 1, 1, 0, Direction::NegZ).IsSolid());
+	assert(!NeighborAt({ start_coords.x + 1, start_coords.z + 1 }, 0, 1, 1, Direction::NegX).IsSolid());
+	assert(!NeighborAt({ start_coords.x + 1, start_coords.z + 1 }, 1, 0, 1, Direction::NegY).IsSolid()); // no chunk
+
+	assert(!NeighborAt({ start_coords.x + 1, start_coords.z + 1 }, 2, 1, 1, Direction::PosX).IsSolid());
+	assert(!NeighborAt({ start_coords.x + 1, start_coords.z + 1 }, 1, 2, 1, Direction::PosY).IsSolid()); // no chunk
+	assert(!NeighborAt({ start_coords.x + 1, start_coords.z + 1 }, 1, 1, 2, Direction::PosZ).IsSolid());
 }
 
 void ChunkManager::InitChunkBlocks(Chunk& chunk)
