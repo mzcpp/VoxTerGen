@@ -3,6 +3,12 @@
 
 #include <glad/glad.h>
 
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
+#include "glm/mat2x2.hpp"
+#include "glm/mat3x3.hpp"
+#include "glm/mat4x4.hpp"
+
 #include <string>
 #include <string_view>
 #include <unordered_map>
