@@ -12,6 +12,8 @@ class MeshBuilder
 private:
 public:
 	static Mesh BuildMeshNaive(const Chunk& chunk, std::function<Block(int, int, int)> neighbor_query);
+
+	static Mesh BuildMeshGreedy(const Chunk& chunk, std::function<Block(int, int, int)> neighbor_query);
 };
 
 #endif // MESH_BUILDER_HPP
