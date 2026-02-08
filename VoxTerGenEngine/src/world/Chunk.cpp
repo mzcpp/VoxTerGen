@@ -6,7 +6,10 @@
 #include <stdexcept>
 #include <memory>
 
-Chunk::Chunk(glm::ivec2 world_coords) : world_coords_(world_coords)
+Chunk::Chunk(glm::ivec2 world_coords) : 
+	world_coords_(world_coords), 
+	mesh_(nullptr), 
+	mesh_renderer_(nullptr)
 {
 }
 

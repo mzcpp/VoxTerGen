@@ -1,6 +1,7 @@
 mesh - naive, greedy
 render mesh
 
+verify the camera is working correctly for big floats
 
 SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix
 
@@ -11,3 +12,5 @@ tick rate - 20/60?
 vsync
 
 cubemap
+
+VERY IMPORTANT, MAKE THE WINDOWS CORRECT SIZE BASED ON MONITOR SIZE SO IT DOES NOT CUTOFF LIKE THE MAZE GENERATOR ON MBA 13

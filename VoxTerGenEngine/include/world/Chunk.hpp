@@ -3,6 +3,8 @@
 
 #include "world/Block.hpp"
 #include "utils/Constants.hpp"
+#include "mesh/Mesh.hpp"
+#include "render/MeshRenderer.hpp"
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -44,8 +46,10 @@ private:
 		glm::ivec3{ 0, 0, 1 }, glm::ivec3{ 0, 0, -1 }
 	};
 
-	std::array<Block, Constants::Chunk::size> blocks_;
 	glm::ivec2 world_coords_;
+	std::array<Block, Constants::Chunk::size> blocks_;
+    std::unique_ptr<Mesh> mesh_;
+    std::unique_ptr<MeshRenderer> mesh_renderer_;
 
 public:
 	/**

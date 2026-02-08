@@ -31,7 +31,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 		}
 	}
 
-	// test NeighborAt here
+	BuildAllChunkMeshes();
 }
 
 void ChunkManager::InitChunkBlocks(Chunk& chunk)
@@ -45,6 +45,14 @@ void ChunkManager::InitChunkBlocks(Chunk& chunk)
 				chunk.BlockAt(x, y, z).SetType(BlockType::Air);
 			}
 		}
+	}
+}
+
+void ChunkManager::BuildAllChunkMeshes()
+{
+	for (auto& [world_coord, chunk] : chunks_)
+	{
+
 	}
 }
 

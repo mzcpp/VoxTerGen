@@ -25,6 +25,8 @@ public:
     
     void InitChunkBlocks(Chunk& chunk);
 
+	void BuildAllChunkMeshes();
+
 	Block NeighborAt(glm::ivec2 chunk_coord, int x, int y, int z, Direction dir) const;
 
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
