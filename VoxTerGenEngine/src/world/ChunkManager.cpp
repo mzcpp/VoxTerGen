@@ -1,4 +1,5 @@
 #include "world/ChunkManager.hpp"
+#include "mesh/MeshBuilder.hpp"
 #include "world/Chunk.hpp"
 #include "core/Settings.hpp"
 #include "utils/Logger.hpp"
@@ -52,7 +53,7 @@ void ChunkManager::BuildAllChunkMeshes()
 {
 	for (auto& [world_coord, chunk] : chunks_)
 	{
-
+		//MeshBuilder::BuildMeshNaive();
 	}
 }
 
