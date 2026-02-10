@@ -72,6 +72,9 @@
     <ClCompile Include="src\mesh\MeshBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Constants.hpp">
@@ -1164,6 +1167,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\mesh\Vertex.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\Material.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
