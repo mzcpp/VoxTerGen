@@ -41,7 +41,7 @@ Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, std::function<Block(glm::i
 	return result;
 }
 
-void MeshBuilder::GetQuadMesh(const Chunk& chunk, int x, int y, int z, std::function<Block(glm::ivec2, int, int, int, Direction)> neighbor_query, Direction dir, Mesh& result_mesh) const
+void MeshBuilder::GetQuadMesh(const Chunk& chunk, int x, int y, int z, std::function<Block(glm::ivec2, int, int, int, Direction)> neighbor_query, Direction dir, Mesh& result_mesh)
 {
 	const glm::ivec2& chunk_world_coords = chunk.WorldCoords();
 	const Block neighbor = neighbor_query(chunk_world_coords, x, y, z, dir);
@@ -70,7 +70,7 @@ void MeshBuilder::GetQuadMesh(const Chunk& chunk, int x, int y, int z, std::func
 			{
 				quad_vertices[i].normal_ = { 1.0f, 0.0f, 0.0f };
 			}
-		break:
+			break;
 		case Direction::NegX:
 		// negX
 		// 0, 0, 0
@@ -86,7 +86,7 @@ void MeshBuilder::GetQuadMesh(const Chunk& chunk, int x, int y, int z, std::func
 			{
 				quad_vertices[i].normal_ = { -1.0f, 0.0f, 0.0f };
 			}
-			break:
+			break;
 		case Direction::PosY:
 		// posY
 		// 0, 1, 1
@@ -102,7 +102,7 @@ void MeshBuilder::GetQuadMesh(const Chunk& chunk, int x, int y, int z, std::func
 			{
 				quad_vertices[i].normal_ = { 0.0f, 1.0f, 0.0f };
 			}
-			break:
+			break;
 		case Direction::NegY:
 		// negY
 		// 1, 0, 1
@@ -118,7 +118,7 @@ void MeshBuilder::GetQuadMesh(const Chunk& chunk, int x, int y, int z, std::func
 			{
 				quad_vertices[i].normal_ = { 0.0f, -1.0f, 0.0f };
 			}
-			break:
+			break;
 		case Direction::PosZ:
 		// posZ
 		// 0, 0, 1
@@ -134,7 +134,7 @@ void MeshBuilder::GetQuadMesh(const Chunk& chunk, int x, int y, int z, std::func
 			{
 				quad_vertices[i].normal_ = { 0.0f, 0.0f, 1.0f };
 			}
-			break:
+			break;
 		case Direction::NegZ:
 		// negZ
 		// 1, 0, 0
@@ -150,7 +150,7 @@ void MeshBuilder::GetQuadMesh(const Chunk& chunk, int x, int y, int z, std::func
 			{
 				quad_vertices[i].normal_ = { 0.0f, 0.0f, -1.0f };
 			}
-			break:
+			break;
 	}
 
 	quad_vertices[0].uv_ = { 0.0f, 0.0f };
@@ -173,7 +173,7 @@ void MeshBuilder::GetQuadMesh(const Chunk& chunk, int x, int y, int z, std::func
 
 	const float world_x = chunk_world_coords.x * Constants::Chunk::width + x;
 	const float world_y = y;
-	const float world_z = chunk_world_coords.z * Constants::Chunk::depth + z;
+	const float world_z = chunk_world_coords.y * Constants::Chunk::depth + z;
 	// OFFSET THE VERTICES POSITIONS
 
 	const std::array<int, 6> quad_indices = {{ 0, 1, 2, 1, 3, 2 }};
