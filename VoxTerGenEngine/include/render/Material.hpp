@@ -5,10 +5,13 @@
 
 enum class Material : uint8_t 
 {
-    GrassTop,
-    GrassSide,
-    Dirt,
-    Stone
+    GrassTop, 
+    GrassSide, 
+    Dirt, 
+    Stone, 
+    Water, 
+    Snow, 
+    Sand
 };
 
 #endif
