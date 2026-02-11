@@ -165,6 +165,14 @@ public:
      */
     const std::array<Block, Constants::Chunk::size>& Blocks() const { return blocks_; }
 
+    const Mesh& Mesh() const { return *mesh_; }
+
+    const MeshRenderer& MeshRenderer() const { return *mesh_renderer_; }
+
+    void SetMesh(std::unique_ptr<Mesh> mesh) { mesh_ = std::move(mesh); }
+
+    void SetMeshRenderer(std::unique_ptr<MeshRenderer> mesh_renderer) { mesh_renderer_ = std::move(mesh_renderer); }
+
 private:
     /**
      * @brief Converts 3D block coordinates to a linear array index.

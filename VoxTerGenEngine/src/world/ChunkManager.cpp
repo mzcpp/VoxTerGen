@@ -53,7 +53,7 @@ void ChunkManager::BuildAllChunkMeshes()
 {
 	for (auto& [world_coord, chunk] : chunks_)
 	{
-		//MeshBuilder::BuildMeshNaive();
+		//chunk.SetMesh() = //MeshBuilder::BuildMeshNaive();
 	}
 }
 
