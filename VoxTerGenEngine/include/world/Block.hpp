@@ -20,9 +20,6 @@ enum class BlockType : uint8_t
 
 /**
  * @brief Represents a block in the world.
- *
- * Encapsulates the block type and provides utility methods
- * to query properties like solidity and transparency.
  */
 class Block
 {

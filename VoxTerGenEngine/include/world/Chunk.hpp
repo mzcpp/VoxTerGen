@@ -12,21 +12,33 @@
 #include <array>
 #include <functional>
 #include <memory>
+#include <cstdint>
+#include <ranges>
 
 /**
  * @brief Represents the six cardinal directions for neighboring blocks in a chunk.
  *
  * Used to query adjacent blocks in each axis-aligned direction.
  */
-enum class Direction
+enum class Direction : uint8_t
 {
 	PosX = 0, 
 	NegX, 
 	PosY, 
 	NegY, 
 	PosZ, 
-	NegZ
+	NegZ, 
+    DirectionCount
 };
+
+inline constexpr Direction Directions()
+{
+    return std::views::iota(0u, static_cast<unsigned int>(Direction::DirectionCount)) | 
+        std::views::transform([](unsigned int i)
+        {
+            return static_cast<Direction>(i);
+        });
+}
 
 /**
  * @brief Represents a 3D chunk of blocks.
