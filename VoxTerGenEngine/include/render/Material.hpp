@@ -4,7 +4,8 @@
 #include <cstdint>
 
 enum class Material : uint8_t 
-{
+{   
+    Air = 0, 
     GrassTop, 
     GrassSide, 
     Dirt, 
