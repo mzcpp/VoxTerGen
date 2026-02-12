@@ -2,6 +2,8 @@
 #include "mesh/Vertex.hpp"
 #include "mesh/Mesh.hpp"
 #include "world/ChunkManager.hpp"
+#include "world/Chunk.hpp"
+#include "render/Material.hpp"
 
 #include <functional>
 #include <array>
@@ -51,7 +53,7 @@ void MeshBuilder::SaveQuadMesh(const Chunk& chunk, int x, int y, int z, std::fun
 	}
 
 	const Block& block = chunk.BlockAt(x, y, z);
-	std::array<Vertex, 4> quad_vertices = { 0.0f, 0.0f, 0.0f };
+	std::array<Vertex, 4> quad_vertices;
 
 	for (int i = 0; i < 4; ++i)
 	{
@@ -158,44 +160,35 @@ void MeshBuilder::SaveQuadMesh(const Chunk& chunk, int x, int y, int z, std::fun
 	// push_back(quad_indices[i] + (4 * quads_saved))
 }
 
-    Air = 0, 
-    Grass, 
-    Dirt, 
-    Stone, 
-    Water, 
-    Sand, 
-    Snow, 
-    Invalid
-
-Material MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
+uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 {
 	switch (block_type)
 	{
 		case BlockType::Air:
-			return Material::Air;
+			return static_cast<uint8_t>(Material::Air);
 		case BlockType::Grass:
 			if (dir == Direction::PosY)
 			{
-				return Material::GrassTop;
+				return static_cast<uint8_t>(Material::GrassTop);
 			}
 			else if (dir == Direction::NegY)
 			{
-				return Material::Dirt;
+				return static_cast<uint8_t>(Material::Dirt);
 			}
 			else
 			{
-				return Material::GrassSide;
+				return static_cast<uint8_t>(Material::GrassSide);
 			}
 		case BlockType::Dirt:
-			return Material::Dirt;
+			return static_cast<uint8_t>(Material::Dirt);
 		case BlockType::Stone:
-			return Material::Stone;
+			return static_cast<uint8_t>(Material::Stone);
 		case BlockType::Water:
-			return Material::Water;
+			return static_cast<uint8_t>(Material::Water);
 		case BlockType::Sand:
-			return Material::Sand;
+			return static_cast<uint8_t>(Material::Sand);
 		case BlockType::Snow:
-			return Material::Snow;
+			return static_cast<uint8_t>(Material::Snow);
 		default:
 			assert(false);
 	}
