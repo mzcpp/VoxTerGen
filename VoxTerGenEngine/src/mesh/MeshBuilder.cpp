@@ -8,7 +8,7 @@
 
 Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, std::function<Block(glm::ivec2, int, int, int, Direction)> neighbor_query)
 {
-	Mesh result_mesh;
+	Mesh chunk_mesh;
 	const glm::ivec2& chunk_world_coords = chunk.WorldCoords();
 
 	for (int z = 0; z < Constants::Chunk::depth; ++z)
@@ -21,18 +21,16 @@ Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, std::function<Block(glm::iv
 				{
 					continue;
 				}
-				
-				GetQuadMesh(chunk, x, y, z, neighbor_query, Direction::PosX, result_mesh);
-				GetQuadMesh(chunk, x, y, z, neighbor_query, Direction::NegX, result_mesh);
-				GetQuadMesh(chunk, x, y, z, neighbor_query, Direction::PosY, result_mesh);
-				GetQuadMesh(chunk, x, y, z, neighbor_query, Direction::NegY, result_mesh);
-				GetQuadMesh(chunk, x, y, z, neighbor_query, Direction::PosZ, result_mesh);
-				GetQuadMesh(chunk, x, y, z, neighbor_query, Direction::NegZ, result_mesh);
+
+				for (Direction dir : AllDirections())
+				{
+					SaveQuadMesh(chunk, x, y, z, neighbor_query, dir, chunk_mesh);
+				}
 			}
 		}	
 	}
 
-	return result_mesh;
+	return chunk_mesh;
 }
 
 Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, std::function<Block(glm::ivec2, int, int, int, Direction)> neighbor_query)
@@ -41,7 +39,7 @@ Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, std::function<Block(glm::i
 	return result;
 }
 
-void MeshBuilder::GetQuadMesh(const Chunk& chunk, int x, int y, int z, std::function<Block(glm::ivec2, int, int, int, Direction)> neighbor_query, Direction dir, Mesh& result_mesh)
+void MeshBuilder::SaveQuadMesh(const Chunk& chunk, int x, int y, int z, std::function<Block(glm::ivec2, int, int, int, Direction)> neighbor_query, Direction dir, Mesh& chunk_mesh)
 {
 	const glm::ivec2& chunk_world_coords = chunk.WorldCoords();
 	const Block neighbor = neighbor_query(chunk_world_coords, x, y, z, dir);
@@ -56,107 +54,95 @@ void MeshBuilder::GetQuadMesh(const Chunk& chunk, int x, int y, int z, std::func
 	switch (dir)
 	{
 		case Direction::PosX:
-		// posX 
-		// 1, 0, 1
-		// 1, 0, 0
-		// 1, 1, 1
-		// 1, 1, 0
-			quad_vertices[0].position_ = { 1.0f, 0.0f, 1.0f };
-			quad_vertices[1].position_ = { 1.0f, 0.0f, 0.0f };
-			quad_vertices[2].position_ = { 1.0f, 1.0f, 1.0f };
-			quad_vertices[3].position_ = { 1.0f, 1.0f, 0.0f };
-
+			// 1, 0, 1
+			// 1, 0, 0
+			// 1, 1, 1
+			// 1, 1, 0
+			
 			for (int i = 0; i < 4; ++i)
 			{
+				quad_vertices[i].position_ = { 1.0f, static_cast<float>((i / 2) % 2 != 0), static_cast<float>(i % 2 == 0) };
 				quad_vertices[i].normal_ = { 1.0f, 0.0f, 0.0f };
+				quad_vertices[i].uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
 			}
+
 			break;
+
 		case Direction::NegX:
-		// negX
-		// 0, 0, 0
-		// 0, 0, 1
-		// 0, 1, 0
-		// 0, 1, 1
-			quad_vertices[0].position_ = { 0.0f, 0.0f, 0.0f };
-			quad_vertices[1].position_ = { 0.0f, 0.0f, 1.0f };
-			quad_vertices[2].position_ = { 0.0f, 1.0f, 0.0f };
-			quad_vertices[3].position_ = { 0.0f, 1.0f, 1.0f };
-			
+			// 0, 0, 0
+			// 0, 0, 1
+			// 0, 1, 0
+			// 0, 1, 1
+
 			for (int i = 0; i < 4; ++i)
 			{
+				quad_vertices[i].position_ = { 0.0f, static_cast<float>((i / 2) % 2 != 0), static_cast<float>(i % 2 != 0) };
 				quad_vertices[i].normal_ = { -1.0f, 0.0f, 0.0f };
+				quad_vertices[i].uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
 			}
+
 			break;
+
 		case Direction::PosY:
-		// posY
-		// 0, 1, 1
-		// 1, 1, 1
-		// 0, 1, 0
-		// 1, 1, 0
-			quad_vertices[0].position_ = { 0.0f, 1.0f, 1.0f };
-			quad_vertices[1].position_ = { 1.0f, 1.0f, 1.0f };
-			quad_vertices[2].position_ = { 0.0f, 1.0f, 0.0f };
-			quad_vertices[3].position_ = { 1.0f, 1.0f, 0.0f };
+			// 0, 1, 1
+			// 1, 1, 1
+			// 0, 1, 0
+			// 1, 1, 0
 
 			for (int i = 0; i < 4; ++i)
 			{
+				quad_vertices[i].position_ = { static_cast<float>(i % 2 != 0), 1.0f, static_cast<float>((i / 2) % 2 == 0) };
 				quad_vertices[i].normal_ = { 0.0f, 1.0f, 0.0f };
+				quad_vertices[i].uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
 			}
+
 			break;
+
 		case Direction::NegY:
-		// negY
-		// 1, 0, 1
-		// 0, 0, 1
-		// 1, 0, 0
-		// 0, 0, 0
-			quad_vertices[0].position_ = { 1.0f, 0.0f, 1.0f };
-			quad_vertices[1].position_ = { 0.0f, 0.0f, 1.0f };
-			quad_vertices[2].position_ = { 1.0f, 0.0f, 0.0f };
-			quad_vertices[3].position_ = { 0.0f, 0.0f, 0.0f };
+			// 1, 0, 1
+			// 0, 0, 1
+			// 1, 0, 0
+			// 0, 0, 0
 
 			for (int i = 0; i < 4; ++i)
 			{
+				quad_vertices[i].position_ = { static_cast<float>(i % 2 == 0), 0.0f, static_cast<float>((i / 2) % 2 == 0) };
 				quad_vertices[i].normal_ = { 0.0f, -1.0f, 0.0f };
+				quad_vertices[i].uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
 			}
+
 			break;
+
 		case Direction::PosZ:
-		// posZ
-		// 0, 0, 1
-		// 1, 0, 1
-		// 0, 1, 1
-		// 1, 1, 1
-			quad_vertices[0].position_ = { 0.0f, 0.0f, 1.0f };
-			quad_vertices[1].position_ = { 1.0f, 0.0f, 1.0f };
-			quad_vertices[2].position_ = { 0.0f, 1.0f, 1.0f };
-			quad_vertices[3].position_ = { 1.0f, 1.0f, 1.0f };
-			
-			for (int i = 0; i < 4; ++i)
-			{
-				quad_vertices[i].normal_ = { 0.0f, 0.0f, 1.0f };
-			}
-			break;
-		case Direction::NegZ:
-		// negZ
-		// 1, 0, 0
-		// 0, 0, 0
-		// 1, 1, 0
-		// 0, 1, 0
-			quad_vertices[0].position_ = { 1.0f, 0.0f, 0.0f };
-			quad_vertices[1].position_ = { 0.0f, 0.0f, 0.0f };
-			quad_vertices[2].position_ = { 1.0f, 1.0f, 0.0f };
-			quad_vertices[3].position_ = { 0.0f, 1.0f, 0.0f };
+			// 0, 0, 1
+			// 1, 0, 1
+			// 0, 1, 1
+			// 1, 1, 1
 
 			for (int i = 0; i < 4; ++i)
 			{
-				quad_vertices[i].normal_ = { 0.0f, 0.0f, -1.0f };
+				quad_vertices[i].position_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0), 1.0f };	
+				quad_vertices[i].normal_ = { 0.0f, 0.0f, 1.0f };
+				quad_vertices[i].uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
 			}
+
+			break;
+
+		case Direction::NegZ:
+			// 1, 0, 0
+			// 0, 0, 0
+			// 1, 1, 0
+			// 0, 1, 0
+
+			for (int i = 0; i < 4; ++i)
+			{
+				quad_vertices[i].position_ = { static_cast<float>(i % 2 == 0), static_cast<float>((i / 2) % 2 != 0), 0.0f };
+				quad_vertices[i].normal_ = { 0.0f, 0.0f, -1.0f };
+				quad_vertices[i].uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
+			}
+
 			break;
 	}
-
-	quad_vertices[0].uv_ = { 0.0f, 0.0f };
-	quad_vertices[1].uv_ = { 1.0f, 0.0f };
-	quad_vertices[2].uv_ = { 0.0f, 1.0f };
-	quad_vertices[3].uv_ = { 1.0f, 1.0f };
 
 	// MATERIAL!!!
 
