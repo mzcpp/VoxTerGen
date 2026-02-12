@@ -18,6 +18,8 @@ public:
 
 private:
 	static void SaveQuadMesh(const Chunk& chunk, int x, int y, int z, std::function<Block(glm::ivec2, int, int, int, Direction)> neighbor_query, Direction dir, Mesh& chunk_mesh);
+
+	static Material GetQuadMaterial(BlockType block_type, Direction dir);
 };
 
 #endif // MESH_BUILDER_HPP
