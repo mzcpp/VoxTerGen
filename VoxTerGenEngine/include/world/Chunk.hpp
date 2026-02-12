@@ -31,10 +31,10 @@ enum class Direction : uint8_t
     DirectionCount
 };
 
-inline constexpr Direction Directions()
+inline constexpr auto AllDirections()
 {
-    return std::views::iota(0u, static_cast<unsigned int>(Direction::DirectionCount)) | 
-        std::views::transform([](unsigned int i)
+    return std::views::iota(static_cast<uint8_t>(0), static_cast<uint8_t>(Direction::DirectionCount)) |
+        std::views::transform([](uint8_t i)
         {
             return static_cast<Direction>(i);
         });
@@ -177,9 +177,9 @@ public:
      */
     const std::array<Block, Constants::Chunk::size>& Blocks() const { return blocks_; }
 
-    const Mesh& Mesh() const { return *mesh_; }
+    const Mesh& GetMesh() const { return *mesh_; }
 
-    const MeshRenderer& MeshRenderer() const { return *mesh_renderer_; }
+    const MeshRenderer& GetMeshRenderer() const { return *mesh_renderer_; }
 
     void SetMesh(std::unique_ptr<Mesh> mesh) { mesh_ = std::move(mesh); }
 
