@@ -177,13 +177,13 @@ public:
      */
     const std::array<Block, Constants::Chunk::size>& Blocks() const { return blocks_; }
 
-    const Mesh& GetMesh() const { return *mesh_; }
+    const Mesh& Mesh() const { return *mesh_; }
 
-    const MeshRenderer& GetMeshRenderer() const { return *mesh_renderer_; }
+    const MeshRenderer& MeshRenderer() const { return *mesh_renderer_; }
 
-    void SetMesh(std::unique_ptr<Mesh> mesh) { mesh_ = std::move(mesh); }
+    void SetMesh(std::unique_ptr<class Mesh> mesh) { mesh_ = std::move(mesh); }
 
-    void SetMeshRenderer(std::unique_ptr<MeshRenderer> mesh_renderer) { mesh_renderer_ = std::move(mesh_renderer); }
+    void SetMeshRenderer(std::unique_ptr<class MeshRenderer> mesh_renderer) { mesh_renderer_ = std::move(mesh_renderer); }
 
 private:
     /**
