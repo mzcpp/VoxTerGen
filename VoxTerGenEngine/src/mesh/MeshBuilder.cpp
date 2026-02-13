@@ -54,17 +54,19 @@ void MeshBuilder::SaveQuadMesh(const Chunk& chunk, int x, int y, int z, std::fun
 
 	const Block& block = chunk.BlockAt(x, y, z);
 	std::array<Vertex, 4> quad_vertices;
+	
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
+	float normal_x = 0.0f;
+	float normal_y = 0.0f;
+	float normal_z = 0.0f;
+	const float world_x = chunk_world_coords.x * Constants::Chunk::width + x;
+	const float world_y = y;
+	const float world_z = chunk_world_coords.y * Constants::Chunk::depth + z;
 
 	for (int i = 0; i < 4; ++i)
 	{
-		float x = 0.0f;
-		float y = 0.0f;
-		float z = 0.0f;
-
-		float normal_x = 0.0f;
-		float normal_y = 0.0f;
-		float normal_z = 0.0f;
-
 		// 1, 0, 1
 		// 1, 0, 0
 		// 1, 1, 1
@@ -132,32 +134,19 @@ void MeshBuilder::SaveQuadMesh(const Chunk& chunk, int x, int y, int z, std::fun
 			normal_z = -1.0f;
 		}
 
-		quad_vertices[i].position_ = { x, y, z };
+		quad_vertices[i].position_ = { x + world_x, y + world_y, z + world_z };
 		quad_vertices[i].normal_ = { normal_x, normal_y, normal_z };
 		quad_vertices[i].uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
 		quad_vertices[i].material_ = GetQuadMaterial(block.Type(), dir);
 	}
-
-	// Block at (x=3, y=5, z=2) in chunk (chunk_x=10, chunk_z=15)
-	// Block size = 1
-	// Chunk size = 16x16x128
-
-	// world_x = chunk_x * 16 + x = 10*16 + 3 = 163
-	// world_y = y = 5
-	// world_z = chunk_z * 16 + z = 15*16 + 2 = 242
-
-
-	const float world_x = chunk_world_coords.x * Constants::Chunk::width + x;
-	const float world_y = y;
-	const float world_z = chunk_world_coords.y * Constants::Chunk::depth + z;
-	// OFFSET THE VERTICES POSITIONS
-
-	const std::array<int, 6> quad_indices = {{ 0, 1, 2, 1, 3, 2 }};
 	
-	// save the vertices in world_coords
-	// ++quads_saved;
-	// save the indices
-	// push_back(quad_indices[i] + (4 * quads_saved))
+	mesh.Vertices().insert(mesh.Vertices().begin(), quad_vertices.begin(), quad_vertices.end());
+	assert(mesh.Vertices().size() % 4 == 0);
+
+	for (int i : { 0, 1, 2, 1, 3, 2 })
+	{
+		mesh.Indices().push_back(i + mesh.Vertices().size());
+	}
 }
 
 uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
