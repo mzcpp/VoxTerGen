@@ -53,7 +53,16 @@ void ChunkManager::BuildAllChunkMeshes()
 {
 	for (auto& [world_coord, chunk] : chunks_)
 	{
-		//chunk.SetMesh() = //MeshBuilder::BuildMeshNaive();
+		std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
+		*chunk_mesh = MeshBuilder::BuildMeshNaive(
+			*chunk,
+			[this, &chunk](int x, int y, int z, Direction dir)
+			{
+				return NeighborAt(chunk->WorldCoords(), x, y, z, dir);
+			}
+		);
+
+		chunk->SetMesh(std::move(chunk_mesh));
 	}
 }
 
@@ -147,9 +156,9 @@ Block ChunkManager::NeighborAt(glm::ivec2 chunk_coord, int x, int y, int z, Dire
 				return chunk->BlockAt(x, y, z + 1);
 			case Direction::NegZ:
 				return chunk->BlockAt(x, y, z - 1);
-			default:
-				Logger::Log(LogLevel::ERROR, "Unknown NeighborAt() direction!");
-				assert(false);
 		}
+
+		assert(false);
+		return Block();
 	}
 }

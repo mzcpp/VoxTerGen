@@ -6,7 +6,7 @@
 /**
  * @brief Enumeration of all possible block types in the world.
  */
-enum class BlockType : uint8_t
+enum class BlockType : std::uint8_t
 {
     Air = 0, 
     Grass, 
@@ -25,6 +25,8 @@ class Block
 {
 private:
     BlockType type_;
+    std::uint32_t sun_light_;
+    std::uint32_t block_light_;
 
 public:
     /**
@@ -32,7 +34,7 @@ public:
      *
      * @param type Type of the block (default: Air)
      */
-    explicit Block(BlockType type = BlockType::Air) : type_(type)
+    explicit Block(BlockType type = BlockType::Air) : type_(type), sun_light_(0), block_light_(0)
     {
     }
 

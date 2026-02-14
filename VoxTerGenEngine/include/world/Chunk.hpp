@@ -62,6 +62,7 @@ private:
 	std::array<Block, Constants::Chunk::size> blocks_;
     std::unique_ptr<Mesh> mesh_;
     std::unique_ptr<MeshRenderer> mesh_renderer_;
+    bool mesh_invalid_;
 
 public:
 	/**
