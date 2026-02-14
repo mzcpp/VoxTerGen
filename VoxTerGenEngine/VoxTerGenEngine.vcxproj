@@ -545,6 +545,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\mesh\Vertex.hpp" />
     <ClInclude Include="include\render\Material.hpp" />
     <ClInclude Include="include\render\MeshRenderer.hpp" />
+    <ClInclude Include="include\render\WorldRenderer.hpp" />
     <ClInclude Include="include\utils\Constants.hpp" />
     <ClInclude Include="include\utils\Logger.hpp" />
     <ClInclude Include="include\utils\MathUtils.hpp" />
