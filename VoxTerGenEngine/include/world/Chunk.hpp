@@ -14,13 +14,19 @@
 #include <memory>
 #include <cstdint>
 #include <ranges>
+#include <cstdlib>
+
+enum class MajorAxis : std::uint8_t
+{
+    X = 0, 
+    Y, 
+    Z
+};
 
 /**
  * @brief Represents the six cardinal directions for neighboring blocks in a chunk.
- *
- * Used to query adjacent blocks in each axis-aligned direction.
  */
-enum class Direction : uint8_t
+enum class Direction : std::uint8_t
 {
 	PosX = 0, 
 	NegX, 
@@ -33,11 +39,39 @@ enum class Direction : uint8_t
 
 inline constexpr auto AllDirections()
 {
-    return std::views::iota(static_cast<uint8_t>(0), static_cast<uint8_t>(Direction::DirectionCount)) |
-        std::views::transform([](uint8_t i)
+    return std::views::iota(static_cast<std::uint8_t>(0), static_cast<std::uint8_t>(Direction::DirectionCount)) |
+        std::views::transform([](std::uint8_t i)
         {
             return static_cast<Direction>(i);
         });
+}
+
+inline constexpr glm::ivec3 NeighborCoords(const glm::ivec3& block_coords, Direction dir)
+{
+    switch (dir)
+    {
+    case Direction::PosX: return { block_coords.x + 1, block_coords.y, block_coords.z };
+    case Direction::NegX: return { block_coords.x - 1, block_coords.y, block_coords.z };
+    case Direction::PosY: return { block_coords.x, block_coords.y + 1, block_coords.z };
+    case Direction::NegY: return { block_coords.x, block_coords.y - 1, block_coords.z };
+    case Direction::PosZ: return { block_coords.x, block_coords.y, block_coords.z + 1 };
+    case Direction::NegZ: return { block_coords.x, block_coords.y, block_coords.z - 1 };
+    }
+
+    assert(false);
+    return block_coords;
+}
+
+constexpr Direction direction_table[3][2] =
+{
+    { Direction::NegX, Direction::PosX },
+    { Direction::NegY, Direction::PosY },
+    { Direction::NegZ, Direction::PosZ }
+};
+
+constexpr Direction ToDirection(MajorAxis axis, bool positive)
+{
+    return direction_table[static_cast<std::uint8_t>(axis)][positive];
 }
 
 /**
@@ -59,7 +93,7 @@ private:
 	};
 
 	glm::ivec2 world_coords_;
-	std::array<Block, Constants::Chunk::size> blocks_;
+	std::array<Block, constants::chunk::size> blocks_;
     std::unique_ptr<Mesh> mesh_;
     std::unique_ptr<MeshRenderer> mesh_renderer_;
     bool mesh_invalid_;
@@ -162,7 +196,7 @@ public:
      *
      * @return Total block count
      */
-    int BlockCount() const { return Constants::Chunk::size; }
+    int BlockCount() const { return constants::chunk::size; }
 
     /**
      * @brief Returns the coordinates of the chunk in world space.
@@ -176,7 +210,7 @@ public:
      *
      * @return Array of blocks
      */
-    const std::array<Block, Constants::Chunk::size>& Blocks() const { return blocks_; }
+    const std::array<Block, constants::chunk::size>& Blocks() const { return blocks_; }
 
     const Mesh& Mesh() const { return *mesh_; }
 

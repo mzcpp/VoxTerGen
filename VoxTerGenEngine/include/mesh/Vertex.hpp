@@ -11,7 +11,7 @@ struct Vertex
     glm::vec3 position_;
     glm::vec3 normal_;
     glm::vec2 uv_;
-    uint8_t material_;
+    std::uint8_t material_;
 };
 
 #endif // VERTEX_HPP

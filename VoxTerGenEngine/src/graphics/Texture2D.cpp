@@ -18,20 +18,20 @@ namespace TextureUtils
     {
         switch (n_components)
         {
-            case 1:
-                *internal_format = GL_R8;
-                *data_format = GL_RED;
-                break;
-            case 3:
-                *internal_format = sRGB ? GL_SRGB8 : GL_RGB8;
-                *data_format = GL_RGB;
-                break;
-            case 4:
-                *internal_format = sRGB ? GL_SRGB8_ALPHA8 : GL_RGBA8;
-                *data_format = GL_RGBA;
-                break;
-            default:
-                throw std::runtime_error("Unsupported texture channel count");
+        case 1:
+            *internal_format = GL_R8;
+            *data_format = GL_RED;
+            break;
+        case 3:
+            *internal_format = sRGB ? GL_SRGB8 : GL_RGB8;
+            *data_format = GL_RGB;
+            break;
+        case 4:
+            *internal_format = sRGB ? GL_SRGB8_ALPHA8 : GL_RGBA8;
+            *data_format = GL_RGBA;
+            break;
+        default:
+            throw std::runtime_error("Unsupported texture channel count");
         }
     }
 

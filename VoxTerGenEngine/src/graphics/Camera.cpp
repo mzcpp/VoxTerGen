@@ -18,9 +18,9 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
 	world_up_(up), 
 	yaw_(yaw), 
 	pitch_(pitch), 
-	zoom_(Constants::Camera::zoom), 
-	near_plane_(Constants::Camera::near_plane), 
-	far_plane_(Constants::Camera::far_plane), 
+	zoom_(constants::camera::zoom), 
+	near_plane_(constants::camera::near_plane), 
+	far_plane_(constants::camera::far_plane), 
 	prev_position_(position), 
 	prev_yaw_(yaw), 
 	prev_pitch_(pitch), 
@@ -172,7 +172,7 @@ bool Camera::PointInsideFrustum(const glm::vec3& point) const
 {
 	for (int i = 0; i < 6; ++i)
 	{
-		if (glm::dot(frustum_planes_[i].normal_, point) + frustum_planes_[i].dist_ < Constants::Math::float_epsilon)
+		if (glm::dot(frustum_planes_[i].normal_, point) + frustum_planes_[i].dist_ < constants::math::float_epsilon)
 		{
 			//Logger::Log(LogLevel::ERROR, "Sanity fail: Point {} {} {} is outside frustum!", point.x, point.y, point.z);
 			return false;
@@ -186,7 +186,7 @@ bool Camera::SanityCheckFrustum() const
 {
 	const glm::vec3 point = 
 		glm::vec3(0.0f) +
-		(front_ * ((Constants::Camera::far_plane - Constants::Camera::near_plane) / 2.0f));
+		(front_ * ((constants::camera::far_plane - constants::camera::near_plane) / 2.0f));
 		
 	if (!PointInsideFrustum(point))
 	{

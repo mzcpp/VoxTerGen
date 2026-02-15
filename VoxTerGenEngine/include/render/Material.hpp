@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-enum class Material : uint8_t 
+enum class Material : std::uint8_t 
 {   
     Air = 0, 
     GrassTop, 

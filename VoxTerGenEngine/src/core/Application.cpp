@@ -1,5 +1,5 @@
 #include "core/Application.hpp"
-#include "utils/Constants.hpp"
+#include "utils/constants.hpp"
 #include "utils/Logger.hpp"
 
 #include <glad/glad/glad.h>
@@ -24,18 +24,9 @@ Application::Application() :
 	window_(nullptr),
 	font_(nullptr),
 	gl_context_(nullptr),
-	screen_width_(Constants::Window::screen_width),
-	screen_height_(Constants::Window::screen_height),
+	screen_width_(constants::window::screen_width),
+	screen_height_(constants::window::screen_height),
 	aspect_ratio_(static_cast<float>(screen_width_) / static_cast<float>(screen_height_)),
-	camera_(
-		glm::vec3(
-			static_cast<float>(0.0f) * -2.0f,
-			static_cast<float>(0.0f),
-			static_cast<float>(0.0f) * 2.0f
-		),
-		glm::vec3(0.0f, 1.0f, 0.0f)
-	),
-	camera_controller_(camera_),
 	running_(false)
 {
 	Logger::Log(LogLevel::INFO, "Application object created.");
@@ -96,8 +87,6 @@ void Application::Run()
 
 	while (running_)
 	{
-		input_manager_.ResetFrameState();
-
 		const std::uint64_t now = SDL_GetPerformanceCounter();
 		const double elapsed = static_cast<double>(now - last_time) / static_cast<double>(SDL_GetPerformanceFrequency());
 
@@ -106,14 +95,14 @@ void Application::Run()
 
 		HandleEvents();
 
-		while (delta >= Constants::Engine::tick_dt)
+		while (delta >= constants::engine::tick_dt)
 		{
 			Tick();
-			delta -= Constants::Engine::tick_dt;
+			delta -= constants::engine::tick_dt;
 			++ticks;
 		}
 
-		const float alpha = std::clamp(static_cast<float>(delta / Constants::Engine::tick_dt), 0.0f, 1.0f);
+		const float alpha = std::clamp(static_cast<float>(delta / constants::engine::tick_dt), 0.0f, 1.0f);
 		//printf("%Lf\n", alpha);
 		Render(alpha);
 		++frames;
@@ -126,7 +115,7 @@ void Application::Run()
 			const double frame_ms = (1.0 / frames) * 1000.0; // average frame time over 1 second
 
 			const std::string title =
-				std::string(Constants::Window::title) +
+				std::string(constants::window::title) +
 				" | FPS: " + std::to_string(frames) +
 				" | TPS: " + std::to_string(ticks) +
 				" | Frame: " + std::to_string(frame_ms).substr(0, 5) + " ms";
@@ -148,8 +137,6 @@ void Application::HandleEvents()
 
 	while (SDL_PollEvent(&e) != 0)
 	{
-		input_manager_.ProcessEvent(e);
-
 		if ((e.type == SDL_QUIT) || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
 		{
 			running_ = false;
@@ -173,36 +160,19 @@ void Application::HandleEvents()
 			}
 		}
 
-		if (e.type == SDL_MOUSEMOTION)
-		{
-			camera_controller_.ApplyRotation(input_manager_);
-		}
-
-		if (e.type == SDL_MOUSEWHEEL)
-		{
-			camera_controller_.ApplyZoom(input_manager_);
-		}
+		engine_.HandleEvents(e);
 	}
+
 }
 
 void Application::Tick()
 {
-	camera_.PreTick();
-	camera_controller_.ApplyInput(input_manager_, static_cast<float>(Constants::Engine::tick_dt), aspect_ratio_);
-	camera_.Tick(aspect_ratio_);
+	engine_.Tick(aspect_ratio_);
 }
 
 void Application::Render(float alpha)
 {
-	glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	const glm::mat4 interpolated_view = camera_.InterpolatedViewMatrix(alpha);
-	const glm::mat4 proj = camera_.ProjectionMatrix();
-
-	//
-
-	camera_.EndTick();
+	engine_.Render(alpha);
 	SDL_GL_SwapWindow(window_);
 }
 
@@ -224,22 +194,22 @@ bool Application::CreateWindow()
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, Constants::OpenGL::required_gl_major);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, Constants::OpenGL::required_gl_minor);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, constants::open_gl::required_gl_major);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, constants::open_gl::required_gl_minor);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, Constants::OpenGL::double_buffer);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, Constants::OpenGL::depth_size);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, constants::open_gl::double_buffer);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, constants::open_gl::depth_size);
 
 #ifdef _DEBUG
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
 #endif
 
 	window_ = SDL_CreateWindow(
-		Constants::Window::title.data(),
+		constants::window::title.data(),
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		Constants::Window::screen_width,
-		Constants::Window::screen_height,
+		constants::window::screen_width,
+		constants::window::screen_height,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
 	);
 
@@ -249,7 +219,7 @@ bool Application::CreateWindow()
 		return false;
 	}
 
-	if (camera_.EnabledMovement())
+	if (engine_.Camera().EnabledMovement())
 	{
 		SDL_SetRelativeMouseMode(SDL_TRUE);
 	}
@@ -275,17 +245,19 @@ bool Application::CreateOpenGLContext()
 		return false;
 	}
 
-	if (GLVersion.major < Constants::OpenGL::required_gl_major ||
-		(GLVersion.major == Constants::OpenGL::required_gl_major &&
-			GLVersion.minor < Constants::OpenGL::required_gl_minor))
+	if (GLVersion.major < constants::open_gl::required_gl_major ||
+		(GLVersion.major == constants::open_gl::required_gl_major &&
+			GLVersion.minor < constants::open_gl::required_gl_minor))
 	{
 		Logger::Log(
 			LogLevel::CRITICAL,
 			"OpenGL {}.{} required, but {}.{} loaded",
-			Constants::OpenGL::required_gl_major,
-			Constants::OpenGL::required_gl_minor,
+			constants::open_gl::required_gl_major,
+			constants::open_gl::required_gl_minor,
 			GLVersion.major,
-			GLVersion.minor);
+			GLVersion.minor
+		);
+
 		return false;
 	}
 
@@ -309,21 +281,23 @@ bool Application::InitOpenGL()
 	glGetIntegerv(GL_MAJOR_VERSION, &major);
 	glGetIntegerv(GL_MINOR_VERSION, &minor);
 
-	if (major < Constants::OpenGL::required_gl_major ||
-		(major == Constants::OpenGL::required_gl_major && minor < Constants::OpenGL::required_gl_minor))
+	if (major < constants::open_gl::required_gl_major ||
+		(major == constants::open_gl::required_gl_major && minor < constants::open_gl::required_gl_minor))
 	{
 		Logger::Log(
 			LogLevel::CRITICAL,
 			"OpenGL {}.{} required, but detected {}.{}!",
-			Constants::OpenGL::required_gl_major,
-			Constants::OpenGL::required_gl_minor,
+			constants::open_gl::required_gl_major,
+			constants::open_gl::required_gl_minor,
 			major,
-			minor);
+			minor
+		);
 
 		const std::string msg = std::format(
 			"OpenGL {}.{} or higher is required!\nPlease update your GPU drivers.",
-			Constants::OpenGL::required_gl_major,
-			Constants::OpenGL::required_gl_minor);
+			constants::open_gl::required_gl_major,
+			constants::open_gl::required_gl_minor
+		);
 
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "OpenGL Version Error", msg.c_str(), window_);
 
@@ -336,10 +310,13 @@ bool Application::InitOpenGL()
 
 	if (IsSoftwareRenderer())
 	{
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+		SDL_ShowSimpleMessageBox(
+			SDL_MESSAGEBOX_ERROR,
 			"Renderer Error",
 			"Your system is using a software OpenGL renderer.\n"
-			"Install or update your GPU drivers.", window_);
+			"Install or update your GPU drivers.", 
+			window_
+		);
 
 		return false;
 	}
@@ -348,7 +325,7 @@ bool Application::InitOpenGL()
 	InitDebugGLCallback();
 #endif
 
-	glViewport(0, 0, Constants::Window::screen_width, Constants::Window::screen_height);
+	glViewport(0, 0, constants::window::screen_width, constants::window::screen_height);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -383,7 +360,7 @@ bool Application::InitSDLModules()
 
 	initialized_ttf_ = true;
 
-	if (Mix_OpenAudio(Constants::Audio::audio_freq, MIX_DEFAULT_FORMAT, Constants::Audio::channels, Constants::Audio::chunk_size) < 0)
+	if (Mix_OpenAudio(constants::audio::audio_freq, MIX_DEFAULT_FORMAT, constants::audio::channels, constants::audio::chunk_size) < 0)
 	{
 		Logger::Log(LogLevel::ERROR, "SDL_mixer could not be initialized! SDL_mixer Error: {}", Mix_GetError());
 		return false;
