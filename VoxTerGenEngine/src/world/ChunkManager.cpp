@@ -144,18 +144,18 @@ Block ChunkManager::NeighborAt(glm::ivec2 chunk_coord, int x, int y, int z, Dire
 
 		switch (dir)
 		{
-			case Direction::PosX:
-				return chunk->BlockAt(x + 1, y, z);
-			case Direction::NegX:
-				return chunk->BlockAt(x - 1, y, z);
-			case Direction::PosY:
-				return chunk->BlockAt(x, y + 1, z);
-			case Direction::NegY:
-				return chunk->BlockAt(x, y - 1, z);
-			case Direction::PosZ:
-				return chunk->BlockAt(x, y, z + 1);
-			case Direction::NegZ:
-				return chunk->BlockAt(x, y, z - 1);
+		case Direction::PosX:
+			return chunk->BlockAt(x + 1, y, z);
+		case Direction::NegX:
+			return chunk->BlockAt(x - 1, y, z);
+		case Direction::PosY:
+			return chunk->BlockAt(x, y + 1, z);
+		case Direction::NegY:
+			return chunk->BlockAt(x, y - 1, z);
+		case Direction::PosZ:
+			return chunk->BlockAt(x, y, z + 1);
+		case Direction::NegZ:
+			return chunk->BlockAt(x, y, z - 1);
 		}
 
 		assert(false);

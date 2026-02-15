@@ -4,6 +4,7 @@
 #include "world/ChunkManager.hpp"
 #include "world/Chunk.hpp"
 #include "render/Material.hpp"
+#include "utils/Logger.hpp"
 
 #include <array>
 #include <cassert>
@@ -112,33 +113,34 @@ uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 {
 	switch (block_type)
 	{
-		case BlockType::Air:
-			return static_cast<uint8_t>(Material::Air);
-		case BlockType::Grass:
-			if (dir == Direction::PosY)
-			{
-				return static_cast<uint8_t>(Material::GrassTop);
-			}
-			else if (dir == Direction::NegY)
-			{
-				return static_cast<uint8_t>(Material::Dirt);
-			}
-			else
-			{
-				return static_cast<uint8_t>(Material::GrassSide);
-			}
-		case BlockType::Dirt:
+	case BlockType::Air:
+		return static_cast<uint8_t>(Material::Air);
+	case BlockType::Grass:
+		if (dir == Direction::PosY)
+		{
+			return static_cast<uint8_t>(Material::GrassTop);
+		}
+		else if (dir == Direction::NegY)
+		{
 			return static_cast<uint8_t>(Material::Dirt);
-		case BlockType::Stone:
-			return static_cast<uint8_t>(Material::Stone);
-		case BlockType::Water:
-			return static_cast<uint8_t>(Material::Water);
-		case BlockType::Sand:
-			return static_cast<uint8_t>(Material::Sand);
-		case BlockType::Snow:
-			return static_cast<uint8_t>(Material::Snow);
+		}
+		else
+		{
+			return static_cast<uint8_t>(Material::GrassSide);
+		}
+	case BlockType::Dirt:
+		return static_cast<uint8_t>(Material::Dirt);
+	case BlockType::Stone:
+		return static_cast<uint8_t>(Material::Stone);
+	case BlockType::Water:
+		return static_cast<uint8_t>(Material::Water);
+	case BlockType::Sand:
+		return static_cast<uint8_t>(Material::Sand);
+	case BlockType::Snow:
+		return static_cast<uint8_t>(Material::Snow);
 	}
 
 	assert(false);
+	Logger::Log(LogLevel::ERROR, "GetQuadMaterial received an unknown type of Block!: block_type = {}", static_cast<std::uint8_t>(block_type));
 	return static_cast<uint8_t>(Material::Air);
 }

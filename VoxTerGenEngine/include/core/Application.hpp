@@ -18,7 +18,6 @@ struct TTF_Font;
  * This class is responsible for:
  * - Initializing SDL and related subsystems
  * - Creating the SDL2 window and OpenGL context
- * - Managing input, camera, and rendering
  * - Running the main application loop
  */
 class Application
@@ -37,10 +36,6 @@ private:
 	int screen_width_;
 	int screen_height_;
 	float aspect_ratio_;
-
-	InputManager input_manager_;
-	Camera camera_;
-	CameraController camera_controller_;
 
 	Engine engine_;
 

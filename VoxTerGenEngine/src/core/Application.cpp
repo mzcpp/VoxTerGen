@@ -27,15 +27,6 @@ Application::Application() :
 	screen_width_(Constants::Window::screen_width),
 	screen_height_(Constants::Window::screen_height),
 	aspect_ratio_(static_cast<float>(screen_width_) / static_cast<float>(screen_height_)),
-	camera_(
-		glm::vec3(
-			static_cast<float>(0.0f) * -2.0f,
-			static_cast<float>(0.0f),
-			static_cast<float>(0.0f) * 2.0f
-		),
-		glm::vec3(0.0f, 1.0f, 0.0f)
-	),
-	camera_controller_(camera_),
 	running_(false)
 {
 	Logger::Log(LogLevel::INFO, "Application object created.");
@@ -96,8 +87,6 @@ void Application::Run()
 
 	while (running_)
 	{
-		input_manager_.ResetFrameState();
-
 		const std::uint64_t now = SDL_GetPerformanceCounter();
 		const double elapsed = static_cast<double>(now - last_time) / static_cast<double>(SDL_GetPerformanceFrequency());
 
@@ -148,8 +137,6 @@ void Application::HandleEvents()
 
 	while (SDL_PollEvent(&e) != 0)
 	{
-		input_manager_.ProcessEvent(e);
-
 		if ((e.type == SDL_QUIT) || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
 		{
 			running_ = false;
@@ -173,36 +160,19 @@ void Application::HandleEvents()
 			}
 		}
 
-		if (e.type == SDL_MOUSEMOTION)
-		{
-			camera_controller_.ApplyRotation(input_manager_);
-		}
-
-		if (e.type == SDL_MOUSEWHEEL)
-		{
-			camera_controller_.ApplyZoom(input_manager_);
-		}
+		engine_.HandleEvents(e);
 	}
+
 }
 
 void Application::Tick()
 {
-	camera_.PreTick();
-	camera_controller_.ApplyInput(input_manager_, static_cast<float>(Constants::Engine::tick_dt), aspect_ratio_);
-	camera_.Tick(aspect_ratio_);
+	engine_.Tick(aspect_ratio_);
 }
 
 void Application::Render(float alpha)
 {
-	glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	const glm::mat4 interpolated_view = camera_.InterpolatedViewMatrix(alpha);
-	const glm::mat4 proj = camera_.ProjectionMatrix();
-
-	//
-
-	camera_.EndTick();
+	engine_.Render(alpha);
 	SDL_GL_SwapWindow(window_);
 }
 
@@ -249,7 +219,7 @@ bool Application::CreateWindow()
 		return false;
 	}
 
-	if (camera_.EnabledMovement())
+	if (engine_.Camera().EnabledMovement())
 	{
 		SDL_SetRelativeMouseMode(SDL_TRUE);
 	}
@@ -285,7 +255,9 @@ bool Application::CreateOpenGLContext()
 			Constants::OpenGL::required_gl_major,
 			Constants::OpenGL::required_gl_minor,
 			GLVersion.major,
-			GLVersion.minor);
+			GLVersion.minor
+		);
+
 		return false;
 	}
 
@@ -318,12 +290,14 @@ bool Application::InitOpenGL()
 			Constants::OpenGL::required_gl_major,
 			Constants::OpenGL::required_gl_minor,
 			major,
-			minor);
+			minor
+		);
 
 		const std::string msg = std::format(
 			"OpenGL {}.{} or higher is required!\nPlease update your GPU drivers.",
 			Constants::OpenGL::required_gl_major,
-			Constants::OpenGL::required_gl_minor);
+			Constants::OpenGL::required_gl_minor
+		);
 
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "OpenGL Version Error", msg.c_str(), window_);
 
@@ -336,10 +310,13 @@ bool Application::InitOpenGL()
 
 	if (IsSoftwareRenderer())
 	{
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+		SDL_ShowSimpleMessageBox(
+			SDL_MESSAGEBOX_ERROR,
 			"Renderer Error",
 			"Your system is using a software OpenGL renderer.\n"
-			"Install or update your GPU drivers.", window_);
+			"Install or update your GPU drivers.", 
+			window_
+		);
 
 		return false;
 	}
