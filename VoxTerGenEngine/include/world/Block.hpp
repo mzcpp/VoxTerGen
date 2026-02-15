@@ -17,8 +17,8 @@ class Block
 {
 private:
     BlockType type_;
-    std::uint32_t sun_light_;
-    std::uint32_t block_light_;
+    std::uint8_t sun_light_;
+    std::uint8_t block_light_;
 
 public:
 	Block(BlockType type = BlockType::Air);

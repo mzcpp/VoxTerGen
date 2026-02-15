@@ -2,7 +2,7 @@
 
 ChunkManager::ChunkManager()
 {
-	InitChunks(Constants::Chunk::default_radius);
+	InitChunks(constants::chunk::default_radius);
 }
 
 //Block& ChunkManager::NeighborAt(glm::ivec2 chunk_coord, int x, int y, int z, Direction dir) const
