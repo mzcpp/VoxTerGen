@@ -6,6 +6,7 @@
 #include "input/InputManager.hpp"
 #include "input/CameraController.hpp"
 #include "graphics/Camera.hpp"
+#include "render/WorldRenderer.hpp"
 
 class Engine
 {
@@ -15,6 +16,7 @@ private:
 	CameraController camera_controller_;
 	Settings settings_;
 	World world_;
+	WorldRenderer world_renderer_;
 
 public:
 	Engine();
