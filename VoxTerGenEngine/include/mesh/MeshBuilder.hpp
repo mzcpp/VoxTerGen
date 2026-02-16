@@ -25,6 +25,8 @@ private:
 	static void SaveQuadMesh(const Chunk& chunk, int x, int y, int z, Direction dir, Mesh& chunk_mesh);
 
 	static uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
+
+	static bool ShouldRenderFace(BlockType first, BLickType second);
 };
 
 Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, NeighborQuery auto&& neighbor_query)
@@ -60,7 +62,43 @@ Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, NeighborQuery auto&& neighb
 
 Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, NeighborQuery auto&& neighbor_query)
 {
-	return {};
+	Mesh chunk_mesh;
+
+	for (int x_boundary = -1; x_boundary < Constants::chunk::width; ++x_boundary)
+	{
+		// |0|1|2|3|4|5|
+		// |0|1|2|3|4|5|
+		// |0|1|2|3|4|5|
+		// |0|1|2|3|4|5|
+
+			for (int y = 0; y < Constants::chunk::height; ++y)
+			{
+				for (int z = 0; z < Constants::chunk::depth; ++z)
+				{
+					neighbor_query(chunk, x_boundary + 1, y, z, Direction::NegX);
+				}
+			}
+
+		
+		// loop the blocks in yz slice
+		// save block type of the left & right
+		// check the neighboring block on the other side of boundary (to the left)
+		// skip air|air or solid|solid
+		// air | solid && SOLID IS INSIDE THIS CHUNK -> emit -x
+		// solid | air && SOLID IS INSIDE THIS CHUNK -> emit +x
+	}
+
+	for (int y = 0; y < Constants::chunk::height + 1; ++y)
+	{
+		
+	}
+
+	for (int z = 0; z < Constants::chunk::depth + 1; ++z)
+	{
+		
+	}
+
+	return chunk_mesh;
 }
 
 #endif // MESH_BUILDER_HPP

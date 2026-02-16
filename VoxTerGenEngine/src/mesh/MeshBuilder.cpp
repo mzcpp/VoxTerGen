@@ -26,67 +26,67 @@ void MeshBuilder::SaveQuadMesh(const Chunk& chunk, int block_x, int block_y, int
 
 	for (int i = 0; i < 4; ++i)
 	{
-		// 1, 0, 1
-		// 1, 0, 0
-		// 1, 1, 1
-		// 1, 1, 0
 		if (dir == Direction::PosX)
 		{
+			// 1, 0, 1
+			// 1, 0, 0
+			// 1, 1, 1
+			// 1, 1, 0
 			vertex_x = 1.0f;
 			vertex_y = static_cast<float>((i / 2) % 2 != 0);
 			vertex_z = static_cast<float>(i % 2 == 0);
 			normal_x = 1.0f;
 		}
-		// 0, 0, 0
-		// 0, 0, 1
-		// 0, 1, 0
-		// 0, 1, 1
 		else if (dir == Direction::NegX)
 		{
+			// 0, 0, 0
+			// 0, 0, 1
+			// 0, 1, 0
+			// 0, 1, 1
 			vertex_x = 0.0f;
 			vertex_y = static_cast<float>((i / 2) % 2 != 0);
 			vertex_z = static_cast<float>(i % 2 != 0);
 			normal_x = -1.0f;
 		}
-		// 0, 1, 1
-		// 1, 1, 1
-		// 0, 1, 0
-		// 1, 1, 0
 		else if (dir == Direction::PosY)
 		{
+			// 0, 1, 1
+			// 1, 1, 1
+			// 0, 1, 0
+			// 1, 1, 0
 			vertex_x = static_cast<float>(i % 2 != 0);
 			vertex_y = 1.0f;
 			vertex_z = static_cast<float>((i / 2) % 2 == 0);
 			normal_y = 1.0f;
 		}
-		// 1, 0, 1
-		// 0, 0, 1
-		// 1, 0, 0
-		// 0, 0, 0
 		else if (dir == Direction::NegY)
 		{
+			// 1, 0, 1
+			// 0, 0, 1
+			// 1, 0, 0
+			// 0, 0, 0
 			vertex_x = static_cast<float>(i % 2 == 0);
 			vertex_y = 0.0f;
 			vertex_z = static_cast<float>((i / 2) % 2 == 0);
 			normal_y = -1.0f;
 		}
-		// 0, 0, 1
-		// 1, 0, 1
-		// 0, 1, 1
-		// 1, 1, 1
 		else if (dir == Direction::PosZ)
 		{
+			// 0, 0, 1
+			// 1, 0, 1
+			// 0, 1, 1
+			// 1, 1, 1
 			vertex_x = static_cast<float>(i % 2 != 0);
 			vertex_y = static_cast<float>((i / 2) % 2 != 0);
 			vertex_z = 1.0f;
 			normal_z = 1.0f;
 		}
-		// 1, 0, 0
-		// 0, 0, 0
-		// 1, 1, 0
-		// 0, 1, 0
 		else if (dir == Direction::NegZ)
 		{
+			// 1, 0, 0
+			// 0, 0, 0
+			// 1, 1, 0
+			// 0, 1, 0
 			vertex_x = static_cast<float>(i % 2 == 0);
 			vertex_y = static_cast<float>((i / 2) % 2 != 0);
 			vertex_z = 0.0f;
