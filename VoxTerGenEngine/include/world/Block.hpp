@@ -34,29 +34,31 @@ public:
      *
      * @param type Type of the block (default: Air)
      */
-    explicit Block(BlockType type = BlockType::Air) : type_(type), sun_light_(0), block_light_(0)
-    {
-    }
+    explicit Block(BlockType type = BlockType::Air);
 
     /**
      * @brief Checks if the block is solid.
      *
      * @return true if the block is solid, false otherwise
      */
-    bool IsSolid() const { return type_ != BlockType::Air && type_ != BlockType::Water; }
+    bool IsSolid() const;
 
     /**
      * @brief Checks if the block is transparent.
      *
      * @return true if the block is transparent (water), false otherwise
      */
-    bool IsTransparent() const { return type_ == BlockType::Water; }
+    bool IsTransparent() const;
+    
+    bool IsAir() const;
+
+    bool ShouldRenderFace(const Block& neighbor) const;
 
     // Getters
-    BlockType Type() const { return type_; }
+    BlockType Type() const;
 
     // Setters
-    void SetType(BlockType type) { type_ = type; }
+    void SetType(BlockType type);
 };
 
 #endif // BLOCK_HPP

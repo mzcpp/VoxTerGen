@@ -6,6 +6,15 @@
 #include "world/Block.hpp"
 
 #include <concepts>
+#include <cstdint>
+#include <vector>
+
+struct MaskCell
+{
+	std::uint8_t block_type_;
+	Direction dir_;
+	std::uint8_t light_;
+};
 
 template <typename Fnc> 
 concept NeighborQuery = 
@@ -25,8 +34,6 @@ private:
 	static void SaveQuadMesh(const Chunk& chunk, int x, int y, int z, Direction dir, Mesh& chunk_mesh);
 
 	static uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
-
-	static bool ShouldRenderFace(BlockType first, BLickType second);
 };
 
 Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, NeighborQuery auto&& neighbor_query)
@@ -63,39 +70,68 @@ Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, NeighborQuery auto&& neighb
 Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, NeighborQuery auto&& neighbor_query)
 {
 	Mesh chunk_mesh;
+	std::vector<MaskCell> mask(Constants::chunk::height * Constants::chunk::depth);
 
 	for (int x_boundary = -1; x_boundary < Constants::chunk::width; ++x_boundary)
 	{
-		// |0|1|2|3|4|5|
-		// |0|1|2|3|4|5|
-		// |0|1|2|3|4|5|
-		// |0|1|2|3|4|5|
+		//  | | | | | | |
+		// -|0|1|2|3|4|5|-
+		// -|0|1|2|3|4|5|-
+		// -|0|1|2|3|4|5|-
+		// -|0|1|2|3|4|5|-
+		//  | | | | | | |
 
-			for (int y = 0; y < Constants::chunk::height; ++y)
+		for (int y = 0; y < Constants::chunk::height; ++y)
+		{
+			for (int z = 0; z < Constants::chunk::depth; ++z)
 			{
-				for (int z = 0; z < Constants::chunk::depth; ++z)
+				// if x == width - 1 ===> needs to handle separately??? ugly if
+				const Block& chunk_block = chunk.BlockAt(x_boundary + 1, y, z);
+				const Block& neg_x_neighbor = neighbor_query(chunk, x_boundary + 1, y, z, Direction::NegX);
+
+				const bool should_render_chunk_face = chunk_block.ShouldRenderFace(neg_x_neighbor);
+				const bool should_render_neighbor_face = neg_x_neighbor.ShouldRenderFace(chunk_block);
+
+				if (should_render_chunk_face)
 				{
-					neighbor_query(chunk, x_boundary + 1, y, z, Direction::NegX);
+					MaskCell cell;
+					cell.block_type_ = chunk_block.Type();
+					cell.light_ = 0;
+					cell.dir_ = Direction::NegX;
 				}
+
+				// else if neighbor INSIDE THIS CHUNK && should_render_neighbor_face
+				// emit +x face into mask
 			}
-
-		
-		// loop the blocks in yz slice
-		// save block type of the left & right
-		// check the neighboring block on the other side of boundary (to the left)
-		// skip air|air or solid|solid
-		// air | solid && SOLID IS INSIDE THIS CHUNK -> emit -x
-		// solid | air && SOLID IS INSIDE THIS CHUNK -> emit +x
+		}
 	}
 
-	for (int y = 0; y < Constants::chunk::height + 1; ++y)
+	mask.clear();
+	mask.resize(Constants::chunk::depth * Constants::chunk::width);
+
+	for (int y_boundary = 0; y_boundary < Constants::chunk::height + 1; ++y_boundary)
 	{
-		
+		for (int z = 0; z < Constants::chunk::depth; ++z)
+		{
+			for (int x = 0; x < Constants::chunk::width; ++x)
+			{
+
+			}
+		}
 	}
 
-	for (int z = 0; z < Constants::chunk::depth + 1; ++z)
+	mask.clear();
+	mask.resize(Constants::chunk::height * Constants::chunk::width);
+
+	for (int z_boundary = 0; z_boundary < Constants::chunk::depth + 1; ++z_boundary)
 	{
-		
+		for (int y = 0; y < Constants::chunk::height; ++y)
+		{
+			for (int x = 0; x < Constants::chunk::width; ++x)
+			{
+
+			}
+		}
 	}
 
 	return chunk_mesh;
