@@ -17,26 +17,26 @@ struct MaskCell
 };
 
 template <typename Fnc> 
-concept NeighborQuery = 
-	std::invocable<Fnc, int, int, int, Direction> &&
-	std::convertible_to<std::invoke_result_t<Fnc, int, int, int, Direction>, Block>;
+concept BlockQuery = 
+	std::invocable<Fnc, const glm::ivec3&> &&
+	std::convertible_to<std::invoke_result_t<Fnc, const glm::ivec3&>, Block>;
 
 class MeshBuilder
 {
 private:
 
 public:
-	static Mesh BuildMeshNaive(const Chunk& chunk, NeighborQuery auto&& neighbor_query);
+	static Mesh BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& block_query);
 	
-	static Mesh BuildMeshGreedy(const Chunk& chunk, NeighborQuery auto&& neighbor_query);
+	static Mesh BuildMeshGreedy(const Chunk& chunk, BlockQuery auto&& block_query);
 
 private:
-	static void SaveQuadMesh(const Chunk& chunk, int x, int y, int z, Direction dir, Mesh& chunk_mesh);
+	static void SaveQuadMesh(const Chunk& chunk, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh);
 
 	static uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 };
 
-Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, NeighborQuery auto&& neighbor_query)
+Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_block_query)
 {
 	Mesh chunk_mesh;
 
@@ -46,19 +46,21 @@ Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, NeighborQuery auto&& neighb
 		{
 			for (int x = 0; x < Constants::Chunk::width; ++x)
 			{
-				if (!chunk.BlockAt(x, y, z).IsSolid())
+				if (!world_block_query(x, y, z).IsSolid())
 				{
 					continue;
 				}
 
 				for (Direction dir : AllDirections())
 				{
-					if (neighbor_query(x, y, z, dir).IsSolid())
+					const glm::ivec3 neighbor_coords = NeighborCoords({ x, y, z }, dir);
+
+					if (world_block_query(neighbor_coords).IsSolid())
 					{
 						continue;
 					}
 
-					SaveQuadMesh(chunk, x, y, z, dir, chunk_mesh);
+					SaveQuadMesh(chunk, { x, y, z }, dir, chunk_mesh);
 				}
 			}
 		}
@@ -67,7 +69,7 @@ Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, NeighborQuery auto&& neighb
 	return chunk_mesh;
 }
 
-Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, NeighborQuery auto&& neighbor_query)
+Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, NeighborQuery auto&& world_block_query)
 {
 	Mesh chunk_mesh;
 	std::vector<MaskCell> mask(Constants::chunk::height * Constants::chunk::depth);
@@ -87,7 +89,7 @@ Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, NeighborQuery auto&& neigh
 			{
 				// if x == width - 1 ===> needs to handle separately??? ugly if
 				const Block& chunk_block = chunk.BlockAt(x_boundary + 1, y, z);
-				const Block& neg_x_neighbor = neighbor_query(chunk, x_boundary + 1, y, z, Direction::NegX);
+				const Block& neg_x_neighbor = world_block_query(chunk, x_boundary + 1, y, z, Direction::NegX);
 
 				const bool should_render_chunk_face = chunk_block.ShouldRenderFace(neg_x_neighbor);
 				const bool should_render_neighbor_face = neg_x_neighbor.ShouldRenderFace(chunk_block);

@@ -9,7 +9,7 @@
 #include <array>
 #include <cassert>
 
-void MeshBuilder::SaveQuadMesh(const Chunk& chunk, int block_x, int block_y, int block_z, Direction dir, Mesh& chunk_mesh)
+void MeshBuilder::SaveQuadMesh(const Chunk& chunk, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh)
 {
 	const glm::ivec2& chunk_world_coords = chunk.WorldCoords();
 	std::array<Vertex, 4> quad_vertices;
@@ -20,9 +20,9 @@ void MeshBuilder::SaveQuadMesh(const Chunk& chunk, int block_x, int block_y, int
 	float normal_x = 0.0f;
 	float normal_y = 0.0f;
 	float normal_z = 0.0f;
-	const float world_x = static_cast<float>(chunk_world_coords.x * Constants::Chunk::width + block_x);
-	const float world_y = static_cast<float>(block_y);
-	const float world_z = static_cast<float>(chunk_world_coords.y * Constants::Chunk::depth + block_z);
+	const float world_x = static_cast<float>(chunk_world_coords.x * Constants::Chunk::width + block_coords.x);
+	const float world_y = static_cast<float>(block_coords.y);
+	const float world_z = static_cast<float>(chunk_world_coords.y * Constants::Chunk::depth + block_coords.z);
 
 	for (int i = 0; i < 4; ++i)
 	{
@@ -96,7 +96,7 @@ void MeshBuilder::SaveQuadMesh(const Chunk& chunk, int block_x, int block_y, int
 		quad_vertices[i].position_ = { vertex_x + world_x, vertex_y + world_y, vertex_z + world_z };
 		quad_vertices[i].normal_ = { normal_x, normal_y, normal_z };
 		quad_vertices[i].uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
-		quad_vertices[i].material_ = GetQuadMaterial(chunk.BlockAt(block_x, block_y, block_z).Type(), dir);
+		quad_vertices[i].material_ = GetQuadMaterial(chunk.BlockAt(block_coords.x, block_coords.y, block_coords.z).Type(), dir);
 	}
 	
 	const std::uint32_t vertices_saved_before = static_cast<std::uint32_t>(chunk_mesh.Vertices().size());

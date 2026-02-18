@@ -40,6 +40,22 @@ inline constexpr auto AllDirections()
         });
 }
 
+inline constexpr glm::ivec3 NeighborCoords(const glm::ivec3& block_coords, Direction dir)
+{
+    switch (dir)
+    {
+    case Direction::PosX: return { block_coords.x + 1, block_coords.y, block_coords.z };
+    case Direction::NegX: return { block_coords.x - 1, block_coords.y, block_coords.z };
+    case Direction::PosY: return { block_coords.x, block_coords.y + 1, block_coords.z };
+    case Direction::NegY: return { block_coords.x, block_coords.y - 1, block_coords.z };
+    case Direction::PosZ: return { block_coords.x, block_coords.y, block_coords.z + 1 };
+    case Direction::NegZ: return { block_coords.x, block_coords.y, block_coords.z - 1 };
+    }
+
+    assert(false);
+    return block_coords;
+}
+
 /**
  * @brief Represents a 3D chunk of blocks.
  *

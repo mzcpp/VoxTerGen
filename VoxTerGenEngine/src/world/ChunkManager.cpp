@@ -56,9 +56,9 @@ void ChunkManager::BuildAllChunkMeshes()
 		std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 		*chunk_mesh = MeshBuilder::BuildMeshNaive(
 			*chunk,
-			[this, &chunk](int x, int y, int z, Direction dir)
+			[this, &chunk](int x, int y, int z)
 			{
-				return NeighborAt(chunk->WorldCoords(), x, y, z, dir);
+				return WorldBlockQuery(chunk->WorldCoords(), x, y, z);
 			}
 		);
 
@@ -78,87 +78,34 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 	return it->second.get();
 }
 
-Block ChunkManager::NeighborAt(glm::ivec2 chunk_coord, int x, int y, int z, Direction dir) const
+Block ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, int x, int y, int z) const
 {
-	if (dir == Direction::PosX && x == Constants::Chunk::width - 1)
-	{
-		const Chunk* right_chunk = GetChunkAt({ chunk_coord.x + 1, chunk_coord.y });
-
-		if (!right_chunk)
-		{
-			return Block();
-		}
-
-		return right_chunk->BlockAt(0, y, z);
-	}
-	else if (dir == Direction::NegX && x == 0)
-	{
-		const Chunk* left_chunk = GetChunkAt({ chunk_coord.x - 1, chunk_coord.y });
-
-		if (!left_chunk)
-		{
-			return Block();
-		}
-
-		return left_chunk->BlockAt(Constants::Chunk::width - 1, y, z);
-	}
-	else if (dir == Direction::PosY && y == Constants::Chunk::height - 1)
+	if (y < 0 || y > Constants::Chunk::height - 1)
 	{
 		return Block();
 	}
-	else if (dir == Direction::NegY && y == 0)
+
+	const int x_chunk_offset = x / Constants::chunk::width;
+	const int z_chunk_offset = z / Constants::chunk::depth;
+	const Chunk* const target_chunk = GetChunkAt({ current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset });
+
+	if (!target_chunk)
 	{
 		return Block();
 	}
-	else if (dir == Direction::PosZ && z == Constants::Chunk::depth - 1)
+	
+	int x_block_offset = x % Constants::chunk::width;
+	int z_block_offset = z % Constants::chunk::depth;
+
+	if (x_block_offset < 0)
 	{
-		const Chunk* front_chunk = GetChunkAt({ chunk_coord.x, chunk_coord.y + 1 });
-
-		if (!front_chunk)
-		{
-			return Block();
-		}
-
-		return front_chunk->BlockAt(x, y, 0);
+		x_block_offset += Constants::chunk::width;
 	}
-	else if (dir == Direction::NegZ && z == 0)
+
+	if (z_block_offset < 0)
 	{
-		const Chunk* back_chunk = GetChunkAt({ chunk_coord.x, chunk_coord.y - 1 });
-
-		if (!back_chunk)
-		{
-			return Block();
-		}
-
-		return back_chunk->BlockAt(x, y, Constants::Chunk::depth - 1);
+		z_block_offset += Constants::chunk::depth;
 	}
-	else
-	{
-		const Chunk* chunk = GetChunkAt({ chunk_coord.x, chunk_coord.y });
-
-		if (!chunk)
-		{
-			Logger::Log(LogLevel::ERROR, "Chunk with coordinates {} {} is missing!", chunk_coord.x, chunk_coord.y);
-			assert(false);
-		}
-
-		switch (dir)
-		{
-		case Direction::PosX:
-			return chunk->BlockAt(x + 1, y, z);
-		case Direction::NegX:
-			return chunk->BlockAt(x - 1, y, z);
-		case Direction::PosY:
-			return chunk->BlockAt(x, y + 1, z);
-		case Direction::NegY:
-			return chunk->BlockAt(x, y - 1, z);
-		case Direction::PosZ:
-			return chunk->BlockAt(x, y, z + 1);
-		case Direction::NegZ:
-			return chunk->BlockAt(x, y, z - 1);
-		}
-
-		assert(false);
-		return Block();
-	}
+	
+	return target_chunk->BlockAt(x_block_offset, y, z_block_offset);
 }
