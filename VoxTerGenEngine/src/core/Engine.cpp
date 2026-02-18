@@ -42,7 +42,7 @@ void Engine::HandleEvents(SDL_Event e)
 void Engine::Tick(float aspect_ratio)
 {
 	camera_.PreTick();
-	camera_controller_.ApplyInput(input_manager_, static_cast<float>(Constants::Engine::tick_dt), aspect_ratio);
+	camera_controller_.ApplyInput(input_manager_, static_cast<float>(constants::engine::tick_dt), aspect_ratio);
 	camera_.Tick(aspect_ratio);
 }
 

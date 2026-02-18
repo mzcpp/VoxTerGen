@@ -4,6 +4,7 @@
 #include "mesh/Mesh.hpp"
 #include "world/Chunk.hpp"
 #include "world/Block.hpp"
+#include "utils/constants.hpp"
 
 #include <concepts>
 #include <cstdint>
@@ -40,13 +41,13 @@ Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_blo
 {
 	Mesh chunk_mesh;
 
-	for (int z = 0; z < Constants::Chunk::depth; ++z)
+	for (int z = 0; z < constants::chunk::depth; ++z)
 	{
-		for (int y = 0; y < Constants::Chunk::height; ++y)
+		for (int y = 0; y < constants::chunk::height; ++y)
 		{
-			for (int x = 0; x < Constants::Chunk::width; ++x)
+			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				if (!world_block_query(x, y, z).IsSolid())
+				if (!world_block_query({ x, y, z }).IsSolid())
 				{
 					continue;
 				}
@@ -69,12 +70,12 @@ Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_blo
 	return chunk_mesh;
 }
 
-Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, NeighborQuery auto&& world_block_query)
+Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, BlockQuery auto&& world_block_query)
 {
 	Mesh chunk_mesh;
-	std::vector<MaskCell> mask(Constants::chunk::height * Constants::chunk::depth);
+	std::vector<MaskCell> mask(constants::chunk::height * constants::chunk::depth);
 
-	for (int x_boundary = -1; x_boundary < Constants::chunk::width; ++x_boundary)
+	for (int x_boundary = -1; x_boundary < constants::chunk::width; ++x_boundary)
 	{
 		//  | | | | | | |
 		// -|0|1|2|3|4|5|-
@@ -83,9 +84,9 @@ Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, NeighborQuery auto&& world
 		// -|0|1|2|3|4|5|-
 		//  | | | | | | |
 
-		for (int y = 0; y < Constants::chunk::height; ++y)
+		for (int y = 0; y < constants::chunk::height; ++y)
 		{
-			for (int z = 0; z < Constants::chunk::depth; ++z)
+			for (int z = 0; z < constants::chunk::depth; ++z)
 			{
 				// if x == width - 1 ===> needs to handle separately??? ugly if
 				const Block& chunk_block = chunk.BlockAt(x_boundary + 1, y, z);
@@ -109,13 +110,13 @@ Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, NeighborQuery auto&& world
 	}
 
 	mask.clear();
-	mask.resize(Constants::chunk::depth * Constants::chunk::width);
+	mask.resize(constants::chunk::depth * constants::chunk::width);
 
-	for (int y_boundary = 0; y_boundary < Constants::chunk::height + 1; ++y_boundary)
+	for (int y_boundary = 0; y_boundary < constants::chunk::height + 1; ++y_boundary)
 	{
-		for (int z = 0; z < Constants::chunk::depth; ++z)
+		for (int z = 0; z < constants::chunk::depth; ++z)
 		{
-			for (int x = 0; x < Constants::chunk::width; ++x)
+			for (int x = 0; x < constants::chunk::width; ++x)
 			{
 
 			}
@@ -123,13 +124,13 @@ Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, NeighborQuery auto&& world
 	}
 
 	mask.clear();
-	mask.resize(Constants::chunk::height * Constants::chunk::width);
+	mask.resize(constants::chunk::height * constants::chunk::width);
 
-	for (int z_boundary = 0; z_boundary < Constants::chunk::depth + 1; ++z_boundary)
+	for (int z_boundary = 0; z_boundary < constants::chunk::depth + 1; ++z_boundary)
 	{
-		for (int y = 0; y < Constants::chunk::height; ++y)
+		for (int y = 0; y < constants::chunk::height; ++y)
 		{
-			for (int x = 0; x < Constants::chunk::width; ++x)
+			for (int x = 0; x < constants::chunk::width; ++x)
 			{
 
 			}

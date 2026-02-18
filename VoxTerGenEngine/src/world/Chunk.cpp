@@ -31,25 +31,25 @@ const Block& Chunk::BlockAt(int x, int y, int z, bool check_index) const
 
 glm::ivec3 Chunk::Pos(int index) const
 {
-	if (index < 0 || index >= Constants::Chunk::size)
+	if (index < 0 || index >= constants::chunk::size)
 	{
 		Logger::Log(LogLevel::ERROR, "Index out of range! index: {}", index);
 		throw std::out_of_range("Index out of range! index: " + std::to_string(index));
 	}
 
-	const int rem = index % (Constants::Chunk::width * Constants::Chunk::depth);
-	const int z = rem / Constants::Chunk::width;
-	const int x = rem % Constants::Chunk::width;
-	const int y = index / (Constants::Chunk::width * Constants::Chunk::depth);
+	const int rem = index % (constants::chunk::width * constants::chunk::depth);
+	const int z = rem / constants::chunk::width;
+	const int x = rem % constants::chunk::width;
+	const int y = index / (constants::chunk::width * constants::chunk::depth);
 
 	return { x, y, z };
 }
 
 bool Chunk::IsValidIndex(int x, int y, int z) const
 {
-	const bool x_range_valid = x >= 0 && x < Constants::Chunk::width;
-	const bool y_range_valid = y >= 0 && y < Constants::Chunk::height;
-	const bool z_range_valid = z >= 0 && z < Constants::Chunk::depth;
+	const bool x_range_valid = x >= 0 && x < constants::chunk::width;
+	const bool y_range_valid = y >= 0 && y < constants::chunk::height;
+	const bool z_range_valid = z >= 0 && z < constants::chunk::depth;
 
 	return x_range_valid && y_range_valid && z_range_valid;
 }
@@ -86,11 +86,11 @@ Block& Chunk::NeighborRefAt(int x, int y, int z, Direction dir)
 
 void Chunk::Fill(std::function<Block(int, int, int)> filler)
 {
-	for (int y = 0; y < Constants::Chunk::height; ++y)
+	for (int y = 0; y < constants::chunk::height; ++y)
 	{
-		for (int z = 0; z < Constants::Chunk::depth; ++z)
+		for (int z = 0; z < constants::chunk::depth; ++z)
 		{
-			for (int x = 0; x < Constants::Chunk::width; ++x)
+			for (int x = 0; x < constants::chunk::width; ++x)
 			{
 				blocks_[Index(x, y, z)] = filler(x, y, z);
 			}
@@ -100,5 +100,5 @@ void Chunk::Fill(std::function<Block(int, int, int)> filler)
 
 int Chunk::Index(int x, int y, int z) const
 {
-	return x + Constants::Chunk::width * (z + Constants::Chunk::depth * y);
+	return x + constants::chunk::width * (z + constants::chunk::depth * y);
 }

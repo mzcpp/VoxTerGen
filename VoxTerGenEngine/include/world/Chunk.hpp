@@ -75,7 +75,7 @@ private:
 	};
 
 	glm::ivec2 world_coords_;
-	std::array<Block, Constants::Chunk::size> blocks_;
+	std::array<Block, constants::chunk::size> blocks_;
     std::unique_ptr<Mesh> mesh_;
     std::unique_ptr<MeshRenderer> mesh_renderer_;
     bool mesh_invalid_;
@@ -178,7 +178,7 @@ public:
      *
      * @return Total block count
      */
-    int BlockCount() const { return Constants::Chunk::size; }
+    int BlockCount() const { return constants::chunk::size; }
 
     /**
      * @brief Returns the coordinates of the chunk in world space.
@@ -192,7 +192,7 @@ public:
      *
      * @return Array of blocks
      */
-    const std::array<Block, Constants::Chunk::size>& Blocks() const { return blocks_; }
+    const std::array<Block, constants::chunk::size>& Blocks() const { return blocks_; }
 
     const Mesh& Mesh() const { return *mesh_; }
 

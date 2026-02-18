@@ -65,8 +65,8 @@ void CameraController::ApplyRotation(const InputManager& input)
     camera_.pitch_ = std::clamp
     (
         camera_.pitch_, 
-        Constants::Camera::pitch_min,
-        Constants::Camera::pitch_max
+        constants::camera::pitch_min,
+        constants::camera::pitch_max
     );
     
     camera_.changed_ = true;
@@ -85,8 +85,8 @@ void CameraController::ApplyZoom(const InputManager& input)
     camera_.zoom_ = std::clamp
     (
         camera_.zoom_ - (input.MouseWheel() * zoom_sensitivity_), 
-        Constants::Camera::zoom_min,
-        Constants::Camera::zoom_max
+        constants::camera::zoom_min,
+        constants::camera::zoom_max
     );
 
     camera_.changed_ = true;

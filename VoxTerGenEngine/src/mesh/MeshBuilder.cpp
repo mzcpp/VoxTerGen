@@ -20,9 +20,9 @@ void MeshBuilder::SaveQuadMesh(const Chunk& chunk, const glm::ivec3& block_coord
 	float normal_x = 0.0f;
 	float normal_y = 0.0f;
 	float normal_z = 0.0f;
-	const float world_x = static_cast<float>(chunk_world_coords.x * Constants::Chunk::width + block_coords.x);
+	const float world_x = static_cast<float>(chunk_world_coords.x * constants::chunk::width + block_coords.x);
 	const float world_y = static_cast<float>(block_coords.y);
-	const float world_z = static_cast<float>(chunk_world_coords.y * Constants::Chunk::depth + block_coords.z);
+	const float world_z = static_cast<float>(chunk_world_coords.y * constants::chunk::depth + block_coords.z);
 
 	for (int i = 0; i < 4; ++i)
 	{

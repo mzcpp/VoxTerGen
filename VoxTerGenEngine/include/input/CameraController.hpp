@@ -29,9 +29,9 @@ public:
      */
     CameraController(Camera& cam) :
         camera_(cam),
-        movement_speed_(Constants::Camera::speed),
-        move_sensitivity_(Constants::Camera::move_sensitivity),
-        zoom_sensitivity_(Constants::Camera::zoom_sensitivity)
+        movement_speed_(constants::camera::speed),
+        move_sensitivity_(constants::camera::move_sensitivity),
+        zoom_sensitivity_(constants::camera::zoom_sensitivity)
     {
     }
 

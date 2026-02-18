@@ -1,6 +1,8 @@
 mesh - naive, greedy
 render mesh
 
+void Chunk::Fill(std::function<Block(int, int, int)> filler)
+
 verify the camera is working correctly for big floats
 
 SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix

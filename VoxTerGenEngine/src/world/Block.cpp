@@ -1,6 +1,6 @@
 #include "world/Block.hpp"
 
-Block::Block(BlockType type = BlockType::Air) : type_(type), sun_light_(0), block_light_(0)
+Block::Block(BlockType type) : type_(type), sun_light_(0), block_light_(0)
 {
 }
 
@@ -36,7 +36,7 @@ bool Block::ShouldRenderFace(const Block& neighbor) const
         return false;
     }
 
-    if (!this.IsTransparent() && !neighbor.IsTransparent())
+    if (!this->IsTransparent() && !neighbor.IsTransparent())
     {
         return false;
     }

@@ -13,7 +13,7 @@ std::size_t ivec2_hash::operator()(const glm::ivec2& vec) const noexcept
 
 ChunkManager::ChunkManager()
 {
-	InitChunks(Constants::Chunk::default_radius);
+	InitChunks(constants::chunk::default_radius);
 }
 
 void ChunkManager::InitChunks(int chunk_radius)
@@ -37,11 +37,11 @@ void ChunkManager::InitChunks(int chunk_radius)
 
 void ChunkManager::InitChunkBlocks(Chunk& chunk)
 {
-	for (int y = 0; y < Constants::Chunk::height; ++y)
+	for (int y = 0; y < constants::chunk::height; ++y)
 	{
-		for (int z = 0; z < Constants::Chunk::depth; ++z)
+		for (int z = 0; z < constants::chunk::depth; ++z)
 		{
-			for (int x = 0; x < Constants::Chunk::width; ++x)
+			for (int x = 0; x < constants::chunk::width; ++x)
 			{
 				chunk.BlockAt(x, y, z).SetType(BlockType::Air);
 			}
@@ -56,9 +56,9 @@ void ChunkManager::BuildAllChunkMeshes()
 		std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 		*chunk_mesh = MeshBuilder::BuildMeshNaive(
 			*chunk,
-			[this, &chunk](int x, int y, int z)
+			[this, &chunk](const glm::ivec3& block_coords)
 			{
-				return WorldBlockQuery(chunk->WorldCoords(), x, y, z);
+				return WorldBlockQuery(chunk->WorldCoords(), block_coords);
 			}
 		);
 
@@ -78,15 +78,15 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 	return it->second.get();
 }
 
-Block ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, int x, int y, int z) const
+Block ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, const glm::ivec3& block_coords) const
 {
-	if (y < 0 || y > Constants::Chunk::height - 1)
+	if (block_coords.y < 0 || block_coords.y > constants::chunk::height - 1)
 	{
 		return Block();
 	}
 
-	const int x_chunk_offset = x / Constants::chunk::width;
-	const int z_chunk_offset = z / Constants::chunk::depth;
+	const int x_chunk_offset = block_coords.x / constants::chunk::width;
+	const int z_chunk_offset = block_coords.z / constants::chunk::depth;
 	const Chunk* const target_chunk = GetChunkAt({ current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset });
 
 	if (!target_chunk)
@@ -94,18 +94,18 @@ Block ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, int x, int y
 		return Block();
 	}
 	
-	int x_block_offset = x % Constants::chunk::width;
-	int z_block_offset = z % Constants::chunk::depth;
+	int x_block_offset = block_coords.x % constants::chunk::width;
+	int z_block_offset = block_coords.z % constants::chunk::depth;
 
 	if (x_block_offset < 0)
 	{
-		x_block_offset += Constants::chunk::width;
+		x_block_offset += constants::chunk::width;
 	}
 
 	if (z_block_offset < 0)
 	{
-		z_block_offset += Constants::chunk::depth;
+		z_block_offset += constants::chunk::depth;
 	}
 	
-	return target_chunk->BlockAt(x_block_offset, y, z_block_offset);
+	return target_chunk->BlockAt(x_block_offset, block_coords.y, z_block_offset);
 }
