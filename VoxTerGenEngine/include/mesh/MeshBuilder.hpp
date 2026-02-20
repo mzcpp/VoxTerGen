@@ -86,7 +86,6 @@ Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_blo
 Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, BlockQuery auto&& world_block_query)
 {
 	Mesh chunk_mesh;
-	std::vector<MaskCell> mask(constants::chunk::height * constants::chunk::depth);
 
 	BuildAxisMesh(chunk, MajorAxis::X, world_block_query, chunk_mesh);
 	BuildAxisMesh(chunk, MajorAxis::Y, world_block_query, chunk_mesh);
