@@ -1,6 +1,10 @@
 mesh - naive, greedy
 render mesh
 
+Chunk.hpp put all direction/axis into VoxelDirections.hpp
+
+Chunk.hpp functions change signature from int x int y int z -> glm::ivec3
+
 void Chunk::Fill(std::function<Block(int, int, int)> filler)
 
 verify the camera is working correctly for big floats

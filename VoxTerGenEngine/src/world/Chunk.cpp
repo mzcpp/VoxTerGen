@@ -56,7 +56,7 @@ bool Chunk::IsValidIndex(int x, int y, int z) const
 
 Block Chunk::NeighborAt(int x, int y, int z, Direction dir) const
 {
-	const size_t dir_index = static_cast<size_t>(dir);
+	const std::size_t dir_index = static_cast<std::size_t>(dir);
 	
 	if (dir_index >= neighbor_offsets_.size()) 
 	{
@@ -77,7 +77,7 @@ Block& Chunk::NeighborRefAt(int x, int y, int z, Direction dir)
 		throw std::out_of_range("Index coordinate(s) out of range!");
 	}
 
-	const size_t dir_index = static_cast<size_t>(dir);
+	const std::size_t dir_index = static_cast<std::size_t>(dir);
 	assert(dir_index < neighbor_offsets_.size()); // catch invalid enum
 
 	const auto& offset = neighbor_offsets_[dir_index];

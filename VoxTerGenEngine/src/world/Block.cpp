@@ -49,7 +49,27 @@ BlockType Block::Type() const
     return type_;
 }
 
+std::uint8_t SunLight() const
+{
+    return sun_light_;
+}
+
+std::uint8_t BlockLight() const
+{
+    return block_light_;
+}
+
 void Block::SetType(BlockType type)
 {
     type_ = type;
+}
+
+void Block::SetSunLight(std::uint8_t sun_light)
+{
+    sun_light_ = sun_light;
+}
+
+void Block::SetBlockLight(std::uint8_t block_light)
+{
+    block_light_ = block_light;
 }

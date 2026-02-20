@@ -25,8 +25,8 @@ class Block
 {
 private:
     BlockType type_;
-    std::uint32_t sun_light_;
-    std::uint32_t block_light_;
+    std::uint8_t sun_light_;
+    std::uint8_t block_light_;
 
 public:
     /**
@@ -56,6 +56,8 @@ public:
 
     // Getters
     BlockType Type() const;
+    std::uint8_t SunLight() const;
+    std::uint8_t BlockLight() const;
 
     // Setters
     void SetType(BlockType type);
