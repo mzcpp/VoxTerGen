@@ -36,8 +36,7 @@ private:
 
 	static uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 
-	static Mesh BuildAxisMesh(const Chunk& chunk, MajorAxis axis);
-
+	static Mesh BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery auto&& world_block_query);
 };
 
 Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_block_query)
@@ -143,14 +142,14 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 
 				if (render_left)
 				{
-					mask_cell.block_type_ = chunk_block.Type();
+					mask_cell.block_type_ = left_block.Type();
 					mask_cell.sun_light_ = left_block.SunLight();
 					mask_cell.block_light_ = left_block.BlockLight();
 					mask_cell.dir_ = ToDirection(axis, true);
 				}
 				else if (render_right)
 				{
-					mask_cell.block_type_ = chunk_block.Type();
+					mask_cell.block_type_ = right_block.Type();
 					mask_cell.sun_light_ = right_block.SunLight();
 					mask_cell.block_light_ = right_block.BlockLight();
 					mask_cell.dir_ = ToDirection(axis, false);

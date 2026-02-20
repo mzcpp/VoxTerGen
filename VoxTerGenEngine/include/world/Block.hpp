@@ -61,6 +61,8 @@ public:
 
     // Setters
     void SetType(BlockType type);
+    void SetSunLight(std::uint8_t sun_light);
+    void SetBlockLight(std::uint8_t block_light);
 };
 
 #endif // BLOCK_HPP

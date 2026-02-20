@@ -49,12 +49,12 @@ BlockType Block::Type() const
     return type_;
 }
 
-std::uint8_t SunLight() const
+std::uint8_t Block::SunLight() const
 {
     return sun_light_;
 }
 
-std::uint8_t BlockLight() const
+std::uint8_t Block::BlockLight() const
 {
     return block_light_;
 }
