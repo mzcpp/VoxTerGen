@@ -255,4 +255,29 @@ void MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 	}
 }
 
+bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& second)
+{
+	if (first.block_type_ != second.block_type_)
+	{
+		return false;
+	}
+
+	if (first.dir_ != second.dir_)
+	{
+		return false;
+	}
+
+	if (first.sun_light_ != second.sun_light_)
+	{
+		return false;
+	}
+
+	if (first.block_light_ != second.block_light_)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 #endif // MESH_BUILDER_HPP
