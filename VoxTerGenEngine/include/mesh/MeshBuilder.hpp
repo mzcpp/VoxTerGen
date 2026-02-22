@@ -37,6 +37,8 @@ private:
 	static uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 
 	static Mesh BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery auto&& world_block_query);
+
+	static bool MaskCellsMergable(const MaskCell& first, const MaskCell& second);
 };
 
 Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_block_query)
@@ -166,6 +168,11 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 	// |X|X|X|X|A|A|
 	// -------------
 		bool merging = false;
+		glm::ivec2 merged_bottom_left = { 0, 0 };
+		int merged_width = 0;
+		int merged_height = 0;
+		int y_return_index = 0;
+		int x_return_index = 0;
 		
 		for (int v = 0; v < cross_1_size; ++v)
 		{
@@ -175,16 +182,58 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 
 				if (cell.processed_ || cell.block_type_ == BlockType::Air)
 				{
-					// IF I FOUND SOME VERTICES/INDICES BEFORE, END SEARCHING, PRODUCE VERTICES AND INDICES AND SAVE
+					// go vertical
+					
+
+					//if (merged_width != 0 || merged_height != 0)
+					//{
+					//	// PRODUCE VERTICES AND INDICES AND SAVE
+					//}
+
 					continue;
 				}
+
+				const MaskCell& merged_bottom_right_cell = slice_mask[(merged_bottom_left.y + merged_height) * cross_1_size + (merged_bottom_left.x + merged_width)];
+
+				if (MaskCellsMergable(cell, merged_bottom_right_cell))
+				{
+					++merged_width;
+				}
+				else
+				{
+
+				}
+
 			}	
 		}
-		// merge all that can be merged
-		// save the vertices & indices to output mesh
 	}
 
 	return axis_mesh;
+}
+
+bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& second)
+{
+	if (first.block_type_ != second.block_type_)
+	{
+		return false;
+	}
+
+	if (first.dir_ != second.dir_)
+	{
+		return false;
+	}
+
+	if (first.sun_light_ != second.sun_light_)
+	{
+		return false;
+	}
+
+	if (first.block_light_ != second.block_light_)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 #endif // MESH_BUILDER_HPP
