@@ -46,7 +46,7 @@ private:
 
 	static bool MaskCellsMergable(const MaskCell& first, const MaskCell& second);
 
-	static bool MergeWithRowAbove(int start_x, int end_x, int y, int height, const MaskCell& cell_to_match, MergedQuad& merged_quad);
+	static bool MergeWithRowAbove(int start_x, int end_x, int y, int height, const MaskCell& cell_to_match, const std::vector<MaskCell>& slice_mask, MergedQuad& merged_quad);
 };
 
 Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_block_query)
@@ -125,12 +125,6 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 
 	slice_mask.resize(cross_1_size * cross_2_size);
 	
-	// | | | | | | | | | | |
-	// |4|5|0|1|2|3|4|5|0|1|
-	// |4|5|0|1|2|3|4|5|0|1|
-	// |4|5|0|1|2|3|4|5|0|1|
-	// |4|5|0|1|2|3|4|5|0|1|
-	// | | | | | | | | | | |
 
 	for (int major = -1; major < major_size; ++major)
 	{
@@ -169,37 +163,6 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 			}
 		}
 
-	// _____________
-	// |O|O|O|O|O|O|
-	// |O|O|X|O|O|A|
-	// |A|X|X|A|A|A|
-	// |X|X|X|X|X|A|
-	// -------------
-	// _____________
-	// |O|O|O|O|O|O|
-	// |X|X|X|O|O|C|
-	// |X|X|X|C|B|B|
-	// |X|X|R|C|B|B|
-	// -------------
-	// _____________
-	// |O|O|O|O|O|O|
-	// |X|A|C|C|C|C|
-	// |X|A|B|C|C|C|
-	// |A|X|X|C|C|C|
-	// -------------
-	// _____________
-	// |O|O|O|O|O|O|
-	// |X|A|C|C|C|C|
-	// |X|X|B|C|C|C|
-	// |X|X|X|C|C|C|
-	// -------------
-	// _____________
-	// |O|O|O|O|O|O|
-	// |X|X|X|O|A|A|
-	// |X|X|X|C|C|C|
-	// |X|X|X|C|C|C|
-	// -------------
-	//
 	// cell processed, next NOT processed = merging = true and continue?
 
 		bool merging = false;
@@ -214,14 +177,14 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 
 				if (cell.processed_)
 				{
-					merging = !cell_next.processed_;
+					merging = !next_cell.processed_;
 					continue;
 				}
 
-				if (cell.block_type_ == BlockType::Air && cell_next.block_type_ == BlockType::Air)
+				if (cell.block_type_ == BlockType::Air && next_cell.block_type_ == BlockType::Air)
 				{
 					cell.processed_ = true;
-					cell_next.processed_ = true;
+					next_cell.processed_ = true;
 					continue;
 				}
 
@@ -256,7 +219,7 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 
 					if (u != cross_2_size - 1)
 					{
-						merged_quad.bottom_left_ = { merged_quad.bottom_left.x + merged_quad.width_, v };
+						merged_quad.bottom_left_ = { merged_quad.bottom_left_.x + merged_quad.width_, v };
 					}
 					else
 					{
@@ -275,62 +238,6 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 	}
 
 	return axis_mesh;
-}
-
-bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& second)
-{
-	if (first.processed_ || second.processed_)
-	{
-		return false;
-	}
-
-	if (first.block_type_ == BlockType::Air || second.block_type_ == BlockType::Air)
-	{
-		return false;
-	}
-
-	if (first.block_type_ != second.block_type_)
-	{
-		return false;
-	}
-
-	if (first.dir_ != second.dir_)
-	{
-		return false;
-	}
-
-	if (first.sun_light_ != second.sun_light_)
-	{
-		return false;
-	}
-
-	if (first.block_light_ != second.block_light_)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool MeshBuilder::MergeWithRowAbove(int start_x, int end_x, int y, int height, const MaskCell& cell_to_match, const std::vector<MaskCell>& slice_mask, MergedQuad& merged_quad)
-{
-	if (start_x >= end_x || start_x < 0 || y >= height || y < 0)
-	{
-		return false;
-	}
-
-	for (int x = start_x; x < end_x; ++x)
-	{
-		const MaskCell& cell = slice_mask[y * height + x];
-
-		if (!MaskCellsMergable(cell_to_match, cell))
-		{
-			return false;
-		}
-	}
-	
-	++merged_quad.height_;
-	return true;
 }
 
 #endif // MESH_BUILDER_HPP

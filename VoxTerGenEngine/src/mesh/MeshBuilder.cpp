@@ -144,3 +144,59 @@ uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 	Logger::Log(LogLevel::ERROR, "GetQuadMaterial received an unknown type of Block!: block_type = {}", static_cast<std::uint8_t>(block_type));
 	return static_cast<uint8_t>(Material::Air);
 }
+
+bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& second)
+{
+	if (first.processed_ || second.processed_)
+	{
+		return false;
+	}
+
+	if (first.block_type_ == BlockType::Air || second.block_type_ == BlockType::Air)
+	{
+		return false;
+	}
+
+	if (first.block_type_ != second.block_type_)
+	{
+		return false;
+	}
+
+	if (first.dir_ != second.dir_)
+	{
+		return false;
+	}
+
+	if (first.sun_light_ != second.sun_light_)
+	{
+		return false;
+	}
+
+	if (first.block_light_ != second.block_light_)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool MeshBuilder::MergeWithRowAbove(int start_x, int end_x, int y, int height, const MaskCell& cell_to_match, const std::vector<MaskCell>& slice_mask, MergedQuad& merged_quad)
+{
+	if (start_x >= end_x || start_x < 0 || y >= height || y < 0)
+	{
+		return false;
+	}
+
+	for (int x = start_x; x < end_x; ++x)
+	{
+		const MaskCell& cell = slice_mask[y * height + x];
+
+		if (!MaskCellsMergable(cell_to_match, cell))
+		{
+			return false;
+		}
+	}
+
+	++merged_quad.height_;
+	return true;
+}
