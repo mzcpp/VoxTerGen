@@ -19,17 +19,23 @@ struct MaskCell
 	bool processed_;
 };
 
+struct MergedQuad
+{
+	glm::ivec2 bottom_left_;
+	int width_;
+	int height_;
+};
+
 template <typename Fnc> 
-concept BlockQuery = 
-	std::invocable<Fnc, const glm::ivec3&> &&
+concept BlockQuery = std::invocable<Fnc, const glm::ivec3&> &&
 	std::convertible_to<std::invoke_result_t<Fnc, const glm::ivec3&>, Block>;
 
 class MeshBuilder
 {
 public:
-	static Mesh BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& block_query);
+	static Mesh BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_block_query);
 	
-	static Mesh BuildMeshGreedy(const Chunk& chunk, BlockQuery auto&& block_query);
+	static Mesh BuildMeshGreedy(const Chunk& chunk, BlockQuery auto&& world_block_query);
 
 private:
 	static void SaveQuadMesh(const Chunk& chunk, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh);
@@ -39,6 +45,8 @@ private:
 	static Mesh BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery auto&& world_block_query);
 
 	static bool MaskCellsMergable(const MaskCell& first, const MaskCell& second);
+
+	static bool MergeWithRowAbove(int start_x, int end_x, int y, int height, const MaskCell& cell_to_match, MergedQuad& merged_quad);
 };
 
 Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_block_query)
@@ -164,46 +172,104 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 	// _____________
 	// |O|O|O|O|O|O|
 	// |O|O|X|O|O|A|
-	// |X|X|X|A|A|A|
-	// |X|X|X|X|A|A|
+	// |A|X|X|A|A|A|
+	// |X|X|X|X|X|A|
 	// -------------
+	// _____________
+	// |O|O|O|O|O|O|
+	// |X|X|X|O|O|C|
+	// |X|X|X|C|B|B|
+	// |X|X|R|C|B|B|
+	// -------------
+	// _____________
+	// |O|O|O|O|O|O|
+	// |X|A|C|C|C|C|
+	// |X|A|B|C|C|C|
+	// |A|X|X|C|C|C|
+	// -------------
+	// _____________
+	// |O|O|O|O|O|O|
+	// |X|A|C|C|C|C|
+	// |X|X|B|C|C|C|
+	// |X|X|X|C|C|C|
+	// -------------
+	// _____________
+	// |O|O|O|O|O|O|
+	// |X|X|X|O|A|A|
+	// |X|X|X|C|C|C|
+	// |X|X|X|C|C|C|
+	// -------------
+	//
+	// cell processed, next NOT processed = merging = true and continue?
+
 		bool merging = false;
-		glm::ivec2 merged_bottom_left = { 0, 0 };
-		int merged_width = 0;
-		int merged_height = 0;
-		int y_return_index = 0;
-		int x_return_index = 0;
+		MergedQuad merged_quad = { { 0, 0 }, 1, 1 };
 		
 		for (int v = 0; v < cross_1_size; ++v)
 		{
-			for (int u = 0; u < cross_2_size; ++u)
+			for (int u = 1; u < cross_2_size; ++u)
 			{
-				const MaskCell& cell = slice_mask[v * cross_1_size + u];
+				MaskCell& cell = slice_mask[(v * cross_1_size) + (u - 1)];
+				MaskCell& next_cell = slice_mask[(v * cross_1_size) + u];
 
-				if (cell.processed_ || cell.block_type_ == BlockType::Air)
+				if (cell.processed_)
 				{
-					// go vertical
-					
-
-					//if (merged_width != 0 || merged_height != 0)
-					//{
-					//	// PRODUCE VERTICES AND INDICES AND SAVE
-					//}
-
+					merging = !cell_next.processed_;
 					continue;
 				}
 
-				const MaskCell& merged_bottom_right_cell = slice_mask[(merged_bottom_left.y + merged_height) * cross_1_size + (merged_bottom_left.x + merged_width)];
-
-				if (MaskCellsMergable(cell, merged_bottom_right_cell))
+				if (cell.block_type_ == BlockType::Air && cell_next.block_type_ == BlockType::Air)
 				{
-					++merged_width;
+					cell.processed_ = true;
+					cell_next.processed_ = true;
+					continue;
+				}
+
+				const bool last_cell = u == cross_2_size - 1;
+				const bool cells_mergable = MaskCellsMergable(cell, next_cell);
+
+				if (!merging && cells_mergable)
+				{
+					merging = true;
+				}
+
+				if (merging && (!cells_mergable || last_cell))
+				{
+					if (last_cell)
+					{
+						++merged_quad.width_;
+					}
+					
+					int height = v;
+
+					while (MergeWithRowAbove(merged_quad.bottom_left_.x, merged_quad.width_, height + 1, cross_1_size, next_cell, merged_quad))
+					{
+						++height;
+					}
+
+					merging = false;
+
+					// MARK AS PROCESSED!!!!!!!!!!!!!!
+					
+					// Emmit vertices & indices here!
+
+
+					if (u != cross_2_size - 1)
+					{
+						merged_quad.bottom_left_ = { merged_quad.bottom_left.x + merged_quad.width_, v };
+					}
+					else
+					{
+						merged_quad.bottom_left_ = { 0, v + 1 }; // WRONG
+					}
+
+					merged_quad.width_ = 1;
+					merged_quad.height_ = 1;
 				}
 				else
 				{
-
+					++merged_quad.width_;
 				}
-
 			}	
 		}
 	}
@@ -213,6 +279,16 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 
 bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& second)
 {
+	if (first.processed_ || second.processed_)
+	{
+		return false;
+	}
+
+	if (first.block_type_ == BlockType::Air || second.block_type_ == BlockType::Air)
+	{
+		return false;
+	}
+
 	if (first.block_type_ != second.block_type_)
 	{
 		return false;
@@ -233,6 +309,27 @@ bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& secon
 		return false;
 	}
 
+	return true;
+}
+
+bool MeshBuilder::MergeWithRowAbove(int start_x, int end_x, int y, int height, const MaskCell& cell_to_match, const std::vector<MaskCell>& slice_mask, MergedQuad& merged_quad)
+{
+	if (start_x >= end_x || start_x < 0 || y >= height || y < 0)
+	{
+		return false;
+	}
+
+	for (int x = start_x; x < end_x; ++x)
+	{
+		const MaskCell& cell = slice_mask[y * height + x];
+
+		if (!MaskCellsMergable(cell_to_match, cell))
+		{
+			return false;
+		}
+	}
+	
+	++merged_quad.height_;
 	return true;
 }
 
