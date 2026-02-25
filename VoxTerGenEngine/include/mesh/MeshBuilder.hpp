@@ -42,7 +42,7 @@ private:
 
 	static uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 
-	static Mesh BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery auto&& world_block_query);
+	static void BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery auto&& world_block_query, Mesh& chunk_mesh);
 
 	static bool MaskCellsMergable(const MaskCell& first, const MaskCell& second);
 
@@ -86,18 +86,16 @@ Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, BlockQuery auto&& world_bl
 {
 	Mesh chunk_mesh;
 
-	const Mesh x_axis_mesh = BuildAxisMesh(chunk, MajorAxis::X, world_block_query);
-	const Mesh y_axis_mesh = BuildAxisMesh(chunk, MajorAxis::Y, world_block_query);
-	const Mesh z_axis_mesh = BuildAxisMesh(chunk, MajorAxis::Z, world_block_query);
-
+	BuildAxisMesh(chunk, MajorAxis::X, world_block_query, chunk_mesh);
+	BuildAxisMesh(chunk, MajorAxis::Y, world_block_query, chunk_mesh);
+	BuildAxisMesh(chunk, MajorAxis::Z, world_block_query, chunk_mesh);
 	// save the meshes to chunk_mesh;
 
 	return chunk_mesh;
 }
 
-Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery auto&& world_block_query)
+void MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery auto&& world_block_query, Mesh& chunk_mesh)
 {
-	Mesh axis_mesh;
 	std::vector<MaskCell> slice_mask;
 
 	int major_size = 0;
@@ -147,23 +145,22 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 				if (render_left)
 				{
 					mask_cell.block_type_ = left_block.Type();
+					mask_cell.dir_ = ToDirection(axis, true);
 					mask_cell.sun_light_ = left_block.SunLight();
 					mask_cell.block_light_ = left_block.BlockLight();
-					mask_cell.dir_ = ToDirection(axis, true);
 				}
 				else if (render_right)
 				{
 					mask_cell.block_type_ = right_block.Type();
+					mask_cell.dir_ = ToDirection(axis, false);
 					mask_cell.sun_light_ = right_block.SunLight();
 					mask_cell.block_light_ = right_block.BlockLight();
-					mask_cell.dir_ = ToDirection(axis, false);
 				}
 
+				mask_cell.processed_ = mask_cell.block_type_ == BlockType::Air;
 				slice_mask[cross_1 * cross_1_size + cross_2] = mask_cell;
 			}
 		}
-
-	// cell processed, next NOT processed = merging = true and continue?
 
 		bool merging = false;
 		MergedQuad merged_quad = { { 0, 0 }, 1, 1 };
@@ -177,28 +174,27 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 
 				if (cell.processed_)
 				{
-					merging = !next_cell.processed_;
+					if (!next_cell.processed_)
+					{
+						merging = true;
+						merged_quad.bottom_left_ = { u, v };
+					}
+
 					continue;
 				}
 
-				if (cell.block_type_ == BlockType::Air && next_cell.block_type_ == BlockType::Air)
-				{
-					cell.processed_ = true;
-					next_cell.processed_ = true;
-					continue;
-				}
-
-				const bool last_cell = u == cross_2_size - 1;
+				const bool at_last_cell = u == cross_2_size - 1;
 				const bool cells_mergable = MaskCellsMergable(cell, next_cell);
 
 				if (!merging && cells_mergable)
 				{
 					merging = true;
+					merged_quad.bottom_left_ = { u - 1, v };
 				}
 
-				if (merging && (!cells_mergable || last_cell))
+				if (merging && (!cells_mergable || at_last_cell))
 				{
-					if (last_cell)
+					if (at_last_cell)
 					{
 						++merged_quad.width_;
 					}
@@ -212,18 +208,19 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 
 					merging = false;
 
-					// MARK AS PROCESSED!!!!!!!!!!!!!!
-					
-					// Emmit vertices & indices here!
+					for (int merged_y = 0; merged_y < merged_quad.height_; ++merged_y)
+					{
+						for (int merged_x = 0; merged_x < merged_quad.width_; ++merged_x)
+						{
+							mask_cell[merged_y * merged_quad.height_ + merged_x].processed_ = true;
+						}
+					}
 
+					// Emit vertices & indices!
 
-					if (u != cross_2_size - 1)
+					if (!at_last_cell)
 					{
 						merged_quad.bottom_left_ = { merged_quad.bottom_left_.x + merged_quad.width_, v };
-					}
-					else
-					{
-						merged_quad.bottom_left_ = { 0, v + 1 }; // WRONG
 					}
 
 					merged_quad.width_ = 1;
@@ -236,8 +233,6 @@ Mesh MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 			}	
 		}
 	}
-
-	return axis_mesh;
 }
 
 #endif // MESH_BUILDER_HPP
