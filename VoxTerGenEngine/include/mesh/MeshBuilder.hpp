@@ -215,7 +215,25 @@ void MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 						}
 					}
 
-					// Emit vertices & indices into chunk_mesh!
+					const MaskCell& first_merged_cell = slice_mask[merged_quad.bottom_left_.y * cross_1_size + merged_quad.bottom_left_.x];
+					Vertex vertex;
+					vertex.dir_ = first_merged_cell.dir_;
+					vertex.sun_light_ = first_merged_cell.sun_light_;
+					vertex.block_light_ = first_merged_cell.block_light_;
+
+					for (int i = 0; i < 2; ++i)
+					{
+						for (int j = 0; j < 2; ++j)
+						{
+							vertex.position_ = { merged_quad.bottom_left_.x + (j * merged_quad.width_), merged_quad.bottom_left_.y + (i * merged_quad.height_), major + 1 };
+							chunk_mesh.Vertices().push_back(vertex);
+						}
+					}
+
+					for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
+					{
+						chunk_mesh.Indices().push_back(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
+					}
 
 					if (!at_last_cell)
 					{

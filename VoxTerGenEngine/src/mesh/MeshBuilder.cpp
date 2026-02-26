@@ -99,50 +99,49 @@ void MeshBuilder::SaveQuadMesh(const Chunk& chunk, const glm::ivec3& block_coord
 		quad_vertices[i].material_ = GetQuadMaterial(chunk.BlockAt(block_coords.x, block_coords.y, block_coords.z).Type(), dir);
 	}
 	
-	const std::uint32_t vertices_saved_before = static_cast<std::uint32_t>(chunk_mesh.Vertices().size());
 	chunk_mesh.Vertices().insert(chunk_mesh.Vertices().end(), quad_vertices.begin(), quad_vertices.end());
 	assert(chunk_mesh.Vertices().size() % 4 == 0);
 
 	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
 	{
-		chunk_mesh.Indices().push_back(i + vertices_saved_before);
+		chunk_mesh.Indices().push_back(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
 	}
 }
 
-uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
+std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 {
 	switch (block_type)
 	{
 	case BlockType::Air:
-		return static_cast<uint8_t>(Material::Air);
+		return static_cast<std::uint8_t>(Material::Air);
 	case BlockType::Grass:
 		if (dir == Direction::PosY)
 		{
-			return static_cast<uint8_t>(Material::GrassTop);
+			return static_cast<std::uint8_t>(Material::GrassTop);
 		}
 		else if (dir == Direction::NegY)
 		{
-			return static_cast<uint8_t>(Material::Dirt);
+			return static_cast<std::uint8_t>(Material::Dirt);
 		}
 		else
 		{
-			return static_cast<uint8_t>(Material::GrassSide);
+			return static_cast<std::uint8_t>(Material::GrassSide);
 		}
 	case BlockType::Dirt:
-		return static_cast<uint8_t>(Material::Dirt);
+		return static_cast<std::uint8_t>(Material::Dirt);
 	case BlockType::Stone:
-		return static_cast<uint8_t>(Material::Stone);
+		return static_cast<std::uint8_t>(Material::Stone);
 	case BlockType::Water:
-		return static_cast<uint8_t>(Material::Water);
+		return static_cast<std::uint8_t>(Material::Water);
 	case BlockType::Sand:
-		return static_cast<uint8_t>(Material::Sand);
+		return static_cast<std::uint8_t>(Material::Sand);
 	case BlockType::Snow:
-		return static_cast<uint8_t>(Material::Snow);
+		return static_cast<std::uint8_t>(Material::Snow);
 	}
 
 	assert(false);
 	Logger::Log(LogLevel::ERROR, "GetQuadMaterial received an unknown type of Block!: block_type = {}", static_cast<std::uint8_t>(block_type));
-	return static_cast<uint8_t>(Material::Air);
+	return static_cast<std::uint8_t>(Material::Air);
 }
 
 bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& second)
