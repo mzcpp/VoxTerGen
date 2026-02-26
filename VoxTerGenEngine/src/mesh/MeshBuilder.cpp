@@ -9,6 +9,7 @@
 #include <array>
 #include <cassert>
 
+// SEND IN chunk.WorldCoords() AND THE TYPE, NOT THE CHUNK
 void MeshBuilder::SaveQuadMesh(const Chunk& chunk, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh)
 {
 	const glm::ivec2& chunk_world_coords = chunk.WorldCoords();

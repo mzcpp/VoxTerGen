@@ -122,7 +122,6 @@ void MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 	}
 
 	slice_mask.resize(cross_1_size * cross_2_size);
-	
 
 	for (int major = -1; major < major_size; ++major)
 	{
@@ -140,7 +139,7 @@ void MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 				const bool render_right = right_block_inside && right_block.ShouldRenderFace(left_block);
 
 				MaskCell mask_cell;
-				mask_cell.block_type_ = { BlockType::Air, 0, 0, Direction::PosX, false };
+				mask_cell = { BlockType::Air, Direction::PosX, 0, 0, false };
 
 				if (render_left)
 				{
@@ -201,7 +200,7 @@ void MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 					
 					int height = v;
 
-					while (MergeWithRowAbove(merged_quad.bottom_left_.x, merged_quad.width_, height + 1, cross_1_size, next_cell, merged_quad))
+					while (MergeWithRowAbove(merged_quad.bottom_left_.x, merged_quad.width_, height + 1, cross_1_size, next_cell, slice_mask, merged_quad))
 					{
 						++height;
 					}
