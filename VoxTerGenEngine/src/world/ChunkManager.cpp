@@ -54,7 +54,7 @@ void ChunkManager::BuildAllChunkMeshes()
 	for (auto& [world_coord, chunk] : chunks_)
 	{
 		std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
-		*chunk_mesh = MeshBuilder::BuildMeshNaive(
+		*chunk_mesh = MeshBuilder::BuildMeshGreedy(
 			*chunk,
 			[this, &chunk](const glm::ivec3& block_coords)
 			{
