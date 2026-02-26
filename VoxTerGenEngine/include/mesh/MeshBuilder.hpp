@@ -9,6 +9,7 @@
 #include <concepts>
 #include <cstdint>
 #include <vector>
+#include <ranges>
 
 struct MaskCell
 {
@@ -221,13 +222,15 @@ void MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 					vertex.sun_light_ = first_merged_cell.sun_light_;
 					vertex.block_light_ = first_merged_cell.block_light_;
 
-					for (int i = 0; i < 2; ++i)
+					const auto indices = std::ranges::iota(0, 2);
+
+					for (int i : indices)
 					{
-						for (int j = 0; j < 2; ++j)
+						for (int j : indices)
 						{
 							vertex.position_ = { merged_quad.bottom_left_.x + (j * merged_quad.width_), merged_quad.bottom_left_.y + (i * merged_quad.height_), major + 1 };
 							chunk_mesh.Vertices().push_back(vertex);
-						}
+						}	
 					}
 
 					for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
