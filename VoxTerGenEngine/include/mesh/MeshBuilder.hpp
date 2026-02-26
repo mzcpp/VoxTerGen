@@ -89,7 +89,6 @@ Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, BlockQuery auto&& world_bl
 	BuildAxisMesh(chunk, MajorAxis::X, world_block_query, chunk_mesh);
 	BuildAxisMesh(chunk, MajorAxis::Y, world_block_query, chunk_mesh);
 	BuildAxisMesh(chunk, MajorAxis::Z, world_block_query, chunk_mesh);
-	// save the meshes to chunk_mesh;
 
 	return chunk_mesh;
 }
@@ -212,11 +211,11 @@ void MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 					{
 						for (int merged_x = 0; merged_x < merged_quad.width_; ++merged_x)
 						{
-							mask_cell[merged_y * merged_quad.height_ + merged_x].processed_ = true;
+							slice_mask[merged_y * merged_quad.height_ + merged_x].processed_ = true;
 						}
 					}
 
-					// Emit vertices & indices!
+					// Emit vertices & indices into chunk_mesh!
 
 					if (!at_last_cell)
 					{
