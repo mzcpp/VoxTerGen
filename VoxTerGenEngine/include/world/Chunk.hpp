@@ -3,6 +3,7 @@
 
 #include "world/Block.hpp"
 #include "utils/Constants.hpp"
+#include "utils/Logger.hpp"
 #include "mesh/Mesh.hpp"
 #include "render/MeshRenderer.hpp"
 
@@ -37,7 +38,7 @@ enum class Direction : std::uint8_t
     DirectionCount
 };
 
-inline constexpr auto AllDirections()
+constexpr auto AllDirections()
 {
     return std::views::iota(static_cast<std::uint8_t>(0), static_cast<std::uint8_t>(Direction::DirectionCount)) |
         std::views::transform([](std::uint8_t i)
@@ -46,7 +47,7 @@ inline constexpr auto AllDirections()
         });
 }
 
-inline constexpr glm::ivec3 NeighborCoords(const glm::ivec3& block_coords, Direction dir)
+constexpr glm::ivec3 NeighborCoords(const glm::ivec3& block_coords, Direction dir)
 {
     switch (dir)
     {
@@ -58,8 +59,26 @@ inline constexpr glm::ivec3 NeighborCoords(const glm::ivec3& block_coords, Direc
     case Direction::NegZ: return { block_coords.x, block_coords.y, block_coords.z - 1 };
     }
 
+    Logger::Log(LogLevel::ERROR, "NeighborCoords received an unknown type of Direction!: dir = {}", static_cast<std::uint8_t>(dir));
     assert(false);
     return block_coords;
+}
+
+constexpr glm::vec3 DirToNormal(Direction dir)
+{
+    switch (dir)
+    {
+    case Direction::PosX: return { 1.0f, 0.0f, 0.0f };
+    case Direction::NegX: return { -1.0f, 0.0f, 0.0f };
+    case Direction::PosY: return { 0.0f, 1.0f, 0.0f };
+    case Direction::NegY: return { 0.0f, -1.0f, 0.0f };
+    case Direction::PosZ: return { 0.0f, 0.0f, 1.0f };
+    case Direction::NegZ: return { 0.0f, 0.0f, -1.0f };
+    }
+
+    Logger::Log(LogLevel::ERROR, "DirToNormal received an unknown type of Direction!: dir = {}", static_cast<std::uint8_t>(dir));
+    assert(false);
+    return { 0.0f, 0.0f, 0.0f };
 }
 
 constexpr Direction direction_table[3][2] =

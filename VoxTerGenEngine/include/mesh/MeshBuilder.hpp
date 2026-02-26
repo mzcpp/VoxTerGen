@@ -218,17 +218,17 @@ void MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 
 					const MaskCell& first_merged_cell = slice_mask[merged_quad.bottom_left_.y * cross_1_size + merged_quad.bottom_left_.x];
 					Vertex vertex;
-					vertex.dir_ = first_merged_cell.dir_;
-					vertex.sun_light_ = first_merged_cell.sun_light_;
-					vertex.block_light_ = first_merged_cell.block_light_;
+					vertex.normal_ = DirToNormal(first_merged_cell.dir_);
+					vertex.material_ = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
 
-					const auto indices = std::ranges::iota(0, 2);
+					const auto indices = std::views::iota(0, 2);
 
 					for (int i : indices)
 					{
 						for (int j : indices)
 						{
 							vertex.position_ = { merged_quad.bottom_left_.x + (j * merged_quad.width_), merged_quad.bottom_left_.y + (i * merged_quad.height_), major + 1 };
+							vertex.uv_ = { j * merged_quad.width_, i * merged_quad.height_ };
 							chunk_mesh.Vertices().push_back(vertex);
 						}	
 					}
