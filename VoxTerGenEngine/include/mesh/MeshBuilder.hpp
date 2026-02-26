@@ -40,7 +40,7 @@ public:
 private:
 	static void SaveQuadMesh(const Chunk& chunk, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh);
 
-	static uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
+	static std::uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 
 	static void BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery auto&& world_block_query, Mesh& chunk_mesh);
 
