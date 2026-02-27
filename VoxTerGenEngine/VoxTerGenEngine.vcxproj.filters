@@ -1184,6 +1184,9 @@
     <ClInclude Include="include\graphics\ui\menu\Button.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\Direction.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\external\glm\detail\func_common.inl">
