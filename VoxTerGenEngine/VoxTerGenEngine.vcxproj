@@ -190,6 +190,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
   <ItemGroup>
     <ClInclude Include="include\Constants.hpp" />
     <ClInclude Include="include\core\Application.hpp" />
+    <ClInclude Include="include\core\Direction.hpp" />
     <ClInclude Include="include\core\Engine.hpp" />
     <ClInclude Include="include\core\Settings.hpp" />
     <ClInclude Include="include\external\glad\glad\glad.h" />
