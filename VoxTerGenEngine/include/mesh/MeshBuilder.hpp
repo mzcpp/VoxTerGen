@@ -193,7 +193,7 @@ void MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery a
 
 				if (merging && (!cells_mergable || at_last_cell))
 				{
-					if (at_last_cell)
+					if (at_last_cell && cells_mergable)
 					{
 						++merged_quad.width_;
 					}
