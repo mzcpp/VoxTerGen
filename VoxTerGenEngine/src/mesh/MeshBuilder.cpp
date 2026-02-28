@@ -5,6 +5,7 @@
 #include "world/Chunk.hpp"
 #include "render/Material.hpp"
 #include "utils/Logger.hpp"
+#include "core/Direction.hpp"
 
 #include <array>
 #include <cassert>

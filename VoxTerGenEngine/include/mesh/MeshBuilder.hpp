@@ -5,6 +5,7 @@
 #include "world/Chunk.hpp"
 #include "world/Block.hpp"
 #include "utils/constants.hpp"
+#include "core/Direction.hpp"
 
 #include <concepts>
 #include <cstdint>
