@@ -6,6 +6,7 @@
 #include "utils/Logger.hpp"
 #include "mesh/Mesh.hpp"
 #include "render/MeshRenderer.hpp"
+#include "core/Direction.hpp"
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -13,85 +14,6 @@
 #include <array>
 #include <functional>
 #include <memory>
-#include <cstdint>
-#include <ranges>
-#include <cstdlib>
-
-enum class MajorAxis : std::uint8_t
-{
-    X = 0, 
-    Y, 
-    Z
-};
-
-/**
- * @brief Represents the six cardinal directions for neighboring blocks in a chunk.
- */
-enum class Direction : std::uint8_t
-{
-	PosX = 0, 
-	NegX, 
-	PosY, 
-	NegY, 
-	PosZ, 
-	NegZ, 
-    DirectionCount
-};
-
-constexpr auto AllDirections()
-{
-    return std::views::iota(static_cast<std::uint8_t>(0), static_cast<std::uint8_t>(Direction::DirectionCount)) |
-        std::views::transform([](std::uint8_t i)
-        {
-            return static_cast<Direction>(i);
-        });
-}
-
-constexpr glm::ivec3 NeighborCoords(const glm::ivec3& block_coords, Direction dir)
-{
-    switch (dir)
-    {
-    case Direction::PosX: return { block_coords.x + 1, block_coords.y, block_coords.z };
-    case Direction::NegX: return { block_coords.x - 1, block_coords.y, block_coords.z };
-    case Direction::PosY: return { block_coords.x, block_coords.y + 1, block_coords.z };
-    case Direction::NegY: return { block_coords.x, block_coords.y - 1, block_coords.z };
-    case Direction::PosZ: return { block_coords.x, block_coords.y, block_coords.z + 1 };
-    case Direction::NegZ: return { block_coords.x, block_coords.y, block_coords.z - 1 };
-    }
-
-    Logger::Log(LogLevel::ERROR, "NeighborCoords received an unknown type of Direction!: dir = {}", static_cast<std::uint8_t>(dir));
-    assert(false);
-    return block_coords;
-}
-
-constexpr glm::vec3 DirToNormal(Direction dir)
-{
-    switch (dir)
-    {
-    case Direction::PosX: return { 1.0f, 0.0f, 0.0f };
-    case Direction::NegX: return { -1.0f, 0.0f, 0.0f };
-    case Direction::PosY: return { 0.0f, 1.0f, 0.0f };
-    case Direction::NegY: return { 0.0f, -1.0f, 0.0f };
-    case Direction::PosZ: return { 0.0f, 0.0f, 1.0f };
-    case Direction::NegZ: return { 0.0f, 0.0f, -1.0f };
-    }
-
-    Logger::Log(LogLevel::ERROR, "DirToNormal received an unknown type of Direction!: dir = {}", static_cast<std::uint8_t>(dir));
-    assert(false);
-    return { 0.0f, 0.0f, 0.0f };
-}
-
-constexpr Direction direction_table[3][2] =
-{
-    { Direction::NegX, Direction::PosX },
-    { Direction::NegY, Direction::PosY },
-    { Direction::NegZ, Direction::PosZ }
-};
-
-constexpr Direction ToDirection(MajorAxis axis, bool positive)
-{
-    return direction_table[static_cast<std::uint8_t>(axis)][positive];
-}
 
 /**
  * @brief Represents a 3D chunk of blocks.

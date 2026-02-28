@@ -1,5 +1,6 @@
 #include "world/Chunk.hpp"
 #include "utils/Logger.hpp"
+#include "core/Direction.hpp"
 
 #include <glm/glm.hpp>
 
