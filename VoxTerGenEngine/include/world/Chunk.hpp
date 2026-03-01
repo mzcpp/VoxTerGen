@@ -59,7 +59,7 @@ public:
      *
      * @throws std::out_of_range if check_index is true and coordinates are invalid
      */
-    Block& BlockAt(int x, int y, int z, bool check_index = false);
+    Block& BlockAt(const glm::ivec3& coords, bool check_index = false);
 
     /**
      * @brief Returns a const reference to the block at the given coordinates.
@@ -73,7 +73,7 @@ public:
      *
      * @throws std::out_of_range if check_index is true and coordinates are invalid
      */
-    const Block& BlockAt(int x, int y, int z, bool check_index = false) const;
+    const Block& BlockAt(const glm::ivec3& coords, bool check_index = false) const;
 
     /**
      * @brief Returns the 3D coordinates of a block from its linear index.
@@ -95,7 +95,7 @@ public:
      *
      * @return True if coordinates are inside chunk bounds, false otherwise
      */
-    bool IsValidIndex(int x, int y, int z) const;
+    bool IsValidIndex(const glm::ivec3& coords) const;
 
     /**
      * @brief Returns a copy of the neighbor block in the specified direction.
@@ -109,7 +109,7 @@ public:
      *
      * @throws std::out_of_range if the neighbor coordinates are invalid
      */
-    Block NeighborAt(int x, int y, int z, Direction dir) const;
+    Block NeighborAt(const glm::ivec3& coords, Direction dir) const;
 
     /**
      * @brief Returns a reference to the neighbor block in the specified direction.
@@ -123,7 +123,7 @@ public:
      *
      * @throws std::out_of_range if the neighbor coordinates are invalid
      */
-    Block& NeighborRefAt(int x, int y, int z, Direction dir);
+    Block& NeighborRefAt(const glm::ivec3& coords, Direction dir);
 
     /**
      * @brief Fills the chunk using a custom filler function.
@@ -165,13 +165,11 @@ private:
     /**
      * @brief Converts 3D block coordinates to a linear array index.
      *
-     * @param x X coordinate
-     * @param y Y coordinate
-     * @param z Z coordinate
+     * @param coords 3D coordinates
      *
      * @return Linear index corresponding to (x, y, z)
      */
-    int Index(int x, int y, int z) const;
+    int Index(const glm::ivec3& coords) const;
 };
 
 #endif // CHUNK_HPP

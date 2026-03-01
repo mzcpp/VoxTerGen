@@ -43,7 +43,7 @@ void ChunkManager::InitChunkBlocks(Chunk& chunk)
 		{
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				chunk.BlockAt(x, y, z).SetType(BlockType::Air);
+				chunk.BlockAt({ x, y, z }).SetType(BlockType::Air);
 			}
 		}
 	}
@@ -115,5 +115,5 @@ Block ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, const glm::i
 		z_block_offset += constants::chunk::depth;
 	}
 	
-	return target_chunk->BlockAt(x_block_offset, block_coords.y, z_block_offset);
+	return target_chunk->BlockAt({ x_block_offset, block_coords.y, z_block_offset });
 }
