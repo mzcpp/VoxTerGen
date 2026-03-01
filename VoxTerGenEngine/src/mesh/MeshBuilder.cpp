@@ -179,16 +179,18 @@ bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& secon
 	return true;
 }
 
-bool MeshBuilder::MergeWithRowAbove(int start_x, int end_x, int y, int height, const MaskCell& cell_to_match, const std::vector<MaskCell>& slice_mask, MergedQuad& merged_quad)
+bool MeshBuilder::MergeWithRowAbove(int start_x, int end_x, int y, int height, int width, const MaskCell& cell_to_match, const std::vector<MaskCell>& slice_mask, MergedQuad& merged_quad)
 {
-	if (start_x >= end_x || start_x < 0 || y >= height || y < 0)
+	assert(slice_mask.size() == static_cast<std::size_t>(width * height));
+
+	if (start_x >= end_x || start_x < 0 || end_x > width || y < 0 || y >= height)
 	{
 		return false;
 	}
 
 	for (int x = start_x; x < end_x; ++x)
 	{
-		const MaskCell& cell = slice_mask[y * height + x];
+		const MaskCell& cell = slice_mask[y * width + x];
 
 		if (!MaskCellsMergable(cell_to_match, cell))
 		{
@@ -240,8 +242,6 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 			chunk_mesh.Vertices().push_back(vertex);
 		}
 	}
-
-	int x = 1;
 }
 
 void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int cross_axis_1_size, int cross_axis_2_size, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh)
@@ -253,8 +253,8 @@ void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_ind
 	{
 		for (int u = 1; u < cross_axis_2_size; ++u)
 		{
-			MaskCell& cell = slice_mask[(v * cross_axis_1_size) + (u - 1)];
-			MaskCell& next_cell = slice_mask[(v * cross_axis_1_size) + u];
+			MaskCell& cell = slice_mask[(v * cross_axis_2_size) + (u - 1)];
+			MaskCell& next_cell = slice_mask[(v * cross_axis_2_size) + u];
 
 			if (u == 1 && cell.block_type_ != BlockType::Air)
 			{
@@ -291,21 +291,22 @@ void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_ind
 
 				int height = v;
 
-				while (MergeWithRowAbove(merged_quad.bottom_left_.x, merged_quad.width_, height + 1, cross_axis_1_size, cell, slice_mask, merged_quad))
+				while (MergeWithRowAbove(merged_quad.bottom_left_.x, merged_quad.width_, height + 1, cross_axis_1_size, cross_axis_2_size, cell, slice_mask, merged_quad))
 				{
 					++height;
 				}
 
 				merging = false;
 
-				for (int merged_y = 0; merged_y < merged_quad.height_; ++merged_y)
+				for (int merged_y = merged_quad.bottom_left_.y; merged_y < merged_quad.height_; ++merged_y)
 				{
-					for (int merged_x = 0; merged_x < merged_quad.width_; ++merged_x)
+					for (int merged_x = merged_quad.bottom_left_.x; merged_x < merged_quad.width_; ++merged_x)
 					{
-						slice_mask[merged_y * cross_axis_1_size + merged_x].processed_ = true;
+						slice_mask[merged_y * cross_axis_2_size + merged_x].processed_ = true;
 					}
 				}
-				const MaskCell& first_merged_cell = slice_mask[merged_quad.bottom_left_.y * cross_axis_1_size + merged_quad.bottom_left_.x];
+
+				const MaskCell& first_merged_cell = slice_mask[merged_quad.bottom_left_.y * cross_axis_2_size + merged_quad.bottom_left_.x];
 				EmitVerticesAndIndices(major_axis, merged_quad, major_axis_index, first_merged_cell, chunk_mesh);
 
 				if (!at_last_cell)

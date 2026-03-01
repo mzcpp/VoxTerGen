@@ -51,7 +51,7 @@ private:
 
 	static bool MaskCellsMergable(const MaskCell& first, const MaskCell& second);
 
-	static bool MergeWithRowAbove(int start_x, int end_x, int y, int height, const MaskCell& cell_to_match, const std::vector<MaskCell>& slice_mask, MergedQuad& merged_quad);
+	static bool MergeWithRowAbove(int start_x, int end_x, int y, int height, int width, const MaskCell& cell_to_match, const std::vector<MaskCell>& slice_mask, MergedQuad& merged_quad);
 	
 	static void BuildSliceMask(MajorAxis major_axis, int major_axis_index, int major_axis_size, int cross_axis_1_size, int cross_axis_2_size, BlockQuery auto&& world_block_query, std::vector<MaskCell>& slice_mask);
 	
@@ -197,7 +197,7 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 			}
 
 			mask_cell.processed_ = mask_cell.block_type_ == BlockType::Air;
-			slice_mask[cross_axis_1_index * cross_axis_1_size + cross_axis_2_index] = mask_cell;
+			slice_mask[cross_axis_1_index * cross_axis_2_size + cross_axis_2_index] = mask_cell;
 		}
 	}
 }
