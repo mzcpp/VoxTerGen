@@ -54,13 +54,21 @@ void ChunkManager::BuildAllChunkMeshes()
 	for (auto& [world_coord, chunk] : chunks_)
 	{
 		std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
-		*chunk_mesh = MeshBuilder::BuildMeshGreedy(
-			*chunk,
+		
+		*chunk_mesh = MeshBuilder::BuildMeshNaive(
+			chunk->WorldCoords(),
 			[this, &chunk](const glm::ivec3& block_coords)
 			{
 				return WorldBlockQuery(chunk->WorldCoords(), block_coords);
 			}
 		);
+
+		/**chunk_mesh = MeshBuilder::BuildMeshGreedy(
+			[this, &chunk](const glm::ivec3& block_coords)
+			{
+				return WorldBlockQuery(chunk->WorldCoords(), block_coords);
+			}
+		);*/
 
 		chunk->SetMesh(std::move(chunk_mesh));
 	}

@@ -14,8 +14,18 @@ enum class MajorAxis : std::uint8_t
 {
     X = 0,
     Y,
-    Z
+    Z, 
+    AxisCount
 };
+
+constexpr auto AllAxes()
+{
+    return std::views::iota(static_cast<std::uint8_t>(0), static_cast<std::uint8_t>(MajorAxis::AxisCount)) |
+        std::views::transform([](std::uint8_t i)
+            {
+                return static_cast<MajorAxis>(i);
+            });
+}
 
 /**
  * @brief Represents the six cardinal directions for neighboring blocks in a chunk.

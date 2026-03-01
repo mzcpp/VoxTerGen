@@ -10,7 +10,6 @@
 #include <concepts>
 #include <cstdint>
 #include <vector>
-#include <ranges>
 
 struct MaskCell
 {
@@ -32,26 +31,36 @@ template <typename Fnc>
 concept BlockQuery = std::invocable<Fnc, const glm::ivec3&> &&
 	std::convertible_to<std::invoke_result_t<Fnc, const glm::ivec3&>, Block>;
 
-class MeshBuilder
+class MeshBuilder final
 {
 public:
-	static Mesh BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_block_query);
+	MeshBuilder() = delete;
+	MeshBuilder(const MeshBuilder&) = delete;
+	MeshBuilder& operator=(const MeshBuilder&) = delete;
+
+	static Mesh BuildMeshNaive(const glm::ivec2& chunk_world_coords, BlockQuery auto&& world_block_query);
 	
-	static Mesh BuildMeshGreedy(const Chunk& chunk, BlockQuery auto&& world_block_query);
+	static Mesh BuildMeshGreedy(BlockQuery auto&& world_block_query);
 
 private:
-	static void SaveQuadMesh(const Chunk& chunk, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh);
+	static void SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType type, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh);
 
 	static std::uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 
-	static void BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery auto&& world_block_query, Mesh& chunk_mesh);
+	static void BuildAxisMesh(MajorAxis major_axis, BlockQuery auto&& world_block_query, Mesh& chunk_mesh);
 
 	static bool MaskCellsMergable(const MaskCell& first, const MaskCell& second);
 
 	static bool MergeWithRowAbove(int start_x, int end_x, int y, int height, const MaskCell& cell_to_match, const std::vector<MaskCell>& slice_mask, MergedQuad& merged_quad);
+	
+	static void BuildSliceMask(MajorAxis major_axis, int major_axis_index, int major_axis_size, int cross_axis_1_size, int cross_axis_2_size, BlockQuery auto&& world_block_query, std::vector<MaskCell>& slice_mask);
+	
+	static void EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, Mesh& chunk_mesh);
+
+	static void MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int cross_axis_1_size, int cross_axis_2_size, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh);
 };
 
-Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_block_query)
+Mesh MeshBuilder::BuildMeshNaive(const glm::ivec2& chunk_world_coords, BlockQuery auto&& world_block_query)
 {
 	Mesh chunk_mesh;
 
@@ -75,7 +84,7 @@ Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_blo
 						continue;
 					}
 
-					SaveQuadMesh(chunk, { x, y, z }, dir, chunk_mesh);
+					SaveQuadMesh(chunk_world_coords, world_block_query({ x, y, z }).Type(), {x, y, z}, dir, chunk_mesh);
 				}
 			}
 		}
@@ -84,173 +93,111 @@ Mesh MeshBuilder::BuildMeshNaive(const Chunk& chunk, BlockQuery auto&& world_blo
 	return chunk_mesh;
 }
 
-Mesh MeshBuilder::BuildMeshGreedy(const Chunk& chunk, BlockQuery auto&& world_block_query)
+Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query)
 {
 	Mesh chunk_mesh;
 
-	BuildAxisMesh(chunk, MajorAxis::X, world_block_query, chunk_mesh);
-	BuildAxisMesh(chunk, MajorAxis::Y, world_block_query, chunk_mesh);
-	BuildAxisMesh(chunk, MajorAxis::Z, world_block_query, chunk_mesh);
+	/*for (MajorAxis axis : AllAxes())
+	{
+		BuildAxisMesh(axis, world_block_query, chunk_mesh);
+	}*/
+
+	BuildAxisMesh(MajorAxis::X, world_block_query, chunk_mesh);
+	//BuildAxisMesh(MajorAxis::Y, world_block_query, chunk_mesh);
+	//BuildAxisMesh(MajorAxis::Z, world_block_query, chunk_mesh);
 
 	return chunk_mesh;
 }
 
-void MeshBuilder::BuildAxisMesh(const Chunk& chunk, MajorAxis axis, BlockQuery auto&& world_block_query, Mesh& chunk_mesh)
+void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, BlockQuery auto&& world_block_query, Mesh& chunk_mesh)
 {
-	std::vector<MaskCell> slice_mask;
+	int major_axis_size = 0;
+	int cross_axis_1_size = 0;
+	int cross_axis_2_size = 0;
 
-	int major_size = 0;
-	int cross_1_size = 0;
-	int cross_2_size = 0;
-
-	if (axis == MajorAxis::X)
+	if (major_axis == MajorAxis::X)
 	{
-		major_size = constants::chunk::width;
-		cross_1_size = constants::chunk::height;
-		cross_2_size = constants::chunk::depth;
+		major_axis_size = constants::chunk::width;
+		cross_axis_1_size = constants::chunk::height;
+		cross_axis_2_size = constants::chunk::depth;
 	}
-	else if (axis == MajorAxis::Y)
+	else if (major_axis == MajorAxis::Y)
 	{
-		major_size = constants::chunk::height;
-		cross_1_size = constants::chunk::depth;
-		cross_2_size = constants::chunk::width;
+		major_axis_size = constants::chunk::height;
+		cross_axis_1_size = constants::chunk::depth;
+		cross_axis_2_size = constants::chunk::width;
 	}
 	else
 	{
-		major_size = constants::chunk::depth;
-		cross_1_size = constants::chunk::height;
-		cross_2_size = constants::chunk::width;
+		major_axis_size = constants::chunk::depth;
+		cross_axis_1_size = constants::chunk::height;
+		cross_axis_2_size = constants::chunk::width;
 	}
+	
+	std::vector<MaskCell> slice_mask;
+	slice_mask.resize(cross_axis_1_size * cross_axis_2_size);
 
-	slice_mask.resize(cross_1_size * cross_2_size);
-
-	for (int major = -1; major < major_size; ++major)
+	for (int major_axis_index = -1; major_axis_index < major_axis_size; ++major_axis_index)
 	{
-		for (int cross_1 = 0; cross_1 < cross_1_size; ++cross_1)
+		BuildSliceMask(major_axis, major_axis_index, major_axis_size, cross_axis_1_size, cross_axis_2_size, world_block_query, slice_mask);
+		MergeFacesAndEmitData(major_axis, major_axis_index, cross_axis_1_size, cross_axis_2_size, slice_mask, chunk_mesh);
+	}
+}
+
+void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int major_axis_size, int cross_axis_1_size, int cross_axis_2_size, BlockQuery auto&& world_block_query, std::vector<MaskCell>& slice_mask)
+{
+	for (int cross_axis_1_index = 0; cross_axis_1_index < cross_axis_1_size; ++cross_axis_1_index)
+	{
+		for (int cross_axis_2_index = 0; cross_axis_2_index < cross_axis_2_size; ++cross_axis_2_index)
 		{
-			for (int cross_2 = 0; cross_2 < cross_2_size; ++cross_2)
+			glm::ivec3 left_query_coords = { 0, 0, 0 };
+			glm::ivec3 right_query_coords = { 0, 0, 0 };
+
+			if (major_axis == MajorAxis::X)
 			{
-				const Block& left_block = world_block_query({ major, cross_1, cross_2 });
-				const Block& right_block = world_block_query({ major + 1, cross_1, cross_2 });
-				
-				const bool left_block_inside = major >= 0 && major < major_size;
-				const bool right_block_inside = (major + 1) >= 0 && (major + 1) < major_size;
-				
-				const bool render_left = left_block_inside && left_block.ShouldRenderFace(right_block);
-				const bool render_right = right_block_inside && right_block.ShouldRenderFace(left_block);
-
-				MaskCell mask_cell;
-				mask_cell = { BlockType::Air, Direction::PosX, 0, 0, false };
-
-				if (render_left)
-				{
-					mask_cell.block_type_ = left_block.Type();
-					mask_cell.dir_ = ToDirection(axis, true);
-					mask_cell.sun_light_ = left_block.SunLight();
-					mask_cell.block_light_ = left_block.BlockLight();
-				}
-				else if (render_right)
-				{
-					mask_cell.block_type_ = right_block.Type();
-					mask_cell.dir_ = ToDirection(axis, false);
-					mask_cell.sun_light_ = right_block.SunLight();
-					mask_cell.block_light_ = right_block.BlockLight();
-				}
-
-				mask_cell.processed_ = mask_cell.block_type_ == BlockType::Air;
-				slice_mask[cross_1 * cross_1_size + cross_2] = mask_cell;
+				left_query_coords = { major_axis_index, cross_axis_1_index, cross_axis_2_index };
+				right_query_coords = { major_axis_index + 1, cross_axis_1_index, cross_axis_2_index };
 			}
-		}
-
-		bool merging = false;
-		MergedQuad merged_quad = { { 0, 0 }, 1, 1 };
-		
-		for (int v = 0; v < cross_1_size; ++v)
-		{
-			for (int u = 1; u < cross_2_size; ++u)
+			else if (major_axis == MajorAxis::Y)
 			{
-				MaskCell& cell = slice_mask[(v * cross_1_size) + (u - 1)];
-				MaskCell& next_cell = slice_mask[(v * cross_1_size) + u];
+				left_query_coords = { cross_axis_2_index, major_axis_index, cross_axis_1_index };
+				right_query_coords = { cross_axis_2_index, major_axis_index + 1, cross_axis_1_index };
+			}
+			else
+			{
+				left_query_coords = { cross_axis_2_index, cross_axis_1_index, major_axis_index };
+				right_query_coords = { cross_axis_2_index, cross_axis_1_index, major_axis_index + 1 };
+			}
 
-				if (cell.processed_)
-				{
-					if (!next_cell.processed_)
-					{
-						merging = true;
-						merged_quad.bottom_left_ = { u, v };
-					}
+			const Block& left_block = world_block_query(left_query_coords);
+			const Block& right_block = world_block_query(right_query_coords);
 
-					continue;
-				}
+			const bool left_block_inside = major_axis_index >= 0 && major_axis_index < major_axis_size;
+			const bool right_block_inside = (major_axis_index + 1) >= 0 && (major_axis_index + 1) < major_axis_size;
 
-				const bool at_last_cell = u == cross_2_size - 1;
-				const bool cells_mergable = MaskCellsMergable(cell, next_cell);
+			const bool render_left = left_block_inside && left_block.ShouldRenderFace(right_block);
+			const bool render_right = right_block_inside && right_block.ShouldRenderFace(left_block);
 
-				if (!merging && cells_mergable)
-				{
-					merging = true;
-					merged_quad.bottom_left_ = { u - 1, v };
-				}
+			MaskCell mask_cell;
+			mask_cell = { BlockType::Air, Direction::PosX, 0, 0, false };
 
-				if (merging && (!cells_mergable || at_last_cell))
-				{
-					if (at_last_cell && cells_mergable)
-					{
-						++merged_quad.width_;
-					}
-					
-					int height = v;
+			if (render_left)
+			{
+				mask_cell.block_type_ = left_block.Type();
+				mask_cell.dir_ = ToDirection(major_axis, true);
+				mask_cell.sun_light_ = left_block.SunLight();
+				mask_cell.block_light_ = left_block.BlockLight();
+			}
+			else if (render_right)
+			{
+				mask_cell.block_type_ = right_block.Type();
+				mask_cell.dir_ = ToDirection(major_axis, false);
+				mask_cell.sun_light_ = right_block.SunLight();
+				mask_cell.block_light_ = right_block.BlockLight();
+			}
 
-					while (MergeWithRowAbove(merged_quad.bottom_left_.x, merged_quad.width_, height + 1, cross_1_size, next_cell, slice_mask, merged_quad))
-					{
-						++height;
-					}
-
-					merging = false;
-
-					for (int merged_y = 0; merged_y < merged_quad.height_; ++merged_y)
-					{
-						for (int merged_x = 0; merged_x < merged_quad.width_; ++merged_x)
-						{
-							slice_mask[merged_y * merged_quad.height_ + merged_x].processed_ = true;
-						}
-					}
-
-					const MaskCell& first_merged_cell = slice_mask[merged_quad.bottom_left_.y * cross_1_size + merged_quad.bottom_left_.x];
-					Vertex vertex;
-					vertex.normal_ = DirToNormal(first_merged_cell.dir_);
-					vertex.material_ = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
-
-					const auto indices = std::views::iota(0, 2);
-
-					for (int i : indices)
-					{
-						for (int j : indices)
-						{
-							vertex.position_ = { merged_quad.bottom_left_.x + (j * merged_quad.width_), merged_quad.bottom_left_.y + (i * merged_quad.height_), major + 1 };
-							vertex.uv_ = { j * merged_quad.width_, i * merged_quad.height_ };
-							chunk_mesh.Vertices().push_back(vertex);
-						}	
-					}
-
-					for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
-					{
-						chunk_mesh.Indices().push_back(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
-					}
-
-					if (!at_last_cell)
-					{
-						merged_quad.bottom_left_ = { merged_quad.bottom_left_.x + merged_quad.width_, v };
-					}
-
-					merged_quad.width_ = 1;
-					merged_quad.height_ = 1;
-				}
-				else
-				{
-					++merged_quad.width_;
-				}
-			}	
+			mask_cell.processed_ = mask_cell.block_type_ == BlockType::Air;
+			slice_mask[cross_axis_1_index * cross_axis_1_size + cross_axis_2_index] = mask_cell;
 		}
 	}
 }
