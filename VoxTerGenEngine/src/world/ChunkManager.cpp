@@ -47,6 +47,391 @@ void ChunkManager::InitChunks(int chunk_radius)
 	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone); // z
 	//chunks_.begin()->second->BlockAt({ 1, 1, 0 }).SetType(BlockType::Stone); // z
 
+	// _____________
+	// |X|X|A|X|X|A|
+	// |X|X|A|X|X|A|
+	// |A|A|X|X|A|A|
+	// |A|A|X|X|A|A|
+	// -------------
+	//chunks_.begin()->second->BlockAt({ 0, 0, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 4 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 3, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 3, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 3, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 3, 4 }).SetType(BlockType::Stone);
+
+	// _____________
+	// |X|X|X|X|X|X|
+	// |X|X|X|X|X|X|
+	// |X|X|X|X|X|X|
+	// |X|X|X|X|X|X|
+	// -------------
+	// for (int i = 0; i < 4; ++i)
+	// {
+	// 	for (int j = 0; j < 6; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, i, j }).SetType(BlockType::Stone);
+	// 	}
+	// }
+
+	// _____________
+	// |X|X|X|X|A|A|
+	// |X|X|X|A|A|A|
+	// |X|X|X|A|A|A|
+	// |X|X|X|A|A|A|
+	// -------------
+	// for (int i = 0; i < 4; ++i)
+	// {
+	// 	for (int j = 0; j < 3; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, i, j }).SetType(BlockType::Stone);
+	// 	}
+	// }
+	//chunks_.begin()->second->BlockAt({ 0, 3, 3 }).SetType(BlockType::Stone);
+	
+	// _____________
+	// |X|X|X|X|X|X|
+	// |X|X|X|C|C|C|
+	// |X|X|X|C|C|C|
+	// |X|X|X|C|C|C|
+	// -------------
+	// for (int i = 0; i < 4; ++i)
+	// {
+	// 	for (int j = 0; j < 3; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, i, j }).SetType(BlockType::Stone);
+	// 	}
+	// }
+	//chunks_.begin()->second->BlockAt({ 0, 3, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 3, 4 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 3, 5 }).SetType(BlockType::Stone);
+	// for (int i = 0; i < 3; ++i)
+	// {
+	// 	for (int j = 3; j < 5; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, i, j }).SetType(BlockType::Dirt);
+	// 	}
+	// }
+
+	// _____________
+	// |A|X|A|A|A|A|
+	// |X|X|X|X|X|A|
+	// |A|X|A|A|A|A|
+	// |A|X|A|A|A|A|
+	// -------------
+	// for (int i = 0; i < 5; ++i)
+	// {
+	// 		chunks_.begin()->second->BlockAt({ 0, 2, i }).SetType(BlockType::Stone);
+	// }
+	// for (int j = 0; j < 4; ++j)
+	// {
+	// 	chunks_.begin()->second->BlockAt({ 0, j, 1 }).SetType(BlockType::Stone);
+	// }
+	
+	// _____________
+	// |X|X|X|A|A|A|
+	// |X|A|A|A|A|A|
+	// |X|A|A|A|A|A|
+	// |X|X|X|X|X|X|
+	// -------------
+	// for (int i = 0; i < 6; ++i)
+	// {
+	// 		chunks_.begin()->second->BlockAt({ 0, 0, i }).SetType(BlockType::Stone);
+	// }
+	// for (int i = 0; i < 3; ++i)
+	// {
+	// 		chunks_.begin()->second->BlockAt({ 0, 3, i }).SetType(BlockType::Stone);
+	// }
+	// for (int i = 0; i < 4; ++i)
+	// {
+	// 		chunks_.begin()->second->BlockAt({ 0, i, 0 }).SetType(BlockType::Stone);
+	// }
+
+	// _____________
+	// |X|X|X|X|X|X|
+	// |X|A|A|A|A|X|
+	// |X|A|A|A|A|X|
+	// |X|X|X|X|X|X|
+	// -------------
+	// for (int i = 0; i < 6; ++i)
+	// {
+	// 		chunks_.begin()->second->BlockAt({ 0, 0, i }).SetType(BlockType::Stone);
+	// 		chunks_.begin()->second->BlockAt({ 0, 3, i }).SetType(BlockType::Stone);
+	// }
+	// for (int i = 0; i < 3; ++i)
+	// {
+	// 		chunks_.begin()->second->BlockAt({ 0, i, 0 }).SetType(BlockType::Stone);
+	// 		chunks_.begin()->second->BlockAt({ 0, i, 5 }).SetType(BlockType::Stone);
+	// }
+
+	// _____________
+	// |A|A|A|A|A|A|
+	// |A|X|A|X|A|X|
+	// |A|A|A|A|A|A|
+	// |X|A|X|A|X|A|
+	// -------------
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 4 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 5 }).SetType(BlockType::Stone);
+
+	// _____________
+	// |X|A|X|A|X|A|
+	// |A|X|A|X|A|X|
+	// |X|A|X|A|X|A|
+	// |A|X|A|X|A|X|
+	// -------------
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 5 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 4 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 5 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 3, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 3, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 3, 4 }).SetType(BlockType::Stone);
+
+	// edges empty
+	// _____________
+	// |A|A|A|A|A|A|
+	// |A|X|X|X|X|A|
+	// |A|X|X|X|X|A|
+	// |A|X|X|X|X|A|
+	// -------------
+	// for (int i = 1; i < 5; ++i)
+	// {
+	// 	for (int j = 0; j < 3; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, j, i }).SetType(BlockType::Stone);
+	// 	}
+	// }
+
+	// L-shape
+	// _____________
+	// |A|A|A|A|A|A|
+	// |X|X|A|A|A|A|
+	// |X|X|X|X|A|A|
+	// |A|A|X|X|X|A|
+	// -------------
+	//chunks_.begin()->second->BlockAt({ 0, 0, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 4 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 1 }).SetType(BlockType::Stone);
+
+	// scattered blocks
+	// _____________
+	// |A|A|A|A|A|A|
+	// |A|X|A|X|A|A|
+	// |A|A|X|A|X|A|
+	// |A|A|A|A|A|A|
+	// -------------
+	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 4 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 3 }).SetType(BlockType::Stone);
+
+	// edges filled
+	// _____________
+	// |X|X|X|X|X|X|
+	// |X|A|A|A|A|X|
+	// |X|A|X|X|A|X|
+	// |X|X|X|X|X|X|
+	// -------------
+	// for (int i = 0; i < 6; ++i)
+	// {
+	// 		chunks_.begin()->second->BlockAt({ 0, 0, i }).SetType(BlockType::Stone);
+	// 		chunks_.begin()->second->BlockAt({ 0, 3, i }).SetType(BlockType::Stone);
+	// }
+	// for (int i = 0; i < 3; ++i)
+	// {
+	// 		chunks_.begin()->second->BlockAt({ 0, i, 0 }).SetType(BlockType::Stone);
+	// 		chunks_.begin()->second->BlockAt({ 0, i, 5 }).SetType(BlockType::Stone);
+	// }
+	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 3 }).SetType(BlockType::Stone);
+
+	// single row in middle
+	// _____________
+	// |A|A|A|A|A|A|
+	// |A|A|A|A|A|A|
+	// |X|X|X|X|A|A|
+	// |A|A|A|A|A|A|
+	// -------------
+	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 3 }).SetType(BlockType::Stone);
+
+	// width 1 column
+	// _____________
+	// |A|A|A|A|A|A|
+	// |X|A|A|A|A|A|
+	// |X|A|A|A|A|A|
+	// |X|A|A|A|A|A|
+	// -------------
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 0 }).SetType(BlockType::Stone);
+
+	// _____________
+	// |A|A|A|A|A|A|
+	// |X|X|A|X|X|A|
+	// |X|X|A|X|X|A|
+	// |A|A|A|A|A|A|
+	// -------------
+	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 4 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 4 }).SetType(BlockType::Stone);
+
+	// _____________
+	// |O|O|O|O|O|O|
+	// |X|X|X|O|A|A|
+	// |X|X|X|C|C|C|
+	// |X|X|X|C|C|C|
+	// -------------
+	// for (int i = 0; i < 3; ++i)
+	// {
+	// 	for (int j = 0; j < 3; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, i, j }).SetType(BlockType::Stone);
+	// 	}
+	// }
+	// for (int i = 0; i < 2; ++i)
+	// {
+	// 	for (int j = 0; j < 3; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, i, j }).SetType(BlockType::Dirt);
+	// 	}
+	// }
+	// 	for (int j = 0; j < 6; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, 3, j }).SetType(BlockType::Sand);
+	// 	}
+	// 	chunks_.begin()->second->BlockAt({ 0, 2, 3 }).SetType(BlockType::Sand);
+
+	// _____________
+	// |O|O|O|O|O|O|
+	// |X|A|C|C|C|C|
+	// |X|X|B|C|C|C|
+	// |X|X|X|C|C|C|
+	// -------------
+	// 	for (int j = 0; j < 6; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, 3, j }).SetType(BlockType::Sand);
+	// 	}
+	// for (int i = 0; i < 3; ++i)
+	// {
+	// 	for (int j = 0; j < 3; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, i, j }).SetType(BlockType::Snow);
+	// 	}
+	// }
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Snow);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Dirt);
+
+	// _____________
+	// |O|O|O|O|O|O|
+	// |X|A|C|C|C|C|
+	// |X|A|B|C|C|C|
+	// |A|X|X|C|C|C|
+	// -------------
+	// 	for (int j = 0; j < 6; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, 3, j }).SetType(BlockType::Sand);
+	// 	}
+	// for (int i = 3; i < 6; ++i)
+	// {
+	// 	for (int j = 3; j < 6; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, i, j }).SetType(BlockType::Snow);
+	// 	}
+	// }
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Snow);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Dirt);
+
+	// _____________
+	// |O|O|O|O|O|O|
+	// |O|O|X|O|O|A|
+	// |A|X|X|A|A|A|
+	// |X|X|X|X|X|A|
+	// -------------
+	// 	for (int j = 0; j < 6; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, 3, j }).SetType(BlockType::Sand);
+	// 	}
+	//chunks_.begin()->second->BlockAt({ 0, 2, 0 }).SetType(BlockType::Sand);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 1 }).SetType(BlockType::Sand);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 3 }).SetType(BlockType::Sand);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 4 }).SetType(BlockType::Sand);
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 4 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 2 }).SetType(BlockType::Stone);
+
+	// _____________
+	// |O|O|O|O|O|O|
+	// |X|X|X|O|O|C|
+	// |X|X|X|C|B|B|
+	// |X|X|R|C|B|B|
+	// -------------
+	// 	for (int j = 0; j < 6; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, 3, j }).SetType(BlockType::Sand);
+	// 	}
+	//chunks_.begin()->second->BlockAt({ 0, 2, 3 }).SetType(BlockType::Sand);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 4 }).SetType(BlockType::Sand);
+	// for (int i = 0; i < 3; ++i)
+	// {
+	// 	for (int j = 0; j < 3; ++j)
+	// 	{
+	// 		chunks_.begin()->second->BlockAt({ 0, i, j }).SetType(BlockType::Stone);
+	// 	}
+	// }
+	//chunks_.begin()->second->BlockAt({ 0, 0, 2 }).SetType(BlockType::Dirt);
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 3 }).SetType(BlockType::Snow);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 3 }).SetType(BlockType::Snow);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 5 }).SetType(BlockType::Snow);
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 4 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 5 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 4 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 5 }).SetType(BlockType::Grass);
+
 	BuildAllChunkMeshes();
 }
 
