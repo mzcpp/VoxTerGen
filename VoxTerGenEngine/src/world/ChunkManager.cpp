@@ -32,6 +32,21 @@ void ChunkManager::InitChunks(int chunk_radius)
 		}
 	}
 
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone); // x
+	//chunks_.begin()->second->BlockAt({ 0, 1, 1 }).SetType(BlockType::Stone); // x
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0} ).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1} ).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 1, 0, 0} ).SetType(BlockType::Stone); // y
+	//chunks_.begin()->second->BlockAt({ 1, 0, 1} ).SetType(BlockType::Stone); // y
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 1, 0, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone); // z
+	//chunks_.begin()->second->BlockAt({ 1, 1, 0 }).SetType(BlockType::Stone); // z
+
 	BuildAllChunkMeshes();
 }
 
