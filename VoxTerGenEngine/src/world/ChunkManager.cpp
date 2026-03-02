@@ -170,7 +170,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 	// 		chunks_.begin()->second->BlockAt({ 0, 0, i }).SetType(BlockType::Stone);
 	// 		chunks_.begin()->second->BlockAt({ 0, 3, i }).SetType(BlockType::Stone);
 	// }
-	// for (int i = 0; i < 3; ++i)
+	// for (int i = 0; i < 4; ++i)
 	// {
 	// 		chunks_.begin()->second->BlockAt({ 0, i, 0 }).SetType(BlockType::Stone);
 	// 		chunks_.begin()->second->BlockAt({ 0, i, 5 }).SetType(BlockType::Stone);
@@ -264,7 +264,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 	// 		chunks_.begin()->second->BlockAt({ 0, 0, i }).SetType(BlockType::Stone);
 	// 		chunks_.begin()->second->BlockAt({ 0, 3, i }).SetType(BlockType::Stone);
 	// }
-	// for (int i = 0; i < 3; ++i)
+	// for (int i = 0; i < 4; ++i)
 	// {
 	// 		chunks_.begin()->second->BlockAt({ 0, i, 0 }).SetType(BlockType::Stone);
 	// 		chunks_.begin()->second->BlockAt({ 0, i, 5 }).SetType(BlockType::Stone);
@@ -303,10 +303,10 @@ void ChunkManager::InitChunks(int chunk_radius)
 	// -------------
 	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 1, 1 }).SetType(BlockType::Stone);
-	//chunks_.begin()->second->BlockAt({ 0, 1, 3 }).SetType(BlockType::Stone);
-	//chunks_.begin()->second->BlockAt({ 0, 1, 4 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 2, 0 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 2, 1 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 3 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 4 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 2, 3 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 2, 4 }).SetType(BlockType::Stone);
 
@@ -325,7 +325,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 	// }
 	// for (int i = 0; i < 2; ++i)
 	// {
-	// 	for (int j = 0; j < 3; ++j)
+	// 	for (int j = 3; j < 6; ++j)
 	// 	{
 	// 		chunks_.begin()->second->BlockAt({ 0, i, j }).SetType(BlockType::Dirt);
 	// 	}
@@ -348,17 +348,20 @@ void ChunkManager::InitChunks(int chunk_radius)
 	// 	}
 	// for (int i = 0; i < 3; ++i)
 	// {
-	// 	for (int j = 0; j < 3; ++j)
+	// 	for (int j = 3; j < 6; ++j)
 	// 	{
 	// 		chunks_.begin()->second->BlockAt({ 0, i, j }).SetType(BlockType::Snow);
 	// 	}
 	// }
-	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Snow);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 2 }).SetType(BlockType::Snow);
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 0, 2 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 1, 1 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 2, 0 }).SetType(BlockType::Stone);
+
 	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Dirt);
 
 	// _____________
@@ -371,17 +374,20 @@ void ChunkManager::InitChunks(int chunk_radius)
 	// 	{
 	// 		chunks_.begin()->second->BlockAt({ 0, 3, j }).SetType(BlockType::Sand);
 	// 	}
-	// for (int i = 3; i < 6; ++i)
+	// for (int i = 0; i < 3; ++i)
 	// {
 	// 	for (int j = 3; j < 6; ++j)
 	// 	{
 	// 		chunks_.begin()->second->BlockAt({ 0, i, j }).SetType(BlockType::Snow);
 	// 	}
 	// }
-	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Snow);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 2 }).SetType(BlockType::Snow);
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 0, 2 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone);
 	//chunks_.begin()->second->BlockAt({ 0, 2, 0 }).SetType(BlockType::Stone);
+	
 	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Dirt);
 
 	// _____________
