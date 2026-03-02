@@ -47,6 +47,12 @@ void ChunkManager::InitChunks(int chunk_radius)
 	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Stone); // z
 	//chunks_.begin()->second->BlockAt({ 1, 1, 0 }).SetType(BlockType::Stone); // z
 
+	// !!!!
+	// IF YOU WANT TO TEST X AXIS, KEEP IT
+	// IF YOU WANT TO TEST Y AXIS, SWAP x AND y
+	// IF YOU WANT TO TEST Z AXIS, SWAP x AND z
+	// !!!!
+
 	// _____________
 	// |X|X|A|X|X|A|
 	// |X|X|A|X|X|A|
