@@ -1,8 +1,6 @@
 mesh - naive, greedy
 render mesh
 
-after Meshing is thoroughly tested, allow the loop in BuildMeshGreedy
-
 make class MeshBuilder a namespace!
 
 void Chunk::Fill(std::function<Block(int, int, int)> filler)
