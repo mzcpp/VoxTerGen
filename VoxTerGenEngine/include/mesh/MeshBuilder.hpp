@@ -50,8 +50,6 @@ private:
 
 	static bool MaskCellsMergable(const MaskCell& first, const MaskCell& second);
 
-	static bool MergeWithRowAbove(int start_x, int end_x, int y, int height, int width, const MaskCell& cell_to_match, const std::vector<MaskCell>& slice_mask, MergedQuad& merged_quad);
-	
 	static void BuildSliceMask(MajorAxis major_axis, int major_axis_index, int major_axis_size, int cross_axis_1_size, int cross_axis_2_size, BlockQuery auto&& world_block_query, std::vector<MaskCell>& slice_mask);
 	
 	static void EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, Mesh& chunk_mesh);
