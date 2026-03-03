@@ -17,7 +17,6 @@ struct MaskCell
 	Direction dir_;
 	std::uint8_t sun_light_;
 	std::uint8_t block_light_;
-	bool processed_;
 };
 
 struct MergedQuad
@@ -57,7 +56,7 @@ private:
 	
 	static void EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, Mesh& chunk_mesh);
 
-	static void MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int cross_axis_1_size, int cross_axis_2_size, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh);
+	static void MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh);
 };
 
 Mesh MeshBuilder::BuildMeshNaive(const glm::ivec2& chunk_world_coords, BlockQuery auto&& world_block_query)
@@ -140,7 +139,7 @@ void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, BlockQuery auto&& world_bl
 	for (int major_axis_index = -1; major_axis_index < major_axis_size; ++major_axis_index)
 	{
 		BuildSliceMask(major_axis, major_axis_index, major_axis_size, cross_axis_1_size, cross_axis_2_size, world_block_query, slice_mask);
-		MergeFacesAndEmitData(major_axis, major_axis_index, cross_axis_1_size, cross_axis_2_size, slice_mask, chunk_mesh);
+		MergeFacesAndEmitData(major_axis, major_axis_index, cross_axis_2_size, cross_axis_1_size, slice_mask, chunk_mesh);
 	}
 }
 
@@ -196,7 +195,6 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 				mask_cell.block_light_ = right_block.BlockLight();
 			}
 
-			mask_cell.processed_ = mask_cell.block_type_ == BlockType::Air;
 			slice_mask[cross_axis_1_index * cross_axis_2_size + cross_axis_2_index] = mask_cell;
 		}
 	}
