@@ -174,29 +174,6 @@ bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& secon
 	return true;
 }
 
-bool MeshBuilder::MergeWithRowAbove(int start_x, int end_x, int y, int height, int width, const MaskCell& cell_to_match, const std::vector<MaskCell>& slice_mask, MergedQuad& merged_quad)
-{
-	assert(slice_mask.size() == static_cast<std::size_t>(width * height));
-
-	if (start_x >= end_x || start_x < 0 || end_x > width || y < 0 || y >= height)
-	{
-		return false;
-	}
-
-	for (int x = start_x; x < end_x; ++x)
-	{
-		const MaskCell& cell = slice_mask[y * width + x];
-
-		if (!MaskCellsMergable(cell_to_match, cell))
-		{
-			return false;
-		}
-	}
-
-	++merged_quad.height_;
-	return true;
-}
-
 void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, Mesh& chunk_mesh)
 {
 	Vertex vertex;
