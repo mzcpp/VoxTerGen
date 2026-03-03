@@ -455,7 +455,10 @@ void ChunkManager::InitChunkBlocks(Chunk& chunk)
 		{
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				chunk.BlockAt({ x, y, z }).SetType(BlockType::Air);
+				Block& block = chunk.BlockAt({ x, y, z });
+				block.SetType(BlockType::Air);
+				block.SetSunLight(0);
+				block.SetBlockLight(0);
 			}
 		}
 	}
