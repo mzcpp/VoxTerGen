@@ -146,11 +146,6 @@ std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 
 bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& second)
 {
-	if (first.processed_ || second.processed_)
-	{
-		return false;
-	}
-
 	if (first.block_type_ == BlockType::Air || second.block_type_ == BlockType::Air)
 	{
 		return false;
@@ -244,83 +239,60 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 	}
 }
 
-void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int cross_axis_1_size, int cross_axis_2_size, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh)
+void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh)
 {
-	bool merging = false;
-	MergedQuad merged_quad = { { 0, 0 }, 1, 1 };
-
-	for (int v = 0; v < cross_axis_1_size; ++v)
+	for (int y = 0; y < mask_height; ++y)
 	{
-		for (int u = 1; u < cross_axis_2_size; ++u)
+		for (int x = 0; x < mask_width;)
 		{
-			MaskCell& cell = slice_mask[(v * cross_axis_2_size) + (u - 1)];
-			MaskCell& next_cell = slice_mask[(v * cross_axis_2_size) + u];
-
-			if (u == 1 && cell.block_type_ != BlockType::Air)
+			const MaskCell& cell = slice_mask[y * mask_width + x];
+			
+			if (cell.block_type_ == BlockType::Air)
 			{
-				merging = true;
-				merged_quad.bottom_left_ = { u - 1, v };
-			}
-
-			if (cell.processed_)
-			{
-				if (!next_cell.processed_)
-				{
-					merging = true;
-					merged_quad.bottom_left_ = { u, v };
-				}
-
+				++x;
 				continue;
 			}
 
-			const bool at_last_cell = u == cross_axis_2_size - 1;
-			const bool cells_mergable = MaskCellsMergable(cell, next_cell);
+			int merged_quad_width = 1;
 
-			if (!merging && cells_mergable)
+			while (x + merged_quad_width < mask_width && 
+				MaskCellsMergable(cell, slice_mask[y * mask_width + (x + merged_quad_width)]))
 			{
-				merging = true;
-				merged_quad.bottom_left_ = { u - 1, v };
+				++merged_quad_width;
 			}
 
-			if (merging && (!cells_mergable || at_last_cell))
-			{
-				if (at_last_cell && cells_mergable)
+			int merged_quad_height = 1;
+			bool done = false;
+
+			while (y + merged_quad_height < mask_height && !done)
+            {
+                for (int k = 0; k < merged_quad_width; ++k)
+                {
+                    if (!MaskCellsMergable(cell, slice_mask[(y + merged_quad_height) * width + x + k]))
+                    {
+                        done = true;
+                        break;
+                    }
+                }
+
+                if (!done)
 				{
-					++merged_quad.width_;
+                    ++merged_quad_height;
 				}
+            }
 
-				int height = v;
+			const MergedQuad merged_quad = { x, y, merged_quad_width, merged_quad_height };
+			EmitVerticesAndIndices(major_axis, merged_quad, major_axis_index, cell, chunk_mesh);
 
-				while (MergeWithRowAbove(merged_quad.bottom_left_.x, merged_quad.width_, height + 1, cross_axis_1_size, cross_axis_2_size, cell, slice_mask, merged_quad))
-				{
-					++height;
-				}
+			for (int dy = 0; dy < merged_quad_height; ++dy)
+            {
+                for (int dx = 0; dx < merged_quad_width; ++dx)
+                {
+                    mask[(y + dy) * width + (x + dx)].block_type_ = BlockType::Air;
+                }
+            }
 
-				merging = false;
-
-				for (int merged_y = merged_quad.bottom_left_.y; merged_y < merged_quad.height_; ++merged_y)
-				{
-					for (int merged_x = merged_quad.bottom_left_.x; merged_x < merged_quad.width_; ++merged_x)
-					{
-						slice_mask[merged_y * cross_axis_2_size + merged_x].processed_ = true;
-					}
-				}
-
-				const MaskCell& first_merged_cell = slice_mask[merged_quad.bottom_left_.y * cross_axis_2_size + merged_quad.bottom_left_.x];
-				EmitVerticesAndIndices(major_axis, merged_quad, major_axis_index, first_merged_cell, chunk_mesh);
-
-				if (!at_last_cell)
-				{
-					merged_quad.bottom_left_ = { merged_quad.bottom_left_.x + merged_quad.width_, v };
-				}
-
-				merged_quad.width_ = 1;
-				merged_quad.height_ = 1;
-			}
-			else
-			{
-				++merged_quad.width_;
-			}
-		}
+			x += merged_quad_width;
+		}	
 	}
 }
