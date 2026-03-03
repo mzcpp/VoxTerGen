@@ -179,10 +179,12 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 	Vertex vertex;
 	vertex.normal_ = DirToNormal(first_merged_cell.dir_);
 	vertex.material_ = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
+
 	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
 	{
 		chunk_mesh.Indices().push_back(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
 	}
+	
 	for (int i : { 0, 1 })
 	{
 		for (int j : { 0, 1 })
