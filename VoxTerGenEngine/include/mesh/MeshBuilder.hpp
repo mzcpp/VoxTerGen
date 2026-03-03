@@ -94,12 +94,12 @@ Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query)
 {
 	Mesh chunk_mesh;
 
-	// for (MajorAxis axis : AllAxes())
-	// {
-	// 	BuildAxisMesh(axis, world_block_query, chunk_mesh);
-	// }
+	 for (MajorAxis axis : AllAxes())
+	 {
+	 	BuildAxisMesh(axis, world_block_query, chunk_mesh);
+	 }
 
-	BuildAxisMesh(MajorAxis::X, world_block_query, chunk_mesh);
+	//BuildAxisMesh(MajorAxis::X, world_block_query, chunk_mesh);
 	//BuildAxisMesh(MajorAxis::Y, world_block_query, chunk_mesh);
 	//BuildAxisMesh(MajorAxis::Z, world_block_query, chunk_mesh);
 
@@ -175,8 +175,7 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 			const bool render_left = left_block_inside && left_block.ShouldRenderFace(right_block);
 			const bool render_right = right_block_inside && right_block.ShouldRenderFace(left_block);
 
-			MaskCell mask_cell;
-			mask_cell = { BlockType::Air, Direction::PosX, 0, 0, false };
+			MaskCell mask_cell = { BlockType::Air, Direction::PosX, 0, 0 };
 
 			if (render_left)
 			{

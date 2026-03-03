@@ -247,7 +247,7 @@ void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_ind
             {
                 for (int k = 0; k < merged_quad_width; ++k)
                 {
-                    if (!MaskCellsMergable(cell, slice_mask[(y + merged_quad_height) * width + x + k]))
+                    if (!MaskCellsMergable(cell, slice_mask[(y + merged_quad_height) * mask_width + x + k]))
                     {
                         done = true;
                         break;
@@ -260,14 +260,19 @@ void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_ind
 				}
             }
 
-			const MergedQuad merged_quad = { x, y, merged_quad_width, merged_quad_height };
+			MergedQuad merged_quad;
+			merged_quad.bottom_left_.x = x;
+			merged_quad.bottom_left_.y = y;
+			merged_quad.width_ = merged_quad_width;
+			merged_quad.height_ = merged_quad_height;
+			
 			EmitVerticesAndIndices(major_axis, merged_quad, major_axis_index, cell, chunk_mesh);
 
 			for (int dy = 0; dy < merged_quad_height; ++dy)
             {
                 for (int dx = 0; dx < merged_quad_width; ++dx)
                 {
-                    mask[(y + dy) * width + (x + dx)].block_type_ = BlockType::Air;
+                    slice_mask[(y + dy) * mask_width + (x + dx)].block_type_ = BlockType::Air;
                 }
             }
 
