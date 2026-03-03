@@ -172,6 +172,10 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 			const Block& left_block = world_block_query(left_query_coords);
 			const Block& right_block = world_block_query(right_query_coords);
 
+			// simplify this to
+			// const bool left_block_inside = major_axis_index != -1;
+			// const bool right_block_inside = (major_axis_index + 1) != major_axis_size;
+
 			const bool left_block_inside = major_axis_index >= 0 && major_axis_index < major_axis_size;
 			const bool right_block_inside = (major_axis_index + 1) >= 0 && (major_axis_index + 1) < major_axis_size;
 
