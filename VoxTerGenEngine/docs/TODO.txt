@@ -1,4 +1,3 @@
-mesh - naive, greedy
 render mesh
 
 make class MeshBuilder a namespace!
