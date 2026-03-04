@@ -99,10 +99,6 @@ Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query)
 	 	BuildAxisMesh(axis, world_block_query, chunk_mesh);
 	 }
 
-	//BuildAxisMesh(MajorAxis::X, world_block_query, chunk_mesh);
-	//BuildAxisMesh(MajorAxis::Y, world_block_query, chunk_mesh);
-	//BuildAxisMesh(MajorAxis::Z, world_block_query, chunk_mesh);
-
 	return chunk_mesh;
 }
 
