@@ -1,8 +1,12 @@
+texture atlas
+make & fill resource manager
 render mesh
 
 make class MeshBuilder a namespace!
 
 void Chunk::Fill(std::function<Block(int, int, int)> filler)
+
+review the camera class thoroughly
 
 verify the camera is working correctly for big floats
 
