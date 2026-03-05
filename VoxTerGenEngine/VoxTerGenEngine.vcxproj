@@ -177,6 +177,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="include\external\glm\detail\glm.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\core\Engine.cpp" />
+    <ClCompile Include="src\core\ResourceManager.cpp" />
     <ClCompile Include="src\core\Settings.cpp" />
     <ClCompile Include="src\external\glad\glad.c" />
     <ClCompile Include="src\graphics\Camera.cpp" />
@@ -192,6 +193,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\core\Application.hpp" />
     <ClInclude Include="include\core\Direction.hpp" />
     <ClInclude Include="include\core\Engine.hpp" />
+    <ClInclude Include="include\core\ResourceManager.hpp" />
     <ClInclude Include="include\core\Settings.hpp" />
     <ClInclude Include="include\external\glad\glad\glad.h" />
     <ClInclude Include="include\external\glad\KHR\khrplatform.h" />
