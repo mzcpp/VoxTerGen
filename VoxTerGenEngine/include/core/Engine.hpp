@@ -2,6 +2,7 @@
 #define ENGINE_HPP
 
 #include "core/Settings.hpp"
+#include "core/ResourceManager.hpp"
 #include "world/World.hpp"
 #include "input/InputManager.hpp"
 #include "input/CameraController.hpp"
@@ -14,6 +15,7 @@ private:
 	InputManager input_manager_;
 	Camera camera_;
 	CameraController camera_controller_;
+	ResourceManager resource_manager_;
 	Settings settings_;
 	World world_;
 	WorldRenderer world_renderer_;
