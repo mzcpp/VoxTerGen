@@ -1,12 +1,13 @@
 #include "core/ResourceManager.hpp"
 #include "utils/Logger.hpp"
+#include "graphics/Texture2D.hpp"
 
-ResourceManager::ResourceManager();
+ResourceManager::ResourceManager()
 {
 
 }
 
-Texture2D* ResourceManager::GetTexture(const std::string& texture_name)
+TextureUtils::Texture2D* ResourceManager::GetTexture(const std::string & texture_name)
 {
     const auto texture_it = textures_.find(texture_name);
 
