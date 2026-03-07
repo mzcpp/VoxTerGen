@@ -1,4 +1,5 @@
 texture atlas
+glEnable(GL_FRAMEBUFFER_SRGB);
 make & fill resource manager
 render mesh
 
