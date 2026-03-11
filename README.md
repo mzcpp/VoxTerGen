@@ -1,4 +1,4 @@
-<img src="img/voxtergen_logo@4x.png"/>
+<img src="readme_img/voxtergen_logo@4x.png"/>
 
 # VoxTerGen
 Procedural terrain and cave generation in a custom voxel engine written in C++ and OpenGL.
