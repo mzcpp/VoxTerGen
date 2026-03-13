@@ -4,9 +4,9 @@
 
 RenderMesh::RenderMesh()
 {
-    glCreateVertexArray(1, &vao_);
-    glCreateBuffers(1, &vbo_):
-    glCreateBuffers(1, &ebo_):
+    glCreateVertexArrays(1, &vao_);
+    glCreateBuffers(1, &vbo_);
+    glCreateBuffers(1, &ebo_);
 }
 
 RenderMesh::~RenderMesh()
