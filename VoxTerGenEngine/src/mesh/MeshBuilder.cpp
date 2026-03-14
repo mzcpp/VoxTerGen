@@ -196,23 +196,24 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 				j = 1 - j;
 			}
 
-			const int uu = merged_quad.bottom_left_.x + (j * merged_quad.width_);
-			const int vv = merged_quad.bottom_left_.y + (i * merged_quad.height_);
+			const int x_pos = merged_quad.bottom_left_.x + (j * merged_quad.width_);
+			const int y_pos = merged_quad.bottom_left_.y + (i * merged_quad.height_);
 
 			if (major_axis == MajorAxis::X)
 			{
-				vertex.position_ = { major_axis_index + 1, vv, uu };
+				vertex.position_ = { major_axis_index + 1, y_pos, x_pos };
 			}
 			else if (major_axis == MajorAxis::Y)
 			{
-				vertex.position_ = { uu, major_axis_index + 1, vv };
+				vertex.position_ = { x_pos, major_axis_index + 1, y_pos };
 			}
 			else
 			{
-				vertex.position_ = { uu, vv, major_axis_index + 1 };
+				vertex.position_ = { x_pos, y_pos, major_axis_index + 1 };
 			}
 
 			vertex.uv_ = { j * merged_quad.width_, i * merged_quad.height_ };
+			//vertex.uv_ = GetTextureCoords({ j, i }, first_merged_cell.block_type_);
 			chunk_mesh.Vertices().push_back(vertex);
 		}
 	}
@@ -279,4 +280,9 @@ void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_ind
 			x += merged_quad_width;
 		}	
 	}
+}
+
+glm::ivec2 MeshBuilder::GetTextureCoords(const glm::ivec2& coords, BlockType block_type)
+{
+	return {};
 }
