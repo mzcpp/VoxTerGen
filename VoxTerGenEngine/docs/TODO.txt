@@ -1,15 +1,17 @@
-texture atlas
-glEnable(GL_FRAMEBUFFER_SRGB);
-make & fill resource manager
+change texture object to construct from texture atlas/cube map
+fill resource manager
 render mesh
+add cubemap
 
-make class MeshBuilder a namespace!
+make class MeshBuilder a namespace
 
-void Chunk::Fill(std::function<Block(int, int, int)> filler)
+do I need void Chunk::Fill(std::function<Block(int, int, int)> filler)?
 
 review the camera class thoroughly
 
 verify the camera is working correctly for big floats
+
+glEnable(GL_FRAMEBUFFER_SRGB);
 
 SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix
 
@@ -18,7 +20,5 @@ opengl/glad correct version check when init
 tick rate - 20/60?
 
 vsync
-
-cubemap
 
 VERY IMPORTANT, MAKE THE WINDOWS CORRECT SIZE BASED ON MONITOR SIZE SO IT DOES NOT CUTOFF LIKE THE MAZE GENERATOR ON MBA 13
