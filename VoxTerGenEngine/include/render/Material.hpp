@@ -12,8 +12,8 @@ enum class Material : std::uint8_t
     Stone, 
     Water, 
     Snow, 
-    Sand
+    Sand, 
+    Bedrock
 };
 
 #endif
-

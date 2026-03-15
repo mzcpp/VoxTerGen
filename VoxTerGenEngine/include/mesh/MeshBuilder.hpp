@@ -6,6 +6,10 @@
 #include "world/Block.hpp"
 #include "utils/constants.hpp"
 #include "core/Direction.hpp"
+#include "render/Material.hpp"
+
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
 
 #include <concepts>
 #include <cstdint>
@@ -56,7 +60,7 @@ private:
 
 	static void MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh);
 	
-	static glm::ivec2 GetTextureCoords(const glm::ivec2& coords, BlockType block_type);
+	static glm::ivec2 GetTextureCoords(const glm::ivec2& quad_coords, const MergedQuad& merged_quad, Material material);
 };
 
 Mesh MeshBuilder::BuildMeshNaive(const glm::ivec2& chunk_world_coords, BlockQuery auto&& world_block_query)

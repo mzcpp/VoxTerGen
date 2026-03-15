@@ -6,6 +6,7 @@
 #include "render/Material.hpp"
 #include "utils/Logger.hpp"
 #include "core/Direction.hpp"
+#include "utils/Constants.hpp"
 
 #include <array>
 #include <cassert>
@@ -137,6 +138,8 @@ std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 		return static_cast<std::uint8_t>(Material::Sand);
 	case BlockType::Snow:
 		return static_cast<std::uint8_t>(Material::Snow);
+	case BlockType::Bedrock:
+		return static_cast<std::uint8_t>(Material::Bedrock);
 	}
 
 	assert(false);
@@ -282,7 +285,36 @@ void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_ind
 	}
 }
 
-glm::ivec2 MeshBuilder::GetTextureCoords(const glm::ivec2& coords, BlockType block_type)
+glm::ivec2 MeshBuilder::GetTextureCoords(const glm::ivec2& quad_coords, const MergedQuad& merged_quad, Material material)
 {
+	glm::ivec2 material_texture_start_coords = { 0.0f, 0.0f };
+	const glm::ivec2 xy_delta = { 1.0f / constants::texture::atlas_columns, 1.0f / constants::texture::atlas_rows };
+
+	switch (material)
+	{
+	case Material::Air:
+		assert(false);
+		// TODO: LOG
+		break;
+	case Material::GrassTop:
+
+		break;
+	case Material::GrassSide:
+		break;
+	case Material::Dirt:
+		break;
+	case Material::Stone:
+		break;
+	case Material::Water:
+		break;
+	case Material::Snow:
+		break;
+	case Material::Sand:
+		break;
+	case Material::Bedrock:
+		break;
+	}
+
+
 	return {};
 }
