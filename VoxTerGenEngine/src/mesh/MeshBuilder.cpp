@@ -216,7 +216,7 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 			}
 
 			vertex.uv_ = { j * merged_quad.width_, i * merged_quad.height_ };
-			//vertex.uv_ = GetTextureCoords({ j, i }, first_merged_cell.block_type_);
+			//vertex.uv_ = GetTextureCoords({ j, i }, merged_quad, vertex.material_);
 			chunk_mesh.Vertices().push_back(vertex);
 		}
 	}
@@ -293,28 +293,36 @@ glm::ivec2 MeshBuilder::GetTextureCoords(const glm::ivec2& quad_coords, const Me
 	switch (material)
 	{
 	case Material::Air:
-		assert(false);
-		// TODO: LOG
-		break;
 	case Material::GrassTop:
-
 		break;
 	case Material::GrassSide:
+		material_texture_start_coords.x = 1 * (xy_delta.x);
 		break;
 	case Material::Dirt:
+		material_texture_start_coords.x = 1 * (xy_delta.x);
+		material_texture_start_coords.y = 1 * (xy_delta.y);
 		break;
 	case Material::Stone:
+		material_texture_start_coords.y = 1 * (xy_delta.y);
 		break;
 	case Material::Water:
+		material_texture_start_coords.y = 3 * (xy_delta.y);
 		break;
 	case Material::Snow:
+		material_texture_start_coords.x = 1 * (xy_delta.x);
+		material_texture_start_coords.y = 2 * (xy_delta.y);
 		break;
 	case Material::Sand:
+		material_texture_start_coords.y = 2 * (xy_delta.y);
 		break;
 	case Material::Bedrock:
+		material_texture_start_coords.x = 1 * (xy_delta.x);
+		material_texture_start_coords.y = 3 * (xy_delta.y);
 		break;
 	}
 
+	material_texture_start_coords.x += quad_coords.x * (merged_quad.width_ * xy_delta.x);
+	material_texture_start_coords.y += quad_coords.y * (merged_quad.height_ * xy_delta.y);
 
-	return {};
+	return material_texture_start_coords;
 }

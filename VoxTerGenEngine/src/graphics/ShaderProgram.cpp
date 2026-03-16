@@ -10,16 +10,6 @@
 #include <iostream>
 #include <optional>
 
-namespace
-{
-    void DetachAndDelete(GLuint program, Shader& shader)
-    {
-        GLuint id = shader.Get();
-        glDetachShader(program, id);
-        glDeleteShader(shader.Release());
-    }
-} // namespace
-
 ShaderProgram::ShaderProgram(
     const std::filesystem::path& vertex_path,
     const std::filesystem::path& fragment_path,
@@ -39,6 +29,7 @@ ShaderProgram::ShaderProgram(
 
     if (id_ == 0)
     {
+        // TODO: std::err?
         throw std::runtime_error("Failed to create shader program");
     }
 
@@ -58,12 +49,12 @@ ShaderProgram::ShaderProgram(
     }
     catch (...)
     {
-        DetachAndDelete(id_, vertex_shader);
-        DetachAndDelete(id_, fragment_shader);
+        DetachAndDeleteShader(vertex_shader);
+        DetachAndDeleteShader(fragment_shader);
 
         if (geometry_shader.has_value())
         {
-            DetachAndDelete(id_, *geometry_shader);
+            DetachAndDeleteShader(id_, *geometry_shader);
         }
 
         glDeleteProgram(id_);
@@ -71,12 +62,12 @@ ShaderProgram::ShaderProgram(
         throw;
     }
 
-    DetachAndDelete(id_, vertex_shader);
-    DetachAndDelete(id_, fragment_shader);
+    DetachAndDeleteShader(vertex_shader);
+    DetachAndDeleteShader(fragment_shader);
 
     if (geometry_shader.has_value())
     {
-        DetachAndDelete(id_, *geometry_shader);
+        DetachAndDeleteShader(*geometry_shader);
     }
 }
 
@@ -88,6 +79,7 @@ ShaderProgram::ShaderProgram(const std::filesystem::path& compute_path) : id_(0)
 
     if (id_ == 0)
     {
+        // TODO: std::err?
         throw std::runtime_error("Failed to create shader program");
     }
 
@@ -100,13 +92,13 @@ ShaderProgram::ShaderProgram(const std::filesystem::path& compute_path) : id_(0)
     }
     catch (...)
     {
-        DetachAndDelete(id_, compute_shader);
+        DetachAndDeleteShader(compute_shader);
         glDeleteProgram(id_);
         id_ = 0;
         throw;
     }
 
-    DetachAndDelete(id_, compute_shader);
+    DetachAndDeleteShader(compute_shader);
 }
 
 ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept
@@ -169,6 +161,7 @@ void ShaderProgram::CheckErrors() const
     std::vector<GLchar> info_log(length ? length : 1);
     GLsizei actual_length = 0;
     glGetProgramInfoLog(id_, length, &actual_length, info_log.data());
+    // TODO: std::err?
     throw std::runtime_error(std::string("Program linking failed:\n") + std::string(info_log.data(), actual_length));
 }
 
@@ -181,7 +174,7 @@ GLint ShaderProgram::GetUniformLocation(std::string_view name) const noexcept
         return it->second;
     }
 
-    GLint uniform_location = glGetUniformLocation(id_, key.c_str());
+    const GLint uniform_location = glGetUniformLocation(id_, key.c_str());
 
     if (uniform_location == -1)
     {
@@ -191,4 +184,10 @@ GLint ShaderProgram::GetUniformLocation(std::string_view name) const noexcept
     uniform_cache_.emplace(std::move(key), uniform_location);
 
     return uniform_location;
+}
+
+void ShaderProgram::DetachAndDeleteShader(Shader& shader)
+{
+    glDetachShader(id_, shader.Get());
+    glDeleteShader(shader.Release());
 }

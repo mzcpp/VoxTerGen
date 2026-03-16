@@ -32,3 +32,29 @@ ShaderProgram* ResourceManager::GetShader(const std::string& shader_name)
 
     return shader_it->second.get();
 }
+
+TTF_Font* GetFont(const std::string& font_name)
+{
+    const auto font_it = fonts_.find(font_name);
+
+    if (font_it == fonts_.end())
+    {
+        Logger::Log(LogLevel::ERROR, "Failed to get a font! Font name: {}", font_name);
+        return nullptr;
+    }
+
+    return font_it->second;
+}
+
+Mix_Chunk* GetSound(const std::string& sound_name)
+{
+    const auto sound_it = sounds_.find(sound_name);
+
+    if (sound_it == sounds_.end())
+    {
+        Logger::Log(LogLevel::ERROR, "Failed to get a sound! Sound name: {}", sound_name);
+        return nullptr;
+    }
+
+    return sound_it->second;
+}
