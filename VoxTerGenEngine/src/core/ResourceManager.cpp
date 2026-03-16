@@ -33,7 +33,7 @@ ShaderProgram* ResourceManager::GetShader(const std::string& shader_name)
     return shader_it->second.get();
 }
 
-TTF_Font* GetFont(const std::string& font_name)
+TTF_Font* ResourceManager::GetFont(const std::string& font_name)
 {
     const auto font_it = fonts_.find(font_name);
 
@@ -46,7 +46,7 @@ TTF_Font* GetFont(const std::string& font_name)
     return font_it->second;
 }
 
-Mix_Chunk* GetSound(const std::string& sound_name)
+Mix_Chunk* ResourceManager::GetSound(const std::string& sound_name)
 {
     const auto sound_it = sounds_.find(sound_name);
 

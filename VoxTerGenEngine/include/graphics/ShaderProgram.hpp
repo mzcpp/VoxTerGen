@@ -1,6 +1,8 @@
 #ifndef SHADERPROGRAM_H
 #define SHADERPROGRAM_H
 
+#include "graphics/Shader.hpp"
+
 #include <glad/glad.h>
 
 #include "glm/vec2.hpp"

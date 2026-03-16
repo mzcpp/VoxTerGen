@@ -54,7 +54,7 @@ ShaderProgram::ShaderProgram(
 
         if (geometry_shader.has_value())
         {
-            DetachAndDeleteShader(id_, *geometry_shader);
+            DetachAndDeleteShader(*geometry_shader);
         }
 
         glDeleteProgram(id_);
