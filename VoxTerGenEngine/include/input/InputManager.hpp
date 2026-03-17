@@ -41,6 +41,7 @@ public:
     const MouseState& Mouse() const { return mouse_; }
     const glm::vec2& MouseDelta() const { return mouse_.delta_; }
     const glm::ivec2& MousePos() const { return mouse_.pos_; }
+    float MouseWheel() const { return mouse_.wheel_; }
 };
 
 #endif // INPUT_MANAGER_HPP
