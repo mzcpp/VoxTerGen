@@ -17,7 +17,7 @@ private:
     std::unordered_map<std::string, std::unique_ptr<ShaderProgram>> shader_programs_;
     std::unordered_map<std::string, TTF_Font*> fonts_;
     std::unordered_map<std::string, Mix_Chunk*> sounds_;
-
+    // TODO: RAII for fonts and sounds
 public:
     ResourceManager();
 

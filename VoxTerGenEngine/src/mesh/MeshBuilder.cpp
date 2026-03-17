@@ -215,8 +215,7 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 				vertex.position_ = { x_pos, y_pos, major_axis_index + 1 };
 			}
 
-			vertex.uv_ = { j * merged_quad.width_, i * merged_quad.height_ };
-			//vertex.uv_ = GetTextureCoords({ j, i }, merged_quad, vertex.material_);
+			vertex.uv_ = GetTextureCoords({ j, i }, merged_quad, static_cast<Material>(vertex.material_));
 			chunk_mesh.Vertices().push_back(vertex);
 		}
 	}
