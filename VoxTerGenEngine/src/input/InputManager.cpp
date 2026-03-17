@@ -57,3 +57,8 @@ bool InputManager::KeyReleased(SDL_Scancode key) const
     bool prev = prev_keys_.count(key) ? prev_keys_.at(key) : false;
     return !curr && prev;
 }
+
+bool InputManager::MouseButtonDown(Uint8 button) const 
+{
+    return mouse_.buttons_ & SDL_BUTTON(button); 
+}

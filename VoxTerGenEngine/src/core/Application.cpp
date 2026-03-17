@@ -172,14 +172,7 @@ void Application::Tick()
 
 void Application::Render(float alpha)
 {
-	glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	const glm::mat4 interpolated_view = camera_.InterpolatedViewMatrix(alpha);
-	const glm::mat4 proj = camera_.ProjectionMatrix();
-
-	camera_.EndTick();
-
+	engine_.Render(alpha);
 	SDL_GL_SwapWindow(window_);
 }
 
@@ -336,9 +329,9 @@ bool Application::InitOpenGL()
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
 	glEnable(GL_MULTISAMPLE);
-	//glCullFace(GL_BACK);
-	//glFrontFace(GL_CCW);
 	glDepthFunc(GL_LESS);
 
 	/* V-Sync */

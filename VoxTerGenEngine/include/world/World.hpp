@@ -12,4 +12,4 @@ public:
 	World();
 };
 
-#endif
+#endif // WORLD_HPP

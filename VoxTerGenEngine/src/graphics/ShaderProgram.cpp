@@ -33,12 +33,12 @@ ShaderProgram::ShaderProgram(
         throw std::runtime_error("Failed to create shader program");
     }
 
-    glAttachShader(id_, vertex_shader.Get());
-    glAttachShader(id_, fragment_shader.Get());
+    glAttachShader(id_, vertex_shader.Id());
+    glAttachShader(id_, fragment_shader.Id());
 
     if (geometry_shader.has_value())
     {
-        glAttachShader(id_, geometry_shader->Get());
+        glAttachShader(id_, geometry_shader->Id());
     }
     
     glLinkProgram(id_);
@@ -83,7 +83,7 @@ ShaderProgram::ShaderProgram(const std::filesystem::path& compute_path) : id_(0)
         throw std::runtime_error("Failed to create shader program");
     }
 
-    glAttachShader(id_, compute_shader.Get());
+    glAttachShader(id_, compute_shader.Id());
     glLinkProgram(id_);
     
     try
@@ -104,7 +104,6 @@ ShaderProgram::ShaderProgram(const std::filesystem::path& compute_path) : id_(0)
 ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept
 {
     id_ = std::exchange(other.id_, 0);
-    uniform_cache_ = std::move(other.uniform_cache_);
 }
 
 ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept
@@ -120,7 +119,6 @@ ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept
     }
 
     id_ = std::exchange(other.id_, 0);
-    uniform_cache_ = std::move(other.uniform_cache_);
 
     return *this;
 }
@@ -165,29 +163,8 @@ void ShaderProgram::CheckErrors() const
     throw std::runtime_error(std::string("Program linking failed:\n") + std::string(info_log.data(), actual_length));
 }
 
-GLint ShaderProgram::GetUniformLocation(std::string_view name) const noexcept
-{
-    std::string key{ name };
-
-    if (auto it = uniform_cache_.find(key); it != uniform_cache_.end())
-    {
-        return it->second;
-    }
-
-    const GLint uniform_location = glGetUniformLocation(id_, key.c_str());
-
-    if (uniform_location == -1)
-    {
-        std::cerr << "Warning: Uniform '" << key << "' not found in shader program " << id_ << std::endl;
-    }
-
-    uniform_cache_.emplace(std::move(key), uniform_location);
-
-    return uniform_location;
-}
-
 void ShaderProgram::DetachAndDeleteShader(Shader& shader)
 {
-    glDetachShader(id_, shader.Get());
+    glDetachShader(id_, shader.Id());
     glDeleteShader(shader.Release());
 }

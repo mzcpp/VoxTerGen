@@ -4,10 +4,22 @@
 #include "input/InputManager.hpp"
 #include "graphics/Camera.hpp"
 #include "input/CameraController.hpp"
+#include "core/Engine.hpp"
 
 struct SDL_Window;
 struct TTF_Font;
 
+/**
+ * @brief Main application class.
+ *
+ * Manages the lifecycle of the application, including initialization,
+ * the main loop, event handling, rendering, and shutdown.
+ *
+ * This class is responsible for:
+ * - Initializing SDL and related subsystems
+ * - Creating the SDL2 window and OpenGL context
+ * - Running the main application loop
+ */
 class Application
 {
 private:
@@ -25,9 +37,7 @@ private:
 	int screen_height_;
 	float aspect_ratio_;
 
-	InputManager input_manager_;
-	Camera camera_;
-	CameraController camera_controller_;
+	Engine engine_;
 
 	bool running_;
 
@@ -40,13 +50,13 @@ public:
 
 	void Run();
 
+private:
 	void HandleEvents();
 
 	void Tick();
 
 	void Render(float alpha);
 
-private:
 	bool InitSDL();
 
 	bool CreateWindow();
@@ -68,4 +78,4 @@ private:
 	bool IsSoftwareRenderer();
 };
 
-#endif // GAME_HPP
+#endif // APPLICATION_HPP

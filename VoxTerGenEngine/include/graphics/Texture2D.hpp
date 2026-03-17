@@ -8,11 +8,6 @@
 
 namespace TextureUtils
 {
-    /**
-     * @brief Identifies the type of texture.
-     *
-     * Used to distinguish between standard 2D textures and cubemap textures.
-     */
     enum class TextureType 
     { 
         Texture2D, 
@@ -40,15 +35,6 @@ namespace TextureUtils
     public:
         Texture2D(std::string_view path, bool sRGB = false, bool generate_mipmaps = true,
             GLenum wrap_s = DEFAULT_WRAP_S, GLenum wrap_t = DEFAULT_WRAP_T,
-            GLenum min_filter = DEFAULT_MIN_FILTER, GLenum mag_filter = DEFAULT_MAG_FILTER);
-
-        Texture2D(int width, int height, const unsigned char* data,
-            GLenum format = GL_RGBA, bool generate_mipmaps = true,
-            GLenum wrap_s = DEFAULT_WRAP_S, GLenum wrap_t = DEFAULT_WRAP_T,
-            GLenum min_filter = DEFAULT_MIN_FILTER, GLenum mag_filter = DEFAULT_MAG_FILTER);
-
-        Texture2D(std::span<std::string_view> paths, bool sRGB = false, bool generate_mipmaps = true,
-            GLenum wrap_s = DEFAULT_WRAP_R, GLenum wrap_t = DEFAULT_WRAP_R, GLenum wrap_r = DEFAULT_WRAP_R,
             GLenum min_filter = DEFAULT_MIN_FILTER, GLenum mag_filter = DEFAULT_MAG_FILTER);
 
         Texture2D(const Texture2D&) = delete;

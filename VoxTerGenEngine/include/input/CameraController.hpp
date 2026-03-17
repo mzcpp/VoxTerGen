@@ -14,12 +14,13 @@ private:
     float zoom_sensitivity_;
 
 public:
-    CameraController(Camera& cam) : 
-        camera_(cam), 
-        movement_speed_(Constants::Camera::speed),
-        move_sensitivity_(Constants::Camera::move_sensitivity), 
-        zoom_sensitivity_(Constants::Camera::zoom_sensitivity)
-    {}
+    CameraController(Camera& cam) :
+        camera_(cam),
+        movement_speed_(constants::camera::speed),
+        move_sensitivity_(constants::camera::move_sensitivity),
+        zoom_sensitivity_(constants::camera::zoom_sensitivity)
+    {
+    }
 
     CameraController(const CameraController& camera) = delete;
     CameraController& operator=(const CameraController&) = delete;
@@ -28,11 +29,10 @@ public:
     CameraController& operator=(CameraController&& other) = delete;
 
     void ApplyInput(const InputManager& input, float delta_time, float aspect_ratio);
-    
+
     void ApplyRotation(const InputManager& input);
 
     void ApplyZoom(const InputManager& input);
 };
 
-#endif
-
+#endif // CAMERA_CONTROLLER_HPP
