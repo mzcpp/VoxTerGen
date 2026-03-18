@@ -22,6 +22,10 @@ namespace TextureUtils
             *internal_format = GL_R8;
             *data_format = GL_RED;
             break;
+        case 2:
+            *internal_format = GL_RG8;
+            *data_format = GL_RG;
+            break;
         case 3:
             *internal_format = sRGB ? GL_SRGB8 : GL_RGB8;
             *data_format = GL_RGB;
@@ -31,15 +35,13 @@ namespace TextureUtils
             *data_format = GL_RGBA;
             break;
         default:
+            Logger::Log(LogLevel::INFO, "Unsupported texture channel count. Current count: {}", n_components);
             throw std::runtime_error("Unsupported texture channel count");
         }
     }
 
-    Texture2D::Texture2D(std::string_view path, bool sRGB, bool generate_mipmaps,
-        GLenum wrap_s, GLenum wrap_t, GLenum min_filter, GLenum mag_filter) 
-        : 
-        type_(TextureType::Texture2D), 
-        target_(GL_TEXTURE_2D)
+    Texture2D::Texture2D(std::string_view path, bool sRGB, bool generate_mipmaps, GLenum wrap_s, GLenum wrap_t, GLenum min_filter, GLenum mag_filter) 
+        : type_(TextureType::Texture2D), target_(GL_TEXTURE_2D)
     {
         glCreateTextures(GL_TEXTURE_2D, 1, &texture_id_);
         int n_components = 0;
@@ -64,6 +66,8 @@ namespace TextureUtils
 
         const int levels = generate_mipmaps ? 1 + static_cast<int>(std::floor(std::log2(std::max(width_, height_)))) : 1;
         
+        GLint previous_unpack_alignment = 0;
+        glGetIntegerv(GL_UNPACK_ALIGNMENT, &previous_unpack_alignment);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glTextureStorage2D(texture_id_, levels, internal_format_, width_, height_);
         glTextureSubImage2D(texture_id_, 0, 0, 0, width_, height_, data_format_, GL_UNSIGNED_BYTE, data.get());
@@ -72,9 +76,10 @@ namespace TextureUtils
         {
             glGenerateTextureMipmap(texture_id_);
         }
-
-        glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_S, data_format_ == GL_RGBA ? DEFAULT_WRAP_RGBA : wrap_s);
-        glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_T, data_format_ == GL_RGBA ? DEFAULT_WRAP_RGBA : wrap_t);
+        
+        glPixelStorei(GL_UNPACK_ALIGNMENT, previous_unpack_alignment);
+        glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_S, wrap_s);
+        glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_T, wrap_t);
         glTextureParameteri(texture_id_, GL_TEXTURE_MIN_FILTER, min_filter);
         glTextureParameteri(texture_id_, GL_TEXTURE_MAG_FILTER, mag_filter);
     }
