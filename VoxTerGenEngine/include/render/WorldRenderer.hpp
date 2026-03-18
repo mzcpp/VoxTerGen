@@ -9,6 +9,9 @@ private:
 	MeshRenderer mesh_renderer_;
 
 public:
+	WorldRenderer();
+
+	~WorldRenderer();
 };
 
 #endif

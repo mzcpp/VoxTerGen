@@ -70,13 +70,8 @@ public:
      * @param yaw Initial yaw angle in degrees
      * @param pitch Initial pitch angle in degrees
      */
-    Camera
-    (
-        glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
-        float yaw = constants::camera::yaw,
-        float pitch = constants::camera::pitch
-    );
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+        float yaw = constants::camera::yaw, float pitch = constants::camera::pitch);
 
     Camera(const Camera& camera) = delete;
     Camera& operator=(const Camera&) = delete;
@@ -167,6 +162,7 @@ public:
 	// Setters
 	void EnableMovement(bool value) { enabled_movement_ = value; }
 	void SetMoving(bool value) { moving_ = value; }
+    void SetPos(const glm::dvec3& new_pos) { position_ = new_pos; }
 
 private:
 	/**

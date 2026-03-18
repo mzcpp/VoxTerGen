@@ -11,14 +11,6 @@
 #include <SDL2/SDL.h>
 
 Engine::Engine() : 
-	camera_(
-		glm::vec3(
-			static_cast<float>(0.0f) * -2.0f,
-			static_cast<float>(0.0f),
-			static_cast<float>(0.0f) * 2.0f
-		),
-		glm::vec3(0.0f, 1.0f, 0.0f)
-	),
 	camera_controller_(camera_)
 {
 }

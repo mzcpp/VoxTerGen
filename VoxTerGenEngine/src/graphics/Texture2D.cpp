@@ -69,6 +69,7 @@ namespace TextureUtils
         GLint previous_unpack_alignment = 0;
         glGetIntegerv(GL_UNPACK_ALIGNMENT, &previous_unpack_alignment);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        
         glTextureStorage2D(texture_id_, levels, internal_format_, width_, height_);
         glTextureSubImage2D(texture_id_, 0, 0, 0, width_, height_, data_format_, GL_UNSIGNED_BYTE, data.get());
 
@@ -78,6 +79,7 @@ namespace TextureUtils
         }
         
         glPixelStorei(GL_UNPACK_ALIGNMENT, previous_unpack_alignment);
+        
         glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_S, wrap_s);
         glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_T, wrap_t);
         glTextureParameteri(texture_id_, GL_TEXTURE_MIN_FILTER, min_filter);
