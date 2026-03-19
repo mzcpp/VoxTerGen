@@ -1,7 +1,7 @@
 change texture object to construct from texture atlas/cube map
 fill resource manager
 render mesh
-add cubemap
+add cubemap, texture2d function?
 
 make class MeshBuilder a namespace
 

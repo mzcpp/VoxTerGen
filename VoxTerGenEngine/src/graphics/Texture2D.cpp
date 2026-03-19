@@ -14,7 +14,7 @@
 
 namespace TextureUtils
 {
-    static void DetermineFormats(int n_components, bool sRGB, GLenum* internal_format, GLenum* data_format)
+    static void GetTextureFormats(int n_components, bool sRGB, GLenum* internal_format, GLenum* data_format)
     {
         switch (n_components)
         {
@@ -46,7 +46,7 @@ namespace TextureUtils
         glCreateTextures(GL_TEXTURE_2D, 1, &texture_id_);
         int n_components = 0;
         
-        std::unique_ptr<stbi_uc, decltype(&stbi_image_free)> data(stbi_load(path.data(), &width_, &height_, &n_components, 0), stbi_image_free);
+        std::unique_ptr<stbi_uc, decltype(&stbi_image_free)> data = { stbi_load(path.data(), &width_, &height_, &n_components, 0), stbi_image_free };
 
         if (!data.get())
         {
@@ -62,7 +62,7 @@ namespace TextureUtils
             throw std::runtime_error("Invalid dimensions of texture");
         }
 
-        DetermineFormats(n_components, sRGB, &internal_format_, &data_format_);
+        GetTextureFormats(n_components, sRGB, &internal_format_, &data_format_);
 
         const int levels = generate_mipmaps ? 1 + static_cast<int>(std::floor(std::log2(std::max(width_, height_)))) : 1;
         
