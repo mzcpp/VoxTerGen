@@ -69,12 +69,16 @@ namespace constants
     } // namespace math
 
     /**
-     * @brief Paths to shader resources.
+     * @brief Paths to resources.
      */
     namespace paths
     {
-        inline constexpr const char* cube_vertex_shader = "res/gfx/shaders/cube_shader.vert";
-        inline constexpr const char* cube_fragment_shader = "res/gfx/shaders/cube_shader.frag";
+        inline constexpr const char* texture_atlas = "res/gfx/textures/atlas.png";
+        inline constexpr const char* sky_cubemap = "res/gfx/textures/cloudbox.png";
+        inline constexpr const char* chunk_mesh_vertex_shader = "res/gfx/shaders/chunk_mesh.vert";
+        inline constexpr const char* chunk_mesh_fragment_shader = "res/gfx/shaders/chunk_mesh.frag";
+        inline constexpr const char* default_font = "res/font/VT323-Regular.ttf";
+        inline constexpr const char* button_click = "res/sfx/click.wav";
     } // namespace paths
 
     /**

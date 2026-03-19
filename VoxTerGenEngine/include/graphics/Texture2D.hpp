@@ -11,15 +11,8 @@ namespace TextureUtils
     enum class TextureType 
     { 
         Texture2D, 
-        CubeMap 
+        Cubemap 
     };
-
-    constexpr GLenum DEFAULT_WRAP_S = GL_REPEAT;
-    constexpr GLenum DEFAULT_WRAP_T = GL_REPEAT;
-    constexpr GLenum DEFAULT_WRAP_R = GL_REPEAT;
-    constexpr GLenum DEFAULT_MIN_FILTER = GL_LINEAR_MIPMAP_LINEAR;
-    constexpr GLenum DEFAULT_MAG_FILTER = GL_LINEAR;
-    constexpr GLenum DEFAULT_WRAP_RGBA = GL_CLAMP_TO_EDGE;
 
     class Texture2D final
     {
@@ -33,9 +26,13 @@ namespace TextureUtils
         GLenum target_ = GL_TEXTURE_2D;
 
     public:
-        Texture2D(std::string_view path, bool sRGB = false, bool generate_mipmaps = true,
-            GLenum wrap_s = DEFAULT_WRAP_S, GLenum wrap_t = DEFAULT_WRAP_T,
-            GLenum min_filter = DEFAULT_MIN_FILTER, GLenum mag_filter = DEFAULT_MAG_FILTER);
+        Texture2D(std::string_view path, bool sRGB = true, bool generate_mipmaps = true,
+            GLenum wrap_s = GL_REPEAT, GLenum wrap_t = GL_REPEAT,
+            GLenum min_filter = GL_LINEAR_MIPMAP_LINEAR, GLenum mag_filter = GL_LINEAR);
+
+        Texture2D(std::string_view cubemap_path, bool sRGB = true, bool generate_mipmaps = false,
+            GLenum wrap_s = GL_CLAMP_TO_EDGE, GLenum wrap_t = GL_CLAMP_TO_EDGE, GLenum wrap_r = GL_CLAMP_TO_EDGE,
+            GLenum min_filter = GL_LINEAR, GLenum mag_filter = GL_LINEAR);
 
         Texture2D(const Texture2D&) = delete;
         Texture2D& operator=(const Texture2D&) = delete;

@@ -40,7 +40,8 @@ namespace TextureUtils
         }
     }
 
-    Texture2D::Texture2D(std::string_view path, bool sRGB, bool generate_mipmaps, GLenum wrap_s, GLenum wrap_t, GLenum min_filter, GLenum mag_filter) 
+    Texture2D::Texture2D(std::string_view path, bool sRGB, bool generate_mipmaps, 
+        GLenum wrap_s, GLenum wrap_t, GLenum min_filter, GLenum mag_filter) 
         : type_(TextureType::Texture2D), target_(GL_TEXTURE_2D)
     {
         glCreateTextures(GL_TEXTURE_2D, 1, &texture_id_);
@@ -82,6 +83,21 @@ namespace TextureUtils
         
         glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_S, wrap_s);
         glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_T, wrap_t);
+        glTextureParameteri(texture_id_, GL_TEXTURE_MIN_FILTER, min_filter);
+        glTextureParameteri(texture_id_, GL_TEXTURE_MAG_FILTER, mag_filter);
+    }
+
+    Texture2D(std::string_view cubemap_path, bool sRGB, bool generate_mipmaps, 
+        GLenum wrap_s, GLenum wrap_t, GLenum wrap_r, GLenum min_filter, GLenum mag_filter)
+        : type_(TextureType::Cubemap), target_(GL_TEXTURE_CUBE_MAP)
+    {
+        glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &texture_id_);
+
+        
+
+        glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_S, wrap_s);
+        glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_T, wrap_t);
+        glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_R, wrap_r);
         glTextureParameteri(texture_id_, GL_TEXTURE_MIN_FILTER, min_filter);
         glTextureParameteri(texture_id_, GL_TEXTURE_MAG_FILTER, mag_filter);
     }
