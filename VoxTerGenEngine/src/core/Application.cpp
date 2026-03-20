@@ -162,7 +162,6 @@ void Application::HandleEvents()
 
 		engine_.HandleEvents(e);
 	}
-
 }
 
 void Application::Tick()
@@ -334,7 +333,7 @@ bool Application::InitOpenGL()
 	glEnable(GL_MULTISAMPLE);
 	glDepthFunc(GL_LESS);
 
-	/* V-Sync */
+	// V-Sync
 	SDL_GL_SetSwapInterval(0);
 
 	return true;

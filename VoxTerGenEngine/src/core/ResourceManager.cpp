@@ -15,11 +15,10 @@ ResourceManager::ResourceManager()
     ////AddTexture("cubemap", std::make_unique<TextureUtils::Texture2D>(constants::paths::sky_cubemap, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR ));
     //LoadShader("chunk_mesh_vertex", constants::paths::chunk_mesh_vertex_shader, GL_VERTEX_SHADER);
     //LoadShader("chunk_mesh_fragment", constants::paths::chunk_mesh_fragment_shader, GL_FRAGMENT_SHADER);
-    //
-    //constexpr int font_size = 28;
-    //LoadFont("default_font", constants::paths::default_font, font_size);
-    //
-    //LoadSound("button_click", constants::paths::button_click);
+    
+    constexpr int font_size = 28;
+    LoadFont("default_font", constants::paths::default_font, font_size);
+    LoadSound("button_click", constants::paths::button_click);
 }
 
 TextureUtils::Texture2D* ResourceManager::GetTexture(const std::string& texture_name)
@@ -73,20 +72,6 @@ Mix_Chunk* ResourceManager::GetSound(const std::string& sound_name)
     return sound_it->second.get();
 }
 
-void ResourceManager::LoadTexture(const std::string& texture_name, const std::filesystem::path& path)
-{
-    if (texture_name.empty() || path.empty())
-    {
-        Logger::Log(LogLevel::ERROR, "Failed to load a texture into resource manager! Texture name: {}, path: {}", texture_name, path.string());
-        return;   
-    }
-
-    if (!textures_.try_emplace(texture_name, std::make_unique<TextureUtils::Texture2D>(path.string())).second)
-    {
-        Logger::Log(LogLevel::INFO, "Texture already exists in resource manager! Texture name: {}, path", texture_name, path.string());
-    }
-}
-
 void ResourceManager::AddTexture(const std::string& texture_name, std::unique_ptr<TextureUtils::Texture2D> texture)
 {
     if (texture_name.empty() || texture == nullptr)
@@ -98,36 +83,6 @@ void ResourceManager::AddTexture(const std::string& texture_name, std::unique_pt
     if (!textures_.try_emplace(texture_name, std::move(texture)).second)
     {
         Logger::Log(LogLevel::INFO, "Texture already exists in resource manager! Texture name: {}", texture_name);
-    }
-}
-
-void ResourceManager::LoadShaderProgram(const std::string& shader_program_name, std::span<const std::filesystem::path> paths)
-{
-    if (shader_program_name.empty() || paths.empty() || paths.size() > 3)
-    {
-        Logger::Log(LogLevel::ERROR, "Failed to load a shader into resource manager! Shader name: {}, paths size: {}", shader_program_name, paths.size());
-        return;
-    }
-
-    if (shader_programs_.contains(shader_program_name))
-    {
-        Logger::Log(LogLevel::INFO, "Shader program already exists in resource manager! Shader program name: {}", shader_program_name);
-        return;
-    }
-
-    switch (paths.size())
-    {
-    case 1:
-        shader_programs_.emplace(shader_program_name, std::make_unique<ShaderProgram>(paths[0]));
-        break;
-
-    case 2:
-        shader_programs_.emplace(shader_program_name, std::make_unique<ShaderProgram>(paths[0], paths[1]));
-        break;
-
-    case 3:
-        shader_programs_.emplace(shader_program_name, std::make_unique<ShaderProgram>(paths[0], paths[1], paths[2]));
-        break;
     }
 }
 

@@ -85,20 +85,6 @@ Block& Chunk::NeighborRefAt(const glm::ivec3& coords, Direction dir)
 	return BlockAt({ coords.x + offset.x, coords.y + offset.y, coords.z + offset.z });
 }
 
-void Chunk::Fill(std::function<Block(int, int, int)> filler)
-{
-	for (int y = 0; y < constants::chunk::height; ++y)
-	{
-		for (int z = 0; z < constants::chunk::depth; ++z)
-		{
-			for (int x = 0; x < constants::chunk::width; ++x)
-			{
-				blocks_[Index({ x, y, z })] = filler(x, y, z);
-			}
-		}
-	}
-}
-
 int Chunk::Index(const glm::ivec3& coords) const
 {
 	return coords.x + constants::chunk::width * (coords.z + constants::chunk::depth * coords.y);

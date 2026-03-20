@@ -4,17 +4,14 @@ add cubemap, texture2d function!!
 
 make class MeshBuilder a namespace
 
-do I need void Chunk::Fill(std::function<Block(int, int, int)> filler)?
-
 review the camera class thoroughly
-
 verify the camera is working correctly for big floats
 
 glEnable(GL_FRAMEBUFFER_SRGB);
 
 SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix
 
-opengl/glad correct version check when init
+opengl/glad correct version check when init, initialization of subsystems review
 
 tick rate - 20/60?
 

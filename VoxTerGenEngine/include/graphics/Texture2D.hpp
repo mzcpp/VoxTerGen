@@ -22,17 +22,15 @@ namespace TextureUtils
         int height_ = 0;
         GLenum internal_format_ = 0;
         GLenum data_format_ = 0;
-        TextureType type_ = TextureType::Texture2D;
-        GLenum target_ = GL_TEXTURE_2D;
+        TextureType type_;
+        GLenum target_;
 
     public:
-        Texture2D(std::string_view path, bool sRGB = true, bool generate_mipmaps = true,
-            GLenum wrap_s = GL_REPEAT, GLenum wrap_t = GL_REPEAT,
-            GLenum min_filter = GL_LINEAR_MIPMAP_LINEAR, GLenum mag_filter = GL_LINEAR);
+        Texture2D(std::string_view path, bool sRGB, bool generate_mipmaps,
+            GLenum wrap_s, GLenum wrap_t, GLenum min_filter, GLenum mag_filter);
 
-        //Texture2D(std::string_view cubemap_path, bool sRGB = true, bool generate_mipmaps = false,
-        //    GLenum wrap_s = GL_CLAMP_TO_EDGE, GLenum wrap_t = GL_CLAMP_TO_EDGE, GLenum wrap_r = GL_CLAMP_TO_EDGE,
-        //    GLenum min_filter = GL_LINEAR, GLenum mag_filter = GL_LINEAR);
+        Texture2D(std::string_view cubemap_path, bool sRGB, bool generate_mipmaps,
+           GLenum wrap_s, GLenum wrap_t, GLenum wrap_r, GLenum min_filter, GLenum mag_filter);
 
         Texture2D(const Texture2D&) = delete;
         Texture2D& operator=(const Texture2D&) = delete;
@@ -45,6 +43,7 @@ namespace TextureUtils
         void Bind(GLuint unit_index = 0) const noexcept;
         void Unbind(GLuint unit_index = 0) const noexcept;
 
+        // Getters
         GLuint Id() const noexcept { return texture_id_; }
         int Width() const noexcept { return width_; }
         int Height() const noexcept { return height_; }

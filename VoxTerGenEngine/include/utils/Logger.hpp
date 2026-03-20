@@ -156,10 +156,9 @@ public:
 			return;
 		}
 
-		const auto timestamp_utc = GetCurrentDateTimeUTC();
-		const auto timestamp_local = GetCurrentDateTimeLocal();
+		const std::string timestamp_utc = GetCurrentDateTimeUTC();
+		const std::string timestamp_local = GetCurrentDateTimeLocal();
 		const auto log_level = std::format("{:<8}", LogLevelToString(level));
-
 		const std::string message = std::format(fmt, std::forward<Args>(args)...);
 
 		if (console_enabled_)

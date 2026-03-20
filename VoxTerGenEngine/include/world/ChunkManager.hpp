@@ -31,7 +31,8 @@ public:
 
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
 
-	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, ivec2_hash>& Chunks() { return chunks_; }
+	// Getters
+	const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, ivec2_hash>& Chunks() { return chunks_; }
 
 };
 

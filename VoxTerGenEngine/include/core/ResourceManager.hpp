@@ -32,12 +32,8 @@ public:
     TTF_Font* GetFont(const std::string& font_name);
 
     Mix_Chunk* GetSound(const std::string& sound_name);
-
-    void LoadTexture(const std::string& texture_name, const std::filesystem::path& path);
     
     void AddTexture(const std::string& texture_name, std::unique_ptr<TextureUtils::Texture2D> texture);
-    
-    void LoadShaderProgram(const std::string& shader_program_name, std::span<const std::filesystem::path> paths);
 
     void AddShaderProgram(const std::string& shader_program_name, std::unique_ptr<ShaderProgram> shader_program);
 

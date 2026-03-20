@@ -45,8 +45,6 @@ public:
 
     Block& NeighborRefAt(const glm::ivec3& coords, Direction dir);
 
-    void Fill(std::function<Block(int, int, int)> filler);
-
     int BlockCount() const { return constants::chunk::size; }
 
     const glm::ivec2& WorldCoords() const { return world_coords_; }

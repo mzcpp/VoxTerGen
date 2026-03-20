@@ -10,6 +10,8 @@ private:
 
 public:
 	World();
+
+	ChunkManager& ChunkManager() { return chunk_manager_; }
 };
 
 #endif // WORLD_HPP
