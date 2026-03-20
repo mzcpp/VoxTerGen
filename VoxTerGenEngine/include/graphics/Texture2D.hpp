@@ -30,9 +30,9 @@ namespace TextureUtils
             GLenum wrap_s = GL_REPEAT, GLenum wrap_t = GL_REPEAT,
             GLenum min_filter = GL_LINEAR_MIPMAP_LINEAR, GLenum mag_filter = GL_LINEAR);
 
-        Texture2D(std::string_view cubemap_path, bool sRGB = true, bool generate_mipmaps = false,
-            GLenum wrap_s = GL_CLAMP_TO_EDGE, GLenum wrap_t = GL_CLAMP_TO_EDGE, GLenum wrap_r = GL_CLAMP_TO_EDGE,
-            GLenum min_filter = GL_LINEAR, GLenum mag_filter = GL_LINEAR);
+        //Texture2D(std::string_view cubemap_path, bool sRGB = true, bool generate_mipmaps = false,
+        //    GLenum wrap_s = GL_CLAMP_TO_EDGE, GLenum wrap_t = GL_CLAMP_TO_EDGE, GLenum wrap_r = GL_CLAMP_TO_EDGE,
+        //    GLenum min_filter = GL_LINEAR, GLenum mag_filter = GL_LINEAR);
 
         Texture2D(const Texture2D&) = delete;
         Texture2D& operator=(const Texture2D&) = delete;

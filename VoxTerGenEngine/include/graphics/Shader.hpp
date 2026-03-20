@@ -16,7 +16,7 @@ class Shader
 {
 private:
     GLuint id_;
-    std::string source_path_;
+    std::filesystem::path source_path_;
     GLenum type_;
 
 public:

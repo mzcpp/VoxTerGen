@@ -5,18 +5,19 @@
 #include <fstream>
 
 Shader::Shader(const std::filesystem::path& shader_path, GLenum shader_type) : 
-    id_(0), source_path_(shader_path.string()), type_(shader_type)
+    id_(0), source_path_(shader_path), type_(shader_type)
 {
     std::ifstream file(source_path_);
 
     if (!file)
     {
-        throw std::runtime_error("Failed to open shader file: " + source_path_);
+        // TODO: log
+        throw std::runtime_error("Failed to open shader file: " + source_path_.string());
     }
 
     std::stringstream ss;
     ss << file.rdbuf();
-    std::string shader_string = ss.str();
+    const std::string shader_string = ss.str();
     const char* shader_code = shader_string.c_str();
 
     id_ = glCreateShader(type_);
@@ -86,6 +87,6 @@ void Shader::CheckErrors()
     GLsizei actual_length = 0;
     
     glGetShaderInfoLog(id_, length, &actual_length, info_log.data());
-    
-    throw std::runtime_error("Shader compilation failed (" + source_path_ + "):\n" + std::string(info_log.data(), actual_length));
+    // TODO: log
+    throw std::runtime_error("Shader compilation failed (" + source_path_.string() + "):\n" + std::string(info_log.data(), actual_length));
 }
