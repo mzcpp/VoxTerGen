@@ -8,8 +8,9 @@ in VS_OUT
 
 out vec4 fragment_color;
 
+uniform sampler2D texture1;
+
 void main()
 {
-    vec3 color = vec3(0.0f);
-    fragment_color = vec4(color, 1.0);
+    fragment_color = texture(texture1, fs_in.uv);
 }
