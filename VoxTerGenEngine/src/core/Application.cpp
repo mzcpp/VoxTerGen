@@ -145,6 +145,16 @@ void Application::HandleEvents()
 			return;
 		}
 
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_o)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_p)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+
 		if (e.type == SDL_WINDOWEVENT)
 		{
 			if (e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
@@ -327,7 +337,8 @@ bool Application::InitOpenGL()
 #endif
 
 	glViewport(0, 0, constants::window::screen_width, constants::window::screen_height);
-
+	
+	glEnable(GL_FRAMEBUFFER_SRGB);
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_CULL_FACE);

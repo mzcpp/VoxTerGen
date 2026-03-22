@@ -1,13 +1,17 @@
-fill resource manager
-render mesh
-add cubemap, texture2d function!!
 
+
+
+add cubemap, texture2d function!!
+get rid of getters with same name as the type - make_unique<class ...>
 make class MeshBuilder a namespace
+
+texture bleeding
+
+WATER next to GRASS culling!!!
 
 review the camera class thoroughly
 verify the camera is working correctly for big floats
 
-glEnable(GL_FRAMEBUFFER_SRGB);
 
 SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix
 
