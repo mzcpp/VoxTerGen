@@ -145,12 +145,12 @@ void Application::HandleEvents()
 			return;
 		}
 
-		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_o)
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
 
-		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_p)
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_e)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
