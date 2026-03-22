@@ -10,6 +10,7 @@
 Chunk::Chunk(glm::ivec2 world_coords) : 
 	world_coords_(world_coords), 
 	mesh_(nullptr), 
+	gpu_mesh_(nullptr), 
 	mesh_invalid_(false)
 {
 }

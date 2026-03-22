@@ -3,7 +3,6 @@
 
 #include "graphics/Texture2D.hpp"
 #include "graphics/ShaderProgram.hpp"
-#include "graphics/Shader.hpp"
 
 #include "SDL2_ttf/SDL_ttf.h"
 #include "SDL2_mixer/SDL_mixer.h"
@@ -11,6 +10,7 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include <filesystem>
 
 struct TTF_Font;
 struct Mix_Chunk;
@@ -25,13 +25,15 @@ private:
 public:
     ResourceManager();
 
-    TextureUtils::Texture2D* GetTexture(const std::string& texture_name);
+    void InitializeResources();
 
-    ShaderProgram* GetShaderProgram(const std::string& shader_program_name);
+    TextureUtils::Texture2D* GetTexture(const std::string& texture_name) const;
 
-    TTF_Font* GetFont(const std::string& font_name);
+    ShaderProgram* GetShaderProgram(const std::string& shader_program_name) const;
 
-    Mix_Chunk* GetSound(const std::string& sound_name);
+    TTF_Font* GetFont(const std::string& font_name) const;
+
+    Mix_Chunk* GetSound(const std::string& sound_name) const;
     
     void AddTexture(const std::string& texture_name, std::unique_ptr<TextureUtils::Texture2D> texture);
 

@@ -32,8 +32,8 @@ namespace TextureUtils
         Texture2D(std::string_view cubemap_path, bool sRGB, bool generate_mipmaps,
            GLenum wrap_s, GLenum wrap_t, GLenum wrap_r, GLenum min_filter, GLenum mag_filter);
 
-        Texture2D(const Texture2D&) = delete;
-        Texture2D& operator=(const Texture2D&) = delete;
+        Texture2D(const Texture2D& other) = delete;
+        Texture2D& operator=(const Texture2D& other) = delete;
 
         Texture2D(Texture2D&& other) noexcept;
         Texture2D& operator=(Texture2D&& other) noexcept;

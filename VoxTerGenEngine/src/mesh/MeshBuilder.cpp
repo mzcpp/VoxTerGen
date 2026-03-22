@@ -13,8 +13,6 @@
 
 void MeshBuilder::SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType type, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh)
 {
-	std::array<Vertex, 4> quad_vertices;
-	
 	float vertex_x = 0.0f;
 	float vertex_y = 0.0f;
 	float vertex_z = 0.0f;
@@ -24,6 +22,11 @@ void MeshBuilder::SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType t
 	const float world_x = static_cast<float>(chunk_world_coords.x * constants::chunk::width + block_coords.x);
 	const float world_y = static_cast<float>(block_coords.y);
 	const float world_z = static_cast<float>(chunk_world_coords.y * constants::chunk::depth + block_coords.z);
+
+	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
+	{
+		chunk_mesh.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
+	}
 
 	for (int i = 0; i < 4; ++i)
 	{
@@ -94,18 +97,13 @@ void MeshBuilder::SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType t
 			normal_z = -1.0f;
 		}
 
-		quad_vertices[i].position_ = { vertex_x + world_x, vertex_y + world_y, vertex_z + world_z };
-		quad_vertices[i].normal_ = { normal_x, normal_y, normal_z };
-		quad_vertices[i].uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
-		quad_vertices[i].material_ = GetQuadMaterial(type, dir);
-	}
-	
-	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
-	{
-		chunk_mesh.Indices().push_back(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
+		chunk_mesh.AddVertex(
+			{ vertex_x + world_x, vertex_y + world_y, vertex_z + world_z }, 
+			{ normal_x, normal_y, normal_z }, 
+			{ static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) }, 
+			GetQuadMaterial(type, dir));
 	}
 
-	chunk_mesh.Vertices().insert(chunk_mesh.Vertices().end(), quad_vertices.begin(), quad_vertices.end());
 	assert(chunk_mesh.Vertices().size() % 4 == 0);
 }
 
@@ -179,14 +177,13 @@ bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& secon
 
 void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, Mesh& chunk_mesh)
 {
-	Vertex vertex;
-	vertex.normal_ = DirToNormal(first_merged_cell.dir_);
-	vertex.material_ = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
-
 	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
 	{
-		chunk_mesh.Indices().push_back(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
+		chunk_mesh.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
 	}
+
+	glm::vec3 vertex_position = { 0.0f, 0.0f, 0.0f };
+	std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
 	
 	for (int i : { 0, 1 })
 	{
@@ -204,19 +201,22 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 
 			if (major_axis == MajorAxis::X)
 			{
-				vertex.position_ = { major_axis_index + 1, y_pos, x_pos };
+				vertex_position = { major_axis_index + 1, y_pos, x_pos };
 			}
 			else if (major_axis == MajorAxis::Y)
 			{
-				vertex.position_ = { x_pos, major_axis_index + 1, y_pos };
+				vertex_position = { x_pos, major_axis_index + 1, y_pos };
 			}
 			else
 			{
-				vertex.position_ = { x_pos, y_pos, major_axis_index + 1 };
+				vertex_position = { x_pos, y_pos, major_axis_index + 1 };
 			}
 
-			vertex.uv_ = GetTextureCoords({ j, i }, merged_quad, static_cast<Material>(vertex.material_));
-			chunk_mesh.Vertices().push_back(vertex);
+			chunk_mesh.AddVertex(
+				vertex_position, 
+				DirToNormal(first_merged_cell.dir_), 
+				GetTextureCoords({ j, i }, merged_quad, static_cast<Material>(material)),
+				material);
 		}
 	}
 }

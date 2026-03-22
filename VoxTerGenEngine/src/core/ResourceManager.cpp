@@ -1,27 +1,33 @@
 #include "core/ResourceManager.hpp"
 #include "graphics/Texture2D.hpp"
+#include "graphics/ShaderProgram.hpp"
 #include "utils/Logger.hpp"
 #include "utils/Constants.hpp"
 
 #include "SDL2_ttf/SDL_ttf.h"
 #include "SDL2_mixer/SDL_mixer.h"
 
+#include <glad/glad.h>
+
 #include <memory>
 #include <filesystem>
 
 ResourceManager::ResourceManager()
 {
-    //AddTexture("atlas", std::make_unique<TextureUtils::Texture2D>(constants::paths::texture_atlas, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));   
-    ////AddTexture("cubemap", std::make_unique<TextureUtils::Texture2D>(constants::paths::sky_cubemap, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR ));
-    //LoadShader("chunk_mesh_vertex", constants::paths::chunk_mesh_vertex_shader, GL_VERTEX_SHADER);
-    //LoadShader("chunk_mesh_fragment", constants::paths::chunk_mesh_fragment_shader, GL_FRAGMENT_SHADER);
+}
+
+void ResourceManager::InitializeResources()
+{
+    AddTexture("atlas", std::make_unique<TextureUtils::Texture2D>(constants::paths::texture_atlas, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
+    //AddTexture("cubemap", std::make_unique<TextureUtils::Texture2D>(constants::paths::sky_cubemap, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR ));
+    AddShaderProgram("chunk_mesh_shader", std::make_unique<ShaderProgram>(constants::paths::chunk_mesh_vertex_shader, constants::paths::chunk_mesh_fragment_shader));
     
     constexpr int font_size = 28;
     LoadFont("default_font", constants::paths::default_font, font_size);
     LoadSound("button_click", constants::paths::button_click);
 }
 
-TextureUtils::Texture2D* ResourceManager::GetTexture(const std::string& texture_name)
+TextureUtils::Texture2D* ResourceManager::GetTexture(const std::string& texture_name) const
 {
     const auto texture_it = textures_.find(texture_name);
 
@@ -33,7 +39,7 @@ TextureUtils::Texture2D* ResourceManager::GetTexture(const std::string& texture_
 
     return texture_it->second.get();
 }
-ShaderProgram* ResourceManager::GetShaderProgram(const std::string& shader_program_name)
+ShaderProgram* ResourceManager::GetShaderProgram(const std::string& shader_program_name) const
 {
     const auto shader_it = shader_programs_.find(shader_program_name);
 
@@ -46,7 +52,7 @@ ShaderProgram* ResourceManager::GetShaderProgram(const std::string& shader_progr
     return shader_it->second.get();
 }
 
-TTF_Font* ResourceManager::GetFont(const std::string& font_name)
+TTF_Font* ResourceManager::GetFont(const std::string& font_name) const
 {
     const auto font_it = fonts_.find(font_name);
 
@@ -59,7 +65,7 @@ TTF_Font* ResourceManager::GetFont(const std::string& font_name)
     return font_it->second.get();
 }
 
-Mix_Chunk* ResourceManager::GetSound(const std::string& sound_name)
+Mix_Chunk* ResourceManager::GetSound(const std::string& sound_name) const
 {
     const auto sound_it = sounds_.find(sound_name);
 

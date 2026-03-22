@@ -51,8 +51,8 @@ public:
      */
     ShaderProgram(const std::filesystem::path& compute_path);
 
-    ShaderProgram(const ShaderProgram&) = delete;
-    ShaderProgram& operator=(const ShaderProgram&) = delete;
+    ShaderProgram(const ShaderProgram& other) = delete;
+    ShaderProgram& operator=(const ShaderProgram& other) = delete;
 
     ShaderProgram(ShaderProgram&& other) noexcept;
     ShaderProgram& operator=(ShaderProgram&& other) noexcept;
@@ -81,7 +81,7 @@ public:
     template <typename T>
     void Set(std::string_view name, const T& value) const noexcept
     {
-        GLint location = glGetUniformLocation(id_, name);
+        const GLint location = glGetUniformLocation(id_, name.data());
         using U = std::remove_cv_t<std::remove_reference_t<T>>;
 
         // Fundamental types

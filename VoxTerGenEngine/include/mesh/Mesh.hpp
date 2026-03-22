@@ -13,8 +13,14 @@ private:
 	std::vector<std::uint32_t> indices_;
 
 public:
-	std::vector<Vertex>& Vertices() { return vertices_; }
-	std::vector<std::uint32_t>& Indices() { return indices_; }
+
+	void AddVertex(const glm::vec3& position, const glm::vec3& normal, const glm::vec2& uv, std::uint8_t material);
+
+	void AddIndex(std::uint32_t index);
+	
+	// Getters
+	const std::vector<Vertex>& Vertices() const { return vertices_; }
+	const std::vector<std::uint32_t>& Indices() const { return indices_; }
 };
 
 #endif // MESH_HPP

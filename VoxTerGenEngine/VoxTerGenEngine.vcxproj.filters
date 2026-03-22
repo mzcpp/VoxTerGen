@@ -84,7 +84,7 @@
     <ClCompile Include="src\core\ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\render\RenderMesh.cpp">
+    <ClCompile Include="src\render\GpuMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1196,7 +1196,7 @@
     <ClInclude Include="include\core\ResourceManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\RenderMesh.hpp">
+    <ClInclude Include="include\render\GpuMesh.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

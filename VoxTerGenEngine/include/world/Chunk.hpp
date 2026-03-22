@@ -3,16 +3,14 @@
 
 #include "world/Block.hpp"
 #include "utils/Constants.hpp"
-#include "utils/Logger.hpp"
 #include "mesh/Mesh.hpp"
-#include "render/MeshRenderer.hpp"
+#include "render/GpuMesh.hpp"
 #include "core/Direction.hpp"
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 #include <array>
-#include <functional>
 #include <memory>
 
 class Chunk
@@ -28,6 +26,7 @@ private:
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
     std::unique_ptr<Mesh> mesh_;
+    std::unique_ptr<GpuMesh> gpu_mesh_;
     bool mesh_invalid_;
 
 public:
@@ -45,14 +44,13 @@ public:
 
     Block& NeighborRefAt(const glm::ivec3& coords, Direction dir);
 
-    int BlockCount() const { return constants::chunk::size; }
-
-    const glm::ivec2& WorldCoords() const { return world_coords_; }
-
-    const std::array<Block, constants::chunk::size>& Blocks() const { return blocks_; }
-
+    // Getters
+    const glm::ivec2& WorldCoords() const noexcept { return world_coords_; }
+    const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
     const Mesh& Mesh() const { return *mesh_; }
+    const GpuMesh& GpuMesh() const { return *gpu_mesh_; }
 
+    // Setters
     void SetMesh(std::unique_ptr<class Mesh> mesh) { mesh_ = std::move(mesh); }
 
 private:

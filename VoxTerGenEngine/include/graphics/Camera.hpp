@@ -73,8 +73,8 @@ public:
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
         float yaw = constants::camera::yaw, float pitch = constants::camera::pitch);
 
-    Camera(const Camera& camera) = delete;
-    Camera& operator=(const Camera&) = delete;
+    Camera(const Camera& other) = delete;
+    Camera& operator=(const Camera& other) = delete;
 
     Camera(Camera&& other) = delete;
     Camera& operator=(Camera&& other) = delete;

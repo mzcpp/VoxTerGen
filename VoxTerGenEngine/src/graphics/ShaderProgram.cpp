@@ -103,6 +103,11 @@ ShaderProgram::ShaderProgram(const std::filesystem::path& compute_path) : id_(0)
 
 ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept
 {
+    if (id_ != 0)
+    {
+        glDeleteProgram(id_);
+    }
+
     id_ = std::exchange(other.id_, 0);
 }
 

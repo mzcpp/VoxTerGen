@@ -23,17 +23,22 @@ private:
 public:
 	Engine();
 
+	void Initialize();
+
 	void HandleEvents(SDL_Event e);
 
 	void Tick(float aspect_ratio);
 
 	void Render(float alpha);
 
-	const InputManager& InputManager() const { return input_manager_; }
-
-	const Camera& Camera() const { return camera_; }
-
-	const CameraController& CameraController() const { return camera_controller_; }
+	// Getters
+	const InputManager& InputManager() const noexcept { return input_manager_; }
+	const Camera& Camera() const noexcept { return camera_; }
+	const CameraController& CameraController() const noexcept { return camera_controller_; }
+	const ResourceManager& ResourceManager() const noexcept { return resource_manager_; }
+	const Settings& Settings() const noexcept { return settings_; }
+	const World& World() const noexcept { return world_; }
+	const WorldRenderer& WorldRenderer() const noexcept { return world_renderer_; }
 };
 
 #endif

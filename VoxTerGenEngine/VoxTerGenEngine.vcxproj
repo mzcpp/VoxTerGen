@@ -192,7 +192,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\mesh\MeshBuilder.cpp" />
     <ClCompile Include="src\render\Material.cpp" />
     <ClCompile Include="src\render\MeshRenderer.cpp" />
-    <ClCompile Include="src\render\RenderMesh.cpp" />
+    <ClCompile Include="src\render\GpuMesh.cpp" />
     <ClCompile Include="src\render\WorldRenderer.cpp" />
     <ClCompile Include="src\world\Block.cpp" />
     <ClCompile Include="src\world\Chunk.cpp" />
@@ -561,7 +561,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\mesh\Vertex.hpp" />
     <ClInclude Include="include\render\Material.hpp" />
     <ClInclude Include="include\render\MeshRenderer.hpp" />
-    <ClInclude Include="include\render\RenderMesh.hpp" />
+    <ClInclude Include="include\render\GpuMesh.hpp" />
     <ClInclude Include="include\render\WorldRenderer.hpp" />
     <ClInclude Include="include\utils\Constants.hpp" />
     <ClInclude Include="include\utils\Logger.hpp" />

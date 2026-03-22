@@ -65,6 +65,8 @@ bool Application::Initialize()
 		return false;
 	}
 
+	engine_.Initialize();
+
 	return true;
 }
 
