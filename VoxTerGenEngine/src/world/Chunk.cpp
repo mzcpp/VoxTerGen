@@ -1,6 +1,7 @@
 #include "world/Chunk.hpp"
 #include "utils/Logger.hpp"
 #include "core/Direction.hpp"
+#include "render/GpuMesh.hpp"
 
 #include <glm/glm.hpp>
 
@@ -10,9 +11,10 @@
 Chunk::Chunk(glm::ivec2 world_coords) : 
 	world_coords_(world_coords), 
 	mesh_(nullptr), 
-	gpu_mesh_(nullptr), 
-	mesh_invalid_(false)
+	gpu_mesh_(nullptr),
+	mesh_invalid_(true)
 {
+	gpu_mesh_ = std::make_unique<class GpuMesh>();
 }
 
 Block& Chunk::BlockAt(const glm::ivec3& coords, bool check_index)
@@ -85,6 +87,17 @@ Block& Chunk::NeighborRefAt(const glm::ivec3& coords, Direction dir)
 	const auto& offset = neighbor_offsets_[dir_index];
 	return BlockAt({ coords.x + offset.x, coords.y + offset.y, coords.z + offset.z });
 }
+
+void Chunk::UploadMeshData() const
+{
+	if (mesh_ == nullptr)
+	{
+		return;
+	}
+
+	gpu_mesh_->UploadMeshData(*mesh_);
+}
+
 
 int Chunk::Index(const glm::ivec3& coords) const
 {

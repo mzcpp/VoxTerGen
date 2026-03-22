@@ -329,6 +329,7 @@ bool Application::InitOpenGL()
 	glViewport(0, 0, constants::window::screen_width, constants::window::screen_height);
 
 	glEnable(GL_DEPTH_TEST);
+	glClear(GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);

@@ -44,14 +44,18 @@ public:
 
     Block& NeighborRefAt(const glm::ivec3& coords, Direction dir);
 
+    void UploadMeshData() const;
+
     // Getters
     const glm::ivec2& WorldCoords() const noexcept { return world_coords_; }
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
     const Mesh& Mesh() const { return *mesh_; }
     const GpuMesh& GpuMesh() const { return *gpu_mesh_; }
+    bool MeshInvalid() const { return mesh_invalid_; }
 
     // Setters
     void SetMesh(std::unique_ptr<class Mesh> mesh) { mesh_ = std::move(mesh); }
+    void SetMeshInvalid(bool mesh_invalid) { mesh_invalid_ = mesh_invalid; }
 
 private:
     int Index(const glm::ivec3& coords) const;

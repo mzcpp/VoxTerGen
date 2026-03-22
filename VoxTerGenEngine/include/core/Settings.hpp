@@ -8,10 +8,12 @@ private:
 public:
 	Settings();
 
+	// Getters
 	int ChunkRadius() { return chunk_radius_; }
 
+	// Setters
 	void SetChunkRadius(int chunk_radius) { chunk_radius_ = chunk_radius; }
 };
 
-#endif
+#endif // SETTINGS_HPP
 

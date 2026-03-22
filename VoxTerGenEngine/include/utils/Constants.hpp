@@ -97,7 +97,7 @@ namespace constants
         inline constexpr float zoom_min = 1.0f;
         inline constexpr float zoom_max = 45.0f;
         inline constexpr float near_plane = 0.1f;
-        inline constexpr float far_plane = 150.0f;
+        inline constexpr float far_plane = 450.0f;
     } // namespace camera
 
     /**

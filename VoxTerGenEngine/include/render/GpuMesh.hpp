@@ -1,7 +1,7 @@
 #ifndef GPU_MESH_HPP
 #define GPU_MESH_HPP
 
-#include <mesh/Mesh.hpp>
+#include "mesh/Mesh.hpp"
 
 #include <glad/glad/glad.h>
 

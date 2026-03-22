@@ -1,8 +1,13 @@
 #include "render/WorldRenderer.hpp"
 #include "core/ResourceManager.hpp"
 #include "graphics/ShaderProgram.hpp"
+#include "world/Chunk.hpp"
+#include "world/ChunkManager.hpp"
 
 #include <glad/glad.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 WorldRenderer::WorldRenderer()
 {
@@ -34,8 +39,14 @@ void WorldRenderer::RenderChunks(
 	resource_manager.GetTexture("atlas")->Bind();
 	shader_program->Set<int>("texture1", 0);
 
-	//glBindVertexArray(chunk.gpu_mesh.vao_)
-	
-	// loop over visible chunks whose mesh_invalid_ flag is true
-	// mesh_renderer_.RenderChunkMesh(chunk, );
+	for (const auto& [world_coords, chunk] : chunks)
+	{
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), { world_coords.x * constants::chunk::width, 0, world_coords.y * constants::chunk::height });
+		shader_program->Set<glm::mat4>("model", model);
+
+		chunk->UploadMeshData();
+		glBindVertexArray(chunk->GpuMesh().VAO());
+		//mesh_renderer_.RenderChunkMesh(*chunk);
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(chunk->Mesh().Indices().size()), GL_UNSIGNED_INT, 0);
+	}
 }

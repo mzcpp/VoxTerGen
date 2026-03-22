@@ -13,7 +13,6 @@ std::size_t ivec2_hash::operator()(const glm::ivec2& vec) const noexcept
 
 ChunkManager::ChunkManager()
 {
-	InitChunks(constants::chunk::default_radius);
 }
 
 void ChunkManager::InitChunks(int chunk_radius)
@@ -31,6 +30,9 @@ void ChunkManager::InitChunks(int chunk_radius)
 			chunks_.emplace(world_coords, std::move(chunk));
 		}
 	}
+
+	chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Stone);
+	chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Stone);
 
 	BuildAllChunkMeshes();
 }
@@ -56,6 +58,11 @@ void ChunkManager::BuildAllChunkMeshes()
 {
 	for (auto& [world_coord, chunk] : chunks_)
 	{
+		if (!chunk->MeshInvalid())
+		{
+			continue;
+		}
+
 		std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 		
 		*chunk_mesh = MeshBuilder::BuildMeshGreedy(
@@ -65,7 +72,15 @@ void ChunkManager::BuildAllChunkMeshes()
 			}
 		);
 
+		//*chunk_mesh = MeshBuilder::BuildMeshNaive(chunk->WorldCoords(),
+		//	[this, &chunk](const glm::ivec3& block_coords)
+		//	{
+		//		return WorldBlockQuery(chunk->WorldCoords(), block_coords);
+		//	}
+		//);
+
 		chunk->SetMesh(std::move(chunk_mesh));
+		chunk->SetMeshInvalid(false);
 	}
 }
 

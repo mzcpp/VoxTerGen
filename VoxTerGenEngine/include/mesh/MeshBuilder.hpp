@@ -87,7 +87,7 @@ Mesh MeshBuilder::BuildMeshNaive(const glm::ivec2& chunk_world_coords, BlockQuer
 						continue;
 					}
 
-					SaveQuadMesh(chunk_world_coords, world_block_query({ x, y, z }).Type(), {x, y, z}, dir, chunk_mesh);
+					SaveQuadMesh(chunk_world_coords, world_block_query({ x, y, z }).Type(), { x, y, z }, dir, chunk_mesh);
 				}
 			}
 		}
