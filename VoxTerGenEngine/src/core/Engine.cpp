@@ -47,7 +47,7 @@ void Engine::Render(float alpha)
 {
 	glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	const glm::mat4 interpolated_view = camera_.InterpolatedViewMatrix(alpha);
 	const glm::mat4 proj = camera_.ProjectionMatrix();
