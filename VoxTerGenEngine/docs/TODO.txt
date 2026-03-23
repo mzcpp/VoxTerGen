@@ -1,5 +1,4 @@
-
-
+correct uploading of GPU mesh!!!
 
 add cubemap, texture2d function!!
 get rid of getters with same name as the type - make_unique<class ...>
