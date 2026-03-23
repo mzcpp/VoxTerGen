@@ -8,6 +8,9 @@ texture bleeding
 
 verify WATER next to SOLID culling!!!
 
+glEnable(GL_FRAMEBUFFER_SRGB);
+
+
 review the camera class thoroughly
 verify the camera is working correctly for big floats
 

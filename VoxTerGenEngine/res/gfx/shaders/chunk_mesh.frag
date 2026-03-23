@@ -49,8 +49,7 @@ vec2 GetAtlasUV(uint material)
 	 	break;
 	 }
 
-	 const vec2 uv_coords = { tile_min.x + (fract(fs_in.uv.x) * xy_delta.x), tile_min.y + (fract(fs_in.uv.y) * xy_delta.y) };
-	 return uv_coords;
+	 return tile_min + fract(fs_in.uv) * xy_delta;
 }
 
 void main()
