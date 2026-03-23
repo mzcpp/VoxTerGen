@@ -291,43 +291,4 @@ glm::vec2 MeshBuilder::GetTextureCoords(const glm::ivec2& quad_coords, const Mer
 		static_cast<float>(quad_coords.x) * static_cast<float>(merged_quad.width_), 
 		static_cast<float>(quad_coords.y) * static_cast<float>(merged_quad.height_)
 	};
-
-	// glm::vec2 material_texture_start_coords = { 0.0f, 0.0f };
-	// const glm::vec2 xy_delta = { 1.0f / constants::texture::atlas_columns, 1.0f / constants::texture::atlas_rows };
-
-	// switch (material)
-	// {
-	// case Material::Air:
-	// case Material::Water:
-	// 	break;
-	// case Material::GrassTop:
-	// 	material_texture_start_coords.y = 3 * (xy_delta.y);
-	// 	break;
-	// case Material::GrassSide:
-	// 	material_texture_start_coords.x = 1 * (xy_delta.x);
-	// 	material_texture_start_coords.y = 3 * (xy_delta.y);
-	// 	break;
-	// case Material::Dirt:
-	// 	material_texture_start_coords.x = 1 * (xy_delta.x);
-	// 	material_texture_start_coords.y = 2 * (xy_delta.y);
-	// 	break;
-	// case Material::Stone:
-	// 	material_texture_start_coords.y = 2 * (xy_delta.y);
-	// 	break;
-	// case Material::Snow:
-	// 	material_texture_start_coords.x = 1 * (xy_delta.x);
-	// 	material_texture_start_coords.y = 1 * (xy_delta.y);
-	// 	break;
-	// case Material::Sand:
-	// 	material_texture_start_coords.y = 1 * (xy_delta.y);
-	// 	break;
-	// case Material::Bedrock:
-	// 	material_texture_start_coords.x = 1 * (xy_delta.x);
-	// 	break;
-	// }
-
-	// material_texture_start_coords.x += static_cast<float>(quad_coords.x) * (static_cast<float>(merged_quad.width_) * xy_delta.x);
-	// material_texture_start_coords.y += static_cast<float>(quad_coords.y) * (static_cast<float>(merged_quad.height_) * xy_delta.y);
-
-	// return material_texture_start_coords;
 }

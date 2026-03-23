@@ -37,6 +37,8 @@ void WorldRenderer::RenderChunks(
 	glActiveTexture(GL_TEXTURE0);
 	resource_manager.GetTexture("atlas")->Bind();
 	shader_program->Set<int>("atlas_texture", 0);
+	shader_program->Set<unsigned int>("atlas_columns", constants::texture::atlas_columns);
+	shader_program->Set<unsigned int>("atlas_rows", constants::texture::atlas_rows);
 
 	for (const auto& [world_coords, chunk] : chunks)
 	{
