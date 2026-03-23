@@ -2,15 +2,16 @@
 
 in VS_OUT
 {
-    in vec3 normal;
-    in vec2 uv;
+    vec3 normal;
+    vec2 uv;
+    flat uint material;
 } fs_in;
 
 out vec4 fragment_color;
 
-uniform sampler2D texture1;
+uniform sampler2D atlas_texture;
 
 void main()
 {
-    fragment_color = texture(texture1, fs_in.uv);
+    fragment_color = texture(atlas_texture, fs_in.uv);
 }

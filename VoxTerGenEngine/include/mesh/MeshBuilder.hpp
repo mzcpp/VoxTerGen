@@ -60,7 +60,7 @@ private:
 
 	static void MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh);
 	
-	static glm::vec2 GetTextureCoords(const glm::ivec2& quad_coords, const MergedQuad& merged_quad, Material material);
+	static glm::vec2 GetTextureCoords(const glm::ivec2& quad_coords, const MergedQuad& merged_quad);
 };
 
 Mesh MeshBuilder::BuildMeshNaive(const glm::ivec2& chunk_world_coords, BlockQuery auto&& world_block_query)

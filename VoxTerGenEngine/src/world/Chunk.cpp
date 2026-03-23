@@ -11,10 +11,9 @@
 Chunk::Chunk(glm::ivec2 world_coords) : 
 	world_coords_(world_coords), 
 	mesh_(nullptr), 
-	gpu_mesh_(nullptr),
+	gpu_mesh_(std::make_unique<class GpuMesh>()),
 	mesh_invalid_(true)
 {
-	gpu_mesh_ = std::make_unique<class GpuMesh>();
 }
 
 Block& Chunk::BlockAt(const glm::ivec3& coords, bool check_index)
