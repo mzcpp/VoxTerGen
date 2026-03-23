@@ -15,6 +15,8 @@ ChunkManager::ChunkManager()
 {
 }
 
+#include <random>
+
 void ChunkManager::InitChunks(int chunk_radius)
 {
 	const int chunk_square_size = 2 * chunk_radius + 1;
@@ -31,8 +33,44 @@ void ChunkManager::InitChunks(int chunk_radius)
 		}
 	}
 
-	chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Stone);
-	chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Stone);
+	//for (int y = 0; y < 4; ++y)
+	//{
+	//	for (int z = 0; z < 4; ++z)
+	//	{
+	//		for (int x = 0; x < 4; ++x)
+	//		{
+	//			int randNum = rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Air) + 1) + static_cast<int>(BlockType::Air);
+
+	//			chunks_.begin()->second->BlockAt({ x, y, z }).SetType(static_cast<BlockType>(randNum));
+	//		}
+	//	}
+	//}
+
+	//for (int y = 0; y < constants::chunk::height; ++y)
+	//{
+	//	for (int z = 0; z < constants::chunk::depth; ++z)
+	//	{
+	//		for (int x = 0; x < constants::chunk::width; ++x)
+	//		{
+	//			int randNum = rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Air) + 1) + static_cast<int>(BlockType::Air);
+
+	//			chunks_.begin()->second->BlockAt({ x, y, z }).SetType(static_cast<BlockType>(randNum));
+	//		}
+	//	}
+	//}
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Stone);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 0 }).SetType(BlockType::Water);
+	//chunks_.begin()->second->BlockAt({ 0, 2, 0 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 0, 3, 0 }).SetType(BlockType::Sand);
+	//chunks_.begin()->second->BlockAt({ 0, 4, 0 }).SetType(BlockType::Snow);
+	//chunks_.begin()->second->BlockAt({ 0, 5, 0 }).SetType(BlockType::Bedrock);
+	//chunks_.begin()->second->BlockAt({ 0, 6, 0 }).SetType(BlockType::Dirt);
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Stone);
+	chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Dirt);
+	chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Dirt);
+
 
 	BuildAllChunkMeshes();
 }
