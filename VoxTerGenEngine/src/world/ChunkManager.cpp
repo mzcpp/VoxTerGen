@@ -105,7 +105,7 @@ Block ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, const glm::i
 
 	const int x_chunk_offset = block_coords.x / constants::chunk::width;
 	const int z_chunk_offset = block_coords.z / constants::chunk::depth;
-	const Chunk* const target_chunk = GetChunkAt({ current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset });
+	const Chunk* target_chunk = GetChunkAt({ current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset });
 
 	if (!target_chunk)
 	{

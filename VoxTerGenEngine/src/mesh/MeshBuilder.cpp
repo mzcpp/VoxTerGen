@@ -215,7 +215,7 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 			chunk_mesh.AddVertex(
 				vertex_position, 
 				DirToNormal(first_merged_cell.dir_), 
-				GetTextureCoords({ j, i }, merged_quad),
+				{ static_cast<float>(j * merged_quad.width_), static_cast<float>(i * merged_quad.height_) }, 
 				material);
 		}
 	}
@@ -282,13 +282,4 @@ void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_ind
 			x += merged_quad_width;
 		}	
 	}
-}
-
-glm::vec2 MeshBuilder::GetTextureCoords(const glm::ivec2& quad_coords, const MergedQuad& merged_quad)
-{
-	return 
-	{
-		static_cast<float>(quad_coords.x) * static_cast<float>(merged_quad.width_), 
-		static_cast<float>(quad_coords.y) * static_cast<float>(merged_quad.height_)
-	};
 }
