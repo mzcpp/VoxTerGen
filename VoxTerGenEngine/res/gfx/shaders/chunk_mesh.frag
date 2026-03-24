@@ -20,32 +20,32 @@ vec2 GetAtlasUV(uint material)
 
 	 switch (material)
 	 {
+	 case 0:
 	 case 1:
-		tile_min.y = 0.75f;
 	 	break;
 	 case 2:
 		tile_min.x = 0.5f;
-		tile_min.y = 0.75f;
 	 	break;
 	 case 3:
 	 	tile_min.x = 0.5f;
-		tile_min.y = 0.5f;
+		tile_min.y = 0.25f;
 	 	break;
 	 case 4:
-		tile_min.y = 0.5f;
+		tile_min.y = 0.25f;
 	 	break;
-	 case 0:
 	 case 5:
+		tile_min.y = 0.75f;
 	 	break;
 	 case 6:
 	 	tile_min.x = 0.5f;
-		tile_min.y = 0.25f;
+		tile_min.y = 0.5f;
 	 	break;
 	 case 7:
-		tile_min.y = 0.25f;
+		tile_min.y = 0.5f;
 	 	break;
 	 case 8:
 		tile_min.x = 0.5f;
+		tile_min.y = 0.75f;
 	 	break;
 	 }
 

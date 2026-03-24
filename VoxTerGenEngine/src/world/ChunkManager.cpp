@@ -106,7 +106,7 @@ Block ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, const glm::i
 		return Block();
 	}
 
-	Chunk* target_chunk = nullptr;
+	const Chunk* target_chunk = nullptr;
 	glm::ivec3 target_block_coords = { block_coords.x, block_coords.y, block_coords.z };
 
 	if (block_coords.x == -1)

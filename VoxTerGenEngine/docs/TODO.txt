@@ -1,3 +1,5 @@
+FIX and verify WATER next to SOLID culling!!!
+thourughly test multiple chunks, boundaries culling, neighbors etc
 correct uploading of GPU mesh! only when necessary and clear cpu mesh after
 put stuff into UBO
 PACK into uint32
@@ -6,8 +8,6 @@ get rid of getters with same name as the type - make_unique<class ...>
 make class MeshBuilder a namespace
 
 texture bleeding
-
-verify WATER next to SOLID culling!!!
 
 glEnable(GL_FRAMEBUFFER_SRGB);
 
