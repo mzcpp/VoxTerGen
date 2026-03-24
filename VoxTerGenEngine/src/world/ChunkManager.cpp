@@ -98,32 +98,46 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 
 Block ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, const glm::ivec3& block_coords) const
 {
+	assert(block_coords.x > -2 || block_coords.x < constants::chunk::width + 1);
+	assert(block_coords.z > -2 || block_coords.z < constants::chunk::depth + 1);
+	
 	if (block_coords.y < 0 || block_coords.y > constants::chunk::height - 1)
 	{
 		return Block();
 	}
 
-	const int x_chunk_offset = block_coords.x / constants::chunk::width;
-	const int z_chunk_offset = block_coords.z / constants::chunk::depth;
-	const Chunk* target_chunk = GetChunkAt({ current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset });
+	Chunk* target_chunk = nullptr;
+	glm::ivec3 target_block_coords = { block_coords.x, block_coords.y, block_coords.z };
+
+	if (block_coords.x == -1)
+	{
+		target_chunk = GetChunkAt({ current_chunk_coord.x - 1, current_chunk_coord.y });
+		target_block_coords.x += constants::chunk::width;
+	}
+	else if (block_coords.x == constants::chunk::width)
+	{
+		target_chunk = GetChunkAt({ current_chunk_coord.x + 1, current_chunk_coord.y });
+		target_block_coords.x -= constants::chunk::width;
+	}
+	else if (block_coords.z == -1)
+	{
+		target_chunk = GetChunkAt({ current_chunk_coord.x, current_chunk_coord.y - 1 });
+		target_block_coords.z += constants::chunk::depth;
+	}
+	else if (block_coords.z == constants::chunk::depth)
+	{
+		target_chunk = GetChunkAt({ current_chunk_coord.x, current_chunk_coord.y + 1 });
+		target_block_coords.z -= constants::chunk::depth;
+	}
+	else
+	{
+		target_chunk = GetChunkAt({ current_chunk_coord.x, current_chunk_coord.y });
+	}
 
 	if (!target_chunk)
 	{
 		return Block();
 	}
 	
-	int x_block_offset = block_coords.x % constants::chunk::width;
-	int z_block_offset = block_coords.z % constants::chunk::depth;
-
-	if (x_block_offset < 0)
-	{
-		x_block_offset += constants::chunk::width;
-	}
-
-	if (z_block_offset < 0)
-	{
-		z_block_offset += constants::chunk::depth;
-	}
-	
-	return target_chunk->BlockAt({ x_block_offset, block_coords.y, z_block_offset });
+	return target_chunk->BlockAt(target_block_coords);
 }
