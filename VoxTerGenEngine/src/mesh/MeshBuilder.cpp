@@ -13,6 +13,7 @@
 
 void MeshBuilder::SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType type, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh)
 {
+	// TODO: USE VECTORS
 	float vertex_x = 0.0f;
 	float vertex_y = 0.0f;
 	float vertex_z = 0.0f;
@@ -183,7 +184,6 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 	}
 
 	glm::vec3 vertex_position = { 0.0f, 0.0f, 0.0f };
-	std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
 	
 	for (int i : { 0, 1 })
 	{
@@ -216,7 +216,7 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 				vertex_position, 
 				DirToNormal(first_merged_cell.dir_), 
 				{ static_cast<float>(j * merged_quad.width_), static_cast<float>(i * merged_quad.height_) }, 
-				material);
+				GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_));
 		}
 	}
 }
