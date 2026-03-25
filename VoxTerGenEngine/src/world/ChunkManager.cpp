@@ -129,36 +129,16 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 
 Block ChunkManager::WorldBlockQuery(const glm::ivec2& current_chunk_coord, const glm::ivec3& block_coords) const
 {	
-	if (block_coords.y < 0 || block_coords.y > constants::chunk::height - 1)
+	if (block_coords.y < 0 || block_coords.y >= constants::chunk::height)
 	{
 		return Block();
 	}
 	
-	const int x_chunk_offset = RoundAwayFromZero(static_cast<float>(block_coords.x) / static_cast<float>(constants::chunk::width));
-	const int z_chunk_offset = RoundAwayFromZero(static_cast<float>(block_coords.z) / static_cast<float>(constants::chunk::depth));
-	const glm::ivec2 target_chunk_coords = { current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset };
-
-	glm::ivec3 target_block_coords = block_coords;
-
-	if (block_coords.x < 0)
-	{
-		target_block_coords.x += constants::chunk::width * x_chunk_offset;
-	}
-	else if (block_coords.x > constants::chunk::width - 1)
-	{
-		target_block_coords.x = block_coords.x % constants::chunk::width;
-	}
+	const int x_chunk_offset = FloorDiv(block_coords.x, constants::chunk::width);
+	const int z_chunk_offset = FloorDiv(block_coords.z, constants::chunk::depth);
+	const glm::ivec3 target_block_coords = { block_coords.x - x_chunk_offset * constants::chunk::width, block_coords.y, block_coords.z - z_chunk_offset * constants::chunk::depth };
 	
-	if (block_coords.z < 0)
-	{
-		target_block_coords.z += constants::chunk::depth * z_chunk_offset;
-	}
-	else if (block_coords.z > constants::chunk::depth - 1)
-	{
-		target_block_coords.z = block_coords.z % constants::chunk::depth;
-	}
-	
-	if (const Chunk* target_chunk = GetChunkAt(target_chunk_coords))
+	if (const Chunk* target_chunk = GetChunkAt({ current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset }))
 	{
 		return target_chunk->BlockAt(target_block_coords);
 	}
