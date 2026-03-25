@@ -37,6 +37,34 @@ void ChunkManager::InitChunks(int chunk_radius)
 	chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Stone);
 	chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Stone);
 
+	//for (int y = 0; y < constants::chunk::height; ++y)
+	//{
+	//	for (int z = 0; z < constants::chunk::depth; ++z)
+	//	{
+	//		for (int x = 0; x < constants::chunk::width; ++x)
+	//		{
+	//			int randNum = rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Air) + 1) + static_cast<int>(BlockType::Air);
+
+	//			chunks_.begin()->second->BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(randNum));
+	//		}
+	//	}
+	//}
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 2 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 3 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Grass);
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Dirt);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Dirt);
+
+	//chunks_.begin()->second->BlockAt({ 1, 0, 1 }).SetType(BlockType::Water);
+	//chunks_.begin()->second->BlockAt({ 1, 0, 2 }).SetType(BlockType::Dirt);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 2, 0, 1 }).SetType(BlockType::Bedrock);
+	//chunks_.begin()->second->BlockAt({ 2, 0, 1 }).SetType(BlockType::Bedrock);
+
 	BuildAllChunkMeshes();
 }
 
@@ -130,7 +158,7 @@ Block ChunkManager::WorldBlockQuery(const glm::ivec2& current_chunk_coord, const
 		target_block_coords.z = block_coords.z % constants::chunk::depth;
 	}
 	
-	if (const Chunk* target_chunk = GetChunkAt(target_chunk_coords);)
+	if (const Chunk* target_chunk = GetChunkAt(target_chunk_coords))
 	{
 		return target_chunk->BlockAt(target_block_coords);
 	}
