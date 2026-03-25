@@ -100,4 +100,9 @@ inline bool Vec3Equal(const glm::vec3& a, const glm::vec3& b, float eps = consta
     return glm::length(a - b) < eps;
 }
 
+int RoundAwayFromZero(float a)
+{
+	return static_cast<int>((a > 0) ? std::ceil(a) : std::floor(b));
+}
+
 #endif // MATH_UTILS_HPP

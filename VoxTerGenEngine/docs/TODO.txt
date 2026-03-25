@@ -1,3 +1,4 @@
+REPLACE type traits in MathUtils with concepts!!!!
 FIX and verify WATER next to SOLID culling!!!
 thourughly test multiple chunks, boundaries culling, neighbors etc
 correct uploading of GPU mesh! only when necessary and clear cpu mesh after

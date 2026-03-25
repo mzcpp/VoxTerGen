@@ -3,6 +3,9 @@
 #include "world/Chunk.hpp"
 #include "core/Settings.hpp"
 #include "utils/Logger.hpp"
+#include "utils/MathUtils.hpp"
+
+#include <cmath>
 
 std::size_t ivec2_hash::operator()(const glm::ivec2& vec) const noexcept
 {
@@ -96,48 +99,41 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 	return chunk_it->second.get();
 }
 
-Block ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, const glm::ivec3& block_coords) const
-{
-	assert(block_coords.x > -2 || block_coords.x < constants::chunk::width + 1);
-	assert(block_coords.z > -2 || block_coords.z < constants::chunk::depth + 1);
-	
+Block ChunkManager::WorldBlockQuery(const glm::ivec2& current_chunk_coord, const glm::ivec3& block_coords) const
+{	
 	if (block_coords.y < 0 || block_coords.y > constants::chunk::height - 1)
 	{
 		return Block();
 	}
+	
+	const int x_chunk_offset = RoundAwayFromZero(static_cast<float>(block_coords.x) / static_cast<float>(constants::chunk::width));
+	const int z_chunk_offset = RoundAwayFromZero(static_cast<float>(block_coords.z) / static_cast<float>(constants::chunk::depth));
+	const glm::ivec2 target_chunk_coords = { current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset };
 
-	const Chunk* target_chunk = nullptr;
-	glm::ivec3 target_block_coords = { block_coords.x, block_coords.y, block_coords.z };
+	glm::ivec3 target_block_coords = block_coords;
 
-	if (block_coords.x == -1)
+	if (block_coords.x < 0)
 	{
-		target_chunk = GetChunkAt({ current_chunk_coord.x - 1, current_chunk_coord.y });
-		target_block_coords.x += constants::chunk::width;
+		target_block_coords.x += constants::chunk::width * x_chunk_offset;
 	}
-	else if (block_coords.x == constants::chunk::width)
+	else if (block_coords.x > constants::chunk::width - 1)
 	{
-		target_chunk = GetChunkAt({ current_chunk_coord.x + 1, current_chunk_coord.y });
-		target_block_coords.x -= constants::chunk::width;
-	}
-	else if (block_coords.z == -1)
-	{
-		target_chunk = GetChunkAt({ current_chunk_coord.x, current_chunk_coord.y - 1 });
-		target_block_coords.z += constants::chunk::depth;
-	}
-	else if (block_coords.z == constants::chunk::depth)
-	{
-		target_chunk = GetChunkAt({ current_chunk_coord.x, current_chunk_coord.y + 1 });
-		target_block_coords.z -= constants::chunk::depth;
-	}
-	else
-	{
-		target_chunk = GetChunkAt({ current_chunk_coord.x, current_chunk_coord.y });
-	}
-
-	if (!target_chunk)
-	{
-		return Block();
+		target_block_coords.x = block_coords.x % constants::chunk::width;
 	}
 	
-	return target_chunk->BlockAt(target_block_coords);
+	if (block_coords.z < 0)
+	{
+		target_block_coords.z += constants::chunk::depth * z_chunk_offset;
+	}
+	else if (block_coords.z > constants::chunk::depth - 1)
+	{
+		target_block_coords.z = block_coords.z % constants::chunk::depth;
+	}
+	
+	if (const Chunk* target_chunk = GetChunkAt(target_chunk_coords);)
+	{
+		return target_chunk->BlockAt(target_block_coords);
+	}
+
+	return Block();
 }
