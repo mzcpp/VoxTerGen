@@ -2,6 +2,7 @@
 #include "core/ResourceManager.hpp"
 #include "graphics/ShaderProgram.hpp"
 #include "world/Chunk.hpp"
+#include "world/World.hpp"
 #include "world/ChunkManager.hpp"
 
 #include <glad/glad.h>
@@ -26,7 +27,18 @@ void WorldRenderer::Initialize()
 
 void WorldRenderer::RenderWorld(const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
 {
-	RenderChunks(world.ChunkManager().Chunks(), view, projection, resource_manager);
+	for (const auto& [world_coord, chunk] : world.ChunkManagerRef().Chunks())
+	{
+		if (!chunk->MeshNeedsUpload())
+		{
+			continue;
+		}
+
+		chunk->UploadMeshData();
+		chunk->ReleaseMeshData();
+	}
+
+	RenderChunks(world.ChunkManagerRef().Chunks(), view, projection, resource_manager);
 }
 
 void WorldRenderer::RenderChunks(

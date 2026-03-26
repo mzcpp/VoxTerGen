@@ -25,18 +25,19 @@ public:
     
     void InitChunkBlocks(Chunk& chunk);
 
+	void Tick();
+
 	void BuildChunkMeshes();
 
-	void UploadChunkMeshes();
-
-	void BuildChunkMesh(const glm::ivec2& chunk_coords, const Chunk& chunk);
+	void BuildChunkMesh(const glm::ivec2& chunk_coords, Chunk& chunk);
 
 	Block WorldBlockQuery(const glm::ivec2& current_chunk_coord, const glm::ivec3& block_coords) const;
 
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
+	Chunk* GetChunkAt(glm::ivec2 chunk_coord);
 
 	// Getters
-	const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, ivec2_hash>& Chunks() { return chunks_; }
+	const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, ivec2_hash>& Chunks() const { return chunks_; }
 
 };
 

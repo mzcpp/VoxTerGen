@@ -2,6 +2,7 @@
 #define WORLD_RENDERER_HPP
 
 #include "render/MeshRenderer.hpp"
+#include "world/World.hpp"
 
 #include <glm/glm.hpp>
 

@@ -27,7 +27,9 @@ private:
 	std::array<Block, constants::chunk::size> blocks_;
     std::unique_ptr<Mesh> mesh_;
     std::unique_ptr<GpuMesh> gpu_mesh_;
-    bool mesh_invalid_;
+    bool mesh_valid_;
+    bool mesh_needs_upload_;
+
 
 public:
 	explicit Chunk(glm::ivec2 world_coords);
@@ -44,7 +46,7 @@ public:
 
     Block& NeighborRefAt(const glm::ivec3& coords, Direction dir);
 
-    void UploadMeshData() const;
+    void UploadMeshData();
 
     void ReleaseMeshData();
 
@@ -53,11 +55,13 @@ public:
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
     const Mesh& Mesh() const { return *mesh_; }
     const GpuMesh& GpuMesh() const { return *gpu_mesh_; }
-    bool MeshInvalid() const { return mesh_invalid_; }
+    bool MeshValid() const { return mesh_valid_; }
+    bool MeshNeedsUpload() const { return mesh_needs_upload_; }
 
     // Setters
     void SetMesh(std::unique_ptr<class Mesh> mesh) { mesh_ = std::move(mesh); }
-    void SetMeshInvalid(bool mesh_invalid) { mesh_invalid_ = mesh_invalid; }
+    void SetMeshValid(bool mesh_valid) { mesh_valid_ = mesh_valid; }
+    void SetMeshNeedsUpload(bool mesh_needs_upload) { mesh_needs_upload_ = mesh_needs_upload; }
 
 private:
     int Index(const glm::ivec3& coords) const;

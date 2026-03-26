@@ -8,10 +8,10 @@
 class GpuMesh
 {
 private:
-    GLuint vao_;
-    GLuint vbo_;
-    GLuint ebo_;
-    GLsizei index_count_;
+    GLuint vao_ = 0;
+    GLuint vbo_ = 0;
+    GLuint ebo_ = 0;
+    GLsizei index_count_ = 0;
 
 public:
     GpuMesh();

@@ -11,7 +11,11 @@ private:
 public:
 	World();
 
-	ChunkManager& ChunkManager() { return chunk_manager_; }
+	void Tick();
+
+	// Getters
+	const ChunkManager& ChunkManagerRef() const { return chunk_manager_; }
+	ChunkManager& ChunkManagerRef() { return chunk_manager_; }
 };
 
 #endif // WORLD_HPP

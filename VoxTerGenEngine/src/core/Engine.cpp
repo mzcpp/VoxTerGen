@@ -17,7 +17,7 @@ Engine::Engine() : camera_controller_(camera_)
 void Engine::Initialize()
 {
 	resource_manager_.InitializeResources();
-	world_.ChunkManager().InitChunks(constants::chunk::default_radius);
+	world_.ChunkManagerRef().InitChunks(constants::chunk::default_radius);
 }
 
 void Engine::HandleEvents(SDL_Event e)
@@ -34,6 +34,12 @@ void Engine::HandleEvents(SDL_Event e)
 	{
 		camera_controller_.ApplyZoom(input_manager_);
 	}
+
+	//if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_f)
+	//{
+	//	std::cout << "invalidated mesh!\n";
+	//	world_.ChunkManagerRef().GetChunkAt({ 0, 0 })->SetMeshValid(false);
+	//}
 }
 
 void Engine::Tick(float aspect_ratio)
@@ -41,6 +47,8 @@ void Engine::Tick(float aspect_ratio)
 	camera_.PreTick();
 	camera_controller_.ApplyInput(input_manager_, static_cast<float>(constants::engine::tick_dt), aspect_ratio);
 	camera_.Tick(aspect_ratio);
+
+	world_.Tick();
 }
 
 void Engine::Render(float alpha)
