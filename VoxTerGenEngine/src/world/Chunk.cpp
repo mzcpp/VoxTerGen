@@ -91,10 +91,22 @@ void Chunk::UploadMeshData() const
 {
 	if (mesh_ == nullptr)
 	{
+		Logger::Log(LogLevel::WARNING, "Failed to upload mesh data! Empty mesh!");
 		return;
 	}
 
+	if (gpu_mesh_ == nullptr)
+	{
+		Logger::Log(LogLevel::CRITICAL, "Failed to upload mesh data! gpu_mesh_ is nullptr!");
+		std::abort();
+	}
+
 	gpu_mesh_->UploadMeshData(*mesh_);
+}
+
+void Chunk::ReleaseMeshData()
+{
+	mesh->reset(nullptr);
 }
 
 

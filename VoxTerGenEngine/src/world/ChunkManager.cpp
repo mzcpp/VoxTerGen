@@ -65,7 +65,8 @@ void ChunkManager::InitChunks(int chunk_radius)
 	//chunks_.begin()->second->BlockAt({ 2, 0, 1 }).SetType(BlockType::Bedrock);
 	//chunks_.begin()->second->BlockAt({ 2, 0, 1 }).SetType(BlockType::Bedrock);
 
-	BuildAllChunkMeshes();
+	BuildChunkMeshes();
+	UploadChunkMeshes();
 }
 
 void ChunkManager::InitChunkBlocks(Chunk& chunk)
@@ -85,7 +86,16 @@ void ChunkManager::InitChunkBlocks(Chunk& chunk)
 	}
 }
 
-void ChunkManager::BuildAllChunkMeshes()
+void ChunkManager::UploadChunkMeshes() const
+{
+	for (const auto& [world_coord, chunk] : chunks_)
+	{
+		chunk->UploadMeshData();
+		chunk->ReleaseMeshData();
+	}
+}
+
+void ChunkManager::BuildChunkMeshes()
 {
 	for (auto& [world_coord, chunk] : chunks_)
 	{
@@ -94,25 +104,30 @@ void ChunkManager::BuildAllChunkMeshes()
 			continue;
 		}
 
-		std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
-		
-		*chunk_mesh = MeshBuilder::BuildMeshGreedy(
-			[this, &chunk](const glm::ivec3& block_coords)
-			{
-				return WorldBlockQuery(chunk->WorldCoords(), block_coords);
-			}
-		);
-
-		//*chunk_mesh = MeshBuilder::BuildMeshNaive(chunk->WorldCoords(),
-		//	[this, &chunk](const glm::ivec3& block_coords)
-		//	{
-		//		return WorldBlockQuery(chunk->WorldCoords(), block_coords);
-		//	}
-		//);
-
-		chunk->SetMesh(std::move(chunk_mesh));
-		chunk->SetMeshInvalid(false);
+		BuildChunkMesh(world_coord, chunk);
 	}
+}
+
+void ChunkManager::BuildChunkMesh(const glm::ivec2& chunk_coords, const Chunk& chunk)
+{
+	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
+		
+	*chunk_mesh = MeshBuilder::BuildMeshGreedy(
+		[this, &chunk](const glm::ivec3& block_coords)
+		{
+			return WorldBlockQuery(chunk->WorldCoords(), block_coords);
+		}
+	);
+
+	//*chunk_mesh = MeshBuilder::BuildMeshNaive(chunk->WorldCoords(),
+	//	[this, &chunk](const glm::ivec3& block_coords)
+	//	{
+	//		return WorldBlockQuery(chunk->WorldCoords(), block_coords);
+	//	}
+	//);
+
+	chunk->SetMesh(std::move(chunk_mesh));
+	chunk->SetMeshInvalid(false);
 }
 
 const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const

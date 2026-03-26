@@ -51,7 +51,7 @@ void Engine::Render(float alpha)
 	const glm::mat4 interpolated_view = camera_.InterpolatedViewMatrix(alpha);
 	const glm::mat4 proj = camera_.ProjectionMatrix();
 
-	world_renderer_.RenderChunks(world_.ChunkManager().Chunks(), interpolated_view, proj, resource_manager_);
+	world_renderer_.RenderWorld(world_, interpolated_view, proj, resource_manager_);
 	
 	camera_.EndTick();
 }

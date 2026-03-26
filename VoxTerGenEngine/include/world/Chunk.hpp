@@ -46,6 +46,8 @@ public:
 
     void UploadMeshData() const;
 
+    void ReleaseMeshData();
+
     // Getters
     const glm::ivec2& WorldCoords() const noexcept { return world_coords_; }
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }

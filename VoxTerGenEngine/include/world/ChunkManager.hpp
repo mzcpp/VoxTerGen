@@ -25,7 +25,11 @@ public:
     
     void InitChunkBlocks(Chunk& chunk);
 
-	void BuildAllChunkMeshes();
+	void BuildChunkMeshes();
+
+	void UploadChunkMeshes();
+
+	void BuildChunkMesh(const glm::ivec2& chunk_coords, const Chunk& chunk);
 
 	Block WorldBlockQuery(const glm::ivec2& current_chunk_coord, const glm::ivec3& block_coords) const;
 
