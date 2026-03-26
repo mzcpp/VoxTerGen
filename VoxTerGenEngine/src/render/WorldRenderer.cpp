@@ -59,9 +59,11 @@ void WorldRenderer::RenderChunks(
 
 	for (const auto& [chunk_coords, chunk] : chunks)
 	{
+		// TODO: check for chunk nullptr!
+
 		const glm::mat4 model = glm::translate(glm::mat4(1.0f), { chunk_coords.x * constants::chunk::width, 0, chunk_coords.y * constants::chunk::height });
     	shader_program->Set<glm::mat4>("model", model);
 
-		mesh_renderer_.RenderChunkMesh(chunk_coords, *chunk);
+		mesh_renderer_.RenderChunkMesh(chunk->GpuMesh());
 	}
 }
