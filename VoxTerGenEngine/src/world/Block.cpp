@@ -31,6 +31,11 @@ bool Block::ShouldRenderFace(const Block& neighbor) const
         return true;
     }
 
+    if (this->IsTransparent() && neighbor.IsSolid())
+    {
+        return false;
+    }
+
     if (this->Type() == neighbor.Type())
     {
         return false;

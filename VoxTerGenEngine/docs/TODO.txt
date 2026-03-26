@@ -1,13 +1,15 @@
-
-
-
+REPLACE type traits in MathUtils with concepts!!!!
+FIX and verify WATER next to SOLID culling!!!
+thourughly test multiple chunks, boundaries culling, neighbors etc
+correct uploading of GPU mesh! only when necessary and clear cpu mesh after
+put stuff into UBO
+PACK into uint32
 add cubemap, texture2d function!!
 get rid of getters with same name as the type - make_unique<class ...>
 make class MeshBuilder a namespace
 
-texture bleeding
+glEnable(GL_FRAMEBUFFER_SRGB);
 
-WATER next to GRASS culling!!!
 
 review the camera class thoroughly
 verify the camera is working correctly for big floats

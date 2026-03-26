@@ -3,6 +3,9 @@
 #include "world/Chunk.hpp"
 #include "core/Settings.hpp"
 #include "utils/Logger.hpp"
+#include "utils/MathUtils.hpp"
+
+#include <cmath>
 
 std::size_t ivec2_hash::operator()(const glm::ivec2& vec) const noexcept
 {
@@ -72,6 +75,34 @@ void ChunkManager::InitChunks(int chunk_radius)
 	chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Dirt);
 
 
+	//for (int y = 0; y < constants::chunk::height; ++y)
+	//{
+	//	for (int z = 0; z < constants::chunk::depth; ++z)
+	//	{
+	//		for (int x = 0; x < constants::chunk::width; ++x)
+	//		{
+	//			int randNum = rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Air) + 1) + static_cast<int>(BlockType::Air);
+
+	//			chunks_.begin()->second->BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(randNum));
+	//		}
+	//	}
+	//}
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 2 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 3 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Grass);
+
+	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Dirt);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Dirt);
+
+	//chunks_.begin()->second->BlockAt({ 1, 0, 1 }).SetType(BlockType::Water);
+	//chunks_.begin()->second->BlockAt({ 1, 0, 2 }).SetType(BlockType::Dirt);
+	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Grass);
+	//chunks_.begin()->second->BlockAt({ 2, 0, 1 }).SetType(BlockType::Bedrock);
+	//chunks_.begin()->second->BlockAt({ 2, 0, 1 }).SetType(BlockType::Bedrock);
+
 	BuildAllChunkMeshes();
 }
 
@@ -134,34 +165,26 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 	return chunk_it->second.get();
 }
 
-Block ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, const glm::ivec3& block_coords) const
-{
-	if (block_coords.y < 0 || block_coords.y > constants::chunk::height - 1)
-	{
-		return Block();
-	}
-
-	const int x_chunk_offset = block_coords.x / constants::chunk::width;
-	const int z_chunk_offset = block_coords.z / constants::chunk::depth;
-	const Chunk* const target_chunk = GetChunkAt({ current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset });
-
-	if (!target_chunk)
+Block ChunkManager::WorldBlockQuery(const glm::ivec2& current_chunk_coord, const glm::ivec3& block_coords) const
+{	
+	if (block_coords.y < 0 || block_coords.y >= constants::chunk::height)
 	{
 		return Block();
 	}
 	
-	int x_block_offset = block_coords.x % constants::chunk::width;
-	int z_block_offset = block_coords.z % constants::chunk::depth;
-
-	if (x_block_offset < 0)
-	{
-		x_block_offset += constants::chunk::width;
-	}
-
-	if (z_block_offset < 0)
-	{
-		z_block_offset += constants::chunk::depth;
-	}
+	const int x_chunk_offset = FloorDiv(block_coords.x, constants::chunk::width);
+	const int z_chunk_offset = FloorDiv(block_coords.z, constants::chunk::depth);
+	const glm::ivec3 target_block_coords = 
+	{ 
+		block_coords.x - (x_chunk_offset * constants::chunk::width), 
+		block_coords.y, 
+		block_coords.z - (z_chunk_offset * constants::chunk::depth) 
+	};
 	
-	return target_chunk->BlockAt({ x_block_offset, block_coords.y, z_block_offset });
+	if (const Chunk* target_chunk = GetChunkAt({ current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset }))
+	{
+		return target_chunk->BlockAt(target_block_coords);
+	}
+
+	return Block();
 }
