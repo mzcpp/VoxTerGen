@@ -88,24 +88,6 @@ Block& Chunk::NeighborRefAt(const glm::ivec3& coords, Direction dir)
 	return BlockAt({ coords.x + offset.x, coords.y + offset.y, coords.z + offset.z });
 }
 
-void Chunk::UploadMeshData()
-{
-	if (mesh_ == nullptr)
-	{
-		Logger::Log(LogLevel::WARNING, "Failed to upload mesh data! Empty mesh!");
-		return;
-	}
-
-	if (gpu_mesh_ == nullptr)
-	{
-		Logger::Log(LogLevel::CRITICAL, "Failed to upload mesh data! gpu_mesh_ is nullptr!");
-		std::abort();
-	}
-
-	gpu_mesh_->UploadMeshData(*mesh_);
-	mesh_needs_upload_ = false;
-}
-
 void Chunk::ReleaseMeshData()
 {
 	mesh_.reset(nullptr);

@@ -20,24 +20,35 @@ WorldRenderer::~WorldRenderer()
 
 }
 
-void WorldRenderer::Initialize()
+void WorldRenderer::InitializeChunkRenderData()
 {
 
 }
 
-void WorldRenderer::RenderWorld(const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
+void WorldRenderer::UploadChunkRenderData(const World& world)
 {
-	for (const auto& [world_coord, chunk] : world.ChunkManagerRef().Chunks())
+	for (const auto& [world_coords, chunk] : world.ChunkManagerRef().Chunks())
 	{
 		if (!chunk->MeshNeedsUpload())
 		{
 			continue;
 		}
+		
+		auto chunk_data_it = chunk_render_data_.find(chunk.WorldCoords());
 
-		chunk->UploadMeshData();
-		chunk->ReleaseMeshData();
+		if (chunk_data_it == chunk_render_data_.end())
+		{
+			continue;
+		}
+
+		chunk_data_it->second.gpu_mesh_->UploadMeshData(chunk.Mesh());
+		chunk.SetMeshNeedsUpload(false);
 	}
+}
 
+void WorldRenderer::RenderWorld(const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
+{
+	UploadChunkRenderData(world);
 	RenderChunks(world.ChunkManagerRef().Chunks(), view, projection, resource_manager);
 }
 

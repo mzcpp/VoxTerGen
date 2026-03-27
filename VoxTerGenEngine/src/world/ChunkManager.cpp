@@ -98,11 +98,11 @@ void ChunkManager::BuildChunkMeshes()
 			continue;
 		}
 
-		BuildChunkMesh(world_coord, *chunk);
+		BuildChunkMesh(*chunk);
 	}
 }
 
-void ChunkManager::BuildChunkMesh(const glm::ivec2& chunk_coords, Chunk& chunk)
+void ChunkManager::BuildChunkMesh(Chunk& chunk)
 {
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 		
@@ -112,8 +112,6 @@ void ChunkManager::BuildChunkMesh(const glm::ivec2& chunk_coords, Chunk& chunk)
 			return WorldBlockQuery(chunk.WorldCoords(), block_coords);
 		}
 	);
-
-	std::cout << "BUILD MESH CHUNK\n";
 
 	//*chunk_mesh = MeshBuilder::BuildMeshNaive(chunk->WorldCoords(),
 	//	[this, &chunk](const glm::ivec3& block_coords)
@@ -139,6 +137,7 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 	return chunk_it->second.get();
 }
 
+// TODO: do I really need this?
 Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord)
 {
 	const auto chunk_it = chunks_.find(chunk_coord);

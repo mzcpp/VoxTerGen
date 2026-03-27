@@ -46,8 +46,6 @@ public:
 
     Block& NeighborRefAt(const glm::ivec3& coords, Direction dir);
 
-    void UploadMeshData();
-
     void ReleaseMeshData();
 
     // Getters
