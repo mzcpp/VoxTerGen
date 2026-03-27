@@ -34,15 +34,10 @@ void WorldRenderer::UploadChunkRenderData(const World& world)
 			continue;
 		}
 		
-		auto chunk_data_it = chunk_render_data_.find(chunk.WorldCoords());
-
-		if (chunk_data_it == chunk_render_data_.end())
-		{
-			continue;
-		}
-
-		chunk_data_it->second.gpu_mesh_->UploadMeshData(chunk.Mesh());
-		chunk.SetMeshNeedsUpload(false);
+		auto& render_data = chunk_render_data_[world_coords];
+		render_data.gpu_mesh_.UploadMeshData(chunk->Mesh());
+		render_data.chunk_model_ = glm::translate(render_data.chunk_model_, { world_coords.x * constants::chunk::width, 0, world_coords.y * constants::chunk::height });
+		chunk->SetMeshNeedsUpload(false);
 	}
 }
 
@@ -70,11 +65,20 @@ void WorldRenderer::RenderChunks(
 
 	for (const auto& [chunk_coords, chunk] : chunks)
 	{
-		// TODO: check for chunk nullptr!
+		if (chunk == nullptr)
+		{
+			Logger::Log(LogLevel::CRITICAL, "Unable to render chunk! Chunk is nullptr! Aborting...");
+			std::abort();
+		}
 
-		const glm::mat4 model = glm::translate(glm::mat4(1.0f), { chunk_coords.x * constants::chunk::width, 0, chunk_coords.y * constants::chunk::height });
-    	shader_program->Set<glm::mat4>("model", model);
+		const auto& chunk_data_it = chunk_render_data_.find(chunk->WorldCoords());
 
-		mesh_renderer_.RenderChunkMesh(chunk->GpuMesh());
+		if (chunk_data_it == chunk_render_data_.end())
+		{
+			continue;
+		}
+
+		shader_program->Set<glm::mat4>("model", chunk_data_it->second.chunk_model_);
+		mesh_renderer_.RenderChunkMesh(chunk_data_it->second.gpu_mesh_);
 	}
 }

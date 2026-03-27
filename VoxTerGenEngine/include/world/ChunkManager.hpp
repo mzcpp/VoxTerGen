@@ -34,6 +34,7 @@ public:
 	Block WorldBlockQuery(const glm::ivec2& current_chunk_coord, const glm::ivec3& block_coords) const;
 
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
+
 	Chunk* GetChunkAt(glm::ivec2 chunk_coord);
 
 	// Getters

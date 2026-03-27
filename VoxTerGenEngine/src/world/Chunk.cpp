@@ -11,7 +11,6 @@
 Chunk::Chunk(glm::ivec2 world_coords) :
 	world_coords_(world_coords),
 	mesh_(nullptr),
-	gpu_mesh_(std::make_unique<class GpuMesh>()),
 	mesh_valid_(false),
 	mesh_needs_upload_(false)
 {
