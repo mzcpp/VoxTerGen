@@ -87,6 +87,9 @@
     <ClCompile Include="src\render\GpuMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\ChunkMeshRenderPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Constants.hpp">
@@ -1197,6 +1200,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\render\GpuMesh.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\ChunkMeshRenderPass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -35,7 +35,7 @@ void WorldRenderer::UploadChunkRenderData(const World& world)
 		}
 		
 		auto& render_data = chunk_render_data_[world_coords];
-		render_data.gpu_mesh_.UploadMeshData(chunk->Mesh());
+		render_data.gpu_mesh_.UploadMeshData(*chunk->Mesh());
 		render_data.chunk_model_ = glm::translate(render_data.chunk_model_, { world_coords.x * constants::chunk::width, 0, world_coords.y * constants::chunk::height });
 		chunk->SetMeshNeedsUpload(false);
 	}

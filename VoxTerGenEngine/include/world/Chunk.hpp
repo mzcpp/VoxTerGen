@@ -50,9 +50,9 @@ public:
     // Getters
     const glm::ivec2& WorldCoords() const noexcept { return world_coords_; }
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
-    const Mesh& Mesh() const { return *mesh_; }
-    bool MeshValid() const { return mesh_valid_; }
-    bool MeshNeedsUpload() const { return mesh_needs_upload_; }
+    const Mesh* Mesh() const noexcept { return mesh_.get(); }
+    bool MeshValid() const noexcept { return mesh_valid_; }
+    bool MeshNeedsUpload() const noexcept { return mesh_needs_upload_; }
 
     // Setters
     void SetMesh(std::unique_ptr<class Mesh> mesh) { mesh_ = std::move(mesh); }
