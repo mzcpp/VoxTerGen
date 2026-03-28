@@ -23,9 +23,10 @@ void ChunkMeshRenderPass::UploadChunkRenderData(const World& world)
 			continue;
 		}
 
-		auto& render_data = chunk_render_data_[world_coords];
+		const auto [it, inserted] = chunk_render_data_.try_emplace(world_coords);
+		auto& render_data = it->second;
 		render_data.gpu_mesh_.UploadMeshData(*chunk->Mesh());
-		render_data.chunk_model_ = glm::translate(render_data.chunk_model_, { world_coords.x * constants::chunk::width, 0, world_coords.y * constants::chunk::height });
+		render_data.chunk_model_ = glm::translate(glm::mat4(1.0f), { world_coords.x * constants::chunk::width, 0, world_coords.y * constants::chunk::height });
 		chunk->SetMeshNeedsUpload(false);
 	}
 }
