@@ -7,7 +7,6 @@
 #include <stdexcept>
 #include <vector>
 #include <string>
-#include <iostream>
 #include <optional>
 
 ShaderProgram::ShaderProgram(
@@ -29,7 +28,6 @@ ShaderProgram::ShaderProgram(
 
     if (id_ == 0)
     {
-        // TODO: std::err?
         throw std::runtime_error("Failed to create shader program");
     }
 
@@ -79,7 +77,6 @@ ShaderProgram::ShaderProgram(const std::filesystem::path& compute_path) : id_(0)
 
     if (id_ == 0)
     {
-        // TODO: std::err?
         throw std::runtime_error("Failed to create shader program");
     }
 
@@ -164,7 +161,6 @@ void ShaderProgram::CheckErrors() const
     std::vector<GLchar> info_log(length ? length : 1);
     GLsizei actual_length = 0;
     glGetProgramInfoLog(id_, length, &actual_length, info_log.data());
-    // TODO: std::err?
     throw std::runtime_error(std::string("Program linking failed:\n") + std::string(info_log.data(), actual_length));
 }
 

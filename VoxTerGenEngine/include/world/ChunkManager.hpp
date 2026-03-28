@@ -3,20 +3,18 @@
 
 #include "world/Chunk.hpp"
 #include "world/Block.hpp"
+#include "utils/Hash.hpp"
 
 #include <glm/vec2.hpp>
 
 #include <unordered_map>
-
-struct ivec2_hash 
-{
-	std::size_t operator()(const glm::ivec2& vec) const noexcept;
-};
+#include <queue>
 
 class ChunkManager
 {
 private:
-	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, ivec2_hash> chunks_;
+	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash> chunks_;
+	std::queue<Chunk*> chunk_build_queue_;
 
 public:
 	ChunkManager();
@@ -25,14 +23,20 @@ public:
     
     void InitChunkBlocks(Chunk& chunk);
 
-	void BuildAllChunkMeshes();
+	void Tick();
+
+	void BuildChunkMeshes();
+
+	void BuildChunkMesh(Chunk& chunk);
 
 	Block WorldBlockQuery(const glm::ivec2& current_chunk_coord, const glm::ivec3& block_coords) const;
 
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
 
+	void PushChunkIntoQueue(Chunk* chunk);
+
 	// Getters
-	const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, ivec2_hash>& Chunks() { return chunks_; }
+	const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash>& Chunks() const { return chunks_; }
 
 };
 

@@ -17,7 +17,8 @@ Engine::Engine() : camera_controller_(camera_)
 void Engine::Initialize()
 {
 	resource_manager_.InitializeResources();
-	world_.ChunkManager().InitChunks(constants::chunk::default_radius);
+	world_.ChunkManagerRef().InitChunks(constants::chunk::default_radius);
+	world_renderer_.InitializeChunkRenderData(world_);
 }
 
 void Engine::HandleEvents(SDL_Event e)
@@ -34,6 +35,17 @@ void Engine::HandleEvents(SDL_Event e)
 	{
 		camera_controller_.ApplyZoom(input_manager_);
 	}
+
+	//if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_f)
+	//{
+	//	for (auto& [world_coords, chunk] : world_.ChunkManagerRef().Chunks())
+	//	{
+	//		std::cout << "invalidated mesh!\n";
+	//		chunk->SetMeshValid(false);
+	//		world_.ChunkManagerRef().PushChunkIntoQueue(chunk.get());
+	//	}
+	//	//world_.ChunkManagerRef().GetChunkAt({ 0, 0 })->SetMeshValid(false);
+	//}
 }
 
 void Engine::Tick(float aspect_ratio)
@@ -41,6 +53,8 @@ void Engine::Tick(float aspect_ratio)
 	camera_.PreTick();
 	camera_controller_.ApplyInput(input_manager_, static_cast<float>(constants::engine::tick_dt), aspect_ratio);
 	camera_.Tick(aspect_ratio);
+
+	world_.Tick();
 }
 
 void Engine::Render(float alpha)
@@ -51,7 +65,7 @@ void Engine::Render(float alpha)
 	const glm::mat4 interpolated_view = camera_.InterpolatedViewMatrix(alpha);
 	const glm::mat4 proj = camera_.ProjectionMatrix();
 
-	world_renderer_.RenderChunks(world_.ChunkManager().Chunks(), interpolated_view, proj, resource_manager_);
+	world_renderer_.RenderWorld(world_, interpolated_view, proj, resource_manager_);
 	
 	camera_.EndTick();
 }

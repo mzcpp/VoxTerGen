@@ -8,11 +8,11 @@
 #include <stdexcept>
 #include <memory>
 
-Chunk::Chunk(glm::ivec2 world_coords) : 
-	world_coords_(world_coords), 
-	mesh_(nullptr), 
-	gpu_mesh_(std::make_unique<class GpuMesh>()),
-	mesh_invalid_(true)
+Chunk::Chunk(glm::ivec2 world_coords) :
+	world_coords_(world_coords),
+	mesh_(nullptr),
+	mesh_valid_(false),
+	mesh_needs_upload_(false)
 {
 }
 
@@ -87,16 +87,10 @@ Block& Chunk::NeighborRefAt(const glm::ivec3& coords, Direction dir)
 	return BlockAt({ coords.x + offset.x, coords.y + offset.y, coords.z + offset.z });
 }
 
-void Chunk::UploadMeshData() const
+void Chunk::ReleaseMeshData()
 {
-	if (mesh_ == nullptr)
-	{
-		return;
-	}
-
-	gpu_mesh_->UploadMeshData(*mesh_);
+	mesh_.reset(nullptr);
 }
-
 
 int Chunk::Index(const glm::ivec3& coords) const
 {

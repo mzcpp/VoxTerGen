@@ -8,10 +8,10 @@
 class GpuMesh
 {
 private:
-    GLuint vao_;
-    GLuint vbo_;
-    GLuint ebo_;
-    GLsizei index_count_;
+    GLuint vao_ = 0;
+    GLuint vbo_ = 0;
+    GLuint ebo_ = 0;
+    GLsizei index_count_ = 0;
 
 public:
     GpuMesh();
@@ -27,10 +27,10 @@ public:
     void UploadMeshData(const Mesh& mesh);
 
     // Getters
-    GLuint VAO() const { return vao_; }
-    GLuint VBO() const { return vbo_; }
-    GLuint EBO() const { return ebo_; }
-    GLsizei IndexCount() const { return index_count_; }
+    GLuint VAO() const noexcept { return vao_; }
+    GLuint VBO() const noexcept { return vbo_; }
+    GLuint EBO() const noexcept { return ebo_; }
+    GLsizei IndexCount() const noexcept { return index_count_; }
 };
 
 #endif // GPU_MESH_HPP
