@@ -8,11 +8,13 @@
 #include <glm/vec2.hpp>
 
 #include <unordered_map>
+#include <queue>
 
 class ChunkManager
 {
 private:
 	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash> chunks_;
+	std::queue<Chunk*> chunk_build_queue_;
 
 public:
 	ChunkManager();
@@ -32,6 +34,8 @@ public:
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
 
 	Chunk* GetChunkAt(glm::ivec2 chunk_coord);
+
+	void PushChunkIntoQueue(Chunk* chunk);
 
 	// Getters
 	const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash>& Chunks() const { return chunks_; }

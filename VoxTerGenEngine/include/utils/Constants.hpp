@@ -57,7 +57,7 @@ namespace constants
         inline constexpr int depth = 16;
         inline constexpr int height = 128;
         inline constexpr int size = width * depth * height;
-        inline constexpr int default_radius = 1;
+        inline constexpr int default_radius = 2;
     } // namespace chunk
 
     /**
@@ -90,7 +90,7 @@ namespace constants
         inline constexpr float pitch = -20.0f;
         inline constexpr float pitch_min = -89.0f;
         inline constexpr float pitch_max = 89.0f;
-        inline constexpr float speed = 15.5f;
+        inline constexpr float speed = 35.5f;
         inline constexpr float move_sensitivity = 0.1f;
         inline constexpr float zoom_sensitivity = 1.0f;
         inline constexpr float zoom = 45.0f;

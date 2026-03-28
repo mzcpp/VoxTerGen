@@ -38,8 +38,13 @@ void Engine::HandleEvents(SDL_Event e)
 
 	//if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_f)
 	//{
-	//	std::cout << "invalidated mesh!\n";
-	//	world_.ChunkManagerRef().GetChunkAt({ 0, 0 })->SetMeshValid(false);
+	//	for (auto& [world_coords, chunk] : world_.ChunkManagerRef().Chunks())
+	//	{
+	//		std::cout << "invalidated mesh!\n";
+	//		chunk->SetMeshValid(false);
+	//		world_.ChunkManagerRef().PushChunkIntoQueue(chunk.get());
+	//	}
+	//	//world_.ChunkManagerRef().GetChunkAt({ 0, 0 })->SetMeshValid(false);
 	//}
 }
 
