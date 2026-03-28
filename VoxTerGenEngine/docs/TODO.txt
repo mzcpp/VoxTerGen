@@ -1,6 +1,3 @@
-verify WATER next to SOLID culling!
-thoroughly test multiple chunks, boundaries culling, neighbors etc
-
 rethink error handling. For example in Chunk.cpp. There's BOTH throw AND LOG, or throw AND assert.
 put stuff into UBO
 PACK vertex into uint32
@@ -10,7 +7,6 @@ PACK vertex into uint32
 		add a bit information into the packed uint32 top_covered = 1/0;
 add cubemap, texture2d function!
 make class MeshBuilder a namespace
-limit upload of mesh per frame?
 
 interpolated_view!
 review the camera class thoroughly
