@@ -4,15 +4,10 @@
 #include "core/Settings.hpp"
 #include "utils/Logger.hpp"
 #include "utils/MathUtils.hpp"
+#include "utils/Hash.hpp"
 
 #include <cmath>
-
-std::size_t ivec2_hash::operator()(const glm::ivec2& vec) const noexcept
-{
-	const std::size_t h1 = std::hash<int>{}(vec.x);
-	const std::size_t h2 = std::hash<int>{}(vec.y);
-	return h1 ^ (h2 << 1);
-}
+#include <ranges>
 
 ChunkManager::ChunkManager()
 {
@@ -91,18 +86,16 @@ void ChunkManager::Tick()
 
 void ChunkManager::BuildChunkMeshes()
 {
-	for (auto& [world_coord, chunk] : chunks_)
+	for (const auto& chunk : chunks_ | std::views::values)
 	{
-		if (chunk->MeshValid())
+		if (!chunk->MeshValid())
 		{
-			continue;
+			BuildChunkMesh(*chunk);
 		}
-
-		BuildChunkMesh(world_coord, *chunk);
 	}
 }
 
-void ChunkManager::BuildChunkMesh(const glm::ivec2& chunk_coords, Chunk& chunk)
+void ChunkManager::BuildChunkMesh(Chunk& chunk)
 {
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 		
@@ -112,8 +105,6 @@ void ChunkManager::BuildChunkMesh(const glm::ivec2& chunk_coords, Chunk& chunk)
 			return WorldBlockQuery(chunk.WorldCoords(), block_coords);
 		}
 	);
-
-	std::cout << "BUILD MESH CHUNK\n";
 
 	//*chunk_mesh = MeshBuilder::BuildMeshNaive(chunk->WorldCoords(),
 	//	[this, &chunk](const glm::ivec3& block_coords)
@@ -139,6 +130,7 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 	return chunk_it->second.get();
 }
 
+// TODO: do I really need this?
 Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord)
 {
 	const auto chunk_it = chunks_.find(chunk_coord);

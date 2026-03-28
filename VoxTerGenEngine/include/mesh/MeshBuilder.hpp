@@ -38,8 +38,8 @@ class MeshBuilder final
 {
 public:
 	MeshBuilder() = delete;
-	MeshBuilder(const MeshBuilder&) = delete;
-	MeshBuilder& operator=(const MeshBuilder&) = delete;
+	MeshBuilder(const MeshBuilder& other) = delete;
+	MeshBuilder& operator=(const MeshBuilder& other) = delete;
 
 	static Mesh BuildMeshNaive(const glm::ivec2& chunk_world_coords, BlockQuery auto&& world_block_query);
 	

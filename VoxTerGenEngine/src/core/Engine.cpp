@@ -18,6 +18,7 @@ void Engine::Initialize()
 {
 	resource_manager_.InitializeResources();
 	world_.ChunkManagerRef().InitChunks(constants::chunk::default_radius);
+	world_renderer_.InitializeChunkRenderData(world_);
 }
 
 void Engine::HandleEvents(SDL_Event e)

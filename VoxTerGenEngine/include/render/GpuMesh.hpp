@@ -27,10 +27,10 @@ public:
     void UploadMeshData(const Mesh& mesh);
 
     // Getters
-    GLuint VAO() const { return vao_; }
-    GLuint VBO() const { return vbo_; }
-    GLuint EBO() const { return ebo_; }
-    GLsizei IndexCount() const { return index_count_; }
+    GLuint VAO() const noexcept { return vao_; }
+    GLuint VBO() const noexcept { return vbo_; }
+    GLuint EBO() const noexcept { return ebo_; }
+    GLsizei IndexCount() const noexcept { return index_count_; }
 };
 
 #endif // GPU_MESH_HPP

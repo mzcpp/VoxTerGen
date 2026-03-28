@@ -3,8 +3,6 @@
 
 #include <glad/glad.h>
 
-#include <span>
-
 GpuMesh::GpuMesh()
 {
     glCreateVertexArrays(1, &vao_);
@@ -89,7 +87,7 @@ void GpuMesh::UploadMeshData(const Mesh& mesh)
     const std::vector<std::uint32_t>& indices = mesh.Indices();
 
     glNamedBufferData(vbo_, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
-    glNamedBufferData(ebo_, indices.size() * sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
+    glNamedBufferData(ebo_, indices.size() * sizeof(std::uint32_t), indices.data(), GL_STATIC_DRAW);
 
     index_count_ = static_cast<GLsizei>(indices.size());
 }

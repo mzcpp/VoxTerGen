@@ -18,8 +18,8 @@ public:
 	void AddIndex(std::uint32_t index);
 	
 	// Getters
-	const std::vector<Vertex>& Vertices() const { return vertices_; }
-	const std::vector<std::uint32_t>& Indices() const { return indices_; }
+	const std::vector<Vertex>& Vertices() const noexcept { return vertices_; }
+	const std::vector<std::uint32_t>& Indices() const noexcept { return indices_; }
 };
 
 #endif // MESH_HPP
