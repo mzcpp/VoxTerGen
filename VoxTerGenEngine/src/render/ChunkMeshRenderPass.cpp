@@ -14,7 +14,7 @@ void ChunkMeshRenderPass::InitializeChunkRenderData(const World& world)
 	for (const auto& [world_coords, chunk] : world.ChunkManagerRef().Chunks())
 	{
 		auto emplace_pair = chunk_render_data_.emplace(world_coords, ChunkRenderData{});
-		emplace_pair.first->second.chunk_model_ = glm::translate(glm::mat4(1.0f), { world_coords.x * constants::chunk::width, 0, world_coords.y * constants::chunk::height });
+		emplace_pair.first->second.chunk_model_ = glm::translate(glm::mat4(1.0f), { world_coords.x * constants::chunk::width, 0, world_coords.y * constants::chunk::depth });
 	}
 }
 
