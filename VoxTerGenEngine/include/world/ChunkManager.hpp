@@ -33,8 +33,6 @@ public:
 
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
 
-	Chunk* GetChunkAt(glm::ivec2 chunk_coord);
-
 	void PushChunkIntoQueue(Chunk* chunk);
 
 	// Getters

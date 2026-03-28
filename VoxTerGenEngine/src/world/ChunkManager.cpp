@@ -30,12 +30,13 @@ void ChunkManager::InitChunks(int chunk_radius)
 		}
 	}
 
-	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Stone);
-	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Stone);
+	//chunks_.at({ 0, 0 })->BlockAt({ 0, 50, 0 }).SetType(BlockType::Water);
+	//chunks_.at({ -1, 0 })->BlockAt({ 15, 50, 0 }).SetType(BlockType::Grass);
+	//chunks_.at({ 0, -1 })->BlockAt({ 0, 50, 15 }).SetType(BlockType::Bedrock);
 
 	for (auto& [world_coords, chunk] : chunks_)
 	{
-		BlockType randBlock = static_cast<BlockType>(rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Grass) + 1) + static_cast<int>(BlockType::Grass));
+		//BlockType randBlock = static_cast<BlockType>(rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Grass) + 1) + static_cast<int>(BlockType::Grass));
 
 		for (int y = 0; y < constants::chunk::height; ++y)
 		{
@@ -43,8 +44,14 @@ void ChunkManager::InitChunks(int chunk_radius)
 			{
 				for (int x = 0; x < constants::chunk::width; ++x)
 				{
-					//BlockType randBlock = static_cast<BlockType>(rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Air) + 1) + static_cast<int>(BlockType::Air));
-					chunk->BlockAt({ x, y, z }).SetType(randBlock);
+					BlockType randBlock = static_cast<BlockType>(rand() % (static_cast<int>(BlockType::Dirt) - static_cast<int>(BlockType::Grass) + 1) + static_cast<int>(BlockType::Grass));
+					chunk->BlockAt({ x, 0, z }).SetType(randBlock);
+					chunk->BlockAt({ 0, y, z }).SetType(randBlock);
+					chunk->BlockAt({ x, y, 0 }).SetType(randBlock);
+
+					chunk->BlockAt({ x, constants::chunk::height - 1, z }).SetType(randBlock);
+					chunk->BlockAt({ constants::chunk::width - 1, y, z }).SetType(randBlock);
+					chunk->BlockAt({ x, y, constants::chunk::depth - 1 }).SetType(randBlock);
 
 
 					/*chunks_.at({ -1, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Grass);
@@ -161,19 +168,6 @@ void ChunkManager::BuildChunkMesh(Chunk& chunk)
 }
 
 const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
-{
-	const auto& chunk_it = chunks_.find(chunk_coord);
-
-	if (chunk_it == chunks_.end())
-	{
-		return nullptr;
-	}
-
-	return chunk_it->second.get();
-}
-
-// TODO: do I really need this?
-Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord)
 {
 	const auto& chunk_it = chunks_.find(chunk_coord);
 
