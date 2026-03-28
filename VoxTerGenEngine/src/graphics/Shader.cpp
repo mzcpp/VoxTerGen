@@ -11,7 +11,6 @@ Shader::Shader(const std::filesystem::path& shader_path, GLenum shader_type) :
 
     if (!file)
     {
-        // TODO: log
         throw std::runtime_error("Failed to open shader file: " + source_path_.string());
     }
 
@@ -87,6 +86,5 @@ void Shader::CheckErrors()
     GLsizei actual_length = 0;
     
     glGetShaderInfoLog(id_, length, &actual_length, info_log.data());
-    // TODO: log
     throw std::runtime_error("Shader compilation failed (" + source_path_.string() + "):\n" + std::string(info_log.data(), actual_length));
 }

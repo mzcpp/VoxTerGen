@@ -38,9 +38,34 @@ void ChunkManager::InitChunks(int chunk_radius)
 		{
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				int randNum = rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Air) + 1) + static_cast<int>(BlockType::Air);
+				BlockType randBlock = static_cast<BlockType>(rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Air) + 1) + static_cast<int>(BlockType::Air));
 
-				chunks_.begin()->second->BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(randNum));
+				chunks_.at({ -1, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Grass);
+				chunks_.at({ 0, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Dirt);
+				chunks_.at({ 1, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Stone);
+
+				chunks_.at({ -1, 0 })->BlockAt({ x, y, z }).SetType(BlockType::Snow);
+				chunks_.at({ 0, 0 })->BlockAt({ x, y, z }).SetType(BlockType::Bedrock);
+				chunks_.at({ 1, 0 })->BlockAt({ x, y, z }).SetType(BlockType::Sand);
+
+				chunks_.at({ -1, -1 })->BlockAt({ x, y, z }).SetType(BlockType::Water);
+				chunks_.at({ 0, -1 })->BlockAt({ x, y, z }).SetType(BlockType::Grass);
+				chunks_.at({ 1, -1 })->BlockAt({ x, y, z }).SetType(BlockType::Bedrock);
+
+				//int posy = y;
+
+				//chunks_.at({ -1, 1 })->BlockAt({ x, posy, z }).SetType(randBlock);
+				//chunks_.at({ 0, 1 })->BlockAt({ x, posy, z }).SetType(randBlock);
+				//chunks_.at({ 1, 1 })->BlockAt({ x, posy, z }).SetType(randBlock);
+
+				//chunks_.at({ -1, 0 })->BlockAt({ x, posy, z }).SetType(randBlock);
+				//chunks_.at({ 0, 0 })->BlockAt({ x, posy, z }).SetType(randBlock);
+				//chunks_.at({ 1, 0 })->BlockAt({ x, posy, z }).SetType(randBlock);
+
+				//chunks_.at({ -1, -1 })->BlockAt({ x, posy, z }).SetType(randBlock);
+				//chunks_.at({ 0, -1 })->BlockAt({ x, posy, z }).SetType(randBlock);
+				//chunks_.at({ 1, -1 })->BlockAt({ x, posy, z }).SetType(randBlock);
+				
 			}
 		}
 	}
@@ -120,7 +145,7 @@ void ChunkManager::BuildChunkMesh(Chunk& chunk)
 
 const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 {
-	const auto chunk_it = chunks_.find(chunk_coord);
+	const auto& chunk_it = chunks_.find(chunk_coord);
 
 	if (chunk_it == chunks_.end())
 	{
@@ -133,7 +158,7 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 // TODO: do I really need this?
 Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord)
 {
-	const auto chunk_it = chunks_.find(chunk_coord);
+	const auto& chunk_it = chunks_.find(chunk_coord);
 
 	if (chunk_it == chunks_.end())
 	{

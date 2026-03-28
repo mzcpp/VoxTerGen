@@ -4,9 +4,12 @@ thoroughly test multiple chunks, boundaries culling, neighbors etc
 rethink error handling. For example in Chunk.cpp. There's BOTH throw AND LOG, or throw AND assert.
 put stuff into UBO
 PACK vertex into uint32
+	Fix grass texture issues
+		grass on sides when its covered by solid top neighbor -> should be dirt on sides
+		popping textures when removing solid block above grass block -> before the grass was all dirt, now after rebuilding grass popped in!
+		add a bit information into the packed uint32 top_covered = 1/0;
 add cubemap, texture2d function!
 make class MeshBuilder a namespace
-
 limit upload of mesh per frame?
 
 interpolated_view!

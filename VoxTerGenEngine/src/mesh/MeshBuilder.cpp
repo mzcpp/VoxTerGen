@@ -8,21 +8,20 @@
 #include "core/Direction.hpp"
 #include "utils/Constants.hpp"
 
+#include <glm/vec3.hpp>
+
 #include <array>
 #include <cassert>
 
 void MeshBuilder::SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType type, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh)
 {
-	// TODO: USE VECTORS
-	float vertex_x = 0.0f;
-	float vertex_y = 0.0f;
-	float vertex_z = 0.0f;
-	float normal_x = 0.0f;
-	float normal_y = 0.0f;
-	float normal_z = 0.0f;
-	const float world_x = static_cast<float>(chunk_world_coords.x * constants::chunk::width + block_coords.x);
-	const float world_y = static_cast<float>(block_coords.y);
-	const float world_z = static_cast<float>(chunk_world_coords.y * constants::chunk::depth + block_coords.z);
+	glm::vec3 vertex = { 0.0f, 0.0f, 0.0f };
+	glm::vec3 normal = { 0.0f, 0.0f, 0.0f };
+	glm::vec3 world_pos = { 
+		static_cast<float>(chunk_world_coords.x * constants::chunk::width + block_coords.x), 
+		static_cast<float>(block_coords.y), 
+		static_cast<float>(chunk_world_coords.y * constants::chunk::depth + block_coords.z) 
+	};
 
 	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
 	{
@@ -37,10 +36,10 @@ void MeshBuilder::SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType t
 			// 1, 0, 0
 			// 1, 1, 1
 			// 1, 1, 0
-			vertex_x = 1.0f;
-			vertex_y = static_cast<float>((i / 2) % 2 != 0);
-			vertex_z = static_cast<float>(i % 2 == 0);
-			normal_x = 1.0f;
+			vertex.x = 1.0f;
+			vertex.y = static_cast<float>((i / 2) % 2 != 0);
+			vertex.z = static_cast<float>(i % 2 == 0);
+			normal.x = 1.0f;
 		}
 		else if (dir == Direction::NegX)
 		{
@@ -48,10 +47,10 @@ void MeshBuilder::SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType t
 			// 0, 0, 1
 			// 0, 1, 0
 			// 0, 1, 1
-			vertex_x = 0.0f;
-			vertex_y = static_cast<float>((i / 2) % 2 != 0);
-			vertex_z = static_cast<float>(i % 2 != 0);
-			normal_x = -1.0f;
+			vertex.x = 0.0f;
+			vertex.y = static_cast<float>((i / 2) % 2 != 0);
+			vertex.z = static_cast<float>(i % 2 != 0);
+			normal.x = -1.0f;
 		}
 		else if (dir == Direction::PosY)
 		{
@@ -59,10 +58,10 @@ void MeshBuilder::SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType t
 			// 1, 1, 1
 			// 0, 1, 0
 			// 1, 1, 0
-			vertex_x = static_cast<float>(i % 2 != 0);
-			vertex_y = 1.0f;
-			vertex_z = static_cast<float>((i / 2) % 2 == 0);
-			normal_y = 1.0f;
+			vertex.x = static_cast<float>(i % 2 != 0);
+			vertex.y = 1.0f;
+			vertex.z = static_cast<float>((i / 2) % 2 == 0);
+			normal.y = 1.0f;
 		}
 		else if (dir == Direction::NegY)
 		{
@@ -70,10 +69,10 @@ void MeshBuilder::SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType t
 			// 0, 0, 1
 			// 1, 0, 0
 			// 0, 0, 0
-			vertex_x = static_cast<float>(i % 2 == 0);
-			vertex_y = 0.0f;
-			vertex_z = static_cast<float>((i / 2) % 2 == 0);
-			normal_y = -1.0f;
+			vertex.x = static_cast<float>(i % 2 == 0);
+			vertex.y = 0.0f;
+			vertex.z = static_cast<float>((i / 2) % 2 == 0);
+			normal.y = -1.0f;
 		}
 		else if (dir == Direction::PosZ)
 		{
@@ -81,10 +80,10 @@ void MeshBuilder::SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType t
 			// 1, 0, 1
 			// 0, 1, 1
 			// 1, 1, 1
-			vertex_x = static_cast<float>(i % 2 != 0);
-			vertex_y = static_cast<float>((i / 2) % 2 != 0);
-			vertex_z = 1.0f;
-			normal_z = 1.0f;
+			vertex.x = static_cast<float>(i % 2 != 0);
+			vertex.y = static_cast<float>((i / 2) % 2 != 0);
+			vertex.z = 1.0f;
+			normal.z = 1.0f;
 		}
 		else if (dir == Direction::NegZ)
 		{
@@ -92,17 +91,17 @@ void MeshBuilder::SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType t
 			// 0, 0, 0
 			// 1, 1, 0
 			// 0, 1, 0
-			vertex_x = static_cast<float>(i % 2 == 0);
-			vertex_y = static_cast<float>((i / 2) % 2 != 0);
-			vertex_z = 0.0f;
-			normal_z = -1.0f;
+			vertex.x = static_cast<float>(i % 2 == 0);
+			vertex.y = static_cast<float>((i / 2) % 2 != 0);
+			vertex.z = 0.0f;
+			normal.z = -1.0f;
 		}
 
-		chunk_mesh.AddVertex(
-			{ vertex_x + world_x, vertex_y + world_y, vertex_z + world_z }, 
-			{ normal_x, normal_y, normal_z }, 
-			{ static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) }, 
-			GetQuadMaterial(type, dir));
+		const glm::vec3 pos = vertex + world_pos;
+		const glm::vec2 uv = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
+		std::uint8_t material = GetQuadMaterial(type, dir);
+
+		chunk_mesh.AddVertex(pos, normal, uv, material);
 	}
 
 	assert(chunk_mesh.Vertices().size() % 4 == 0);
@@ -212,11 +211,11 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 				vertex_position = { x_pos, y_pos, major_axis_index + 1 };
 			}
 
-			chunk_mesh.AddVertex(
-				vertex_position, 
-				DirToNormal(first_merged_cell.dir_), 
-				{ static_cast<float>(j * merged_quad.width_), static_cast<float>(i * merged_quad.height_) }, 
-				GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_));
+			const glm::vec3 normal = DirToNormal(first_merged_cell.dir_);
+			const glm::vec2 uv = { static_cast<float>(j * merged_quad.width_), static_cast<float>(i * merged_quad.height_) };
+			std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
+
+			chunk_mesh.AddVertex(vertex_position, normal, uv, material);
 		}
 	}
 }
