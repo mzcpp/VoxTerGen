@@ -3,20 +3,16 @@
 
 #include "world/Chunk.hpp"
 #include "world/Block.hpp"
+#include "utils/Hash.hpp"
 
 #include <glm/vec2.hpp>
 
 #include <unordered_map>
 
-struct ivec2_hash 
-{
-	std::size_t operator()(const glm::ivec2& vec) const noexcept;
-};
-
 class ChunkManager
 {
 private:
-	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, ivec2_hash> chunks_;
+	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash> chunks_;
 
 public:
 	ChunkManager();
@@ -38,7 +34,7 @@ public:
 	Chunk* GetChunkAt(glm::ivec2 chunk_coord);
 
 	// Getters
-	const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, ivec2_hash>& Chunks() const { return chunks_; }
+	const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash>& Chunks() const { return chunks_; }
 
 };
 

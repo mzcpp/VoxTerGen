@@ -7,6 +7,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <ranges>
+#include <iostream>
+
+void ChunkMeshRenderPass::InitializeChunkRenderData(const World& world)
+{
+	for (const auto& [world_coords, chunk] : world.ChunkManagerRef().Chunks())
+	{
+		auto emplace_pair = chunk_render_data_.emplace(world_coords, ChunkRenderData{});
+		emplace_pair.first->second.chunk_model_ = glm::translate(glm::mat4(1.0f), { world_coords.x * constants::chunk::width, 0, world_coords.y * constants::chunk::height });
+	}
+}
 
 void ChunkMeshRenderPass::Render(const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
 {
@@ -22,16 +32,15 @@ void ChunkMeshRenderPass::UploadChunkRenderData(const World& world)
 		{
 			continue;
 		}
-
-		const auto [it, inserted] = chunk_render_data_.try_emplace(world_coords);
-		auto& render_data = it->second;
+		
+		auto& render_data = chunk_render_data_[world_coords];
 		render_data.gpu_mesh_.UploadMeshData(*chunk->Mesh());
-		render_data.chunk_model_ = glm::translate(glm::mat4(1.0f), { world_coords.x * constants::chunk::width, 0, world_coords.y * constants::chunk::height });
+		render_data.gpu_mesh_uploaded_ = true;
 		chunk->SetMeshNeedsUpload(false);
 	}
 }
 
-void ChunkMeshRenderPass::RenderChunks(const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, ivec2_hash>& chunks, const glm::mat4& view, 
+void ChunkMeshRenderPass::RenderChunks(const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash>& chunks, const glm::mat4& view, 
 	const glm::mat4& projection, const ResourceManager& resource_manager)
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");

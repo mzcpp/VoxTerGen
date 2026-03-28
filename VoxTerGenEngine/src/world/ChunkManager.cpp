@@ -4,16 +4,10 @@
 #include "core/Settings.hpp"
 #include "utils/Logger.hpp"
 #include "utils/MathUtils.hpp"
+#include "utils/Hash.hpp"
 
 #include <cmath>
 #include <ranges>
-
-std::size_t ivec2_hash::operator()(const glm::ivec2& vec) const noexcept
-{
-	const std::size_t h1 = std::hash<int>{}(vec.x);
-	const std::size_t h2 = std::hash<int>{}(vec.y);
-	return h1 ^ (h2 << 1);
-}
 
 ChunkManager::ChunkManager()
 {

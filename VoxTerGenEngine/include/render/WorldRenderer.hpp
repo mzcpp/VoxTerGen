@@ -24,7 +24,7 @@ public:
 
 	~WorldRenderer();
 
-	void InitializeChunkRenderData();
+	void InitializeChunkRenderData(const World& world);
 
 	void UploadChunkRenderData(const World& world);
 

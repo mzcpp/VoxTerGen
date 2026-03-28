@@ -1205,6 +1205,9 @@
     <ClInclude Include="include\render\ChunkMeshRenderPass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\utils\Hash.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\external\glm\detail\func_common.inl">
