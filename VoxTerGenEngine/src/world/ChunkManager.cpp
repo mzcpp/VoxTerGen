@@ -6,6 +6,7 @@
 #include "utils/MathUtils.hpp"
 
 #include <cmath>
+#include <ranges>
 
 std::size_t ivec2_hash::operator()(const glm::ivec2& vec) const noexcept
 {
@@ -91,14 +92,12 @@ void ChunkManager::Tick()
 
 void ChunkManager::BuildChunkMeshes()
 {
-	for (auto& [world_coord, chunk] : chunks_)
+	for (const auto& chunk : chunks_ | std::views::values)
 	{
-		if (chunk->MeshValid())
+		if (!chunk->MeshValid())
 		{
-			continue;
+			BuildChunkMesh(*chunk);
 		}
-
-		BuildChunkMesh(*chunk);
 	}
 }
 
