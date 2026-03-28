@@ -18,6 +18,15 @@ The format follows Keep a Changelog and Semantic Versioning.
 
 ---
 
+## [0.2.0] - 28 March 2026
+
+### Added
+- Basic single-threaded chunk mesh rendering pipeline.
+- Chunk build queue to limit mesh generation per frame.
+- Separation of CPU-side and GPU-side chunk data for mesh generation and upload.
+
+---
+
 ## [0.1.0] - 4 March 2026
 
 ### Added

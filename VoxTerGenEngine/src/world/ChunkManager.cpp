@@ -34,58 +34,49 @@ void ChunkManager::InitChunks(int chunk_radius)
 	//chunks_.at({ -1, 0 })->BlockAt({ 15, 50, 0 }).SetType(BlockType::Grass);
 	//chunks_.at({ 0, -1 })->BlockAt({ 0, 50, 15 }).SetType(BlockType::Bedrock);
 
-	for (auto& [world_coords, chunk] : chunks_)
-	{
-		//BlockType randBlock = static_cast<BlockType>(rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Grass) + 1) + static_cast<int>(BlockType::Grass));
+	//for (auto& [world_coords, chunk] : chunks_)
+	//{
+	//	//BlockType randBlock = static_cast<BlockType>(rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Grass) + 1) + static_cast<int>(BlockType::Grass));
 
-		for (int y = 0; y < constants::chunk::height; ++y)
-		{
-			for (int z = 0; z < constants::chunk::depth; ++z)
-			{
-				for (int x = 0; x < constants::chunk::width; ++x)
-				{
-					BlockType randBlock = static_cast<BlockType>(rand() % (static_cast<int>(BlockType::Dirt) - static_cast<int>(BlockType::Grass) + 1) + static_cast<int>(BlockType::Grass));
-					chunk->BlockAt({ x, 0, z }).SetType(randBlock);
-					chunk->BlockAt({ 0, y, z }).SetType(randBlock);
-					chunk->BlockAt({ x, y, 0 }).SetType(randBlock);
+	//	for (int y = 0; y < constants::chunk::height; ++y)
+	//	{
+	//		for (int z = 0; z < constants::chunk::depth; ++z)
+	//		{
+	//			for (int x = 0; x < constants::chunk::width; ++x)
+	//			{
+	//				BlockType randBlock = static_cast<BlockType>(rand() % (static_cast<int>(BlockType::Dirt) - static_cast<int>(BlockType::Grass) + 1) + static_cast<int>(BlockType::Grass));
+	//				chunk->BlockAt({ x, 0, z }).SetType(randBlock);
 
-					chunk->BlockAt({ x, constants::chunk::height - 1, z }).SetType(randBlock);
-					chunk->BlockAt({ constants::chunk::width - 1, y, z }).SetType(randBlock);
-					chunk->BlockAt({ x, y, constants::chunk::depth - 1 }).SetType(randBlock);
+	//				/*chunks_.at({ -1, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Grass);
+	//				chunks_.at({ 0, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Dirt);
+	//				chunks_.at({ 1, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Stone);
 
+	//				chunks_.at({ -1, 0 })->BlockAt({ x, y, z }).SetType(BlockType::Snow);
+	//				chunks_.at({ 0, 0 })->BlockAt({ x, y, z }).SetType(BlockType::Bedrock);
+	//				chunks_.at({ 1, 0 })->BlockAt({ x, y, z }).SetType(BlockType::Sand);
 
-					/*chunks_.at({ -1, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Grass);
-					chunks_.at({ 0, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Dirt);
-					chunks_.at({ 1, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Stone);
+	//				chunks_.at({ -1, -1 })->BlockAt({ x, y, z }).SetType(BlockType::Water);
+	//				chunks_.at({ 0, -1 })->BlockAt({ x, y, z }).SetType(BlockType::Grass);
+	//				chunks_.at({ 1, -1 })->BlockAt({ x, y, z }).SetType(BlockType::Bedrock);*/
 
-					chunks_.at({ -1, 0 })->BlockAt({ x, y, z }).SetType(BlockType::Snow);
-					chunks_.at({ 0, 0 })->BlockAt({ x, y, z }).SetType(BlockType::Bedrock);
-					chunks_.at({ 1, 0 })->BlockAt({ x, y, z }).SetType(BlockType::Sand);
+	//				//int posy = y;
 
-					chunks_.at({ -1, -1 })->BlockAt({ x, y, z }).SetType(BlockType::Water);
-					chunks_.at({ 0, -1 })->BlockAt({ x, y, z }).SetType(BlockType::Grass);
-					chunks_.at({ 1, -1 })->BlockAt({ x, y, z }).SetType(BlockType::Bedrock);*/
+	//				//chunks_.at({ -1, 1 })->BlockAt({ x, posy, z }).SetType(randBlock);
+	//				//chunks_.at({ 0, 1 })->BlockAt({ x, posy, z }).SetType(randBlock);
+	//				//chunks_.at({ 1, 1 })->BlockAt({ x, posy, z }).SetType(randBlock);
 
-					//int posy = y;
+	//				//chunks_.at({ -1, 0 })->BlockAt({ x, posy, z }).SetType(randBlock);
+	//				//chunks_.at({ 0, 0 })->BlockAt({ x, posy, z }).SetType(randBlock);
+	//				//chunks_.at({ 1, 0 })->BlockAt({ x, posy, z }).SetType(randBlock);
 
-					//chunks_.at({ -1, 1 })->BlockAt({ x, posy, z }).SetType(randBlock);
-					//chunks_.at({ 0, 1 })->BlockAt({ x, posy, z }).SetType(randBlock);
-					//chunks_.at({ 1, 1 })->BlockAt({ x, posy, z }).SetType(randBlock);
+	//				//chunks_.at({ -1, -1 })->BlockAt({ x, posy, z }).SetType(randBlock);
+	//				//chunks_.at({ 0, -1 })->BlockAt({ x, posy, z }).SetType(randBlock);
+	//				//chunks_.at({ 1, -1 })->BlockAt({ x, posy, z }).SetType(randBlock);
 
-					//chunks_.at({ -1, 0 })->BlockAt({ x, posy, z }).SetType(randBlock);
-					//chunks_.at({ 0, 0 })->BlockAt({ x, posy, z }).SetType(randBlock);
-					//chunks_.at({ 1, 0 })->BlockAt({ x, posy, z }).SetType(randBlock);
-
-					//chunks_.at({ -1, -1 })->BlockAt({ x, posy, z }).SetType(randBlock);
-					//chunks_.at({ 0, -1 })->BlockAt({ x, posy, z }).SetType(randBlock);
-					//chunks_.at({ 1, -1 })->BlockAt({ x, posy, z }).SetType(randBlock);
-
-				}
-			}
-		}
-
-
-	}
+	//			}
+	//		}
+	//	}
+	//}
 
 	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Grass);
 	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Grass);
