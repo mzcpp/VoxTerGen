@@ -13,30 +13,44 @@ void CameraController::ApplyInput(const InputManager& input, float delta_time, f
         return;
     }
 
+    glm::vec3 move_dir(0.0f);
+
     if (input.KeyDown(SDL_SCANCODE_W))
     {
-        camera_.position_ += camera_.front_ * movement_speed_ * delta_time;
-        camera_.changed_ = true;
-        camera_.moving_ = true;
+        move_dir += camera_.front_;
     }
-    
+
     if (input.KeyDown(SDL_SCANCODE_S))
     {
-        camera_.position_ -= camera_.front_ * movement_speed_ * delta_time;
-        camera_.changed_ = true;
-        camera_.moving_ = true;
+        move_dir -= camera_.front_;
     }
 
     if (input.KeyDown(SDL_SCANCODE_A))
     {
-        camera_.position_ -= camera_.right_ * movement_speed_ * delta_time;
-        camera_.changed_ = true;
-        camera_.moving_ = true;
+        move_dir -= camera_.right_;
     }
 
     if (input.KeyDown(SDL_SCANCODE_D))
     {
-        camera_.position_ += camera_.right_ * movement_speed_ * delta_time;
+        move_dir += camera_.right_;
+    }
+
+    if (input.KeyDown(SDL_SCANCODE_SPACE))
+    {
+        move_dir += camera_.world_up_;
+    }
+
+    if (input.KeyDown(SDL_SCANCODE_X))
+    { 
+        move_dir -= camera_.world_up_;
+    }
+
+    if (glm::length(move_dir) > 0.0f)
+    {
+        move_dir = glm::normalize(move_dir);
+
+        camera_.position_ += move_dir * movement_speed_ * delta_time;
+
         camera_.changed_ = true;
         camera_.moving_ = true;
     }
@@ -52,7 +66,7 @@ void CameraController::ApplyRotation(const InputManager& input)
         return;
     }
 
-    glm::vec2 mouse_delta = input.MouseDelta();
+    const glm::vec2 mouse_delta = input.MouseDelta();
 
     if (FloatingPointNearZero(mouse_delta.x) && FloatingPointNearZero(mouse_delta.y))
     {
@@ -60,15 +74,7 @@ void CameraController::ApplyRotation(const InputManager& input)
     }
 
     camera_.yaw_ += mouse_delta.x * move_sensitivity_;
-    camera_.pitch_ += mouse_delta.y * move_sensitivity_;
-
-    camera_.pitch_ = std::clamp
-    (
-        camera_.pitch_, 
-        constants::camera::pitch_min,
-        constants::camera::pitch_max
-    );
-    
+    camera_.pitch_ = std::clamp(camera_.pitch_ + (mouse_delta.y * move_sensitivity_), constants::camera::pitch_min, constants::camera::pitch_max);
     camera_.changed_ = true;
     camera_.moving_ = true;
     camera_.UpdateCameraVectors();
@@ -82,13 +88,7 @@ void CameraController::ApplyZoom(const InputManager& input)
         return;
     }
 
-    camera_.zoom_ = std::clamp
-    (
-        camera_.zoom_ - (input.MouseWheel() * zoom_sensitivity_), 
-        constants::camera::zoom_min,
-        constants::camera::zoom_max
-    );
-
+    camera_.zoom_ = std::clamp(camera_.zoom_ - (input.MouseWheel() * zoom_sensitivity_), constants::camera::zoom_min, constants::camera::zoom_max);
     camera_.changed_ = true;
     camera_.moving_ = true;
     camera_.UpdateFrustumPlanes();

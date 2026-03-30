@@ -9,8 +9,7 @@
 
 #include <algorithm>
 
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
-	: 
+Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : 
 	position_(position), 
 	front_(glm::vec3(0.0f, 0.0f, -1.0f)), 
 	up_(glm::vec3(0.0f, 0.0f, 0.0f)), 
@@ -60,10 +59,12 @@ glm::mat4 Camera::InterpolatedViewMatrix(float alpha) const
 	const float interp_yaw = glm::mix(prev_yaw_, yaw_, alpha);
 	const float interp_pitch = glm::mix(prev_pitch_, pitch_, alpha);
 
-	glm::vec3 front;
-	front.x = std::cos(glm::radians(interp_yaw)) * std::cos(glm::radians(interp_pitch));
-	front.y = std::sin(glm::radians(interp_pitch));
-	front.z = std::sin(glm::radians(interp_yaw)) * std::cos(glm::radians(interp_pitch));
+	glm::vec3 front = { 
+		std::cos(glm::radians(interp_yaw)) * std::cos(glm::radians(interp_pitch)), 
+		std::sin(glm::radians(interp_pitch)), 
+		std::sin(glm::radians(interp_yaw)) * std::cos(glm::radians(interp_pitch))
+	};
+
 	front = glm::normalize(front);
 
 	return glm::lookAt(interp_pos, interp_pos + front, world_up_);
@@ -71,18 +72,19 @@ glm::mat4 Camera::InterpolatedViewMatrix(float alpha) const
 
 void Camera::UpdateSimulationMatrices(float aspect_ratio)
 {
-	view_ = glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f) + front_, up_);
+	glm::vec3 pos = glm::vec3(position_);
+	view_ = glm::lookAt(pos, pos + front_, up_);
 	projection_ = glm::perspective(glm::radians(zoom_), aspect_ratio, near_plane_, far_plane_);
 	view_proj_ = projection_ * view_;
 }
 
 void Camera::UpdateCameraVectors()
 {
-	glm::vec3 front;
-
-	front.x = cos(glm::radians(yaw_)) * cos(glm::radians(pitch_));
-	front.y = sin(glm::radians(pitch_));
-	front.z = sin(glm::radians(yaw_)) * cos(glm::radians(pitch_));
+	const glm::vec3 front = { 
+		cos(glm::radians(yaw_)) * cos(glm::radians(pitch_)), 
+		sin(glm::radians(pitch_)), 
+		sin(glm::radians(yaw_)) * cos(glm::radians(pitch_)) 
+	};
 
 	front_ = glm::normalize(front);
 	right_ = glm::normalize(glm::cross(front_, world_up_));
@@ -184,9 +186,7 @@ bool Camera::PointInsideFrustum(const glm::vec3& point) const
 
 bool Camera::SanityCheckFrustum() const
 {
-	const glm::vec3 point = 
-		glm::vec3(0.0f) +
-		(front_ * ((constants::camera::far_plane - constants::camera::near_plane) / 2.0f));
+	const glm::vec3 point = glm::vec3(0.0f) + (front_ * ((constants::camera::far_plane - constants::camera::near_plane) / 2.0f));
 		
 	if (!PointInsideFrustum(point))
 	{

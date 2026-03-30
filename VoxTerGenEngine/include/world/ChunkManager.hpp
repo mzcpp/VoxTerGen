@@ -4,6 +4,7 @@
 #include "world/Chunk.hpp"
 #include "world/Block.hpp"
 #include "utils/Hash.hpp"
+#include "graphics/Camera.hpp"
 
 #include <glm/vec2.hpp>
 
@@ -25,6 +26,8 @@ public:
 
 	void Tick(const Camera& camera);
 
+	void StreamChunks(const Camera& camera);
+
 	void BuildChunkMeshes();
 
 	void BuildChunkMesh(Chunk& chunk);
@@ -35,8 +38,10 @@ public:
 
 	void PushChunkIntoQueue(Chunk* chunk);
 
+	glm::ivec2 GetChunkCoords(const glm::dvec3& pos) noexcept;
+
 	// TODO: TEMPORARY CHUNK FILL - REMOVE LATER!
-	void FillChunk(const Chunk& chunk);
+	void FillChunkTmp(Chunk& chunk);
 
 	// Getters
 	const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash>& Chunks() const { return chunks_; }

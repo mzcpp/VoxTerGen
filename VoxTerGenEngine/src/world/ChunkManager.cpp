@@ -5,6 +5,7 @@
 #include "utils/Logger.hpp"
 #include "utils/MathUtils.hpp"
 #include "utils/Hash.hpp"
+#include "graphics/Camera.hpp"
 
 #include <cmath>
 #include <ranges>
@@ -13,7 +14,7 @@ ChunkManager::ChunkManager()
 {
 }
 
-void ChunkManager::FillChunkTmp(const Chunk& chunk)
+void ChunkManager::FillChunkTmp(Chunk& chunk)
 {
 	static int i = 1;
 
@@ -23,8 +24,7 @@ void ChunkManager::FillChunkTmp(const Chunk& chunk)
 		{
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				BlockType block_type = static_cast<BlockType>(i);
-				chunk->BlockAt({ x, 0, z }).SetType(randBlock);
+				chunk.BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(i));
 			}
 		}
 	}
@@ -56,8 +56,10 @@ void ChunkManager::InitChunks(int chunk_radius)
 	//chunks_.at({ -1, 0 })->BlockAt({ 15, 50, 0 }).SetType(BlockType::Grass);
 	//chunks_.at({ 0, -1 })->BlockAt({ 0, 50, 15 }).SetType(BlockType::Bedrock);
 
-	//for (auto& [world_coords, chunk] : chunks_)
-	//{
+	for (auto& [world_coords, chunk] : chunks_)
+	{
+		FillChunkTmp(*chunk);
+	}
 	//	//BlockType randBlock = static_cast<BlockType>(rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Grass) + 1) + static_cast<int>(BlockType::Grass));
 
 	//	for (int y = 0; y < constants::chunk::height; ++y)
@@ -142,50 +144,63 @@ void ChunkManager::Tick(const Camera& camera)
 
 void ChunkManager::StreamChunks(const Camera& camera)
 {
-	const glm::ivec2 current_chunk_coords = { static_cast<int>(camera.Pos().x) / constants::chunk::width, static_cast<int>(camera.Pos().z) / constants::chunk::depth };
-	const glm::ivec2 prev_chunk_coords = { static_cast<int>(camera.PrevPos().x) / constants::chunk::width, static_cast<int>(camera.PrevPos().z) / constants::chunk::depth };
+	const glm::ivec2 current_chunk_coords = GetChunkCoords(camera.Pos());
+	const glm::ivec2 prev_chunk_coords = GetChunkCoords(camera.PrevPos());
 
-	if (prev_chunk_coords == current_chunk_coord)
+	//std::cout << "ROUNDED " << current_chunk_coords.x << ' ' << current_chunk_coords.y << '\n';
+	//std::cout << "RAW " << camera.Pos().x << ' ' << camera.Pos().z << '\n';
+
+	if (prev_chunk_coords == current_chunk_coords)
 	{
 		return;
 	}
 
-	std::cout << "CHANGED CHUNK POSITION!!\n";
+	//std::cout << "CHANGED CHUNK POSITION!!\n";
 
-	for (int i = 0; i < (radius * 2) + 1; ++i)
+	for (int i = 0; i < (constants::chunk::default_radius * 2) + 1; ++i)
 	{ 
 		// MERGE THIS !!! NO IF ELSE !!!!
 		// IN EACH CASE AFTER UNLOAD AND LOAD, 
 		// FILL IT UP WITH TMP FUNCTION
 		// PUSH TO QUEUE TO REBUILD MESH!
-		if (current_chunk_coord.x > prev_chunk_coords.x)
+		if (current_chunk_coords.x > prev_chunk_coords.x)
 		{
 			// UNLOAD LEFT
+			//chunks_.erase(glm::ivec2{ prev_chunk_coords.x - constants::chunk::default_radius, prev_chunk_coords.y - constants::chunk::default_radius + i });
+
+			//const glm::ivec2 world_coords = { prev_chunk_coords.x + constants::chunk::default_radius + 1, prev_chunk_coords.y - constants::chunk::default_radius + i };
+			//std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(world_coords);
+			//InitChunkBlocks(*chunk);
+			//FillChunkTmp(*chunk);
+			//chunk_build_queue_.push(chunk.get());
+			//chunks_.try_emplace(world_coords, std::move(chunk));
+
 			// UNLOAD (prev_chunk_coord.x - radius, prev_chunk_coord.y - radius + i) IF IT STILL THERE
 			// LOAD (prev_chunk_coord.x + radius + 1, prev_chunk_coord.y - radius + i) IF NOT ALREADY THERE
-			// std::cout << "UNLOADED LEFT!\n";
+			
+			std::cout << "UNLOADED LEFT!\n";
 		}
-		else
+		else if (current_chunk_coords.x < prev_chunk_coords.x)
 		{
 			// UNLOAD RIGHT
 			// UNLOAD (prev_chunk_coord.x + radius, prev_chunk_coord.y - radius + i) IF IT STILL THERE
 			// LOAD (prev_chunk_coord.x - radius - 1, prev_chunk_coord.y - radius + i) IF NOT ALREADY THERE
-			// std::cout << "UNLOADED RIGHT!\n";
+			std::cout << "UNLOADED RIGHT!\n";
 		}
 
-		if (current_chunk_coord.z > prev_chunk_coords.z)
+		if (current_chunk_coords.y > prev_chunk_coords.y)
 		{
 			// UNLOAD UP
 			// UNLOAD (prev_chunk_coord.x - radius + i, prev_chunk_coord.y - radius) IF IT STILL THERE
 			// LOAD (prev_chunk_coord.x - radius + i, prev_chunk_coord.y + radius + 1) IF NOT ALREADY THERE
-			// std::cout << "UNLOADED UP!\n";
+			std::cout << "UNLOADED UP!\n";
 		}
-		else
+		else if (current_chunk_coords.y < prev_chunk_coords.y)
 		{
 			// UNLOAD DOWN
 			// UNLOAD (prev_chunk_coord.x - radius + i, prev_chunk_coord.y + radius) IF IT STILL THERE
 			// LOAD (prev_chunk_coord.x - radius + i, prev_chunk_coord.y - radius - 1) IF NOT ALREADY THERE
-			// std::cout << "UNLOADED DOWN!\n";
+			std::cout << "UNLOADED DOWN!\n";
 		}
 	}
 }
@@ -270,4 +285,9 @@ Block ChunkManager::WorldBlockQuery(const glm::ivec2& current_chunk_coord, const
 void ChunkManager::PushChunkIntoQueue(Chunk* chunk)
 {
 	chunk_build_queue_.push(chunk);
+}
+
+glm::ivec2 ChunkManager::GetChunkCoords(const glm::dvec3& pos) noexcept
+{
+	return { static_cast<int>(std::floor(pos.x / constants::chunk::width)), static_cast<int>(std::floor(pos.z / constants::chunk::depth)) };
 }

@@ -1,4 +1,5 @@
 #include "world/World.hpp"
+#include "graphics/Camera.hpp"
 
 World::World()
 {

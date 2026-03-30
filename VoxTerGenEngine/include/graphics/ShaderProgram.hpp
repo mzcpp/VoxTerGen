@@ -63,7 +63,7 @@ public:
     void Use() const noexcept;
 
     // Getters
-    [[nodiscard]] GLuint Id() const noexcept { return id_; }
+    GLuint Id() const noexcept { return id_; }
 
     /**
      * @brief Sets a uniform value in the shader program.

@@ -4,7 +4,6 @@
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-
 #include <glm/mat3x3.hpp>
 #include <glm/mat4x4.hpp>
 
@@ -54,7 +53,7 @@ void Engine::Tick(float aspect_ratio)
 	camera_controller_.ApplyInput(input_manager_, static_cast<float>(constants::engine::tick_dt), aspect_ratio);
 	camera_.Tick(aspect_ratio);
 
-	world_.Tick(camera);
+	world_.Tick(camera_);
 }
 
 void Engine::Render(float alpha)
