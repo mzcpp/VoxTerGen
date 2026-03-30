@@ -57,11 +57,6 @@ Shader::~Shader()
     }
 }
 
-GLuint Shader::Id() const
-{
-    return id_;
-}
-
 GLuint Shader::Release()
 {
     GLuint tmp = id_;

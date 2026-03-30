@@ -38,9 +38,7 @@ public:
      *
      * @throws std::runtime_error if shader compilation or program linking fails.
      */
-    ShaderProgram(const std::filesystem::path& vertex_path,
-        const std::filesystem::path& fragment_path,
-        const std::filesystem::path& geometry_path = {});
+    ShaderProgram(const std::filesystem::path& vertex_path, const std::filesystem::path& fragment_path, const std::filesystem::path& geometry_path = {});
 
     /**
      * @brief Constructs a shader program from a compute shader.
@@ -59,12 +57,13 @@ public:
 
     ~ShaderProgram();
 
-    [[nodiscard]] GLuint Id() const noexcept;
-
     /**
      * @brief Binds the shader program for use in rendering.
      */
     void Use() const noexcept;
+
+    // Getters
+    [[nodiscard]] GLuint Id() const noexcept { return id_; }
 
     /**
      * @brief Sets a uniform value in the shader program.
@@ -147,7 +146,6 @@ public:
         {
             glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
         }
-
         // Unsupported type
         else
         {

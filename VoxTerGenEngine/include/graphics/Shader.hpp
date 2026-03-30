@@ -12,7 +12,7 @@
  * The Shader class loads, compiles, and manages an OpenGL shader object
  * from a given source file.
  */
-class Shader
+class Shader final
 {
 private:
     GLuint id_;
@@ -38,7 +38,7 @@ public:
     
     ~Shader();
 
-    GLuint Id() const;
+    GLuint Id() const noexcept { return id_; }
 
     /**
      * @brief Releases ownership of the shader object.

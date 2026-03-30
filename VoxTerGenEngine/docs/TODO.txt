@@ -5,6 +5,9 @@ PACK vertex into uint32
 		grass on sides when its covered by solid top neighbor -> should be dirt on sides
 		popping textures when removing solid block above grass block -> before the grass was all dirt, now after rebuilding grass popped in!
 		add a bit information into the packed uint32 top_covered = 1/0;
+
+glMultiDrawElementsIndirect rendering!
+Vertex pulling?, binary greedy meshing?
 add cubemap, texture2d function!
 make class MeshBuilder a namespace
 

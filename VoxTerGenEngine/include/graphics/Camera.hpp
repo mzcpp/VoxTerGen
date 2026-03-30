@@ -144,25 +144,25 @@ public:
     void PrintFrustumPlanes() const;
 	
 	// Getters
-	glm::mat4 ViewMatrix() const { return view_; }
-	glm::mat4 ProjectionMatrix() const { return projection_; }
-	glm::dvec3 Pos() const { return position_; }
-	glm::vec3 Front() const { return front_; }
-	glm::vec3 Up() const { return up_; }
-	glm::vec3 Right() const { return right_; }
-	glm::vec3 WorldUp() const { return world_up_; }
-	float Yaw() const { return yaw_; }
-	float Pitch() const { return pitch_; }
-	float Zoom() const { return zoom_; }
-	const std::array<Plane, 6>& GetFrustumPlanes() const { return frustum_planes_; }
-	bool EnabledMovement() const { return enabled_movement_; }
-	bool Changed() const { return changed_; }
-	bool Moving() const { return moving_; }
+	glm::mat4 ViewMatrix() const noexcept { return view_; }
+	glm::mat4 ProjectionMatrix() const noexcept { return projection_; }
+	glm::dvec3 Pos() const noexcept { return position_; }
+	glm::vec3 Front() const noexcept { return front_; }
+	glm::vec3 Up() const noexcept { return up_; }
+	glm::vec3 Right() const noexcept { return right_; }
+	glm::vec3 WorldUp() const noexcept { return world_up_; }
+	float Yaw() const noexcept { return yaw_; }
+	float Pitch() const noexcept { return pitch_; }
+	float Zoom() const noexcept { return zoom_; }
+	const std::array<Plane, 6>& GetFrustumPlanes() const noexcept { return frustum_planes_; }
+	bool EnabledMovement() const noexcept { return enabled_movement_; }
+	bool Changed() const noexcept { return changed_; }
+	bool Moving() const noexcept { return moving_; }
 
 	// Setters
-	void EnableMovement(bool value) { enabled_movement_ = value; }
-	void SetMoving(bool value) { moving_ = value; }
-    void SetPos(const glm::dvec3& new_pos) { position_ = new_pos; }
+	void EnableMovement(bool value) noexcept { enabled_movement_ = value; }
+	void SetMoving(bool value) noexcept { moving_ = value; }
+    void SetPos(const glm::dvec3& new_pos) noexcept { position_ = new_pos; }
 
 private:
 	/**
