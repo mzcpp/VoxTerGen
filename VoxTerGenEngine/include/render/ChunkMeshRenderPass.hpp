@@ -26,7 +26,7 @@ private:
 	std::unordered_map<glm::ivec2, ChunkRenderData, utils::ivec2_hash> chunk_render_data_;
 
 public:
-	void InitializeChunkRenderData(const World& world);
+	void UpdateChunkRenderData(const World& world);
 
 	void Render(const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
 	

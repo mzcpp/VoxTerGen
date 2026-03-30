@@ -20,9 +20,9 @@ WorldRenderer::~WorldRenderer()
 
 }
 
-void WorldRenderer::InitializeChunkRenderData(const World& world)
+void WorldRenderer::UpdateChunkRenderData(const World& world)
 {
-	chunk_mesh_render_pass_.InitializeChunkRenderData(world);
+	chunk_mesh_render_pass_.UpdateChunkRenderData(world);
 }
 
 void WorldRenderer::RenderWorld(const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)

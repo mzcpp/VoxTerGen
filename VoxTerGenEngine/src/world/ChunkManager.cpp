@@ -147,61 +147,44 @@ void ChunkManager::StreamChunks(const Camera& camera)
 	const glm::ivec2 current_chunk_coords = GetChunkCoords(camera.Pos());
 	const glm::ivec2 prev_chunk_coords = GetChunkCoords(camera.PrevPos());
 
-	//std::cout << "ROUNDED " << current_chunk_coords.x << ' ' << current_chunk_coords.y << '\n';
-	//std::cout << "RAW " << camera.Pos().x << ' ' << camera.Pos().z << '\n';
-
 	if (prev_chunk_coords == current_chunk_coords)
 	{
 		return;
 	}
 
-	//std::cout << "CHANGED CHUNK POSITION!!\n";
-
 	for (int i = 0; i < (constants::chunk::default_radius * 2) + 1; ++i)
 	{ 
-		// MERGE THIS !!! NO IF ELSE !!!!
-		// IN EACH CASE AFTER UNLOAD AND LOAD, 
-		// FILL IT UP WITH TMP FUNCTION
-		// PUSH TO QUEUE TO REBUILD MESH!
+		glm::ivec2 to_erase_coords(0.0f);
+		glm::ivec2 to_emplace_coords(0.0f);
+	
 		if (current_chunk_coords.x > prev_chunk_coords.x)
 		{
-			// UNLOAD LEFT
-			//chunks_.erase(glm::ivec2{ prev_chunk_coords.x - constants::chunk::default_radius, prev_chunk_coords.y - constants::chunk::default_radius + i });
-
-			//const glm::ivec2 world_coords = { prev_chunk_coords.x + constants::chunk::default_radius + 1, prev_chunk_coords.y - constants::chunk::default_radius + i };
-			//std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(world_coords);
-			//InitChunkBlocks(*chunk);
-			//FillChunkTmp(*chunk);
-			//chunk_build_queue_.push(chunk.get());
-			//chunks_.try_emplace(world_coords, std::move(chunk));
-
-			// UNLOAD (prev_chunk_coord.x - radius, prev_chunk_coord.y - radius + i) IF IT STILL THERE
-			// LOAD (prev_chunk_coord.x + radius + 1, prev_chunk_coord.y - radius + i) IF NOT ALREADY THERE
-			
-			std::cout << "UNLOADED LEFT!\n";
+			to_erase_coords = { prev_chunk_coords.x - constants::chunk::default_radius, prev_chunk_coords.y - constants::chunk::default_radius + i };
+			to_emplace_coords = { prev_chunk_coords.x + constants::chunk::default_radius + 1, prev_chunk_coords.y - constants::chunk::default_radius + i };
 		}
 		else if (current_chunk_coords.x < prev_chunk_coords.x)
 		{
-			// UNLOAD RIGHT
-			// UNLOAD (prev_chunk_coord.x + radius, prev_chunk_coord.y - radius + i) IF IT STILL THERE
-			// LOAD (prev_chunk_coord.x - radius - 1, prev_chunk_coord.y - radius + i) IF NOT ALREADY THERE
-			std::cout << "UNLOADED RIGHT!\n";
+			to_erase_coords = { prev_chunk_coords.x + constants::chunk::default_radius, prev_chunk_coords.y - constants::chunk::default_radius + i };
+			to_emplace_coords = { prev_chunk_coords.x - constants::chunk::default_radius - 1, prev_chunk_coords.y - constants::chunk::default_radius + i };
 		}
 
 		if (current_chunk_coords.y > prev_chunk_coords.y)
 		{
-			// UNLOAD UP
-			// UNLOAD (prev_chunk_coord.x - radius + i, prev_chunk_coord.y - radius) IF IT STILL THERE
-			// LOAD (prev_chunk_coord.x - radius + i, prev_chunk_coord.y + radius + 1) IF NOT ALREADY THERE
-			std::cout << "UNLOADED UP!\n";
+			to_erase_coords = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y - constants::chunk::default_radius };
+			to_emplace_coords = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y + constants::chunk::default_radius + 1 };
 		}
 		else if (current_chunk_coords.y < prev_chunk_coords.y)
 		{
-			// UNLOAD DOWN
-			// UNLOAD (prev_chunk_coord.x - radius + i, prev_chunk_coord.y + radius) IF IT STILL THERE
-			// LOAD (prev_chunk_coord.x - radius + i, prev_chunk_coord.y - radius - 1) IF NOT ALREADY THERE
-			std::cout << "UNLOADED DOWN!\n";
+			to_erase_coords = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y + constants::chunk::default_radius };
+			to_emplace_coords = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y - constants::chunk::default_radius - 1 };
 		}
+
+		chunks_.erase(to_erase_coords);
+		std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(to_emplace_coords);
+		InitChunkBlocks(*chunk);
+		FillChunkTmp(*chunk);
+		chunk_build_queue_.push(chunk.get());
+		chunks_.try_emplace(to_emplace_coords, std::move(chunk));
 	}
 }
 
