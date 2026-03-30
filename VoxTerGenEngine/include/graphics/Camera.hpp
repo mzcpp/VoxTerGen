@@ -158,7 +158,9 @@ public:
 	bool EnabledMovement() const noexcept { return enabled_movement_; }
 	bool Changed() const noexcept { return changed_; }
 	bool Moving() const noexcept { return moving_; }
-
+    glm::dvec3 PrevPos() const noexcept { return prev_position_; }
+    float PrevYaw() const noexcept { return prev_yaw_; }
+	float PrevPitch() const noexcept { return prev_pitch_; }
 	// Setters
 	void EnableMovement(bool value) noexcept { enabled_movement_ = value; }
 	void SetMoving(bool value) noexcept { moving_ = value; }

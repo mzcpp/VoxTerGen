@@ -13,6 +13,28 @@ ChunkManager::ChunkManager()
 {
 }
 
+void ChunkManager::FillChunkTmp(const Chunk& chunk)
+{
+	static int i = 1;
+
+	for (int y = 0; y < constants::chunk::height; ++y)
+	{
+		for (int z = 0; z < constants::chunk::depth; ++z)
+		{
+			for (int x = 0; x < constants::chunk::width; ++x)
+			{
+				BlockType block_type = static_cast<BlockType>(i);
+				chunk->BlockAt({ x, 0, z }).SetType(randBlock);
+			}
+		}
+	}
+
+	if (++i >= 8)
+	{
+		i = 1;
+	}
+}
+
 void ChunkManager::InitChunks(int chunk_radius)
 {
 	const int chunk_square_size = 2 * chunk_radius + 1;
@@ -112,9 +134,60 @@ void ChunkManager::InitChunkBlocks(Chunk& chunk)
 	}
 }
 
-void ChunkManager::Tick()
+void ChunkManager::Tick(const Camera& camera)
 {
+	StreamChunks(camera);
 	BuildChunkMeshes();
+}
+
+void ChunkManager::StreamChunks(const Camera& camera)
+{
+	const glm::ivec2 current_chunk_coords = { static_cast<int>(camera.Pos().x) / constants::chunk::width, static_cast<int>(camera.Pos().z) / constants::chunk::depth };
+	const glm::ivec2 prev_chunk_coords = { static_cast<int>(camera.PrevPos().x) / constants::chunk::width, static_cast<int>(camera.PrevPos().z) / constants::chunk::depth };
+
+	if (prev_chunk_coords == current_chunk_coord)
+	{
+		return;
+	}
+
+	std::cout << "CHANGED CHUNK POSITION!!\n";
+
+	for (int i = 0; i < (radius * 2) + 1; ++i)
+	{ 
+		// MERGE THIS !!! NO IF ELSE !!!!
+		// IN EACH CASE AFTER UNLOAD AND LOAD, 
+		// FILL IT UP WITH TMP FUNCTION
+		// PUSH TO QUEUE TO REBUILD MESH!
+		if (current_chunk_coord.x > prev_chunk_coords.x)
+		{
+			// UNLOAD LEFT
+			// UNLOAD (prev_chunk_coord.x - radius, prev_chunk_coord.y - radius + i) IF IT STILL THERE
+			// LOAD (prev_chunk_coord.x + radius + 1, prev_chunk_coord.y - radius + i) IF NOT ALREADY THERE
+			// std::cout << "UNLOADED LEFT!\n";
+		}
+		else
+		{
+			// UNLOAD RIGHT
+			// UNLOAD (prev_chunk_coord.x + radius, prev_chunk_coord.y - radius + i) IF IT STILL THERE
+			// LOAD (prev_chunk_coord.x - radius - 1, prev_chunk_coord.y - radius + i) IF NOT ALREADY THERE
+			// std::cout << "UNLOADED RIGHT!\n";
+		}
+
+		if (current_chunk_coord.z > prev_chunk_coords.z)
+		{
+			// UNLOAD UP
+			// UNLOAD (prev_chunk_coord.x - radius + i, prev_chunk_coord.y - radius) IF IT STILL THERE
+			// LOAD (prev_chunk_coord.x - radius + i, prev_chunk_coord.y + radius + 1) IF NOT ALREADY THERE
+			// std::cout << "UNLOADED UP!\n";
+		}
+		else
+		{
+			// UNLOAD DOWN
+			// UNLOAD (prev_chunk_coord.x - radius + i, prev_chunk_coord.y + radius) IF IT STILL THERE
+			// LOAD (prev_chunk_coord.x - radius + i, prev_chunk_coord.y - radius - 1) IF NOT ALREADY THERE
+			// std::cout << "UNLOADED DOWN!\n";
+		}
+	}
 }
 
 void ChunkManager::BuildChunkMeshes()

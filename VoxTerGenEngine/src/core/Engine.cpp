@@ -54,7 +54,7 @@ void Engine::Tick(float aspect_ratio)
 	camera_controller_.ApplyInput(input_manager_, static_cast<float>(constants::engine::tick_dt), aspect_ratio);
 	camera_.Tick(aspect_ratio);
 
-	world_.Tick();
+	world_.Tick(camera);
 }
 
 void Engine::Render(float alpha)

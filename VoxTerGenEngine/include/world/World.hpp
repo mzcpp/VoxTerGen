@@ -11,7 +11,7 @@ private:
 public:
 	World();
 
-	void Tick();
+	void Tick(const Camera& camera);
 
 	// Getters
 	const ChunkManager& ChunkManagerRef() const { return chunk_manager_; }

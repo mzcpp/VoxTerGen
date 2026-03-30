@@ -23,7 +23,7 @@ public:
     
     void InitChunkBlocks(Chunk& chunk);
 
-	void Tick();
+	void Tick(const Camera& camera);
 
 	void BuildChunkMeshes();
 
@@ -34,6 +34,9 @@ public:
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
 
 	void PushChunkIntoQueue(Chunk* chunk);
+
+	// TODO: TEMPORARY CHUNK FILL - REMOVE LATER!
+	void FillChunk(const Chunk& chunk);
 
 	// Getters
 	const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash>& Chunks() const { return chunks_; }
