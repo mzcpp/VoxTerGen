@@ -9,6 +9,8 @@
 #include "graphics/Camera.hpp"
 #include "render/WorldRenderer.hpp"
 
+#include <queue>
+
 class Engine
 {
 private:
@@ -19,6 +21,8 @@ private:
 	Settings settings_;
 	World world_;
 	WorldRenderer world_renderer_;
+
+	std::queue<ChunkEvent> chunk_event_queue_;
 
 public:
 	Engine();

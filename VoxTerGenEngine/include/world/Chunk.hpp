@@ -12,6 +12,24 @@
 
 #include <array>
 #include <memory>
+#include <variant>
+#include <cstdint>
+
+namespace
+{
+    struct ChunkMeshReady
+    {
+        std::uint64_t id_;
+        
+    };
+
+    struct ChunkDestroyed
+    {
+        std::uint64_t id_;
+    };
+}
+
+using ChunkEvent = std::variant<ChunkMeshReady, ChunkDestroyed>;
 
 class Chunk
 {
