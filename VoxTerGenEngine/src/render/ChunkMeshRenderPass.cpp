@@ -13,6 +13,10 @@ void ChunkMeshRenderPass::UpdateChunkRenderData(const World& world)
 {
 	for (const auto& world_coords : world.ChunkManagerRef().Chunks() | std::views::keys)
 	{
+		if (chunk_render_data_[world_coords].gpu_mesh_uploaded_)
+		{
+
+		}
 		auto emplace_pair = chunk_render_data_.try_emplace(world_coords, ChunkRenderData{});
 		emplace_pair.first->second.chunk_model_ = glm::translate(glm::mat4(1.0f), { world_coords.x * constants::chunk::width, 0, world_coords.y * constants::chunk::depth });
 	}

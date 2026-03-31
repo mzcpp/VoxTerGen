@@ -15,21 +15,21 @@
 #include <variant>
 #include <cstdint>
 
-namespace
+namespace chunk_event
 {
     struct ChunkMeshReady
     {
         std::uint64_t id_;
-        
+        std::unique_ptr<Mesh> cpu_mesh_;
     };
 
     struct ChunkDestroyed
     {
         std::uint64_t id_;
     };
-}
+} // chunk_event
 
-using ChunkEvent = std::variant<ChunkMeshReady, ChunkDestroyed>;
+using ChunkEvent = std::variant<chunk_event::ChunkMeshReady, chunk_event::ChunkDestroyed>;
 
 class Chunk
 {
@@ -41,6 +41,7 @@ private:
 		glm::ivec3{ 0, 0, 1 }, glm::ivec3{ 0, 0, -1 }
 	};
 
+    static std::uint64_t id_;
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
     std::unique_ptr<Mesh> mesh_;

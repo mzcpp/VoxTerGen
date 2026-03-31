@@ -17,7 +17,7 @@ void Engine::Initialize()
 {
 	resource_manager_.InitializeResources();
 	world_.ChunkManagerRef().InitChunks(constants::chunk::default_radius);
-	world_renderer_.UpdateChunkRenderData(world_);
+	// world_renderer_.UpdateChunkRenderData(world_); DELETE THIS
 }
 
 void Engine::HandleEvents(SDL_Event e)
@@ -54,7 +54,7 @@ void Engine::Tick(float aspect_ratio)
 	camera_.Tick(aspect_ratio);
 
 	world_.Tick(camera_);
-	world_renderer_.UpdateChunkRenderData(world_);
+	//world_renderer_.UpdateChunkRenderData(world_);
 }
 
 void Engine::Render(float alpha)

@@ -138,7 +138,7 @@ void ChunkManager::InitChunkBlocks(Chunk& chunk)
 
 void ChunkManager::Tick(const Camera& camera)
 {
-	StreamChunks(camera);
+	//StreamChunks(camera);
 	BuildChunkMeshes();
 }
 
@@ -154,8 +154,8 @@ void ChunkManager::StreamChunks(const Camera& camera)
 
 	for (int i = 0; i < (constants::chunk::default_radius * 2) + 1; ++i)
 	{ 
-		glm::ivec2 to_erase_coords(0.0f);
-		glm::ivec2 to_emplace_coords(0.0f);
+		glm::ivec2 to_erase_coords(0);
+		glm::ivec2 to_emplace_coords(0);
 	
 		if (current_chunk_coords.x > prev_chunk_coords.x)
 		{
