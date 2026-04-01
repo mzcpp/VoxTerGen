@@ -26,7 +26,7 @@ public:
     
     void InitChunkBlocks(Chunk& chunk);
 
-	void Tick(const Camera& camera);
+	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
 
 	void StreamChunks(const Camera& camera);
 

@@ -17,7 +17,6 @@ void Engine::Initialize()
 {
 	resource_manager_.InitializeResources();
 	world_.ChunkManagerRef().InitChunks(constants::chunk::default_radius);
-	// world_renderer_.UpdateChunkRenderData(world_); DELETE THIS
 }
 
 void Engine::HandleEvents(SDL_Event e)
@@ -53,8 +52,7 @@ void Engine::Tick(float aspect_ratio)
 	camera_controller_.ApplyInput(input_manager_, static_cast<float>(constants::engine::tick_dt), aspect_ratio);
 	camera_.Tick(aspect_ratio);
 
-	world_.Tick(camera_);
-	//world_renderer_.UpdateChunkRenderData(world_);
+	world_.Tick(chunk_event_queue_, camera_);
 }
 
 void Engine::Render(float alpha)
@@ -65,7 +63,7 @@ void Engine::Render(float alpha)
 	const glm::mat4 interpolated_view = camera_.InterpolatedViewMatrix(alpha);
 	const glm::mat4 proj = camera_.ProjectionMatrix();
 
-	world_renderer_.RenderWorld(world_, interpolated_view, proj, resource_manager_);
+	world_renderer_.RenderWorld(chunk_event_queue_, world_, interpolated_view, proj, resource_manager_);
 	
 	camera_.EndTick();
 }

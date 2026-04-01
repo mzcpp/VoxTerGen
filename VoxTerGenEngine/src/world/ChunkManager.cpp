@@ -46,15 +46,10 @@ void ChunkManager::InitChunks(int chunk_radius)
 		{
 			const glm::ivec2 world_coords = { start_coords.x + x, start_coords.z + z };
 			std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, world_coords);
-			InitChunkBlocks(*chunk);
 			chunk_build_queue_.push(chunk.get());
 			chunks_.emplace(world_coords, std::move(chunk));
 		}
 	}
-
-	//chunks_.at({ 0, 0 })->BlockAt({ 0, 50, 0 }).SetType(BlockType::Water);
-	//chunks_.at({ -1, 0 })->BlockAt({ 15, 50, 0 }).SetType(BlockType::Grass);
-	//chunks_.at({ 0, -1 })->BlockAt({ 0, 50, 15 }).SetType(BlockType::Bedrock);
 
 	for (auto& chunk : chunks_ | std::views::values)
 	{
@@ -119,7 +114,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 
 }
 
-// TODO: shouldnt this be done in Chunk constructor? And only assigning xyz, the rest should be default
+// TODO: Verify if this is needed at all.
 void ChunkManager::InitChunkBlocks(Chunk& chunk)
 {
 	for (int y = 0; y < constants::chunk::height; ++y)
@@ -137,9 +132,9 @@ void ChunkManager::InitChunkBlocks(Chunk& chunk)
 	}
 }
 
-void ChunkManager::Tick(const Camera& camera)
+void ChunkManager::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera,)
 {
-	//StreamChunks(camera);
+	StreamChunks(camera);
 	BuildChunkMeshes();
 }
 
@@ -202,6 +197,7 @@ void ChunkManager::BuildChunkMeshes()
 		if (!chunk->MeshValid())
 		{
 			BuildChunkMesh(*chunk);
+			// QUEUE ChunkMeshReady
 			++meshes_built;
 		}
 	}
@@ -209,6 +205,7 @@ void ChunkManager::BuildChunkMeshes()
 
 void ChunkManager::BuildChunkMesh(Chunk& chunk)
 {
+	// RETURN UNIQUEPTR
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 		
 	*chunk_mesh = MeshBuilder::BuildMeshGreedy(
@@ -218,18 +215,7 @@ void ChunkManager::BuildChunkMesh(Chunk& chunk)
 		}
 	);
 
-	//*chunk_mesh = MeshBuilder::BuildMeshNaive(chunk->WorldCoords(),
-	//	[this, &chunk](const glm::ivec3& block_coords)
-	//	{
-	//		return WorldBlockQuery(chunk->WorldCoords(), block_coords);
-	//	}
-	//);
-
-	// QUEUE MESH
-
 	chunk.SetMesh(std::move(chunk_mesh));
-	chunk.SetMeshValid(true);
-	chunk.SetMeshNeedsUpload(true);
 }
 
 const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const

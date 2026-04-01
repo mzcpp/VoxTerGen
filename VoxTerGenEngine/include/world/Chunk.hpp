@@ -36,8 +36,7 @@ private:
 	std::array<Block, constants::chunk::size> blocks_;
     std::unique_ptr<Mesh> mesh_;
     bool mesh_valid_;
-    bool mesh_needs_upload_;
-
+    
 public:
 	explicit Chunk(std::uint64_t id, glm::ivec2 world_coords);
 

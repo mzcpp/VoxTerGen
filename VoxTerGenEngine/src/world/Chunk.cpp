@@ -23,8 +23,7 @@ Chunk::Chunk(std::uint64_t id, glm::ivec2 world_coords) :
 	id_(id), 
 	world_coords_(world_coords), 
 	mesh_(nullptr), 
-	mesh_valid_(false), 
-	mesh_needs_upload_(false)
+	mesh_valid_(false)
 {
 }
 

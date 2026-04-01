@@ -9,20 +9,7 @@
 #include <ranges>
 #include <iostream>
 
-void ChunkMeshRenderPass::UpdateChunkRenderData(const World& world)
-{
-	for (const auto& world_coords : world.ChunkManagerRef().Chunks() | std::views::keys)
-	{
-		if (chunk_render_data_[world_coords].gpu_mesh_uploaded_)
-		{
-
-		}
-		auto emplace_pair = chunk_render_data_.try_emplace(world_coords, ChunkRenderData{});
-		emplace_pair.first->second.chunk_model_ = glm::translate(glm::mat4(1.0f), { world_coords.x * constants::chunk::width, 0, world_coords.y * constants::chunk::depth });
-	}
-}
-
-void ChunkMeshRenderPass::Render(const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
+void ChunkMeshRenderPass::Render(std::queue<ChunkEvent>& chunk_event_queue, const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
 {
 	UploadChunkRenderData(world);
 	RenderChunks(world.ChunkManagerRef().Chunks(), view, projection, resource_manager);
@@ -40,7 +27,6 @@ void ChunkMeshRenderPass::UploadChunkRenderData(const World& world)
 		auto& render_data = chunk_render_data_[world_coords];
 		render_data.gpu_mesh_.UploadMeshData(*chunk->Mesh());
 		render_data.gpu_mesh_uploaded_ = true;
-		chunk->SetMeshNeedsUpload(false);
 	}
 }
 

@@ -28,7 +28,7 @@ public:
 
 	void UploadChunkRenderData(const World& world);
 
-	void RenderWorld(const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
+	void RenderWorld(std::queue<ChunkEvent>& chunk_event_queue, const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
 
 	void RenderChunks(
 		const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, ivec2_hash>& chunks, 

@@ -6,7 +6,7 @@ World::World()
 
 }
 
-void World::Tick(const Camera& camera)
+void World::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
-	chunk_manager_.Tick(camera);
+	chunk_manager_.Tick(chunk_event_queue, camera);
 }
