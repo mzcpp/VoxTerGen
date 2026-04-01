@@ -15,42 +15,31 @@
 #include <variant>
 #include <cstdint>
 
-namespace chunk_event
+struct ChunkMeshReady
 {
-    struct ChunkMeshReady
-    {
-        std::uint64_t id_;
-        std::unique_ptr<Mesh> cpu_mesh_;
-    };
+    std::uint64_t chunk_id_;
+    std::unique_ptr<Mesh> cpu_mesh_;
+};
 
-    struct ChunkDestroyed
-    {
-        std::uint64_t id_;
-    };
-} // chunk_event
+struct ChunkDestroyed
+{
+    std::uint64_t chunk_id_;
+};
 
 using ChunkEvent = std::variant<chunk_event::ChunkMeshReady, chunk_event::ChunkDestroyed>;
 
 class Chunk
 {
 private:
-	static constexpr std::array<glm::ivec3, 6> neighbor_offsets_
-	{
-		glm::ivec3{ 1, 0, 0 }, glm::ivec3{ -1, 0, 0 },
-		glm::ivec3{ 0, 1, 0 }, glm::ivec3{ 0, -1, 0 },
-		glm::ivec3{ 0, 0, 1 }, glm::ivec3{ 0, 0, -1 }
-	};
-
-    static std::uint64_t id_;
+    std::uint64_t id_;
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
     std::unique_ptr<Mesh> mesh_;
     bool mesh_valid_;
     bool mesh_needs_upload_;
 
-
 public:
-	explicit Chunk(glm::ivec2 world_coords);
+	explicit Chunk(std::uint64_t id, glm::ivec2 world_coords);
 
     Block& BlockAt(const glm::ivec3& coords, bool check_index = false);
 

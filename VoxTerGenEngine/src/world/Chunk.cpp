@@ -3,15 +3,27 @@
 #include "core/Direction.hpp"
 #include "render/GpuMesh.hpp"
 
-#include <glm/glm.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 #include <stdexcept>
 #include <memory>
+#include <cstdint>
 
-Chunk::Chunk(glm::ivec2 world_coords) :
-	world_coords_(world_coords),
-	mesh_(nullptr),
-	mesh_valid_(false),
+namespace
+{
+	constexpr std::array<glm::ivec3, 6> neighbor_offsets_ = {
+		glm::ivec3{ 1, 0, 0 }, glm::ivec3{ -1, 0, 0 },
+		glm::ivec3{ 0, 1, 0 }, glm::ivec3{ 0, -1, 0 },
+		glm::ivec3{ 0, 0, 1 }, glm::ivec3{ 0, 0, -1 }
+	};
+}
+
+Chunk::Chunk(std::uint64_t id, glm::ivec2 world_coords) : 
+	id_(id), 
+	world_coords_(world_coords), 
+	mesh_(nullptr), 
+	mesh_valid_(false), 
 	mesh_needs_upload_(false)
 {
 }

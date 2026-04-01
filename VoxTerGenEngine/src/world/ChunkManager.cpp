@@ -45,7 +45,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 		for (int x = 0; x < chunk_square_size; ++x)
 		{
 			const glm::ivec2 world_coords = { start_coords.x + x, start_coords.z + z };
-			std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(world_coords);
+			std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, world_coords);
 			InitChunkBlocks(*chunk);
 			chunk_build_queue_.push(chunk.get());
 			chunks_.emplace(world_coords, std::move(chunk));
@@ -56,7 +56,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 	//chunks_.at({ -1, 0 })->BlockAt({ 15, 50, 0 }).SetType(BlockType::Grass);
 	//chunks_.at({ 0, -1 })->BlockAt({ 0, 50, 15 }).SetType(BlockType::Bedrock);
 
-	for (auto& [world_coords, chunk] : chunks_)
+	for (auto& chunk : chunks_ | std::views::values)
 	{
 		FillChunkTmp(*chunk);
 	}
@@ -119,6 +119,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 
 }
 
+// TODO: shouldnt this be done in Chunk constructor? And only assigning xyz, the rest should be default
 void ChunkManager::InitChunkBlocks(Chunk& chunk)
 {
 	for (int y = 0; y < constants::chunk::height; ++y)
@@ -223,6 +224,8 @@ void ChunkManager::BuildChunkMesh(Chunk& chunk)
 	//		return WorldBlockQuery(chunk->WorldCoords(), block_coords);
 	//	}
 	//);
+
+	// QUEUE MESH
 
 	chunk.SetMesh(std::move(chunk_mesh));
 	chunk.SetMeshValid(true);
