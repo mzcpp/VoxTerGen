@@ -10,6 +10,8 @@
 
 #include <glm/mat4x4.hpp>
 
+#include <queue>
+
 WorldRenderer::WorldRenderer()
 {
 
@@ -22,7 +24,7 @@ WorldRenderer::~WorldRenderer()
 
 void WorldRenderer::UpdateChunkRenderData(const World& world)
 {
-	chunk_mesh_render_pass_.UpdateChunkRenderData(world);
+	//chunk_mesh_render_pass_.UpdateChunkRenderData(world);
 }
 
 void WorldRenderer::RenderWorld(std::queue<ChunkEvent>& chunk_event_queue, const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)

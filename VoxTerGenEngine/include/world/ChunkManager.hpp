@@ -8,6 +8,7 @@
 
 #include <glm/vec2.hpp>
 
+#include <queue>
 #include <unordered_map>
 #include <queue>
 #include <cstdint>
@@ -24,15 +25,13 @@ public:
 
     void InitChunks(int chunk_radius);
     
-    void InitChunkBlocks(Chunk& chunk);
-
 	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
 
-	void StreamChunks(const Camera& camera);
+	void StreamChunks(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
 
-	void BuildChunkMeshes();
+	void BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue);
 
-	void BuildChunkMesh(Chunk& chunk);
+	std::unique_ptr<Mesh> BuildChunkMesh(Chunk& chunk);
 
 	Block WorldBlockQuery(const glm::ivec2& current_chunk_coord, const glm::ivec3& block_coords) const;
 

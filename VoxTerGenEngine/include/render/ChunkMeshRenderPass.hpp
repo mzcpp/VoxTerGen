@@ -6,11 +6,13 @@
 #include "world/World.hpp"
 #include "render/GpuMesh.hpp"
 #include "utils/Hash.hpp"
+#include "world/Chunk.hpp"
 
 #include <glm/vec2.hpp>
 #include <glm/mat4x4.hpp>
 
 #include <unordered_map>
+#include <queue>
 
 struct ChunkRenderData
 {
@@ -26,7 +28,7 @@ private:
 	std::unordered_map<glm::ivec2, ChunkRenderData, utils::ivec2_hash> chunk_render_data_;
 
 public:
-	void Render(cstd::queue<ChunkEvent>& chunk_event_queue, onst World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
+	void Render(std::queue<ChunkEvent>& chunk_event_queue, const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
 	
 	void UploadChunkRenderData(const World& world);
 

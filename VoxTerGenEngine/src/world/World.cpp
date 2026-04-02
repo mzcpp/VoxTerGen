@@ -1,5 +1,8 @@
 #include "world/World.hpp"
+#include "world/Chunk.hpp"
 #include "graphics/Camera.hpp"
+
+#include <queue>
 
 World::World()
 {

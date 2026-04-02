@@ -17,15 +17,16 @@ void ChunkMeshRenderPass::Render(std::queue<ChunkEvent>& chunk_event_queue, cons
 
 void ChunkMeshRenderPass::UploadChunkRenderData(const World& world)
 {
+	// READ THE QUEUE! DO NOT LOOP ALL THE CHUNKS IN THE WORLD!
 	for (const auto& [world_coords, chunk] : world.ChunkManagerRef().Chunks())
 	{
-		if (!chunk->MeshNeedsUpload())
+		/*if (!chunk->MeshNeedsUpload())
 		{
 			continue;
-		}
+		}*/
 		
 		auto& render_data = chunk_render_data_[world_coords];
-		render_data.gpu_mesh_.UploadMeshData(*chunk->Mesh());
+		//render_data.gpu_mesh_.UploadMeshData(*chunk->Mesh());
 		render_data.gpu_mesh_uploaded_ = true;
 	}
 }

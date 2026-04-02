@@ -3,12 +3,14 @@
 
 #include "render/ChunkMeshRenderPass.hpp"
 #include "world/World.hpp"
+#include "world/Chunk.hpp"
 
 #include <glm/vec2.hpp>
 #include <glm/mat4x4.hpp>
 
 #include <unordered_map>
 #include <memory>
+#include <queue>
 
 class Chunk;
 class ResourceManager;

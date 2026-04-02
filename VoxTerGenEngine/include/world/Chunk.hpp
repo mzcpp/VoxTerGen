@@ -26,7 +26,7 @@ struct ChunkDestroyed
     std::uint64_t chunk_id_;
 };
 
-using ChunkEvent = std::variant<chunk_event::ChunkMeshReady, chunk_event::ChunkDestroyed>;
+using ChunkEvent = std::variant<ChunkMeshReady, ChunkDestroyed>;
 
 class Chunk
 {
@@ -34,7 +34,6 @@ private:
     std::uint64_t id_;
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
-    std::unique_ptr<Mesh> mesh_;
     bool mesh_valid_;
     
 public:
@@ -52,19 +51,14 @@ public:
 
     Block& NeighborRefAt(const glm::ivec3& coords, Direction dir);
 
-    void ReleaseMeshData();
-
     // Getters
+    std::uint64_t Id() const noexcept { return id_; }
     const glm::ivec2& WorldCoords() const noexcept { return world_coords_; }
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
-    const Mesh* Mesh() const noexcept { return mesh_.get(); }
     bool MeshValid() const noexcept { return mesh_valid_; }
-    bool MeshNeedsUpload() const noexcept { return mesh_needs_upload_; }
 
     // Setters
-    void SetMesh(std::unique_ptr<class Mesh> mesh) { mesh_ = std::move(mesh); }
     void SetMeshValid(bool mesh_valid) { mesh_valid_ = mesh_valid; }
-    void SetMeshNeedsUpload(bool mesh_needs_upload) { mesh_needs_upload_ = mesh_needs_upload; }
 
 private:
     int Index(const glm::ivec3& coords) const;
