@@ -39,6 +39,7 @@ void ChunkManager::FillChunkTmp(Chunk& chunk)
 void ChunkManager::InitChunks(int chunk_radius)
 {
 	const int chunk_square_size = 2 * chunk_radius + 1;
+	// TODO: observer will not always start at 0, 0?
 	const glm::ivec3 start_coords = { 0 - chunk_radius, 0, 0 - chunk_radius };
 
 	for (int z = 0; z < chunk_square_size; ++z)
@@ -48,6 +49,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 			const glm::ivec2 world_coords = { start_coords.x + x, start_coords.z + z };
 			std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, world_coords);
 			chunk_build_queue_.push(chunk.get());
+
 			chunks_.try_emplace(world_coords, std::move(chunk));
 		}
 	}
@@ -74,48 +76,83 @@ void ChunkManager::StreamChunks(std::queue<ChunkEvent>& chunk_event_queue, const
 		return;
 	}
 
-	for (int i = 0; i < (constants::chunk::default_radius * 2) + 1; ++i)
-	{ 
-		glm::ivec2 to_erase_coords(0);
-		glm::ivec2 to_emplace_coords(0);
-	
-		if (current_chunk_coords.x > prev_chunk_coords.x)
+	for (const glm::ivec2& world_coords : chunks_ | std::views::keys)
+	{
+		if (world_coords.x < current_chunk_coords.x - radius || world_coords.x > current_chunk_coords.x + radius || 
+		world_coords.y < current_chunk_coords.y - radius || world_coords.y > current_chunk_coords.y + radius)
 		{
-			to_erase_coords = { prev_chunk_coords.x - constants::chunk::default_radius, prev_chunk_coords.y - constants::chunk::default_radius + i };
-			to_emplace_coords = { prev_chunk_coords.x + constants::chunk::default_radius + 1, prev_chunk_coords.y - constants::chunk::default_radius + i };
+			// chunk not in desired, erase it
 		}
-		else if (current_chunk_coords.x < prev_chunk_coords.x)
-		{
-			to_erase_coords = { prev_chunk_coords.x + constants::chunk::default_radius, prev_chunk_coords.y - constants::chunk::default_radius + i };
-			to_emplace_coords = { prev_chunk_coords.x - constants::chunk::default_radius - 1, prev_chunk_coords.y - constants::chunk::default_radius + i };
-		}
-
-		if (current_chunk_coords.y > prev_chunk_coords.y)
-		{
-			to_erase_coords = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y - constants::chunk::default_radius };
-			to_emplace_coords = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y + constants::chunk::default_radius + 1 };
-		}
-		else if (current_chunk_coords.y < prev_chunk_coords.y)
-		{
-			to_erase_coords = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y + constants::chunk::default_radius };
-			to_emplace_coords = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y - constants::chunk::default_radius - 1 };
-		}
-
-		const auto& chunk_to_erase_it = chunks_.find(to_erase_coords);
-		
-		if (chunk_to_erase_it != chunks_.end())
-		{
-			chunk_event_queue.emplace(ChunkDestroyed{ chunk_to_erase_it->second->Id() });
-			chunks_.erase(chunk_to_erase_it);
-			std::cout << "ChunkDestroyed EVENT!\n";
-		}	
-
-		std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, to_emplace_coords);
-		FillChunkTmp(*chunk);
-		chunk_build_queue_.emplace(chunk.get());
-		// what if this fails?
-		chunks_.try_emplace(to_emplace_coords, std::move(chunk));
 	}
+
+	for (int y = current_chunk_coords.y - constants::chunk::default_radius; y < current_chunk_coords.y + constants::chunk::default_radius + 1; ++y)
+	{
+		for (int x = current_chunk_coords.x - constants::chunk::default_radius; x < current_chunk_coords.x + constants::chunk::default_radius + 1; ++x)
+		{
+			// if desired chunk at (x, y) is NOT in chunks_ -> I need to emplace it
+		}
+	}
+
+	// for (int i = 0; i < (constants::chunk::default_radius * 2) + 1; ++i)
+	// { 
+	// 	glm::ivec2 x_chunk_to_erase(0);
+	// 	glm::ivec2 y_chunk_to_erase(0);
+	// 	glm::ivec2 x_chunk_to_emplace(0);
+	// 	glm::ivec2 y_chunk_to_emplace(0);
+	
+	// 	if (current_chunk_coords.x > prev_chunk_coords.x)
+	// 	{
+	// 		x_chunk_to_erase = { prev_chunk_coords.x - constants::chunk::default_radius, prev_chunk_coords.y - constants::chunk::default_radius + i };
+	// 		x_chunk_to_emplace = { prev_chunk_coords.x + constants::chunk::default_radius + 1, prev_chunk_coords.y - constants::chunk::default_radius + i };
+	// 	}
+	// 	else if (current_chunk_coords.x < prev_chunk_coords.x)
+	// 	{
+	// 		x_chunk_to_erase = { prev_chunk_coords.x + constants::chunk::default_radius, prev_chunk_coords.y - constants::chunk::default_radius + i };
+	// 		x_chunk_to_emplace = { prev_chunk_coords.x - constants::chunk::default_radius - 1, prev_chunk_coords.y - constants::chunk::default_radius + i };
+	// 	}
+
+	// 	if (current_chunk_coords.y > prev_chunk_coords.y)
+	// 	{
+	// 		y_chunk_to_erase = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y - constants::chunk::default_radius };
+	// 		y_chunk_to_emplace = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y + constants::chunk::default_radius + 1 };
+	// 	}
+	// 	else if (current_chunk_coords.y < prev_chunk_coords.y)
+	// 	{
+	// 		y_chunk_to_erase = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y + constants::chunk::default_radius };
+	// 		y_chunk_to_emplace = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y - constants::chunk::default_radius - 1 };
+	// 	}
+
+	// 	const auto& x_chunk_to_erase_it = chunks_.find(x_chunk_to_erase);
+		
+	// 	if (x_chunk_to_erase_it != chunks_.end())
+	// 	{
+	// 		chunk_event_queue.emplace(ChunkDestroyed{ x_chunk_to_erase_it->second->Id() });
+	// 		chunks_.erase(x_chunk_to_erase_it);
+	// 		std::cout << "ChunkDestroyed EVENT!\n";
+	// 	}
+
+	// 	std::unique_ptr<Chunk> x_chunk = std::make_unique<Chunk>(next_chunk_id_++, x_chunk_to_emplace);
+	// 	FillChunkTmp(*x_chunk);
+	// 	chunk_build_queue_.emplace(x_chunk.get());
+	// 	chunks_.try_emplace(x_chunk_to_emplace, std::move(x_chunk));
+
+	// 	if (x_chunk_to_erase != y_chunk_to_erase)
+	// 	{
+	// 		const auto& y_chunk_to_erase_it = chunks_.find(y_chunk_to_erase);
+		
+	// 		if (y_chunk_to_erase_it != chunks_.end())
+	// 		{
+	// 			chunk_event_queue.emplace(ChunkDestroyed{ y_chunk_to_erase_it->second->Id() });
+	// 			chunks_.erase(y_chunk_to_erase_it);
+	// 			std::cout << "ChunkDestroyed EVENT!\n";
+	// 		}
+
+	// 		std::unique_ptr<Chunk> y_chunk = std::make_unique<Chunk>(next_chunk_id_++, y_chunk_to_emplace);
+	// 		FillChunkTmp(*y_chunk);
+	// 		chunk_build_queue_.emplace(y_chunk.get());
+	// 		chunks_.try_emplace(y_chunk_to_emplace, std::move(y_chunk));
+	// 	}
+	// }
 }
 
 void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
@@ -130,7 +167,7 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 
 		if (!chunk->MeshValid())
 		{
-			chunk_event_queue.emplace(ChunkMeshReady{ chunk->Id(), BuildChunkMesh(*chunk) });
+			chunk_event_queue.emplace(ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), BuildChunkMesh(*chunk) });
 			std::cout << "ChunkMeshReady EVENT!\n";
 			++meshes_built;
 			chunk->SetMeshValid(true);

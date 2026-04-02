@@ -15,15 +15,18 @@
 #include <variant>
 #include <cstdint>
 
+using ChunkID = std::uint64_t;
+
 struct ChunkMeshReady
 {
-    std::uint64_t chunk_id_;
+    ChunkID chunk_id_;
+    std::ivec2 world_coords_;
     std::unique_ptr<Mesh> cpu_mesh_;
 };
 
 struct ChunkDestroyed
 {
-    std::uint64_t chunk_id_;
+    ChunkID chunk_id_;
 };
 
 using ChunkEvent = std::variant<ChunkMeshReady, ChunkDestroyed>;
@@ -31,13 +34,13 @@ using ChunkEvent = std::variant<ChunkMeshReady, ChunkDestroyed>;
 class Chunk
 {
 private:
-    std::uint64_t id_;
+    ChunkID id_;
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
     bool mesh_valid_;
     
 public:
-	explicit Chunk(std::uint64_t id, glm::ivec2 world_coords);
+	explicit Chunk(ChunkID id, glm::ivec2 world_coords);
 
     Block& BlockAt(const glm::ivec3& coords, bool check_index = false);
 
@@ -52,7 +55,7 @@ public:
     Block& NeighborRefAt(const glm::ivec3& coords, Direction dir);
 
     // Getters
-    std::uint64_t Id() const noexcept { return id_; }
+    ChunkID Id() const noexcept { return id_; }
     const glm::ivec2& WorldCoords() const noexcept { return world_coords_; }
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
     bool MeshValid() const noexcept { return mesh_valid_; }

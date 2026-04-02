@@ -19,7 +19,7 @@ namespace
 	};
 }
 
-Chunk::Chunk(std::uint64_t id, glm::ivec2 world_coords) : 
+Chunk::Chunk(ChunkID id, glm::ivec2 world_coords) : 
 	id_(id), 
 	world_coords_(world_coords), 
 	mesh_valid_(false)

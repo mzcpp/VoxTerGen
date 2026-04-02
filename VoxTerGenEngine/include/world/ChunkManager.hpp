@@ -18,7 +18,7 @@ class ChunkManager
 private:
 	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash> chunks_;
 	std::queue<Chunk*> chunk_build_queue_;
-	std::uint64_t next_chunk_id_ = 1;
+	ChunkID next_chunk_id_ = 1;
 
 public:
 	ChunkManager();

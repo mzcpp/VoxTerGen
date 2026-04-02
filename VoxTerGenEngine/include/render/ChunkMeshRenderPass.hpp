@@ -17,7 +17,6 @@
 struct ChunkRenderData
 {
 	GpuMesh gpu_mesh_;
-	bool gpu_mesh_uploaded_ = false;
 	glm::mat4 chunk_model_ = glm::mat4(1.0f);
 };
 
@@ -25,15 +24,14 @@ class ChunkMeshRenderPass
 {
 private:
 	MeshRenderer mesh_renderer_;
-	std::unordered_map<glm::ivec2, ChunkRenderData, utils::ivec2_hash> chunk_render_data_;
+	std::unordered_map<ChunkID, ChunkRenderData> chunks_render_data_;
 
 public:
 	void Render(std::queue<ChunkEvent>& chunk_event_queue, const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
 	
-	void UploadChunkRenderData(const World& world);
+	void ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue);
 
-	void RenderChunks(const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash>& chunks, const glm::mat4& view, 
-		const glm::mat4& projection, const ResourceManager& resource_manager);
+	void RenderChunks(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
 
 };
 

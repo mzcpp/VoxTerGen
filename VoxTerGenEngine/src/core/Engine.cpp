@@ -16,6 +16,7 @@ Engine::Engine() : camera_controller_(camera_)
 void Engine::Initialize()
 {
 	resource_manager_.InitializeResources();
+	// TODO: Make World::InitChunks and call InitChunks inside there too to make this prettier.
 	world_.ChunkManagerRef().InitChunks(constants::chunk::default_radius);
 }
 
