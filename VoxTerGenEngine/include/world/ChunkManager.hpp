@@ -27,7 +27,7 @@ public:
     
 	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
 
-	void StreamChunks(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
+	void LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
 
 	void BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue);
 

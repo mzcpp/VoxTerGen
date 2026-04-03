@@ -60,11 +60,11 @@ void ChunkManager::InitChunks(int chunk_radius)
 
 void ChunkManager::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
-	StreamChunks(chunk_event_queue, camera);
+	LoadChunks(chunk_event_queue, camera);
 	BuildChunkMeshes(chunk_event_queue);
 }
 
-void ChunkManager::StreamChunks(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
+void ChunkManager::LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
 	const glm::ivec2 current_chunk_coords = GetChunkCoords(camera.Pos());
 	const glm::ivec2 prev_chunk_coords = GetChunkCoords(camera.PrevPos());
