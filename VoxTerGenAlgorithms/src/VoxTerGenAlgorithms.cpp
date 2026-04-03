@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+using namespace voxtergen_algorithms;
+
 // TODO: This is an example of a library function
 void VoxTerGenAlgorithms::Test(int x, int y, int z)
 {
