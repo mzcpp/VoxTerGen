@@ -1,5 +1,5 @@
 #include "render/ChunkMeshRenderPass.hpp"
-#include "world/World.hpp"
+#include "world/Chunk.hpp"
 #include "core/ResourceManager.hpp"
 
 #include <glm/vec2.hpp>
@@ -8,38 +8,34 @@
 
 #include <ranges>
 #include <iostream>
-
-void ChunkMeshRenderPass::Render(std::queue<ChunkEvent>& chunk_event_queue, const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
-{
-	// TODO: call ProcessChunkEvents here or in WorldRenderer::RenderWorld? (one level higher)
-	ProcessChunkEvents(chunk_event_queue);
-	RenderChunks(view, projection, resource_manager);
-}
+#include <memory>
+#include <variant>
 
 void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue)
 {
 	while (!chunk_event_queue.empty())
 	{
-		const ChunkEvent& chunk_event = chunk_event_queue.front();
+		ChunkEvent chunk_event = std::move(chunk_event_queue.front());
 		chunk_event_queue.pop();
 		
-		// std::visit here?
 		// TODO: Reuse the GPU buffers, not erase and allocate anew.
-		if (std::holds_alternative<ChunkMeshReady>(chunk_event))
-		{
-			const ChunkMeshReady& event = std::get<ChunkMeshReady>(chunk_event);
+		std::visit(overloaded
+			{
+				[this](chunk_event::ChunkMeshReady& e)
+				{
+					e.render_data_.gpu_mesh_.UploadMeshData(*e.cpu_mesh_);
+					e.render_data_.chunk_model_ = glm::translate(glm::mat4(1.0f), { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth });
+					chunks_render_data_.emplace(e.chunk_id_, std::move(e.render_data_));
+				},
 
-			ChunkRenderData render_data;
-			render_data.gpu_mesh_.UploadMeshData(event.cpu_mesh_.get());
-			render_data.chunk_model_ = glm::translate(glm::mat4(1.0f), { event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth });
-			// TODO: Check if it was emplaced??
-			chunks_render_data_.try_emplace(event.chunk_id_, render_data);
-		}
-		else if (std::holds_alternative<ChunkDestroyed>(chunk_event))
-		{
-			const ChunkDestroyed& event = std::get<ChunkDestroyed>(chunk_event);
-			chunks_render_data_.erase(event.chunk_id_);
-		}
+				[this](chunk_event::ChunkDestroyed& e)
+				{
+					chunks_render_data_.erase(e.chunk_id_);
+				}
+
+			}, 
+			chunk_event
+		);
 	}
 }
 
@@ -62,4 +58,6 @@ void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& p
 		shader_program->Set<glm::mat4>("model", chunk_render_data.chunk_model_);
 		mesh_renderer_.RenderChunkMesh(chunk_render_data.gpu_mesh_);
 	}
+
+	glUseProgram(0);
 }

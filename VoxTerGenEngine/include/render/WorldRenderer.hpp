@@ -2,8 +2,6 @@
 #define WORLD_RENDERER_HPP
 
 #include "render/ChunkMeshRenderPass.hpp"
-#include "world/World.hpp"
-#include "world/Chunk.hpp"
 
 #include <glm/vec2.hpp>
 #include <glm/mat4x4.hpp>
@@ -26,7 +24,9 @@ public:
 
 	~WorldRenderer();
 
-	void RenderWorld(std::queue<ChunkEvent>& chunk_event_queue, const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
+	void Tick(std::queue<ChunkEvent>& chunk_event_queue);
+
+	void RenderWorld(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
 };
 
 #endif

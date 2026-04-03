@@ -3,12 +3,12 @@
 
 #include "world/Block.hpp"
 #include "utils/Constants.hpp"
-#include "mesh/Mesh.hpp"
 #include "render/GpuMesh.hpp"
 #include "core/Direction.hpp"
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 #include <array>
 #include <memory>
@@ -17,19 +17,31 @@
 
 using ChunkID = std::uint64_t;
 
-struct ChunkMeshReady
+class Mesh;
+
+struct ChunkRenderData
 {
-    ChunkID chunk_id_;
-    std::ivec2 world_coords_;
-    std::unique_ptr<Mesh> cpu_mesh_;
+    GpuMesh gpu_mesh_;
+    glm::mat4 chunk_model_ = glm::mat4(1.0f);
 };
 
-struct ChunkDestroyed
+namespace chunk_event
 {
-    ChunkID chunk_id_;
-};
+    struct ChunkMeshReady
+    {
+        ChunkID chunk_id_;
+        glm::ivec2 world_coords_;
+        std::unique_ptr<Mesh> cpu_mesh_;
+        ChunkRenderData render_data_;
+    };
 
-using ChunkEvent = std::variant<ChunkMeshReady, ChunkDestroyed>;
+    struct ChunkDestroyed
+    {
+        ChunkID chunk_id_;
+    };
+}
+
+using ChunkEvent = std::variant<chunk_event::ChunkMeshReady, chunk_event::ChunkDestroyed>;
 
 class Chunk
 {

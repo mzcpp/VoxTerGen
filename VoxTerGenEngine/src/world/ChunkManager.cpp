@@ -1,15 +1,12 @@
 #include "world/ChunkManager.hpp"
 #include "mesh/MeshBuilder.hpp"
 #include "world/Chunk.hpp"
-#include "core/Settings.hpp"
-#include "utils/Logger.hpp"
 #include "utils/MathUtils.hpp"
-#include "utils/Hash.hpp"
-#include "graphics/Camera.hpp"
 
 #include <queue>
 #include <cmath>
 #include <ranges>
+#include <memory>
 
 ChunkManager::ChunkManager()
 {
@@ -38,6 +35,7 @@ void ChunkManager::FillChunkTmp(Chunk& chunk)
 
 void ChunkManager::InitChunks(int chunk_radius)
 {
+	assert(chunk_radius >= 0);
 	const int chunk_square_size = 2 * chunk_radius + 1;
 	// TODO: observer will not always start at 0, 0?
 	const glm::ivec3 start_coords = { 0 - chunk_radius, 0, 0 - chunk_radius };
@@ -76,12 +74,23 @@ void ChunkManager::StreamChunks(std::queue<ChunkEvent>& chunk_event_queue, const
 		return;
 	}
 
-	for (const glm::ivec2& world_coords : chunks_ | std::views::keys)
+	auto it = chunks_.begin();
+
+	while (it != chunks_.end())
 	{
-		if (world_coords.x < current_chunk_coords.x - radius || world_coords.x > current_chunk_coords.x + radius || 
-		world_coords.y < current_chunk_coords.y - radius || world_coords.y > current_chunk_coords.y + radius)
+		const glm::ivec2& chunk_world_coords = it->first;
+
+		if (chunk_world_coords.x < current_chunk_coords.x - constants::chunk::default_radius || 
+			chunk_world_coords.x > current_chunk_coords.x + constants::chunk::default_radius ||
+			chunk_world_coords.y < current_chunk_coords.y - constants::chunk::default_radius || 
+			chunk_world_coords.y > current_chunk_coords.y + constants::chunk::default_radius)
 		{
-			// chunk not in desired, erase it
+			chunk_event_queue.emplace(chunk_event::ChunkDestroyed{ it->second->Id() });
+			it = chunks_.erase(it);
+		}
+		else
+		{
+			++it;
 		}
 	}
 
@@ -89,70 +98,17 @@ void ChunkManager::StreamChunks(std::queue<ChunkEvent>& chunk_event_queue, const
 	{
 		for (int x = current_chunk_coords.x - constants::chunk::default_radius; x < current_chunk_coords.x + constants::chunk::default_radius + 1; ++x)
 		{
-			// if desired chunk at (x, y) is NOT in chunks_ -> I need to emplace it
+			const glm::ivec2 chunk_world_coords = { x, y };
+
+			if (chunks_.find(chunk_world_coords) == chunks_.end())
+			{
+				std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
+				FillChunkTmp(*chunk);
+				chunk_build_queue_.emplace(chunk.get());
+				chunks_.try_emplace(chunk_world_coords, std::move(chunk));
+			}
 		}
 	}
-
-	// for (int i = 0; i < (constants::chunk::default_radius * 2) + 1; ++i)
-	// { 
-	// 	glm::ivec2 x_chunk_to_erase(0);
-	// 	glm::ivec2 y_chunk_to_erase(0);
-	// 	glm::ivec2 x_chunk_to_emplace(0);
-	// 	glm::ivec2 y_chunk_to_emplace(0);
-	
-	// 	if (current_chunk_coords.x > prev_chunk_coords.x)
-	// 	{
-	// 		x_chunk_to_erase = { prev_chunk_coords.x - constants::chunk::default_radius, prev_chunk_coords.y - constants::chunk::default_radius + i };
-	// 		x_chunk_to_emplace = { prev_chunk_coords.x + constants::chunk::default_radius + 1, prev_chunk_coords.y - constants::chunk::default_radius + i };
-	// 	}
-	// 	else if (current_chunk_coords.x < prev_chunk_coords.x)
-	// 	{
-	// 		x_chunk_to_erase = { prev_chunk_coords.x + constants::chunk::default_radius, prev_chunk_coords.y - constants::chunk::default_radius + i };
-	// 		x_chunk_to_emplace = { prev_chunk_coords.x - constants::chunk::default_radius - 1, prev_chunk_coords.y - constants::chunk::default_radius + i };
-	// 	}
-
-	// 	if (current_chunk_coords.y > prev_chunk_coords.y)
-	// 	{
-	// 		y_chunk_to_erase = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y - constants::chunk::default_radius };
-	// 		y_chunk_to_emplace = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y + constants::chunk::default_radius + 1 };
-	// 	}
-	// 	else if (current_chunk_coords.y < prev_chunk_coords.y)
-	// 	{
-	// 		y_chunk_to_erase = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y + constants::chunk::default_radius };
-	// 		y_chunk_to_emplace = { prev_chunk_coords.x - constants::chunk::default_radius + i, prev_chunk_coords.y - constants::chunk::default_radius - 1 };
-	// 	}
-
-	// 	const auto& x_chunk_to_erase_it = chunks_.find(x_chunk_to_erase);
-		
-	// 	if (x_chunk_to_erase_it != chunks_.end())
-	// 	{
-	// 		chunk_event_queue.emplace(ChunkDestroyed{ x_chunk_to_erase_it->second->Id() });
-	// 		chunks_.erase(x_chunk_to_erase_it);
-	// 		std::cout << "ChunkDestroyed EVENT!\n";
-	// 	}
-
-	// 	std::unique_ptr<Chunk> x_chunk = std::make_unique<Chunk>(next_chunk_id_++, x_chunk_to_emplace);
-	// 	FillChunkTmp(*x_chunk);
-	// 	chunk_build_queue_.emplace(x_chunk.get());
-	// 	chunks_.try_emplace(x_chunk_to_emplace, std::move(x_chunk));
-
-	// 	if (x_chunk_to_erase != y_chunk_to_erase)
-	// 	{
-	// 		const auto& y_chunk_to_erase_it = chunks_.find(y_chunk_to_erase);
-		
-	// 		if (y_chunk_to_erase_it != chunks_.end())
-	// 		{
-	// 			chunk_event_queue.emplace(ChunkDestroyed{ y_chunk_to_erase_it->second->Id() });
-	// 			chunks_.erase(y_chunk_to_erase_it);
-	// 			std::cout << "ChunkDestroyed EVENT!\n";
-	// 		}
-
-	// 		std::unique_ptr<Chunk> y_chunk = std::make_unique<Chunk>(next_chunk_id_++, y_chunk_to_emplace);
-	// 		FillChunkTmp(*y_chunk);
-	// 		chunk_build_queue_.emplace(y_chunk.get());
-	// 		chunks_.try_emplace(y_chunk_to_emplace, std::move(y_chunk));
-	// 	}
-	// }
 }
 
 void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
@@ -167,8 +123,7 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 
 		if (!chunk->MeshValid())
 		{
-			chunk_event_queue.emplace(ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), BuildChunkMesh(*chunk) });
-			std::cout << "ChunkMeshReady EVENT!\n";
+			chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), BuildChunkMesh(*chunk) });
 			++meshes_built;
 			chunk->SetMeshValid(true);
 		}
