@@ -4,7 +4,6 @@
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-
 #include <glm/mat3x3.hpp>
 #include <glm/mat4x4.hpp>
 
@@ -17,8 +16,7 @@ Engine::Engine() : camera_controller_(camera_)
 void Engine::Initialize()
 {
 	resource_manager_.InitializeResources();
-	world_.ChunkManagerRef().InitChunks(constants::chunk::default_radius);
-	world_renderer_.InitializeChunkRenderData(world_);
+	world_.InitChunks(constants::chunk::default_radius);
 }
 
 void Engine::HandleEvents(SDL_Event e)
@@ -54,7 +52,8 @@ void Engine::Tick(float aspect_ratio)
 	camera_controller_.ApplyInput(input_manager_, static_cast<float>(constants::engine::tick_dt), aspect_ratio);
 	camera_.Tick(aspect_ratio);
 
-	world_.Tick();
+	world_.Tick(chunk_event_queue_, camera_);
+	world_renderer_.Tick(chunk_event_queue_);
 }
 
 void Engine::Render(float alpha)
@@ -65,7 +64,7 @@ void Engine::Render(float alpha)
 	const glm::mat4 interpolated_view = camera_.InterpolatedViewMatrix(alpha);
 	const glm::mat4 proj = camera_.ProjectionMatrix();
 
-	world_renderer_.RenderWorld(world_, interpolated_view, proj, resource_manager_);
+	world_renderer_.RenderWorld(interpolated_view, proj, resource_manager_);
 	
 	camera_.EndTick();
 }

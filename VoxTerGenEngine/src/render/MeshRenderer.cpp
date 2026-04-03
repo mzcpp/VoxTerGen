@@ -3,8 +3,6 @@
 #include "utils/Constants.hpp"
 #include "render/GpuMesh.hpp"
 
-#include <glm/vec2.hpp>
-
 #include <glad/glad.h>
 
 MeshRenderer::MeshRenderer()

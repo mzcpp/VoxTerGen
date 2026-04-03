@@ -3,16 +3,26 @@
 #include "core/Direction.hpp"
 #include "render/GpuMesh.hpp"
 
-#include <glm/glm.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 #include <stdexcept>
 #include <memory>
+#include <cstdint>
 
-Chunk::Chunk(glm::ivec2 world_coords) :
-	world_coords_(world_coords),
-	mesh_(nullptr),
-	mesh_valid_(false),
-	mesh_needs_upload_(false)
+namespace
+{
+	constexpr std::array<glm::ivec3, 6> neighbor_offsets_ = {
+		glm::ivec3{ 1, 0, 0 }, glm::ivec3{ -1, 0, 0 },
+		glm::ivec3{ 0, 1, 0 }, glm::ivec3{ 0, -1, 0 },
+		glm::ivec3{ 0, 0, 1 }, glm::ivec3{ 0, 0, -1 }
+	};
+}
+
+Chunk::Chunk(ChunkID id, glm::ivec2 world_coords) : 
+	id_(id), 
+	world_coords_(world_coords), 
+	mesh_valid_(false)
 {
 }
 
@@ -85,11 +95,6 @@ Block& Chunk::NeighborRefAt(const glm::ivec3& coords, Direction dir)
 
 	const auto& offset = neighbor_offsets_[dir_index];
 	return BlockAt({ coords.x + offset.x, coords.y + offset.y, coords.z + offset.z });
-}
-
-void Chunk::ReleaseMeshData()
-{
-	mesh_.reset(nullptr);
 }
 
 int Chunk::Index(const glm::ivec3& coords) const

@@ -1,21 +1,43 @@
 #include "world/ChunkManager.hpp"
 #include "mesh/MeshBuilder.hpp"
 #include "world/Chunk.hpp"
-#include "core/Settings.hpp"
-#include "utils/Logger.hpp"
 #include "utils/MathUtils.hpp"
-#include "utils/Hash.hpp"
 
+#include <queue>
 #include <cmath>
 #include <ranges>
+#include <memory>
 
 ChunkManager::ChunkManager()
 {
 }
 
+void ChunkManager::FillChunkTmp(Chunk& chunk)
+{
+	static int i = 1;
+
+	for (int y = 0; y < constants::chunk::height; ++y)
+	{
+		for (int z = 0; z < constants::chunk::depth; ++z)
+		{
+			for (int x = 0; x < constants::chunk::width; ++x)
+			{
+				chunk.BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(i));
+			}
+		}
+	}
+
+	if (++i >= 8)
+	{
+		i = 1;
+	}
+}
+
 void ChunkManager::InitChunks(int chunk_radius)
 {
+	assert(chunk_radius >= 0);
 	const int chunk_square_size = 2 * chunk_radius + 1;
+	// TODO: observer will not always start at 0, 0?
 	const glm::ivec3 start_coords = { 0 - chunk_radius, 0, 0 - chunk_radius };
 
 	for (int z = 0; z < chunk_square_size; ++z)
@@ -23,101 +45,73 @@ void ChunkManager::InitChunks(int chunk_radius)
 		for (int x = 0; x < chunk_square_size; ++x)
 		{
 			const glm::ivec2 world_coords = { start_coords.x + x, start_coords.z + z };
-			std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(world_coords);
-			InitChunkBlocks(*chunk);
+			std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, world_coords);
 			chunk_build_queue_.push(chunk.get());
-			chunks_.emplace(world_coords, std::move(chunk));
+
+			chunks_.try_emplace(world_coords, std::move(chunk));
 		}
 	}
 
-	//chunks_.at({ 0, 0 })->BlockAt({ 0, 50, 0 }).SetType(BlockType::Water);
-	//chunks_.at({ -1, 0 })->BlockAt({ 15, 50, 0 }).SetType(BlockType::Grass);
-	//chunks_.at({ 0, -1 })->BlockAt({ 0, 50, 15 }).SetType(BlockType::Bedrock);
-
-	//for (auto& [world_coords, chunk] : chunks_)
-	//{
-	//	//BlockType randBlock = static_cast<BlockType>(rand() % (static_cast<int>(BlockType::Bedrock) - static_cast<int>(BlockType::Grass) + 1) + static_cast<int>(BlockType::Grass));
-
-	//	for (int y = 0; y < constants::chunk::height; ++y)
-	//	{
-	//		for (int z = 0; z < constants::chunk::depth; ++z)
-	//		{
-	//			for (int x = 0; x < constants::chunk::width; ++x)
-	//			{
-	//				BlockType randBlock = static_cast<BlockType>(rand() % (static_cast<int>(BlockType::Dirt) - static_cast<int>(BlockType::Grass) + 1) + static_cast<int>(BlockType::Grass));
-	//				chunk->BlockAt({ x, 0, z }).SetType(randBlock);
-
-	//				/*chunks_.at({ -1, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Grass);
-	//				chunks_.at({ 0, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Dirt);
-	//				chunks_.at({ 1, 1 })->BlockAt({ x, y, z }).SetType(BlockType::Stone);
-
-	//				chunks_.at({ -1, 0 })->BlockAt({ x, y, z }).SetType(BlockType::Snow);
-	//				chunks_.at({ 0, 0 })->BlockAt({ x, y, z }).SetType(BlockType::Bedrock);
-	//				chunks_.at({ 1, 0 })->BlockAt({ x, y, z }).SetType(BlockType::Sand);
-
-	//				chunks_.at({ -1, -1 })->BlockAt({ x, y, z }).SetType(BlockType::Water);
-	//				chunks_.at({ 0, -1 })->BlockAt({ x, y, z }).SetType(BlockType::Grass);
-	//				chunks_.at({ 1, -1 })->BlockAt({ x, y, z }).SetType(BlockType::Bedrock);*/
-
-	//				//int posy = y;
-
-	//				//chunks_.at({ -1, 1 })->BlockAt({ x, posy, z }).SetType(randBlock);
-	//				//chunks_.at({ 0, 1 })->BlockAt({ x, posy, z }).SetType(randBlock);
-	//				//chunks_.at({ 1, 1 })->BlockAt({ x, posy, z }).SetType(randBlock);
-
-	//				//chunks_.at({ -1, 0 })->BlockAt({ x, posy, z }).SetType(randBlock);
-	//				//chunks_.at({ 0, 0 })->BlockAt({ x, posy, z }).SetType(randBlock);
-	//				//chunks_.at({ 1, 0 })->BlockAt({ x, posy, z }).SetType(randBlock);
-
-	//				//chunks_.at({ -1, -1 })->BlockAt({ x, posy, z }).SetType(randBlock);
-	//				//chunks_.at({ 0, -1 })->BlockAt({ x, posy, z }).SetType(randBlock);
-	//				//chunks_.at({ 1, -1 })->BlockAt({ x, posy, z }).SetType(randBlock);
-
-	//			}
-	//		}
-	//	}
-	//}
-
-	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Grass);
-	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Grass);
-	//chunks_.begin()->second->BlockAt({ 0, 0, 2 }).SetType(BlockType::Grass);
-	//chunks_.begin()->second->BlockAt({ 0, 0, 3 }).SetType(BlockType::Grass);
-	//chunks_.begin()->second->BlockAt({ 0, 1, 2 }).SetType(BlockType::Grass);
-
-	//chunks_.begin()->second->BlockAt({ 0, 0, 0 }).SetType(BlockType::Dirt);
-	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Dirt);
-
-	//chunks_.begin()->second->BlockAt({ 1, 0, 1 }).SetType(BlockType::Water);
-	//chunks_.begin()->second->BlockAt({ 1, 0, 2 }).SetType(BlockType::Dirt);
-	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Grass);
-	//chunks_.begin()->second->BlockAt({ 2, 0, 1 }).SetType(BlockType::Bedrock);
-	//chunks_.begin()->second->BlockAt({ 2, 0, 1 }).SetType(BlockType::Bedrock);
-
+	for (auto& chunk : chunks_ | std::views::values)
+	{
+		FillChunkTmp(*chunk);
+	}
 }
 
-void ChunkManager::InitChunkBlocks(Chunk& chunk)
+void ChunkManager::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
-	for (int y = 0; y < constants::chunk::height; ++y)
+	StreamChunks(chunk_event_queue, camera);
+	BuildChunkMeshes(chunk_event_queue);
+}
+
+void ChunkManager::StreamChunks(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
+{
+	const glm::ivec2 current_chunk_coords = GetChunkCoords(camera.Pos());
+	const glm::ivec2 prev_chunk_coords = GetChunkCoords(camera.PrevPos());
+
+	if (prev_chunk_coords == current_chunk_coords)
 	{
-		for (int z = 0; z < constants::chunk::depth; ++z)
+		return;
+	}
+
+	auto it = chunks_.begin();
+
+	while (it != chunks_.end())
+	{
+		const glm::ivec2& chunk_world_coords = it->first;
+
+		if (chunk_world_coords.x < current_chunk_coords.x - constants::chunk::default_radius || 
+			chunk_world_coords.x > current_chunk_coords.x + constants::chunk::default_radius ||
+			chunk_world_coords.y < current_chunk_coords.y - constants::chunk::default_radius || 
+			chunk_world_coords.y > current_chunk_coords.y + constants::chunk::default_radius)
 		{
-			for (int x = 0; x < constants::chunk::width; ++x)
+			chunk_event_queue.emplace(chunk_event::ChunkDestroyed{ it->second->Id() });
+			it = chunks_.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (int y = current_chunk_coords.y - constants::chunk::default_radius; y < current_chunk_coords.y + constants::chunk::default_radius + 1; ++y)
+	{
+		for (int x = current_chunk_coords.x - constants::chunk::default_radius; x < current_chunk_coords.x + constants::chunk::default_radius + 1; ++x)
+		{
+			const glm::ivec2 chunk_world_coords = { x, y };
+
+			if (chunks_.find(chunk_world_coords) == chunks_.end())
 			{
-				Block& block = chunk.BlockAt({ x, y, z });
-				block.SetType(BlockType::Air);
-				block.SetSunLight(0);
-				block.SetBlockLight(0);
+				std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
+				FillChunkTmp(*chunk);
+				chunk_build_queue_.emplace(chunk.get());
+				chunks_.try_emplace(chunk_world_coords, std::move(chunk));
 			}
 		}
 	}
 }
 
-void ChunkManager::Tick()
-{
-	BuildChunkMeshes();
-}
-
-void ChunkManager::BuildChunkMeshes()
+void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 {
 	constexpr int meshes_build_limit = 1;
 	int meshes_built = 0;
@@ -129,13 +123,14 @@ void ChunkManager::BuildChunkMeshes()
 
 		if (!chunk->MeshValid())
 		{
-			BuildChunkMesh(*chunk);
+			chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), BuildChunkMesh(*chunk) });
 			++meshes_built;
+			chunk->SetMeshValid(true);
 		}
 	}
 }
 
-void ChunkManager::BuildChunkMesh(Chunk& chunk)
+std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk)
 {
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 		
@@ -146,16 +141,7 @@ void ChunkManager::BuildChunkMesh(Chunk& chunk)
 		}
 	);
 
-	//*chunk_mesh = MeshBuilder::BuildMeshNaive(chunk->WorldCoords(),
-	//	[this, &chunk](const glm::ivec3& block_coords)
-	//	{
-	//		return WorldBlockQuery(chunk->WorldCoords(), block_coords);
-	//	}
-	//);
-
-	chunk.SetMesh(std::move(chunk_mesh));
-	chunk.SetMeshValid(true);
-	chunk.SetMeshNeedsUpload(true);
+	return chunk_mesh;
 }
 
 const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
@@ -197,4 +183,9 @@ Block ChunkManager::WorldBlockQuery(const glm::ivec2& current_chunk_coord, const
 void ChunkManager::PushChunkIntoQueue(Chunk* chunk)
 {
 	chunk_build_queue_.push(chunk);
+}
+
+glm::ivec2 ChunkManager::GetChunkCoords(const glm::dvec3& pos) noexcept
+{
+	return { static_cast<int>(std::floor(pos.x / constants::chunk::width)), static_cast<int>(std::floor(pos.z / constants::chunk::depth)) };
 }

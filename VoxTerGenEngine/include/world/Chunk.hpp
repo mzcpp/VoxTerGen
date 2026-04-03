@@ -3,35 +3,56 @@
 
 #include "world/Block.hpp"
 #include "utils/Constants.hpp"
-#include "mesh/Mesh.hpp"
 #include "render/GpuMesh.hpp"
 #include "core/Direction.hpp"
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 #include <array>
 #include <memory>
+#include <variant>
+#include <cstdint>
+
+using ChunkID = std::uint64_t;
+
+class Mesh;
+
+struct ChunkRenderData
+{
+    GpuMesh gpu_mesh_;
+    glm::mat4 chunk_model_ = glm::mat4(1.0f);
+};
+
+namespace chunk_event
+{
+    struct ChunkMeshReady
+    {
+        ChunkID chunk_id_;
+        glm::ivec2 world_coords_;
+        std::unique_ptr<Mesh> cpu_mesh_;
+        ChunkRenderData render_data_;
+    };
+
+    struct ChunkDestroyed
+    {
+        ChunkID chunk_id_;
+    };
+}
+
+using ChunkEvent = std::variant<chunk_event::ChunkMeshReady, chunk_event::ChunkDestroyed>;
 
 class Chunk
 {
 private:
-	static constexpr std::array<glm::ivec3, 6> neighbor_offsets_
-	{
-		glm::ivec3{ 1, 0, 0 }, glm::ivec3{ -1, 0, 0 },
-		glm::ivec3{ 0, 1, 0 }, glm::ivec3{ 0, -1, 0 },
-		glm::ivec3{ 0, 0, 1 }, glm::ivec3{ 0, 0, -1 }
-	};
-
+    ChunkID id_;
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
-    std::unique_ptr<Mesh> mesh_;
     bool mesh_valid_;
-    bool mesh_needs_upload_;
-
-
+    
 public:
-	explicit Chunk(glm::ivec2 world_coords);
+	explicit Chunk(ChunkID id, glm::ivec2 world_coords);
 
     Block& BlockAt(const glm::ivec3& coords, bool check_index = false);
 
@@ -45,19 +66,14 @@ public:
 
     Block& NeighborRefAt(const glm::ivec3& coords, Direction dir);
 
-    void ReleaseMeshData();
-
     // Getters
+    ChunkID Id() const noexcept { return id_; }
     const glm::ivec2& WorldCoords() const noexcept { return world_coords_; }
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
-    const Mesh* Mesh() const noexcept { return mesh_.get(); }
     bool MeshValid() const noexcept { return mesh_valid_; }
-    bool MeshNeedsUpload() const noexcept { return mesh_needs_upload_; }
 
     // Setters
-    void SetMesh(std::unique_ptr<class Mesh> mesh) { mesh_ = std::move(mesh); }
     void SetMeshValid(bool mesh_valid) { mesh_valid_ = mesh_valid; }
-    void SetMeshNeedsUpload(bool mesh_needs_upload) { mesh_needs_upload_ = mesh_needs_upload; }
 
 private:
     int Index(const glm::ivec3& coords) const;

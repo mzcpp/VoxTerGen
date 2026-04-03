@@ -122,9 +122,12 @@ ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept
     return *this;
 }
 
-GLuint ShaderProgram::Id() const noexcept
+ShaderProgram::~ShaderProgram()
 {
-	return id_;
+    if (id_ != 0)
+    {
+        glDeleteProgram(id_);
+    }
 }
 
 void ShaderProgram::Use() const noexcept

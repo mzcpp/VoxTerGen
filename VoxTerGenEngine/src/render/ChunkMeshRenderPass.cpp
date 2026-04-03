@@ -1,5 +1,5 @@
 #include "render/ChunkMeshRenderPass.hpp"
-#include "world/World.hpp"
+#include "world/Chunk.hpp"
 #include "core/ResourceManager.hpp"
 
 #include <glm/vec2.hpp>
@@ -8,40 +8,38 @@
 
 #include <ranges>
 #include <iostream>
+#include <memory>
+#include <variant>
 
-void ChunkMeshRenderPass::InitializeChunkRenderData(const World& world)
+void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue)
 {
-	for (const auto& [world_coords, chunk] : world.ChunkManagerRef().Chunks())
+	while (!chunk_event_queue.empty())
 	{
-		auto emplace_pair = chunk_render_data_.emplace(world_coords, ChunkRenderData{});
-		emplace_pair.first->second.chunk_model_ = glm::translate(glm::mat4(1.0f), { world_coords.x * constants::chunk::width, 0, world_coords.y * constants::chunk::depth });
-	}
-}
-
-void ChunkMeshRenderPass::Render(const World& world, const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
-{
-	UploadChunkRenderData(world);
-	RenderChunks(world.ChunkManagerRef().Chunks(), view, projection, resource_manager);
-}
-
-void ChunkMeshRenderPass::UploadChunkRenderData(const World& world)
-{
-	for (const auto& [world_coords, chunk] : world.ChunkManagerRef().Chunks())
-	{
-		if (!chunk->MeshNeedsUpload())
-		{
-			continue;
-		}
+		ChunkEvent chunk_event = std::move(chunk_event_queue.front());
+		chunk_event_queue.pop();
 		
-		auto& render_data = chunk_render_data_[world_coords];
-		render_data.gpu_mesh_.UploadMeshData(*chunk->Mesh());
-		render_data.gpu_mesh_uploaded_ = true;
-		chunk->SetMeshNeedsUpload(false);
+		// TODO: Reuse the GPU buffers, not erase and allocate anew.
+		std::visit(overloaded
+			{
+				[this](chunk_event::ChunkMeshReady& e)
+				{
+					e.render_data_.gpu_mesh_.UploadMeshData(*e.cpu_mesh_);
+					e.render_data_.chunk_model_ = glm::translate(glm::mat4(1.0f), { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth });
+					chunks_render_data_.emplace(e.chunk_id_, std::move(e.render_data_));
+				},
+
+				[this](chunk_event::ChunkDestroyed& e)
+				{
+					chunks_render_data_.erase(e.chunk_id_);
+				}
+
+			}, 
+			chunk_event
+		);
 	}
 }
 
-void ChunkMeshRenderPass::RenderChunks(const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash>& chunks, const glm::mat4& view, 
-	const glm::mat4& projection, const ResourceManager& resource_manager)
+void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");
 
@@ -55,22 +53,11 @@ void ChunkMeshRenderPass::RenderChunks(const std::unordered_map<glm::ivec2, std:
 	resource_manager.GetTexture("atlas")->Bind();
 	shader_program->Set<int>("atlas_texture", 0);
 
-	for (const auto& chunk : chunks | std::views::values)
+	for (const ChunkRenderData& chunk_render_data : chunks_render_data_ | std::views::values)
 	{
-		if (chunk == nullptr)
-		{
-			Logger::Log(LogLevel::CRITICAL, "Unable to render chunk! Chunk is nullptr! Aborting...");
-			std::abort();
-		}
-
-		const auto& chunk_data_it = chunk_render_data_.find(chunk->WorldCoords());
-
-		if (chunk_data_it == chunk_render_data_.end())
-		{
-			continue;
-		}
-
-		shader_program->Set<glm::mat4>("model", chunk_data_it->second.chunk_model_);
-		mesh_renderer_.RenderChunkMesh(chunk_data_it->second.gpu_mesh_);
+		shader_program->Set<glm::mat4>("model", chunk_render_data.chunk_model_);
+		mesh_renderer_.RenderChunkMesh(chunk_render_data.gpu_mesh_);
 	}
+
+	glUseProgram(0);
 }
