@@ -6,13 +6,14 @@
 #include <SDL2/SDL.h>
 
 #include <unordered_map>
+#include <cstdint>
 
 struct MouseState
 {
     glm::ivec2 pos_{ 0, 0 };
     glm::vec2 delta_{ 0.0f };
     float wheel_ = 0.0f; 
-    Uint32 buttons_ = 0;
+    std::uint32_t buttons_ = 0;
 };
 
 class InputManager

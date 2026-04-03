@@ -22,8 +22,8 @@ public:
     {
     }
 
-    CameraController(const CameraController& camera) = delete;
-    CameraController& operator=(const CameraController&) = delete;
+    CameraController(const CameraController& other) = delete;
+    CameraController& operator=(const CameraController& other) = delete;
 
     CameraController(CameraController&& other) = delete;
     CameraController& operator=(CameraController&& other) = delete;

@@ -2,6 +2,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <cstdint>
+
 void InputManager::ResetFrameState()
 {
     prev_keys_ = keys_;
@@ -41,8 +43,8 @@ void InputManager::ProcessEvent(const SDL_Event& e)
 
 bool InputManager::KeyPressed(SDL_Scancode key) const
 {
-    bool curr = keys_.count(key) ? keys_.at(key) : false;
-    bool prev = prev_keys_.count(key) ? prev_keys_.at(key) : false;
+    const bool curr = keys_.count(key) ? keys_.at(key) : false;
+    const bool prev = prev_keys_.count(key) ? prev_keys_.at(key) : false;
     return curr && !prev;
 }
 
@@ -53,12 +55,12 @@ bool InputManager::KeyDown(SDL_Scancode key) const
 
 bool InputManager::KeyReleased(SDL_Scancode key) const
 {
-    bool curr = keys_.count(key) ? keys_.at(key) : false;
-    bool prev = prev_keys_.count(key) ? prev_keys_.at(key) : false;
+    const bool curr = keys_.count(key) ? keys_.at(key) : false;
+    const bool prev = prev_keys_.count(key) ? prev_keys_.at(key) : false;
     return !curr && prev;
 }
 
-bool InputManager::MouseButtonDown(Uint8 button) const 
+bool InputManager::MouseButtonDown(std::uint8_t button) const 
 {
     return mouse_.buttons_ & SDL_BUTTON(button); 
 }
