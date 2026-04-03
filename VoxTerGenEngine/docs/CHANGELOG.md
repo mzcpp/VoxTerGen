@@ -18,6 +18,15 @@ The format follows Keep a Changelog and Semantic Versioning.
 
 ---
 
+## [0.3.0] - 3 April 2026
+
+### Added
+- Chunk streaming logic for loading and unloading chunks based on observer's position.
+- Chunk event queue to handle communication between engine components.
+- Improved rendering pipeline to support chunk streaming.
+
+---
+
 ## [0.2.0] - 28 March 2026
 
 ### Added
