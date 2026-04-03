@@ -4,10 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.14.36717.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VoxTerGenEngine", "VoxTerGenEngine\VoxTerGenEngine.vcxproj", "{4690F704-36F9-433F-B92D-E20F87A2289F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8CF0B891-228F-4135-B196-3A7CA233912C} = {8CF0B891-228F-4135-B196-3A7CA233912C}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VoxTerGenAlgorithms", "VoxTerGenAlgorithms\VoxTerGenAlgorithms.vcxproj", "{8CF0B891-228F-4135-B196-3A7CA233912C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VoxTerGenBench", "VoxTerGenBench\VoxTerGenBench.vcxproj", "{260196FE-E373-4C4C-BCAB-B63FAB4A5F05}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8CF0B891-228F-4135-B196-3A7CA233912C} = {8CF0B891-228F-4135-B196-3A7CA233912C}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
