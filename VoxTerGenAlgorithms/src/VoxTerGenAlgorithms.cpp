@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "VoxTerGenAlgorithms/VoxTerGenAlgorithms.hpp"
+#include "VoxTerGenAlgorithms.hpp"
 
 #include <iostream>
 

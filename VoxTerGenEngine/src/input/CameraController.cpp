@@ -68,7 +68,7 @@ void CameraController::ApplyRotation(const InputManager& input)
 
     const glm::vec2 mouse_delta = input.MouseDelta();
 
-    if (FloatingPointNearZero(mouse_delta.x) && FloatingPointNearZero(mouse_delta.y))
+    if (math_utils::FloatingPointNearZero(mouse_delta.x) && math_utils::FloatingPointNearZero(mouse_delta.y))
     {
         return;
     }
@@ -83,7 +83,7 @@ void CameraController::ApplyRotation(const InputManager& input)
 
 void CameraController::ApplyZoom(const InputManager& input)
 {
-    if (!camera_.enabled_movement_ || FloatingPointNearZero(input.MouseWheel()))
+    if (!camera_.enabled_movement_ || math_utils::FloatingPointNearZero(input.MouseWheel()))
     {
         return;
     }

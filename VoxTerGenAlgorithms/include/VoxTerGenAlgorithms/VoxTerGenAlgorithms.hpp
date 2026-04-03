@@ -1,5 +1,5 @@
-#ifndef VOXTERGEN_ALGORITHMS
-#define VOXTERGEN_ALGORITHMS
+#ifndef VOXTERGEN_ALGORITHMS_HPP
+#define VOXTERGEN_ALGORITHMS_HPP
 
 namespace voxtergen_algorithms
 {

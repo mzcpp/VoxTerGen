@@ -21,6 +21,18 @@
     <ClCompile Include="src\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\noise\core\PerlinNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\noise\core\OpenSimplex2SNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\noise\core\WorleyNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\noise\methods\FractionalBrownianMotion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="internal\framework.h">
@@ -33,6 +45,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VoxTerGenAlgorithms\VoxTerGenAlgorithms.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\PerlinNoise.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2SNoise.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\WorleyNoise.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="internal\utils\MathUtils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\FractionalBrownianMotion.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
