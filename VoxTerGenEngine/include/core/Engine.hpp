@@ -45,5 +45,5 @@ public:
 	const WorldRenderer& WorldRenderer() const noexcept { return world_renderer_; }
 };
 
-#endif
+#endif // ENGINE_HPP
 

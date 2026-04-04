@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\noise\methods\FractionalBrownianMotion.cpp" />
+    <ClCompile Include="src\noise\methods\FractalBrownianMotion.cpp" />
     <ClCompile Include="src\noise\core\OpenSimplex2SNoise.cpp" />
     <ClCompile Include="src\noise\core\PerlinNoise.cpp" />
     <ClCompile Include="src\noise\core\WorleyNoise.cpp" />
@@ -29,17 +29,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\VoxTerGenAlgorithms.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\FractionalBrownianMotion.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\FractalBrownianMotion.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2SNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\PerlinNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\WorleyNoise.hpp" />
-    <ClInclude Include="include\VoxTerGenAlgorithms\VoxTerGenAlgorithms.hpp" />
     <ClInclude Include="internal\framework.h" />
-    <ClInclude Include="internal\utils\MathUtils.hpp" />
+    <ClInclude Include="internal\utils\Hash.hpp" />
+    <ClInclude Include="internal\utils\Rng.hpp" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

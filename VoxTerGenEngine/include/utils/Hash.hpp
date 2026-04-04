@@ -14,4 +14,4 @@ namespace utils
 	};
 }
 
-#endif
+#endif // HASH_HPP
