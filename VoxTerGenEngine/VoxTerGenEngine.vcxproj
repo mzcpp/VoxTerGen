@@ -75,12 +75,14 @@
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)libs/SDL2/x64;$(ProjectDir)libs/SDL2_image/x64;$(ProjectDir)libs/SDL2_mixer/x64;$(ProjectDir)libs/SDL2_ttf/x64</LibraryPath>
     <IntDir>$(SolutionDir)$(ProjectName)\build\$(Configuration)\$(Platform)\obj\</IntDir>
     <OutDir>$(SolutionDir)$(ProjectName)\build\$(Configuration)\$(Platform)\</OutDir>
+    <ExternalIncludePath>$(ProjectDir)include\external\glad;$(ProjectDir)include\external\glm;$(ProjectDir)include\external\SDL2;$(ProjectDir)include\external\SDL2_image;$(ProjectDir)include\external\SDL2_mixer;$(ProjectDir)include\external\SDL2_ttf;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)include;$(ProjectDir)include/external</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(ProjectDir)libs/SDL2/x64;$(ProjectDir)libs/SDL2_image/x64;$(ProjectDir)libs/SDL2_mixer/x64;$(ProjectDir)libs/SDL2_ttf/x64</LibraryPath>
     <IntDir>$(SolutionDir)$(ProjectName)\build\$(Configuration)\$(Platform)\obj\</IntDir>
     <OutDir>$(SolutionDir)$(ProjectName)\build\$(Configuration)\$(Platform)\</OutDir>
+    <ExternalIncludePath>$(ProjectDir)include\external\glad;$(ProjectDir)include\external\glm;$(ProjectDir)include\external\SDL2;$(ProjectDir)include\external\SDL2_image;$(ProjectDir)include\external\SDL2_mixer;$(ProjectDir)include\external\SDL2_ttf;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -120,6 +122,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/external:W0 /external:I"$(ProjectDir)include/external/glad" /external:I"$(ProjectDir)include/external/glm" /external:I"$(ProjectDir)include/external/SDL2" /external:I"$(ProjectDir)include/external/SDL2_image" /external:I"$(ProjectDir)include/external/SDL2_mixer" /external:I"$(ProjectDir)include/external/SDL2_ttf" %(AdditionalOptions)</AdditionalOptions>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,7 +145,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -153,6 +156,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <AdditionalOptions>/external:W0 /external:I"$(ProjectDir)include/external/glad" /external:I"$(ProjectDir)include/external/glm" /external:I"$(ProjectDir)include/external/SDL2" /external:I"$(ProjectDir)include/external/SDL2_image" /external:I"$(ProjectDir)include/external/SDL2_mixer" /external:I"$(ProjectDir)include/external/SDL2_ttf" %(AdditionalOptions)</AdditionalOptions>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
