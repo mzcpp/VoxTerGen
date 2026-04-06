@@ -35,7 +35,7 @@ private:
 
 	double Fade(double t) const;
 
-	double Lerp(double t, double a, double b) const;
+	double Lerp(double a, double b, double n) const;
 
 	double DotGrad(std::uint64_t hash, double x) const;
 

@@ -8,10 +8,8 @@
 
 #include <glm/vec2.hpp>
 
-#include <queue>
 #include <unordered_map>
 #include <queue>
-#include <cstdint>
 
 class ChunkManager
 {

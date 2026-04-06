@@ -4,16 +4,13 @@
 #include "graphics/Texture2D.hpp"
 #include "graphics/ShaderProgram.hpp"
 
-#include "SDL2_ttf/SDL_ttf.h"
-#include "SDL2_mixer/SDL_mixer.h"
+#include <SDL2_ttf/SDL_ttf.h>
+#include <SDL2_mixer/SDL_mixer.h>
 
 #include <unordered_map>
 #include <string>
 #include <memory>
 #include <filesystem>
-
-struct TTF_Font;
-struct Mix_Chunk;
 
 class ResourceManager
 {
@@ -22,6 +19,7 @@ private:
     std::unordered_map<std::string, std::unique_ptr<ShaderProgram>> shader_programs_;
     std::unordered_map<std::string, std::unique_ptr<TTF_Font, decltype(&TTF_CloseFont)>> fonts_;
     std::unordered_map<std::string, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>> sounds_;
+
 public:
     ResourceManager();
 

@@ -1,6 +1,7 @@
 #ifndef WORLD_HPP
 #define WORLD_HPP
 
+#include "world/Chunk.hpp"
 #include "world/ChunkManager.hpp"
 
 class World

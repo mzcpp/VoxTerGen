@@ -11,6 +11,8 @@
 
 #include <queue>
 
+union SDL_Event;
+
 class Engine
 {
 private:

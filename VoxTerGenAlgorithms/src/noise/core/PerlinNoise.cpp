@@ -115,9 +115,9 @@ double PerlinNoise::Fade(double t) const
 	return t * t * t * (t * (t * 6 - 15) + 10);
 }
 
-double PerlinNoise::Lerp(double t, double a, double b) const
+double PerlinNoise::Lerp(double a, double b, double n) const
 {
-	return a + t * (b - a);
+	return a + n * (b - a);
 }
 
 double PerlinNoise::DotGrad(std::uint64_t hash, double x) const
