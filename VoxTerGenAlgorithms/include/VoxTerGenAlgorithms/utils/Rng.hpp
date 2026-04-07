@@ -28,7 +28,7 @@ namespace rng
 
 			for (int i = 0; i < 4; ++i)
 			{
-				s[i] = hash::SplitMix64(x, seed);
+				s[i] = hash::SplitMix64(x);
 				x = s[i];
 			}
 		}

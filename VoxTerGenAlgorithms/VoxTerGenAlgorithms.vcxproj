@@ -37,8 +37,8 @@
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\PerlinNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\WorleyNoise.hpp" />
     <ClInclude Include="internal\framework.h" />
-    <ClInclude Include="internal\utils\Hash.hpp" />
-    <ClInclude Include="internal\utils\Rng.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Hash.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Rng.hpp" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -141,7 +141,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)internal;$(ProjectDir)include\$(ProjectName);$(ProjectDir)src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\$(ProjectName);$(ProjectDir)src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ProgramDataBaseFileName>$(SolutionDir)$(ProjectName)\build\$(Configuration)\$(Platform)\obj\$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
@@ -166,7 +166,7 @@ del /Q $(SolutionDir)$(ProjectName)\lib\$(Configuration)\$(Platform)\$(TargetNam
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)internal;$(ProjectDir)include\$(ProjectName);$(ProjectDir)src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\$(ProjectName);$(ProjectDir)src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ProgramDataBaseFileName>$(SolutionDir)$(ProjectName)\build\$(Configuration)\$(Platform)\obj\$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>

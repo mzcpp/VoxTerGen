@@ -50,13 +50,13 @@
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\WorleyNoise.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="internal\utils\Hash.hpp">
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Hash.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\FractalBrownianMotion.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="internal\utils\Rng.hpp">
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Rng.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

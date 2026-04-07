@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "noise/core/PerlinNoise.hpp"
+#include "utils/Hash.hpp"
 
 #include <cstdint>
 #include <cmath>
@@ -84,7 +85,7 @@ std::uint64_t PerlinNoise::Hash(std::int64_t x) const
 {
 	std::uint64_t h = seed_;
 
-	h = hash::SplitMix64(h ^ static_cast<uint64_t>(x), seed_);
+	h = hash::SplitMix64(h ^ static_cast<uint64_t>(x));
 
 	return h;
 }
@@ -93,8 +94,8 @@ std::uint64_t PerlinNoise::Hash(std::int64_t x, std::int64_t y) const
 {
 	std::uint64_t h = seed_;
 
-	h = hash::SplitMix64(h ^ static_cast<uint64_t>(x), seed_);
-	h = hash::SplitMix64(h ^ static_cast<uint64_t>(y), seed_);
+	h = hash::SplitMix64(h ^ static_cast<uint64_t>(x));
+	h = hash::SplitMix64(h ^ static_cast<uint64_t>(y));
 
 	return h;
 }
@@ -103,9 +104,9 @@ std::uint64_t PerlinNoise::Hash(std::int64_t x, std::int64_t y, std::int64_t z) 
 {
 	std::uint64_t h = seed_;
 
-	h = hash::SplitMix64(h ^ static_cast<uint64_t>(x), seed_);
-	h = hash::SplitMix64(h ^ static_cast<uint64_t>(y), seed_);
-	h = hash::SplitMix64(h ^ static_cast<uint64_t>(z), seed_);
+	h = hash::SplitMix64(h ^ static_cast<uint64_t>(x));
+	h = hash::SplitMix64(h ^ static_cast<uint64_t>(y));
+	h = hash::SplitMix64(h ^ static_cast<uint64_t>(z));
 
 	return h;
 }
