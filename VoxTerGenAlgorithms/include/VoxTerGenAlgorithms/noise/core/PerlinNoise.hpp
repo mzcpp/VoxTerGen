@@ -1,9 +1,9 @@
 #ifndef PERLIN_NOISE_HPP
 #define PERLIN_NOISE_HPP
 
-#include <cstdint>
+#include "VoxTerGenAlgorithms/utils/Hash.hpp"
 
-#include "utils/Hash.hpp"
+#include <cstdint>
 
 /**
  * @note Portion was based on Ken Perlin's original implementation available at: https://cs.nyu.edu/~perlin/noise/

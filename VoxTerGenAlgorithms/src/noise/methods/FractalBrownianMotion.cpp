@@ -1,4 +1,4 @@
 #include "pch.h"
 
-#include "noise/methods/FractalBrownianMotion.hpp"
-#include "utils/Rng.hpp"
+#include "VoxTerGenAlgorithms/noise/methods/FractalBrownianMotion.hpp"
+#include "VoxTerGenAlgorithms/utils/Rng.hpp"

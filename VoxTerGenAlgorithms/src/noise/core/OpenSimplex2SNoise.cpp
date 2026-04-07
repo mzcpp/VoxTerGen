@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "noise/core/OpenSimplex2SNoise.hpp"
+#include "VoxTerGenAlgorithms/noise/core/OpenSimplex2SNoise.hpp"
 
 #include <cstdint>
 

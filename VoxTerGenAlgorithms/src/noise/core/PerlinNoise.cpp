@@ -1,7 +1,7 @@
 #include "pch.h"
 
-#include "noise/core/PerlinNoise.hpp"
-#include "utils/Hash.hpp"
+#include "VoxTerGenAlgorithms/noise/core/PerlinNoise.hpp"
+#include "VoxTerGenAlgorithms/utils/Hash.hpp"
 
 #include <cstdint>
 #include <cmath>

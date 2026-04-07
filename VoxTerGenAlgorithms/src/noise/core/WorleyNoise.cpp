@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "noise/core/WorleyNoise.hpp"
+#include "VoxTerGenAlgorithms/noise/core/WorleyNoise.hpp"
 
 #include <cstdint>
 
