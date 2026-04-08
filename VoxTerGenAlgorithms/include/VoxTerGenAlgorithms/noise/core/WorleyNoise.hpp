@@ -3,13 +3,20 @@
 
 #include <cstdint>
 
+struct Point
+{
+	double x = 0.0;
+	double y = 0.0;
+};
+
 class WorleyNoise
 {
 private:
 	std::uint64_t seed_;
+	int cell_size_;
 
 public:
-	WorleyNoise(std::uint64_t seed);
+	WorleyNoise(std::uint64_t seed, int cell_size);
 
 	double Noise(double x) const;
 
@@ -22,6 +29,7 @@ public:
 
 private:
 
+	Point GenRandomPoint() const noexcept;
 };
 
 #endif // WORLEY_NOISE_HPP
