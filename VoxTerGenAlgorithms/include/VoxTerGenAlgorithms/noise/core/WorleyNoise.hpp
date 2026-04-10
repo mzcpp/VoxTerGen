@@ -7,7 +7,7 @@ enum class DistanceResultType
 {
 	F1,
 	F2_SUB_F1
-}
+};
 
 enum class DistanceMetric
 {

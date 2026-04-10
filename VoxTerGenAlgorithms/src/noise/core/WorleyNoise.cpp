@@ -33,10 +33,10 @@ double WorleyNoise::Noise(double x) const
 
 	std::uint64_t h = seed_;
 
-	h ^= x * hash_constants::A;
+	h ^= xi * hash_constants::A;
 	h = hash::SplitMix64(h);
 
-	std::uint64_t px = hash::SplitMix64(h);
+	std::uint64_t fp_x = hash::SplitMix64(h);
 
 	for (int xo = xi - 1; xo < xi + 1; ++xo)
 	{
@@ -58,13 +58,13 @@ double WorleyNoise::Noise(double x, double y) const
 
 	std::uint64_t h = seed_;
 
-	h ^= x * hash_constants::A;
+	h ^= xi * hash_constants::A;
 	h = hash::SplitMix64(h);
-	h ^= y * hash_constants::B;
+	h ^= yi * hash_constants::B;
 	h = hash::SplitMix64(h);
 
-	std::uint64_t px = hash::SplitMix64(h);
-	std::uint64_t py = hash::SplitMix64(px);
+	std::uint64_t fp_x = hash::SplitMix64(h);
+	std::uint64_t fp_y = hash::SplitMix64(fp_x);
 
 	for (int yo = yi - 1; yo < yi + 1; ++yo)
 	{
@@ -91,16 +91,16 @@ double WorleyNoise::Noise(double x, double y, double z) const
 
 	std::uint64_t h = seed_;
 
-	h ^= x * hash_constants::A;
+	h ^= xi * hash_constants::A;
 	h = hash::SplitMix64(h);
-	h ^= y * hash_constants::B;
+	h ^= yi * hash_constants::B;
 	h = hash::SplitMix64(h);
-	h ^= z * hash_constants::C;
+	h ^= zi * hash_constants::C;
 	h = hash::SplitMix64(h);
 
 	std::uint64_t fp_x = hash::SplitMix64(h);
-	std::uint64_t fp_y = hash::SplitMix64(px);
-	std::uint64_t fp_z = hash::SplitMix64(py);
+	std::uint64_t fp_y = hash::SplitMix64(fp_x);
+	std::uint64_t fp_z = hash::SplitMix64(fp_y);
 
 	// normalize [0, 1)
 
