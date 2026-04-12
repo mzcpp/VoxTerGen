@@ -2,6 +2,7 @@
 #define WORLEY_NOISE_HPP
 
 #include <cstdint>
+#include <array>
 
 enum class DistanceResultType
 {
@@ -13,7 +14,7 @@ enum class DistanceResultType
 	F1_MUL_F2, 
 	F2_DIV_F1, 
 	F3_SUB_F1, 
-	CELL_OUTPUT
+	CELL_HASH_VALUE
 };
 
 enum class DistanceMetric
@@ -27,22 +28,12 @@ enum class DistanceMetric
 
 enum class FeaturePointMode
 {
-	FIXED, 
-	RANDOM
-}
-
-struct Vec2D
-{
-	double x = 0.0;
-	double y = 0.0;
+	FIXED,
+	POISSON_APPROX
 };
 
-struct Vec3D
-{
-	double x = 0.0;
-	double y = 0.0;
-	double z = 0.0;
-};
+using ivec3 = std::array<std::uint64_t, 3>;
+using dvec3 = std::array<double, 3>;
 
 class WorleyNoise
 {
@@ -51,11 +42,14 @@ private:
 	int cell_size_;
 	DistanceMetric dist_metric_;
 	DistanceResultType dist_result_type_;
+	FeaturePointMode fp_mode_;
 	int n_feature_points_;
 	float minkowski_p_;
+	int dimension_;
 
 public:
-	WorleyNoise(std::uint64_t seed, int cell_size);
+	WorleyNoise(std::uint64_t seed, int cell_size, DistanceMetric dist_metric, DistanceResultType dist_result_type, FeaturePointMode fp_mode,
+		int n_feature_points, float minkowski_p, int dimension);
 
 	double Noise(double x) const;
 
@@ -66,20 +60,16 @@ public:
 	// Getters
 	std::uint64_t Seed() const noexcept { return seed_; }
 
-	// Setters
-	void SetDistanceMetric(DistanceMetric dist_metric) noexcept { dist_metric_ = dist_metric; }
-	void SetDistanceResultType(DistanceResultType dist_result_type) noexcept { dist_result_type_ = dist_result_type; }
-	void SetFeaturePointsNumber(int n_feature_points) noexcept { n_feature_points_ = n_feature_points; }
-	void SetMinkowskiExponent(float minkowski_p) noexcept { minkowski_p_ = minkowski_p; }
-
 private:
-	double GetRandomPoint(int cell_xi) const noexcept;
+	std::uint64_t HashCell(const ivec3& coords) const noexcept;
 
-	Vec2D GetRandomPoint(int cell_xi, int cell_yi) const noexcept;
+	dvec3 GetRandomPoint(std::uint64_t hash, const ivec3& cell_coords) const noexcept;
 
-	Vec3D GetRandomPoint(int cell_xi, int cell_yi, int cell_zi) const noexcept;
+	double GetDistance(dvec3 p1, dvec3 p2) const noexcept;
 
-	double GetDistance(Point p1, Point p2) const noexcept;
+	double GetResult(const dvec3& distances) const noexcept;
+
+	int GetFeaturePointsNumber(std::uint64_t cell_hash) const noexcept;
 };
 
 #endif // WORLEY_NOISE_HPP
