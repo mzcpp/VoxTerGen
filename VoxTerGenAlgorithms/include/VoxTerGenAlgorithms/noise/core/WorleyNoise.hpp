@@ -46,6 +46,7 @@ private:
 	int n_feature_points_;
 	float minkowski_p_;
 	int dimension_;
+	double min_distance_;
 
 public:
 	WorleyNoise(std::uint64_t seed, int cell_size, DistanceMetric dist_metric, DistanceResultType dist_result_type, FeaturePointMode fp_mode,
@@ -70,6 +71,8 @@ private:
 	double GetResult(const dvec3& distances) const noexcept;
 
 	int GetFeaturePointsNumber(std::uint64_t cell_hash) const noexcept;
+
+	void UpdateMinDistances(double min_distance, std::size_t j, dvec3& min_distances) const noexcept;
 };
 
 #endif // WORLEY_NOISE_HPP
