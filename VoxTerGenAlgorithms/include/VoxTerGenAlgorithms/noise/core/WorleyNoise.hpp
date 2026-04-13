@@ -13,7 +13,8 @@ enum class DistanceResultType
 	F2_SUB_F1, 
 	F1_MUL_F2, 
 	F2_DIV_F1, 
-	F3_SUB_F1
+	F3_SUB_F1, 
+	CELL_VALUE
 };
 
 enum class DistanceMetric

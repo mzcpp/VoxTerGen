@@ -41,6 +41,11 @@ double WorleyNoise::Noise(double x) const
 {
 	const int xi = static_cast<int>(std::floor(x));
 
+	if (dist_result_type_ == DistanceResultType::CELL_VALUE)
+	{
+		// TODO
+	}
+
 	dvec3 min_distances = { std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() };
 
 	for (int xo = xi - 1; xo <= xi + 1; ++xo)
@@ -55,6 +60,11 @@ double WorleyNoise::Noise(double x, double y) const
 {
 	const int xi = static_cast<int>(std::floor(x));
 	const int yi = static_cast<int>(std::floor(y));
+
+	if (dist_result_type_ == DistanceResultType::CELL_VALUE)
+	{
+		// TODO
+	}
 
 	dvec3 min_distances = { std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() };
 
@@ -74,6 +84,11 @@ double WorleyNoise::Noise(double x, double y, double z) const
 	const int xi = static_cast<int>(std::floor(x));
 	const int yi = static_cast<int>(std::floor(y));
 	const int zi = static_cast<int>(std::floor(z));
+
+	if (dist_result_type_ == DistanceResultType::CELL_VALUE)
+	{
+		// TODO
+	}
 
 	dvec3 min_distances = { std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() };
 
