@@ -13,8 +13,7 @@ enum class DistanceResultType
 	F2_SUB_F1, 
 	F1_MUL_F2, 
 	F2_DIV_F1, 
-	F3_SUB_F1, 
-	CELL_HASH_VALUE
+	F3_SUB_F1
 };
 
 enum class DistanceMetric
@@ -32,7 +31,7 @@ enum class FeaturePointMode
 	POISSON_APPROX
 };
 
-using ivec3 = std::array<std::uint64_t, 3>;
+using ivec3 = std::array<std::int64_t, 3>;
 using dvec3 = std::array<double, 3>;
 
 class WorleyNoise
@@ -71,7 +70,7 @@ private:
 
 	int GetFeaturePointsNumber(std::uint64_t cell_hash) const noexcept;
 
-	dvec3 CalculateMinDistances(std::uint64_t current_cell_hash, dvec3 current_cell, ivec3 neighbor_cell) const noexcept;
+	void CalculateMinDistances(dvec3 current_cell, ivec3 neighbor_cell, dvec3& min_distances) const noexcept;
 
 	void UpdateMinDistances(double distance, dvec3& min_distances) const noexcept;
 };

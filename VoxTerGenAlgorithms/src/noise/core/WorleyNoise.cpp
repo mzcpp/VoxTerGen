@@ -39,29 +39,13 @@ WorleyNoise::WorleyNoise(std::uint64_t seed, DistanceMetric dist_metric, Distanc
 
 double WorleyNoise::Noise(double x) const
 {
-	const std::uint64_t xi = static_cast<std::uint64_t>(x);
-	const std::uint64_t current_cell_hash = HashCell({ xi, 0, 0 });
-
-	if (dist_result_type_ == DistanceResultType::CELL_HASH_VALUE)
-	{
-		return static_cast<double>(current_cell_hash) * inv_ui64_t_max;
-	}
+	const int xi = static_cast<int>(std::floor(x));
 
 	dvec3 min_distances = { std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() };
 
-	for (std::uint64_t xo = xi - 1; xo <= xi + 1; ++xo)
+	for (int xo = xi - 1; xo <= xi + 1; ++xo)
 	{
-		// for (int i = 0; i < GetFeaturePointsNumber(current_cell_hash); ++i)
-		// {
-		// 	const ivec3 cell_coords = { xo, 0, 0 };
-		// 	const std::uint64_t cell_hash = HashCell(cell_coords);
-		// 	const std::uint64_t point_hash = hash::SplitMix64(cell_hash ^ (i * hash_constants::D));
-		// 	const dvec3 feature_point = GetRandomPoint(point_hash, cell_coords);
-		// 	const double distance = GetDistance(feature_point, { x, 0.0, 0.0 });
-		// 	UpdateMinDistances(distance, min_distances);
-		// }
-
-		min_distances = CalculateMinDistances(current_cell_hash, { x, 0.0, 0.0 }, { xo, 0, 0 });
+		CalculateMinDistances({ x, 0.0, 0.0 }, { xo, 0, 0 }, min_distances);
 	}
 
 	return GetResult(min_distances);
@@ -69,32 +53,16 @@ double WorleyNoise::Noise(double x) const
 
 double WorleyNoise::Noise(double x, double y) const
 {
-	const std::uint64_t xi = static_cast<std::uint64_t>(x);
-	const std::uint64_t yi = static_cast<std::uint64_t>(y);
-	const std::uint64_t current_cell_hash = HashCell({ xi, yi, 0 });
-
-	if (dist_result_type_ == DistanceResultType::CELL_HASH_VALUE)
-	{
-		return static_cast<double>(current_cell_hash) * inv_ui64_t_max;
-	}
+	const int xi = static_cast<int>(std::floor(x));
+	const int yi = static_cast<int>(std::floor(y));
 
 	dvec3 min_distances = { std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() };
 
-	for (std::uint64_t yo = yi - 1; yo <= yi + 1; ++yo)
+	for (int yo = yi - 1; yo <= yi + 1; ++yo)
 	{
-		for (std::uint64_t xo = xi - 1; xo <= xi + 1; ++xo)
+		for (int xo = xi - 1; xo <= xi + 1; ++xo)
 		{
-			// for (int i = 0; i < GetFeaturePointsNumber(current_cell_hash); ++i)
-			// {
-			// 	const ivec3 cell_coords = { xo, yo, 0 };
-			// 	const std::uint64_t cell_hash = HashCell(cell_coords);
-			// 	const std::uint64_t point_hash = hash::SplitMix64(cell_hash ^ (i * hash_constants::D));
-			// 	const dvec3 feature_point = GetRandomPoint(point_hash, cell_coords);
-			// 	const double distance = GetDistance(feature_point, { x, y, 0.0 });
-			// 	UpdateMinDistances(distance, min_distances);
-			// }
-
-			min_distances = CalculateMinDistances(current_cell_hash, { x, y, 0.0 }, { xo, yo, 0 });
+			CalculateMinDistances({ x, y, 0.0 }, { xo, yo, 0 }, min_distances);
 		}
 	}
 
@@ -103,35 +71,19 @@ double WorleyNoise::Noise(double x, double y) const
 
 double WorleyNoise::Noise(double x, double y, double z) const
 {
-	const std::uint64_t xi = static_cast<std::uint64_t>(x);
-	const std::uint64_t yi = static_cast<std::uint64_t>(y);
-	const std::uint64_t zi = static_cast<std::uint64_t>(z);
-	const std::uint64_t current_cell_hash = HashCell({ xi, yi, zi });
-
-	if (dist_result_type_ == DistanceResultType::CELL_HASH_VALUE)
-	{
-		return static_cast<double>(current_cell_hash) * inv_ui64_t_max;
-	}
+	const int xi = static_cast<int>(std::floor(x));
+	const int yi = static_cast<int>(std::floor(y));
+	const int zi = static_cast<int>(std::floor(z));
 
 	dvec3 min_distances = { std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() };
 
-	for (std::uint64_t yo = yi - 1; yo <= yi + 1; ++yo)
+	for (int yo = yi - 1; yo <= yi + 1; ++yo)
 	{
-		for (std::uint64_t zo = zi - 1; zo <= zi + 1; ++zo)
+		for (int zo = zi - 1; zo <= zi + 1; ++zo)
 		{
-			for (std::uint64_t xo = xi - 1; xo <= xi + 1; ++xo)
+			for (int xo = xi - 1; xo <= xi + 1; ++xo)
 			{
-				// for (int i = 0; i < GetFeaturePointsNumber(current_cell_hash); ++i)
-				// {
-				// 	const ivec3 cell_coords = { xo, yo, zo };
-				// 	const std::uint64_t cell_hash = HashCell(cell_coords);
-				// 	const std::uint64_t point_hash = hash::SplitMix64(cell_hash ^ (i * hash_constants::D));
-				// 	const dvec3 feature_point = GetRandomPoint(point_hash, cell_coords);
-				// 	const double distance = GetDistance(feature_point, { x, y, z });
-				// 	UpdateMinDistances(distance, min_distances);
-				// }
-
-				min_distances = CalculateMinDistances(current_cell_hash, { x, y, o }, { xo, yo, zo });
+				CalculateMinDistances({ x, y, 0 }, { xo, yo, zo }, min_distances);
 			}
 		}
 	}
@@ -187,7 +139,7 @@ double WorleyNoise::GetDistance(dvec3 p1, dvec3 p2) const noexcept
 	{
 		for (int i = 0; i < dimension_; ++i)
 		{
-			result = std::fmax(result, std::fabs(p2[i] - p1[i]));
+			result += std::fabs(p2[i] - p1[i]);
 		}
 
 		return result;
@@ -196,7 +148,7 @@ double WorleyNoise::GetDistance(dvec3 p1, dvec3 p2) const noexcept
 	{
 		for (int i = 0; i < dimension_; ++i)
 		{
-			result += std::fabs(p2[i] - p1[i]);
+			result = std::fmax(result, std::fabs(p2[i] - p1[i]));
 		}
 	}
 	else if (dist_metric_ == DistanceMetric::MINKOWSKI)
@@ -283,36 +235,35 @@ int WorleyNoise::GetFeaturePointsNumber(std::uint64_t cell_hash) const noexcept
 	return 1;
 }
 
-dvec3 WorleyNoise::CalculateMinDistances(std::uint64_t current_cell_hash, dvec3 current_cell, ivec3 neighbor_cell) const noexcept
+void WorleyNoise::CalculateMinDistances(dvec3 current_cell, ivec3 neighbor_cell, dvec3& min_distances) const noexcept
 {
-	dvec3 min_distances = { std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() };
-
-	for (int i = 0; i < GetFeaturePointsNumber(current_cell_hash); ++i)
+	const std::uint64_t neighbor_cell_hash = HashCell(neighbor_cell);
+	const int feature_points_count = GetFeaturePointsNumber(neighbor_cell_hash);
+	
+	for (int i = 0; i < feature_points_count; ++i)
 	{
-		const ivec3 cell_coords = { neighbor_cell[0], neighbor_cell[1], neighbor_cell[2] };
-		const std::uint64_t cell_hash = HashCell(cell_coords);
-		const std::uint64_t point_hash = hash::SplitMix64(cell_hash ^ (i * hash_constants::D));
-		const dvec3 feature_point = GetRandomPoint(point_hash, cell_coords);
-		const double distance = GetDistance(feature_point, { current_cell[0], current_cell[1], current_cell[2] });
+		const std::uint64_t point_hash = hash::SplitMix64(neighbor_cell_hash ^ (i * hash_constants::D));
+		const dvec3 feature_point = GetRandomPoint(point_hash, neighbor_cell);
+		const double distance = GetDistance(feature_point, current_cell);
 		UpdateMinDistances(distance, min_distances);
 	}
-
-	return min_distances;
 }
 
 void WorleyNoise::UpdateMinDistances(double distance, dvec3& min_distances) const noexcept
 {
-	for (std::size_t j = 0; j < min_distances.size(); ++j)
+	if (distance < min_distances[0])
 	{
-		if (distance < min_distances[j])
-		{
-			for (std::size_t k = 0; k < min_distances.size() - 1 - j; ++k)
-			{
-				std::swap(min_distances[j + (1 - k)], min_distances[j + (2 - k)]);
-			}
-
-			min_distances[j] = distance;
-			return;
-		}
+		min_distances[2] = min_distances[1];
+		min_distances[1] = min_distances[0];
+		min_distances[0] = distance;
+	}
+	else if (distance < min_distances[1])
+	{
+		min_distances[2] = min_distances[1];
+		min_distances[1] = distance;
+	}
+	else if (distance < min_distances[2])
+	{
+		min_distances[2] = distance;
 	}
 }
