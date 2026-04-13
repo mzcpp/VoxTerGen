@@ -39,7 +39,6 @@ class WorleyNoise
 {
 private:
 	std::uint64_t seed_;
-	int cell_size_;
 	DistanceMetric dist_metric_;
 	DistanceResultType dist_result_type_;
 	FeaturePointMode fp_mode_;
@@ -49,7 +48,7 @@ private:
 	double min_distance_;
 
 public:
-	WorleyNoise(std::uint64_t seed, int cell_size, DistanceMetric dist_metric, DistanceResultType dist_result_type, FeaturePointMode fp_mode,
+	WorleyNoise(std::uint64_t seed, DistanceMetric dist_metric, DistanceResultType dist_result_type, FeaturePointMode fp_mode,
 		int n_feature_points, float minkowski_p, int dimension);
 
 	double Noise(double x) const;
@@ -72,7 +71,7 @@ private:
 
 	int GetFeaturePointsNumber(std::uint64_t cell_hash) const noexcept;
 
-	dvec3 CalculateMinDistances(dvec3 current_cell, dvec3 neighbor_cell) const noexcept;
+	dvec3 CalculateMinDistances(std::uint64_t current_cell_hash, dvec3 current_cell, ivec3 neighbor_cell) const noexcept;
 
 	void UpdateMinDistances(double distance, dvec3& min_distances) const noexcept;
 };
