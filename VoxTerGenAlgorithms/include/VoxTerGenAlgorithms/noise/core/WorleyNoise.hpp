@@ -72,7 +72,9 @@ private:
 
 	int GetFeaturePointsNumber(std::uint64_t cell_hash) const noexcept;
 
-	void UpdateMinDistances(double min_distance, std::size_t j, dvec3& min_distances) const noexcept;
+	dvec3 CalculateMinDistances(dvec3 current_cell, dvec3 neighbor_cell) const noexcept;
+
+	void UpdateMinDistances(double distance, dvec3& min_distances) const noexcept;
 };
 
 #endif // WORLEY_NOISE_HPP

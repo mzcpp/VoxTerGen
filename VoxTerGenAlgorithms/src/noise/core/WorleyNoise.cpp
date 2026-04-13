@@ -59,17 +59,8 @@ double WorleyNoise::Noise(double x) const
 			const std::uint64_t neighbor_cell_hash = HashCell(neighbor_cell);
 			const std::uint64_t neighbor_point_hash = hash::SplitMix64(neighbor_cell_hash ^ (i * hash_constants::D));
 			const dvec3 neighbor_feature_point = GetRandomPoint(neighbor_point_hash, neighbor_cell);
-
-			for (std::size_t j = 0; j < min_distances.size(); ++j)
-			{
-				const double dist = GetDistance(neighbor_feature_point, { x, 0.0, 0.0 });
-				
-				if (dist < min_distances[j])
-				{
-					min_distances[j] = dist;
-					break;
-				}
-			}
+			const double distance = GetDistance(neighbor_feature_point, { x, 0.0, 0.0 });
+			UpdateMinDistances(distance, min_distances);
 		}
 	}
 
@@ -101,17 +92,8 @@ double WorleyNoise::Noise(double x, double y) const
 				const std::uint64_t neighbor_cell_hash = HashCell(neighbor_cell);
 				const std::uint64_t neighbor_point_hash = hash::SplitMix64(neighbor_cell_hash ^ (i * hash_constants::D));
 				const dvec3 neighbor_feature_point = GetRandomPoint(neighbor_point_hash, neighbor_cell);
-
-				for (std::size_t j = 0; j < min_distances.size(); ++j)
-				{
-					const double dist = GetDistance(neighbor_feature_point, { x, y, 0.0 });
-
-					if (dist < min_distances[j])
-					{
-						min_distances[j] = dist;
-						break;
-					}
-				}
+				const double distance = GetDistance(neighbor_feature_point, { x, y, 0.0 });
+				UpdateMinDistances(distance, min_distances);
 			}
 		}
 	}
@@ -146,17 +128,8 @@ double WorleyNoise::Noise(double x, double y, double z) const
 					const std::uint64_t neighbor_cell_hash = HashCell(neighbor_cell);
 					const std::uint64_t neighbor_point_hash = hash::SplitMix64(neighbor_cell_hash ^ (i * hash_constants::D));
 					const dvec3 neighbor_feature_point = GetRandomPoint(neighbor_point_hash, neighbor_cell);
-
-					for (std::size_t j = 0; j < min_distances.size(); ++j)
-					{
-						const double dist = GetDistance(neighbor_feature_point, { x, y, z });
-
-						if (dist < min_distances[j])
-						{
-							min_distances[j] = dist;
-							break;
-						}
-					}
+					const double distance = GetDistance(neighbor_feature_point, { x, y, z });
+					UpdateMinDistances(distance, min_distances);
 				}
 			}
 		}
@@ -309,12 +282,25 @@ int WorleyNoise::GetFeaturePointsNumber(std::uint64_t cell_hash) const noexcept
 	return 1;
 }
 
-void WorleyNoise::UpdateMinDistances(double min_distance, std::size_t j, dvec3& min_distances) const noexcept
+dvec3 WorleyNoise::CalculateMinDistances(dvec3 current_cell, dvec3 neighbor_cell) const noexcept
 {
-	for (std::size_t k = 0; min_distances.size() - 1 - j; ++k)
-	{
-		std::swap(min_distances[j + (1 - k)], min_distances[j + (2 - k)]);
-	}
+	return {};
+}
 
-	min_distances[j] = min_distance;
+
+void WorleyNoise::UpdateMinDistances(double distance, dvec3& min_distances) const noexcept
+{
+	for (std::size_t j = 0; j < min_distances.size(); ++j)
+	{
+		if (distance < min_distances[j])
+		{
+			for (std::size_t k = 0; k < min_distances.size() - 1 - j; ++k)
+			{
+				std::swap(min_distances[j + (1 - k)], min_distances[j + (2 - k)]);
+			}
+
+			min_distances[j] = distance;
+			return;
+		}
+	}
 }
