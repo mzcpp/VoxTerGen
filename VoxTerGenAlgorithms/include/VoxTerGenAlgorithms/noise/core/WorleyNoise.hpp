@@ -29,7 +29,7 @@ enum class DistanceMetric
 enum class FeaturePointMode
 {
 	FIXED,
-	POISSON_APPROX
+	WEIGHTED_RANDOM
 };
 
 using ivec3 = std::array<std::int64_t, 3>;
@@ -45,7 +45,6 @@ private:
 	int n_feature_points_;
 	float minkowski_p_;
 	int dimension_;
-	double min_distance_;
 
 public:
 	WorleyNoise(std::uint64_t seed, DistanceMetric dist_metric, DistanceResultType dist_result_type, FeaturePointMode fp_mode,
@@ -65,13 +64,13 @@ private:
 
 	dvec3 GetRandomPoint(std::uint64_t hash, const ivec3& cell_coords) const noexcept;
 
-	double GetDistance(dvec3 p1, dvec3 p2) const noexcept;
+	double GetDistance(const dvec3& p1, const dvec3& p2) const noexcept;
 
 	double GetResult(const dvec3& distances) const noexcept;
 
 	int GetFeaturePointsNumber(std::uint64_t cell_hash) const noexcept;
 
-	void CalculateMinDistances(dvec3 current_cell, ivec3 neighbor_cell, dvec3& min_distances) const noexcept;
+	void CalculateMinDistances(const dvec3& current_cell, const ivec3& neighbor_cell, dvec3& min_distances, double& closest_hash) const noexcept;
 
 	void UpdateMinDistances(double distance, dvec3& min_distances) const noexcept;
 };
