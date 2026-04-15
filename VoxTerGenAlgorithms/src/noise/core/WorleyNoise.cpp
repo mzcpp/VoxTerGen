@@ -127,11 +127,12 @@ std::uint64_t WorleyNoise::HashCell(const ivec3& coords) const noexcept
 
 	for (int i = 0; i < dimension_; ++i)
 	{
-		cell_hash ^= coords[i] * hash_constants::constants[i];
-		cell_hash = hash::SplitMix64(cell_hash);
+		// Flip the most significant bit.
+		const std::uint64_t coord = static_cast<std::uint64_t>(coords[i]) ^ 0x8000000000000000ULL;
+		cell_hash ^= hash::SplitMix64(coord * hash_constants::constants[i]);
 	}
 
-	return cell_hash;
+	return hash::SplitMix64(cell_hash);
 }
 
 std::uint64_t WorleyNoise::HashCellFast(const ivec3& coords) const noexcept
@@ -147,7 +148,11 @@ dvec3 WorleyNoise::GetRandomPoint(std::uint64_t hash, const ivec3& cell_coords) 
 	for (int i = 0; i < dimension_; ++i)
 	{
 		h = hash::SplitMix64(h);
-		result[i] = cell_coords[i] + (h * inv_ui64_t_max);
+		
+		// [0, 2^53) -> [0, 1)
+		// Discard the lower 11 bits, then multiply with (1 / 2^53).
+		const double u = (h >> 11) * (1.0 / (1ULL << 53));
+		result[i] = cell_coords[i] + u;
 	}
 
 	return result;
