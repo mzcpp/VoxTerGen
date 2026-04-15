@@ -7,6 +7,8 @@ PACK vertex into uint32
 		add a bit information into the packed uint32 top_covered = 1/0;
 
 glMultiDrawElementsIndirect rendering!
+rethink hashing for noise
+transparent water
 Vertex pulling?, binary greedy meshing?, chunk object pooling?
 add cubemap, texture2d function!
 make class MeshBuilder a namespace

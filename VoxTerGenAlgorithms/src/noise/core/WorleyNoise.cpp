@@ -9,6 +9,7 @@
 #include <array>
 #include <cassert>
 #include <algorithm>
+#include <numbers>
 
 namespace hash_constants
 {
@@ -57,7 +58,9 @@ double WorleyNoise::Noise(double x) const
 		return closest_hash;
 	}
 
-	return GetResult(min_distances);
+	const double normalized_distance = NormalizeDistance(GetResult(min_distances));
+
+	return std::clamp(normalized_distance, 0.0, 1.0);
 }
 
 double WorleyNoise::Noise(double x, double y) const
@@ -82,7 +85,9 @@ double WorleyNoise::Noise(double x, double y) const
 		return closest_hash;
 	}
 	
-	return GetResult(min_distances);
+	const double normalized_distance = NormalizeDistance(GetResult(min_distances));
+
+	return std::clamp(normalized_distance, 0.0, 1.0);
 }
 
 double WorleyNoise::Noise(double x, double y, double z) const
@@ -111,7 +116,9 @@ double WorleyNoise::Noise(double x, double y, double z) const
 		return closest_hash;
 	}
 
-	return GetResult(min_distances);
+	const double normalized_distance = NormalizeDistance(GetResult(min_distances));
+
+	return std::clamp(normalized_distance, 0.0, 1.0);
 }
 
 std::uint64_t WorleyNoise::HashCell(const ivec3& coords) const noexcept
@@ -125,6 +132,11 @@ std::uint64_t WorleyNoise::HashCell(const ivec3& coords) const noexcept
 	}
 
 	return cell_hash;
+}
+
+std::uint64_t WorleyNoise::HashCellFast(const ivec3& coords) const noexcept
+{
+	return 0;
 }
 
 dvec3 WorleyNoise::GetRandomPoint(std::uint64_t hash, const ivec3& cell_coords) const noexcept
@@ -181,6 +193,29 @@ double WorleyNoise::GetDistance(const dvec3& p1, const dvec3& p2) const noexcept
 		}
 
 		return std::pow(result, 1.0 / minkowski_p_);
+	}
+
+	assert(false);
+	return 0.0;
+}
+
+double WorleyNoise::NormalizeDistance(double distance) const noexcept
+{
+	if (dist_metric_ == DistanceMetric::EUCLIDEAN)
+	{
+		return dimension_ == 2 ? (distance / std::numbers::sqrt2) : (distance / std::numbers::sqrt3);
+	}
+	else if (dist_metric_ == DistanceMetric::EUCLIDEAN_SQ || dist_metric_ == DistanceMetric::MANHATTAN)
+	{
+		return distance / static_cast<double>(dimension_);
+	}
+	else if (dist_metric_ == DistanceMetric::CHEBYSHEV)
+	{
+		return distance;
+	}
+	else if (dist_metric_ == DistanceMetric::MINKOWSKI)
+	{
+		return (distance / (std::pow(dimension_ , 1.0 / minkowski_p_)));
 	}
 
 	assert(false);
