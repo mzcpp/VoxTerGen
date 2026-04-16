@@ -43,12 +43,12 @@ WorleyNoise::WorleyNoise(std::uint64_t seed, DistanceMetric dist_metric, Distanc
 double WorleyNoise::Noise(double x) const
 {
 	const dvec3 current_cell_coords = { x, 0.0, 0.0 };
-	const int xi = static_cast<int>(std::floor(x));
+	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
 
 	dvec3 min_distances = { std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() };
 	double closest_hash = 0.0;
 
-	for (int xo = xi - 1; xo <= xi + 1; ++xo)
+	for (std::int64_t xo = xi - 1; xo <= xi + 1; ++xo)
 	{
 		CalculateMinDistances(current_cell_coords, { xo, 0, 0 }, min_distances, closest_hash);
 	}
@@ -58,23 +58,21 @@ double WorleyNoise::Noise(double x) const
 		return closest_hash;
 	}
 
-	const double normalized_distance = NormalizeDistance(GetResult(min_distances));
-
-	return std::clamp(normalized_distance, 0.0, 1.0);
+	return GetResult(min_distances);
 }
 
 double WorleyNoise::Noise(double x, double y) const
 {
 	const dvec3 current_cell_coords = { x, y, 0.0 };
-	const int xi = static_cast<int>(std::floor(x));
-	const int yi = static_cast<int>(std::floor(y));
+	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
+	const std::int64_t yi = static_cast<std::int64_t>(std::floor(y));
 
 	dvec3 min_distances = { std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() };
 	double closest_hash = 0.0;
 
-	for (int yo = yi - 1; yo <= yi + 1; ++yo)
+	for (std::int64_t yo = yi - 1; yo <= yi + 1; ++yo)
 	{
-		for (int xo = xi - 1; xo <= xi + 1; ++xo)
+		for (std::int64_t xo = xi - 1; xo <= xi + 1; ++xo)
 		{
 			CalculateMinDistances(current_cell_coords, { xo, yo, 0 }, min_distances, closest_hash);
 		}
@@ -85,26 +83,24 @@ double WorleyNoise::Noise(double x, double y) const
 		return closest_hash;
 	}
 	
-	const double normalized_distance = NormalizeDistance(GetResult(min_distances));
-
-	return std::clamp(normalized_distance, 0.0, 1.0);
+	return GetResult(min_distances);
 }
 
 double WorleyNoise::Noise(double x, double y, double z) const
 {
 	const dvec3 current_cell_coords = { x, y, z };
-	const int xi = static_cast<int>(std::floor(x));
-	const int yi = static_cast<int>(std::floor(y));
-	const int zi = static_cast<int>(std::floor(z));
+	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
+	const std::int64_t yi = static_cast<std::int64_t>(std::floor(y));
+	const std::int64_t zi = static_cast<std::int64_t>(std::floor(z));
 	
 	dvec3 min_distances = { std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() };
 	double closest_hash = 0.0;
 
-	for (int yo = yi - 1; yo <= yi + 1; ++yo)
+	for (std::int64_t yo = yi - 1; yo <= yi + 1; ++yo)
 	{
-		for (int zo = zi - 1; zo <= zi + 1; ++zo)
+		for (std::int64_t zo = zi - 1; zo <= zi + 1; ++zo)
 		{
-			for (int xo = xi - 1; xo <= xi + 1; ++xo)
+			for (std::int64_t xo = xi - 1; xo <= xi + 1; ++xo)
 			{
 				CalculateMinDistances(current_cell_coords, { xo, yo, zo }, min_distances, closest_hash);
 			}
@@ -116,9 +112,7 @@ double WorleyNoise::Noise(double x, double y, double z) const
 		return closest_hash;
 	}
 
-	const double normalized_distance = NormalizeDistance(GetResult(min_distances));
-
-	return std::clamp(normalized_distance, 0.0, 1.0);
+	return GetResult(min_distances);
 }
 
 std::uint64_t WorleyNoise::HashCell(const ivec3& coords) const noexcept
@@ -133,11 +127,6 @@ std::uint64_t WorleyNoise::HashCell(const ivec3& coords) const noexcept
 	}
 
 	return hash::SplitMix64(cell_hash);
-}
-
-std::uint64_t WorleyNoise::HashCellFast(const ivec3& coords) const noexcept
-{
-	return 0;
 }
 
 dvec3 WorleyNoise::GetRandomPoint(std::uint64_t hash, const ivec3& cell_coords) const noexcept
@@ -204,7 +193,7 @@ double WorleyNoise::GetDistance(const dvec3& p1, const dvec3& p2) const noexcept
 	return 0.0;
 }
 
-double WorleyNoise::NormalizeDistance(double distance) const noexcept
+double WorleyNoise::NormalizeF1(double distance) const noexcept
 {
 	if (dist_metric_ == DistanceMetric::EUCLIDEAN)
 	{
@@ -232,7 +221,7 @@ double WorleyNoise::GetResult(const dvec3& distances) const noexcept
 	const double f1 = distances[0];
 	const double f2 = distances[1];
 	const double f3 = distances[2];
-	
+
 	switch (dist_result_type_)
 	{
 	case DistanceResultType::F1:
@@ -258,6 +247,8 @@ double WorleyNoise::GetResult(const dvec3& distances) const noexcept
 		assert(false && "Invalid DistanceResultType!");
 		return 0.0;
 	}
+
+	return 0.0;
 }
 
 int WorleyNoise::GetFeaturePointsNumber(std::uint64_t cell_hash) const noexcept

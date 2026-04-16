@@ -58,17 +58,16 @@ public:
 
 	// Getters
 	std::uint64_t Seed() const noexcept { return seed_; }
+	
+	double NormalizeF1(double distance) const noexcept;
 
 private:
 	std::uint64_t HashCell(const ivec3& coords) const noexcept;
-
-	std::uint64_t HashCellFast(const ivec3& coords) const noexcept;
 
 	dvec3 GetRandomPoint(std::uint64_t hash, const ivec3& cell_coords) const noexcept;
 
 	double GetDistance(const dvec3& p1, const dvec3& p2) const noexcept;
 
-	double NormalizeDistance(double distance) const noexcept;
 
 	double GetResult(const dvec3& distances) const noexcept;
 
