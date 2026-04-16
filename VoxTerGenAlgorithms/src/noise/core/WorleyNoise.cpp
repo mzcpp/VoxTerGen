@@ -129,6 +129,13 @@ std::uint64_t WorleyNoise::HashCell(const ivec3& coords) const noexcept
 	return hash::SplitMix64(cell_hash);
 }
 
+std::uint64_t HashCellFast(const ivec3& coords) const noexcept
+{
+	std::uint64_t cell_hash = seed_;
+	
+	return cell_hash;
+}
+
 dvec3 WorleyNoise::GetRandomPoint(std::uint64_t hash, const ivec3& cell_coords) const noexcept
 {
 	dvec3 result = { 0.0, 0.0, 0.0 };
@@ -143,6 +150,13 @@ dvec3 WorleyNoise::GetRandomPoint(std::uint64_t hash, const ivec3& cell_coords) 
 		const double u = (h >> 11) * (1.0 / (1ULL << 53));
 		result[i] = cell_coords[i] + u;
 	}
+
+	return result;
+}
+
+dvec3 WorleyNoise::GetRandomPointFast(std::uint64_t hash, const ivec3& cell_coords) const noexcept
+{
+	dvec3 result = { 0.0, 0.0, 0.0 };
 
 	return result;
 }
