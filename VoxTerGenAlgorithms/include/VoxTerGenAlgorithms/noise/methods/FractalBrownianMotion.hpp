@@ -2,6 +2,7 @@
 #define FRACTAL_BROWNIAN_MOTION_HPP
 
 #include <concepts>
+#include <cstdint>
 
 template <typename Noise>
 concept NoiseType = requires(Noise noise, double x, double y, double z)
@@ -16,10 +17,26 @@ class FractalBrownianMotion
 {
 private:
     Noise noise_;
+
 public:
     FractalBrownianMotion(Noise noise) : noise_(noise)
     {
 
+    }
+
+    double GenerateFractal(double x) const noexcept
+    {
+        return 0.0;
+    }
+
+    double GenerateFractal(double x, double y) const noexcept
+    {
+        return 0.0;
+    }
+
+    double GenerateFractal(double x, double y, double z) const noexcept
+    {
+        return 0.0;
     }
 
 };

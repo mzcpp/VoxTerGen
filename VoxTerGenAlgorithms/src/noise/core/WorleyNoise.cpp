@@ -129,7 +129,7 @@ std::uint64_t WorleyNoise::HashCell(const ivec3& coords) const noexcept
 	return hash::SplitMix64(cell_hash);
 }
 
-std::uint64_t HashCellFast(const ivec3& coords) const noexcept
+std::uint64_t WorleyNoise::HashCellFast(const ivec3& coords) const noexcept
 {
 	std::uint64_t cell_hash = seed_;
 	

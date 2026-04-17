@@ -7,12 +7,11 @@
 #include <cmath>
 #include <cassert>
 
-
 PerlinNoise::PerlinNoise(std::uint64_t seed) : seed_(seed)
 {
 }
 
-double PerlinNoise::Noise(double x) const
+double PerlinNoise::Noise(double x) const noexcept
 {
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
 	const double xd = x - xi;
@@ -25,7 +24,7 @@ double PerlinNoise::Noise(double x) const
 	return Lerp(DotGrad(a, xd), DotGrad(b, xd - 1.0), u);
 }
 
-double PerlinNoise::Noise(double x, double y) const
+double PerlinNoise::Noise(double x, double y) const noexcept
 {
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
 	const std::int64_t yi = static_cast<std::int64_t>(std::floor(y));
@@ -47,7 +46,7 @@ double PerlinNoise::Noise(double x, double y) const
 	return Lerp(x1, x2, v);
 }
 
-double PerlinNoise::Noise(double x, double y, double z) const
+double PerlinNoise::Noise(double x, double y, double z) const noexcept
 {
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
 	const std::int64_t yi = static_cast<std::int64_t>(std::floor(y));
@@ -81,7 +80,7 @@ double PerlinNoise::Noise(double x, double y, double z) const
 	return Lerp(y1, y2, w);
 }
 
-std::uint64_t PerlinNoise::Hash(std::int64_t x) const
+std::uint64_t PerlinNoise::Hash(std::int64_t x) const noexcept
 {
 	std::uint64_t h = seed_;
 
@@ -90,7 +89,7 @@ std::uint64_t PerlinNoise::Hash(std::int64_t x) const
 	return h;
 }
 
-std::uint64_t PerlinNoise::Hash(std::int64_t x, std::int64_t y) const
+std::uint64_t PerlinNoise::Hash(std::int64_t x, std::int64_t y) const noexcept
 {
 	std::uint64_t h = seed_;
 
@@ -100,7 +99,7 @@ std::uint64_t PerlinNoise::Hash(std::int64_t x, std::int64_t y) const
 	return h;
 }
 
-std::uint64_t PerlinNoise::Hash(std::int64_t x, std::int64_t y, std::int64_t z) const
+std::uint64_t PerlinNoise::Hash(std::int64_t x, std::int64_t y, std::int64_t z) const noexcept
 {
 	std::uint64_t h = seed_;
 
@@ -111,22 +110,22 @@ std::uint64_t PerlinNoise::Hash(std::int64_t x, std::int64_t y, std::int64_t z) 
 	return h;
 }
 
-double PerlinNoise::Fade(double t) const
+double PerlinNoise::Fade(double t) const noexcept
 {
 	return t * t * t * (t * (t * 6 - 15) + 10);
 }
 
-double PerlinNoise::Lerp(double a, double b, double n) const
+double PerlinNoise::Lerp(double a, double b, double t) const noexcept
 {
-	return a + n * (b - a);
+	return a + t * (b - a);
 }
 
-double PerlinNoise::DotGrad(std::uint64_t hash, double x) const
+double PerlinNoise::DotGrad(std::uint64_t hash, double x) const noexcept
 {
 	return (hash & 1) ? x : -x;
 }
 
-double PerlinNoise::DotGrad(std::uint64_t hash, double x, double y) const
+double PerlinNoise::DotGrad(std::uint64_t hash, double x, double y) const noexcept
 {
 	switch (hash & 0x7)
 	{
@@ -150,9 +149,12 @@ double PerlinNoise::DotGrad(std::uint64_t hash, double x, double y) const
 		assert(false);
 		return 0.0;
 	}
+
+	assert(false);
+	return 0.0;
 }
 
-double PerlinNoise::DotGrad(std::uint64_t hash, double x, double y, double z) const
+double PerlinNoise::DotGrad(std::uint64_t hash, double x, double y, double z) const noexcept
 {
 	switch (hash & 0xF)
 	{
@@ -192,4 +194,7 @@ double PerlinNoise::DotGrad(std::uint64_t hash, double x, double y, double z) co
 		assert(false);
 		return 0.0;
 	}
+
+	assert(false);
+	return 0.0;
 }
