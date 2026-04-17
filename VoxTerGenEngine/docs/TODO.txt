@@ -16,7 +16,7 @@ make class MeshBuilder a namespace
 interpolated_view!
 review the camera class thoroughly
 verify the camera is working correctly for big floats
-
+TODO comments in codebase
 SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix
 
 opengl/glad correct version check when init, initialization of subsystems review
