@@ -27,9 +27,6 @@
     <ClCompile Include="src\noise\core\WorleyNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\noise\methods\FractalBrownianMotion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="internal\framework.h">
@@ -53,7 +50,7 @@
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Hash.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\FractalBrownianMotion.hpp">
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\Fractal.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Rng.hpp">

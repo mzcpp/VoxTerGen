@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\noise\methods\FractalBrownianMotion.cpp" />
     <ClCompile Include="src\noise\core\OpenSimplex2SNoise.cpp" />
     <ClCompile Include="src\noise\core\PerlinNoise.cpp" />
     <ClCompile Include="src\noise\core\WorleyNoise.cpp" />
@@ -31,7 +30,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\FractalBrownianMotion.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\Fractal.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2SNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\PerlinNoise.hpp" />
