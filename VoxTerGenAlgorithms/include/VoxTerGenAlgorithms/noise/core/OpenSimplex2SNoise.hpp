@@ -1,7 +1,13 @@
-#ifndef OPEN_SIMPLEX_2S_NOISE_HPP
-#define OPEN_SIMPLEX_2S_NOISE_HPP
+#ifndef OPEN_SIMPLEX_2_NOISE_HPP
+#define OPEN_SIMPLEX_2_NOISE_HPP
 
 #include <cstdint>
+
+enum class OpenSimplex2Variant
+{
+	Fast, 
+	Smooth
+}
 
 class OpenSimplex2SNoise
 {
@@ -21,7 +27,12 @@ public:
 	std::uint64_t Seed() const noexcept { return seed_; }
 
 private:
+	// void SkewCoordinates(double& x);
+
+	// void SkewCoordinates(double& x, double& y);
+
+	// void SkewCoordinates(double& x, double& y, double& z);
 };
 
-#endif // OPEN_SIMPLEX_2S_NOISE_HPP
+#endif // OPEN_SIMPLEX_2_NOISE_HPP
 

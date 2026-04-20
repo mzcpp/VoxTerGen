@@ -90,6 +90,11 @@ namespace accumulation
             weight_ = std::clamp(signal * ridge_gain_, 0.0, 1.0);
             return result_sum + signal * amplitude;
         }
+
+        void Reset() 
+        {  
+            weight_ = 1.0;
+        }
     };
 } // namespace accumulation
 
@@ -126,7 +131,7 @@ public:
     template<std::floating_point... Args>
     double GenerateFractal(Args... xyz) const noexcept
     {
-        auto accumulate = accumulator_;
+        accumulator_.Reset();
 
         double frequency = 1.0;
         double amplitude = 1.0;
@@ -135,14 +140,13 @@ public:
 
         for (int octave = 0; octave < octaves_; ++octave)
         {
-            
             double signal = std::apply([&](auto... coord) { 
                 return noise_.Noise((coord * frequency)...);
             }, warped_coords);
 
             signal = signal_transform_(signal);
 
-            result_noise = accumulate(result_noise, signal, amplitude);
+            result_noise = accumulator_(result_noise, signal, amplitude);
 
             frequency *= lacunarity_;
             amplitude *= amplitude_decay_;
