@@ -5,17 +5,17 @@
 
 enum class OpenSimplex2Variant
 {
-	Fast, 
+	Fast,
 	Smooth
-}
+};
 
-class OpenSimplex2SNoise
+class OpenSimplex2Noise
 {
 private:
 	std::uint64_t seed_;
 
 public:
-	OpenSimplex2SNoise(std::uint64_t seed);
+	OpenSimplex2Noise(std::uint64_t seed);
 
 	double Noise(double x) const;
 

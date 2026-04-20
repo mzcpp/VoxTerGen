@@ -21,7 +21,7 @@
     <ClCompile Include="src\noise\core\PerlinNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\noise\core\OpenSimplex2SNoise.cpp">
+    <ClCompile Include="src\noise\core\OpenSimplex2Noise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\noise\core\WorleyNoise.cpp">
@@ -41,7 +41,7 @@
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\PerlinNoise.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2SNoise.hpp">
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2Noise.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\WorleyNoise.hpp">
