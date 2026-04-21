@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <numbers>
 #include <array>
+#include <cmath>
 
 /**
  * @note Parts of this source code were adapted from Stefan Gustavson's paper on Ken Perlin's Simplex Noise. 
@@ -24,7 +25,7 @@ double OpenSimplex2Noise::Noise(double x, double y) const noexcept
 	// Skew coordinates to determine the simplex we're in.
 	const double F2 = 0.5 * (std::numbers::sqrt3 - 1.0);
 	const double s = (x + y) * F2;
-	const ivec2 simplex_coords = { std::floor(x + s), std::floor(y + s) };
+	const ivec2 simplex_coords = { static_cast<int>(std::floor(x + s)), static_cast<int>(std::floor(y + s)) };
 
 	// Unskew the cell origin back to axis-aligned space to determine distance from origin.
 	const double G2 = (3.0 - std::numbers::sqrt3) / 6.0;
@@ -51,7 +52,7 @@ double OpenSimplex2Noise::Noise(double x, double y, double z) const noexcept
 	// Skew coordinates to determine the simplex we're in.
 	const double F3 = 1.0 / 3.0;
 	const double s = (x + y + z) * F3;
-	const ivec3 simplex_coords = { std::floor(x + s), std::floor(y + s), std::floor(z + s) };
+	const ivec3 simplex_coords = { static_cast<int>(std::floor(x + s)), static_cast<int>(std::floor(y + s)), static_cast<int>(std::floor(z + s)) };
 
 	// Unskew the cell origin back to axis-aligned space to determine distance from origin.
 	const double G3 = 1.0 / 6.0;
@@ -66,19 +67,19 @@ double OpenSimplex2Noise::Noise(double x, double y, double z) const noexcept
 	return (n0 + n1 + n2 + n3); // scale by something to normalize?
 }
 
-void OpenSimplex2Noise::GetP2P3Offsets(const dvec3& p1, dvec3& p2_offsets, dvec3& p3_offsets) const noexcept
+void OpenSimplex2Noise::GetP2P3Offsets(const dvec3& p1, ivec3& p2_offsets, ivec3& p3_offsets) const noexcept
 {
 	const double& x0 = p1[0];
 	const double& y0 = p1[1];
 	const double& z0 = p1[2];
 
-	const double& i1 = p2_offsets[0];
-	const double& j1 = p2_offsets[1];
-	const double& k1 = p2_offsets[2];
+	int& i1 = p2_offsets[0];
+	int& j1 = p2_offsets[1];
+	int& k1 = p2_offsets[2];
 
-	const double& i2 = p3_offsets[0];
-	const double& j2 = p3_offsets[1];
-	const double& k2 = p3_offsets[2];
+	int& i2 = p3_offsets[0];
+	int& j2 = p3_offsets[1];
+	int& k2 = p3_offsets[2];
 
 	if (x0 >= y0) 
 	{

@@ -31,7 +31,7 @@ public:
 	std::uint64_t Seed() const noexcept { return seed_; }
 
 private:
-	void GetP2P3Offsets(const dvec3& p1, dvec3& p2_offsets, dvec3& p3_offsets) const noexcept;
+	void GetP2P3Offsets(const dvec3& p1, ivec3& p2_offsets, ivec3& p3_offsets) const noexcept;
 };
 
 #endif // OPEN_SIMPLEX_2_NOISE_HPP
