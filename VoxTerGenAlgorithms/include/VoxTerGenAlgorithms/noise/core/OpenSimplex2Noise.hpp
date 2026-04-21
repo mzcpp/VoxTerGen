@@ -27,11 +27,11 @@ public:
 	std::uint64_t Seed() const noexcept { return seed_; }
 
 private:
-	// void SkewCoordinates(double& x);
+	 void SkewCoordinates(double& x) const noexcept;
 
-	// void SkewCoordinates(double& x, double& y);
+	 void SkewCoordinates(double& x, double& y) const noexcept;
 
-	// void SkewCoordinates(double& x, double& y, double& z);
+	 void SkewCoordinates(double& x, double& y, double& z) const noexcept;
 };
 
 #endif // OPEN_SIMPLEX_2_NOISE_HPP
