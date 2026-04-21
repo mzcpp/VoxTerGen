@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\noise\core\OpenSimplex2Noise.cpp" />
     <ClCompile Include="src\noise\core\PerlinNoise.cpp" />
+    <ClCompile Include="src\noise\core\SimplexNoise.cpp" />
     <ClCompile Include="src\noise\core\WorleyNoise.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -30,6 +31,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\SimplexNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\Fractal.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2Noise.hpp" />

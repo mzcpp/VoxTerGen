@@ -27,6 +27,9 @@
     <ClCompile Include="src\noise\core\WorleyNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\noise\core\SimplexNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="internal\framework.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Rng.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\SimplexNoise.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
