@@ -9,7 +9,7 @@
 
 /**
  * @note Parts of this source code were adapted from Stefan Gustavson's paper on Ken Perlin's Simplex Noise.
- * 		 Source: https://www.researchgate.net/publication/216813608_Simplex_noise_demystified
+ * Sources: https://www.researchgate.net/publication/216813608_Simplex_noise_demystified
  */
 
 SimplexNoise::SimplexNoise(std::uint64_t seed) : seed_(seed)

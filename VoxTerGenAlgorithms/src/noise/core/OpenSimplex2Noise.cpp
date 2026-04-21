@@ -7,6 +7,12 @@
 #include <array>
 #include <cmath>
 
+/**
+ * @note This source code was adapted from Kurt Spencer's and Jordan Peck's repositories.
+ * Sources: https://github.com/KdotJPG/OpenSimplex2
+ *			https://github.com/Auburn/FastNoiseLite
+ */
+
 OpenSimplex2Noise::OpenSimplex2Noise(std::uint64_t seed) : seed_(seed)
 {
 }
