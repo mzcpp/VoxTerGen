@@ -7,6 +7,11 @@
 #include <cmath>
 #include <cassert>
 
+/**
+ * @note Parts of this source code were adapted from Ken Perlin's original implementation available at: https://cs.nyu.edu/~perlin/noise/
+ * 		 DotGrad functions were taken from: http://riven8192.blogspot.com/2010/08/calculate-perlinnoise-twice-as-fast.html
+ */
+
 PerlinNoise::PerlinNoise(std::uint64_t seed) : seed_(seed)
 {
 }

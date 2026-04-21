@@ -5,10 +5,6 @@
 
 #include <cstdint>
 
-/**
- * @note Portion was based on Ken Perlin's original implementation available at: https://cs.nyu.edu/~perlin/noise/
- *		 DotGrad functions were taken from: http://riven8192.blogspot.com/2010/08/calculate-perlinnoise-twice-as-fast.html
- */
 class PerlinNoise
 {
 private:
