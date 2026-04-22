@@ -26,3 +26,9 @@ double OpenSimplex2Noise::Noise(double x, double y, double z) const noexcept
 {
 	return 0.0;
 }
+
+double OpenSimplex2Noise::Noise(double x, double y, double z, double w) const noexcept
+{
+	// TODO
+	return 0.0;
+}

@@ -115,6 +115,12 @@ double WorleyNoise::Noise(double x, double y, double z) const
 	return GetResult(min_distances);
 }
 
+double WorleyNoise::Noise(double x, double y, double z, double w) const noexcept
+{
+	// TODO
+	return 0.0;
+}
+
 std::uint64_t WorleyNoise::HashCell(const ivec3& coords) const noexcept
 {
 	std::uint64_t cell_hash = seed_;

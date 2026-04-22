@@ -19,8 +19,13 @@ public:
 
 	double Noise(double x, double y, double z) const noexcept;
 
+	double Noise(double x, double y, double z, double w) const noexcept;
+
 	// Getters
 	std::uint64_t Seed() const noexcept { return seed_; }
+
+	// Setters
+	void SetSeed(std::uint64_t seed) noexcept { seed_ = seed; }
 
 private:
 	std::uint64_t Hash(std::int64_t x) const noexcept;

@@ -21,8 +21,8 @@ double PerlinNoise::Noise(double x) const noexcept
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
 	const double xd = x - xi;
 
-	const std::uint64_t a = Hash(xi);
-	const std::uint64_t b = Hash(xi + 1);
+	const std::uint64_t a = hash::HashCoords(seed_, xi);
+	const std::uint64_t b = hash::HashCoords(seed_, xi + 1);
 
 	const double u = Fade(xd);
 
@@ -37,10 +37,10 @@ double PerlinNoise::Noise(double x, double y) const noexcept
 	const double xd = x - xi;
 	const double yd = y - yi;
 
-	const std::uint64_t aa = Hash(xi, yi);
-	const std::uint64_t ab = Hash(xi, yi + 1);
-	const std::uint64_t ba = Hash(xi + 1, yi);
-	const std::uint64_t bb = Hash(xi + 1, yi + 1);
+	const std::uint64_t aa = hash::HashCoords(seed_, xi, yi);
+	const std::uint64_t ab = hash::HashCoords(seed_, xi, yi + 1);
+	const std::uint64_t ba = hash::HashCoords(seed_, xi + 1, yi);
+	const std::uint64_t bb = hash::HashCoords(seed_, xi + 1, yi + 1);
 
 	const double u = Fade(xd);
 	const double v = Fade(yd);
@@ -61,14 +61,14 @@ double PerlinNoise::Noise(double x, double y, double z) const noexcept
 	const double yd = y - yi;
 	const double zd = z - zi;
 
-	const std::uint64_t aaa = Hash(xi, yi, zi);
-	const std::uint64_t aab = Hash(xi, yi, zi + 1);
-	const std::uint64_t aba = Hash(xi, yi + 1, zi);
-	const std::uint64_t abb = Hash(xi, yi + 1, zi + 1);
-	const std::uint64_t baa = Hash(xi + 1, yi, zi);
-	const std::uint64_t bab = Hash(xi + 1, yi, zi + 1);
-	const std::uint64_t bba = Hash(xi + 1, yi + 1, zi);
-	const std::uint64_t bbb = Hash(xi + 1, yi + 1, zi + 1);
+	const std::uint64_t aaa = hash::HashCoords(seed_, xi, yi, zi);
+	const std::uint64_t aab = hash::HashCoords(seed_, xi, yi, zi + 1);
+	const std::uint64_t aba = hash::HashCoords(seed_, xi, yi + 1, zi);
+	const std::uint64_t abb = hash::HashCoords(seed_, xi, yi + 1, zi + 1);
+	const std::uint64_t baa = hash::HashCoords(seed_, xi + 1, yi, zi);
+	const std::uint64_t bab = hash::HashCoords(seed_, xi + 1, yi, zi + 1);
+	const std::uint64_t bba = hash::HashCoords(seed_, xi + 1, yi + 1, zi);
+	const std::uint64_t bbb = hash::HashCoords(seed_, xi + 1, yi + 1, zi + 1);
 
 	const double u = Fade(xd);
 	const double v = Fade(yd);
@@ -85,34 +85,10 @@ double PerlinNoise::Noise(double x, double y, double z) const noexcept
 	return Lerp(y1, y2, w);
 }
 
-std::uint64_t PerlinNoise::Hash(std::int64_t x) const noexcept
+double PerlinNoise::Noise(double x, double y, double z, double w) const noexcept
 {
-	std::uint64_t h = seed_;
-
-	h = hash::SplitMix64(h ^ static_cast<uint64_t>(x));
-
-	return h;
-}
-
-std::uint64_t PerlinNoise::Hash(std::int64_t x, std::int64_t y) const noexcept
-{
-	std::uint64_t h = seed_;
-
-	h = hash::SplitMix64(h ^ static_cast<uint64_t>(x));
-	h = hash::SplitMix64(h ^ static_cast<uint64_t>(y));
-
-	return h;
-}
-
-std::uint64_t PerlinNoise::Hash(std::int64_t x, std::int64_t y, std::int64_t z) const noexcept
-{
-	std::uint64_t h = seed_;
-
-	h = hash::SplitMix64(h ^ static_cast<uint64_t>(x));
-	h = hash::SplitMix64(h ^ static_cast<uint64_t>(y));
-	h = hash::SplitMix64(h ^ static_cast<uint64_t>(z));
-
-	return h;
+	// TODO
+	return 0.0;
 }
 
 double PerlinNoise::Fade(double t) const noexcept
