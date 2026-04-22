@@ -2,7 +2,7 @@
 
 #include "VoxTerGenAlgorithms/noise/core/SimplexNoise.hpp"
 #include "VoxTerGenAlgorithms/utils/Hash.hpp"
-//#include "VoxTerGenAlgorithms/utils/Math.hpp"
+#include "VoxTerGenAlgorithms/utils/Math.hpp"
 
 #include <cstdint>
 #include <numbers>
@@ -59,7 +59,7 @@ double SimplexNoise::Noise(double x, double y) const noexcept
 		(t2 < 0) ? 0.0 : t2 * t2 * t2 * t2 * math::DotGrad(p2_hash, p2[0], p2[1])
 	};
 
-	return std::accumulate(corner_contributions.begin, corner_contributions.end(), 0.0); // normalize
+	return std::accumulate(corner_contributions.begin(), corner_contributions.end(), 0.0); // normalize
 }
 
 double SimplexNoise::Noise(double x, double y, double z) const noexcept
@@ -78,9 +78,9 @@ double SimplexNoise::Noise(double x, double y, double z) const noexcept
 	ivec3 p2_offsets = { 0, 0, 0 };
 	GetP2P3Offsets(p0, p1_offsets, p2_offsets);
 
-	const dvec2 p1 = { p0[0] - p1_offsets[0] + G3, p0[1] - p1_offsets[1] + G3, p0[2] - p1_offsets[2] + G3 };
-	const dvec2 p2 = { p0[0] - p2_offsets[0] + G3, p0[1] - p2_offsets[1] + G3, p0[2] - p2_offsets[2] + G3 };;
-	const dvec2 p3 = { p0[0] - 1.0 + (3.0 * G3), p0[1] - 1.0 + (3.0 * G3), p0[2] - 1.0 + (3.0 * G3) };
+	const dvec3 p1 = { p0[0] - p1_offsets[0] + G3, p0[1] - p1_offsets[1] + G3, p0[2] - p1_offsets[2] + G3 };
+	const dvec3 p2 = { p0[0] - p2_offsets[0] + G3, p0[1] - p2_offsets[1] + G3, p0[2] - p2_offsets[2] + G3 };;
+	const dvec3 p3 = { p0[0] - 1.0 + (3.0 * G3), p0[1] - 1.0 + (3.0 * G3), p0[2] - 1.0 + (3.0 * G3) };
 
 	const std::uint64_t p0_hash = hash::HashCoords(seed_, simplex_coords[0], simplex_coords[1], simplex_coords[2]);
 	const std::uint64_t p1_hash = hash::HashCoords(seed_, simplex_coords[0] + p1_offsets[0], simplex_coords[1] + p1_offsets[1], simplex_coords[2] + p1_offsets[2]);
@@ -100,7 +100,7 @@ double SimplexNoise::Noise(double x, double y, double z) const noexcept
 		(t3 < 0) ? 0.0 : t3 * t3 * t3 * t3 * math::DotGrad(p3_hash, p3[0], p3[1], p3[2]) 
 	};
 
-	return std::accumulate(corner_contributions.begin, corner_contributions.end(), 0.0); // normalize
+	return std::accumulate(corner_contributions.begin(), corner_contributions.end(), 0.0); // normalize
 }
 
 double SimplexNoise::Noise(double x, double y, double z, double w) const noexcept

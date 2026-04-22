@@ -40,7 +40,7 @@ WorleyNoise::WorleyNoise(std::uint64_t seed, DistanceMetric dist_metric, Distanc
 {
 }
 
-double WorleyNoise::Noise(double x) const
+double WorleyNoise::Noise(double x) const noexcept
 {
 	const dvec3 current_cell_coords = { x, 0.0, 0.0 };
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
@@ -61,7 +61,7 @@ double WorleyNoise::Noise(double x) const
 	return GetResult(min_distances);
 }
 
-double WorleyNoise::Noise(double x, double y) const
+double WorleyNoise::Noise(double x, double y) const noexcept
 {
 	const dvec3 current_cell_coords = { x, y, 0.0 };
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
@@ -86,7 +86,7 @@ double WorleyNoise::Noise(double x, double y) const
 	return GetResult(min_distances);
 }
 
-double WorleyNoise::Noise(double x, double y, double z) const
+double WorleyNoise::Noise(double x, double y, double z) const noexcept
 {
 	const dvec3 current_cell_coords = { x, y, z };
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));

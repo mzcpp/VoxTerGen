@@ -37,6 +37,7 @@
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2Noise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\PerlinNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\WorleyNoise.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Math.hpp" />
     <ClInclude Include="internal\framework.h" />
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Hash.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Rng.hpp" />
