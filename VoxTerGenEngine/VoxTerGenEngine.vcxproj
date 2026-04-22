@@ -202,6 +202,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\world\Block.cpp" />
     <ClCompile Include="src\world\Chunk.cpp" />
     <ClCompile Include="src\world\ChunkManager.cpp" />
+    <ClCompile Include="src\world\Observer.cpp" />
     <ClCompile Include="src\world\World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -576,6 +577,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\world\Block.hpp" />
     <ClInclude Include="include\world\Chunk.hpp" />
     <ClInclude Include="include\world\ChunkManager.hpp" />
+    <ClInclude Include="include\world\Observer.hpp" />
     <ClInclude Include="include\world\World.hpp" />
   </ItemGroup>
   <ItemGroup>

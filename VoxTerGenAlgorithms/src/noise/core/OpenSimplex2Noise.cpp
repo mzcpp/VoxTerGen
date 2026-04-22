@@ -8,7 +8,7 @@
 #include <cmath>
 
 /**
- * @note This source code was adapted from Kurt Spencer's and Jordan Peck's repositories.
+ * @note This source code was adapted from Kurt Spencer's and Jordan Peck's implementations.
  * Sources: https://github.com/KdotJPG/OpenSimplex2
  *			https://github.com/Auburn/FastNoiseLite
  */
