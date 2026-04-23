@@ -11,6 +11,11 @@
 #include <algorithm>
 #include <numbers>
 
+/**
+ * @note Original author of the algorithm is Steven Worley. This source code was adapted from The Book of Shaders' implementation.
+ * Sources: https://thebookofshaders.com/12/
+ */
+
 namespace hash_constants
 {
 	constexpr std::uint64_t A = 0x9E3779B97F4A7C15ULL;
