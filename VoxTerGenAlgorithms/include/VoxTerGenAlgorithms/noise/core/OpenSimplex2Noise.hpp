@@ -12,7 +12,6 @@ enum class OpenSimplex2Variant
 
 enum class Noise2DModifier
 {
-	Default = ImproveXY, 
 	ImproveXY, 
 	ImproveX, 
 	Fallback
@@ -20,7 +19,6 @@ enum class Noise2DModifier
 
 enum class Noise3DModifier
 {
-	Default = ImproveXZ, 
 	ImproveXY, 
 	ImproveXZ, 
 	Fallback
@@ -28,7 +26,6 @@ enum class Noise3DModifier
 
 enum class Noise4DModifier
 {
-	Default = ImproveXYZ, 
 	ImproveXYZ, 
 	ImproveXY, 
 	ImproveXZ, 
@@ -57,9 +54,9 @@ public:
 	OpenSimplex2Noise(
 		std::uint64_t seed, 
 		OpenSimplex2Variant variant, 
-		Noise2DModifier noise_2d_modifier = Noise2DModifier::Default, 
-		Noise3DModifier noise_3d_modifier = Noise3DModifier::Default, 
-		Noise4DModifier noise_4d_modifier = Noise4DModifier::Default);
+		Noise2DModifier noise_2d_modifier = Noise2DModifier::ImproveXY,
+		Noise3DModifier noise_3d_modifier = Noise3DModifier::ImproveXZ,
+		Noise4DModifier noise_4d_modifier = Noise4DModifier::ImproveXYZ);
 
 	double Noise(double x, double y) const noexcept;
 
@@ -70,9 +67,9 @@ public:
 	// Getters
 	std::uint64_t Seed() const noexcept { return seed_; }
 	OpenSimplex2Variant Variant() const noexcept { return variant_; }
-	Noise2DModifier Noise2DModifier() const noexcept { return noise_2d_modifier; }
-	Noise3DModifier Noise3DModifier() const noexcept { return noise_3d_modifier; }
-	Noise4DModifier Noise4DModifier() const noexcept { return noise_4d_modifier; }
+	Noise2DModifier GetNoise2DModifier() const noexcept { return noise_2d_modifier_; }
+	Noise3DModifier GetNoise3DModifier() const noexcept { return noise_3d_modifier_; }
+	Noise4DModifier GetNoise4DModifier() const noexcept { return noise_4d_modifier_; }
 
 	// Setters
 	void SetSeed(std::uint64_t seed) noexcept { seed_ = seed; }
@@ -82,11 +79,11 @@ public:
 	void SetNoise4DModifier(Noise4DModifier noise_4d_modifier) noexcept { noise_4d_modifier_ = noise_4d_modifier; }
 
 private:
-	void Improve(double& rx, double& ry) const noexcept;
+	void RotateCoords(double& rx, double& ry) const noexcept;
 
-	void Improve(double& rx, double& ry, double& rz) const noexcept;
+	void RotateCoords(double& rx, double& ry, double& rz) const noexcept;
 	
-	void Improve(double& rx, double& ry, double& rz, double& rw) const noexcept;
+	void RotateCoords(double& rx, double& ry, double& rz, double& rw) const noexcept;
 };
 
 #endif // OPEN_SIMPLEX_2_NOISE_HPP

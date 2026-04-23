@@ -13,6 +13,11 @@
  *			https://github.com/Auburn/FastNoiseLite
  */
 
+namespace
+{
+
+}
+
 OpenSimplex2Noise::OpenSimplex2Noise(
 	std::uint64_t seed, 
 	OpenSimplex2Variant variant, 
@@ -33,7 +38,16 @@ double OpenSimplex2Noise::Noise(double x, double y) const noexcept
 	double xr = 0.0;
 	double yr = 0.0;
 
-	Improve(xr, yr);
+	RotateCoords(xr, yr);
+
+	if (variant_ == OpenSimplex2Variant::Fast)
+	{
+
+	}
+	else
+	{
+
+	}
 
 	return 0.0;
 }
@@ -44,28 +58,46 @@ double OpenSimplex2Noise::Noise(double x, double y, double z) const noexcept
 	double yr = 0.0;
 	double zr = 0.0;
 
-	Improve(xr, yr, zr);
+	RotateCoords(xr, yr, zr);
+
+	if (variant_ == OpenSimplex2Variant::Fast)
+	{
+
+	}
+	else
+	{
+
+	}
 
 	return 0.0;
 }
 
 double OpenSimplex2Noise::Noise(double x, double y, double z, double w) const noexcept
 {
+	// TODO
+
 	double xr = 0.0;
 	double yr = 0.0;
 	double zr = 0.0;
 	double wr = 0.0;
 
-	Improve(xr, yr, zr, wr);
+	RotateCoords(xr, yr, zr, wr);
 
-	// TODO
+	if (variant_ == OpenSimplex2Variant::Fast)
+	{
+
+	}
+	else
+	{
+
+	}
 
 	return 0.0;
 }
 
-void OpenSimplex2Noise::Improve(double& rx, double& ry) const noexcept
+void OpenSimplex2Noise::RotateCoords(double& rx, double& ry) const noexcept
 {
-	if (noise_2d_modifier_ == Noise2DModifier::Default || noise_2d_modifier_ == Noise2DModifier::ImproveXY)
+	if (noise_2d_modifier_ == Noise2DModifier::ImproveXY)
 	{
 
 	}
@@ -79,9 +111,9 @@ void OpenSimplex2Noise::Improve(double& rx, double& ry) const noexcept
 	}
 }
 
-void OpenSimplex2Noise::Improve(double& rx, double& ry, double& rz) const noexcept
+void OpenSimplex2Noise::RotateCoords(double& rx, double& ry, double& rz) const noexcept
 {
-	if (noise_3d_modifier_ == Noise3DModifier::Default || noise_3d_modifier_ == Noise3DModifier::ImproveXZ)
+	if (noise_3d_modifier_ == Noise3DModifier::ImproveXZ)
 	{
 
 	}
@@ -95,9 +127,9 @@ void OpenSimplex2Noise::Improve(double& rx, double& ry, double& rz) const noexce
 	}
 }
 
-void OpenSimplex2Noise::Improve(double& rx, double& ry, double& rz, double& rw) const noexcept
+void OpenSimplex2Noise::RotateCoords(double& rx, double& ry, double& rz, double& rw) const noexcept
 {
-	if (noise_4d_modifier_ == Noise4DModifier::Default || noise_3d_modifier_ == Noise4DModifier::ImproveXYZ)
+	if (noise_4d_modifier_ == Noise4DModifier::ImproveXYZ)
 	{
 
 	}
