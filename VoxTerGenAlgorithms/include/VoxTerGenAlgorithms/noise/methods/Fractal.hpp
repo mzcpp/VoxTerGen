@@ -22,7 +22,7 @@ namespace domain_transform
         template<typename... Args>
         auto operator()(Args... coords) const
         {
-            return std::tuple(coords...);
+            return std::tuple<Args...>(coords...);
         }
     };
 
@@ -41,7 +41,7 @@ namespace domain_transform
         {
             // TODO: warp each axis separately
             const double offset_coords = warp_noise_.Noise(coords...) * strength_;
-            return std::tuple((coords + offset_coords)...);
+            return std::tuple<Args...>((coords + offset_coords)...);
         }
     };
 } // namespace domain_transform
@@ -73,6 +73,8 @@ namespace accumulation
         {
             return result_sum + signal * amplitude;
         }
+
+        void Reset() {}
     };
 
     struct RidgedFBM
@@ -121,15 +123,27 @@ private:
     double lacunarity_;
 
 public:
-    Fractal(const Noise& noise, const DomainTransform& domain, const SignalTransform& signal, const Accumulator& acc, 
-        int octaves, double amplitude_decay, double lacunarity) : 
-        noise_(noise), domain_transform_(domain), signal_transform_(signal), accumulator_(acc), 
-        octaves_(octaves), amplitude_decay_(amplitude_decay), lacunarity_(lacunarity)
+    Fractal(
+        const Noise& noise, 
+        const DomainTransform& domain, 
+        const SignalTransform& signal, 
+        const Accumulator& acc, 
+        int octaves, 
+        double amplitude_decay, 
+        double lacunarity) 
+        : 
+        noise_(noise), 
+        domain_transform_(domain), 
+        signal_transform_(signal), 
+        accumulator_(acc), 
+        octaves_(octaves), 
+        amplitude_decay_(amplitude_decay), 
+        lacunarity_(lacunarity)
     {
     }
 
     template<std::floating_point... Args>
-    double GenerateFractal(Args... xyz) const noexcept
+    double GenerateFractal(Args... xyz) noexcept
     {
         accumulator_.Reset();
 

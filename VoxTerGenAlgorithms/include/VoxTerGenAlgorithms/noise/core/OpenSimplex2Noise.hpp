@@ -12,25 +12,26 @@ enum class OpenSimplex2Variant
 
 enum class Noise2DModifier
 {
-	ImproveXY, 
+	Skew, 
+	Default = Skew,
 	ImproveX, 
-	Fallback
 };
 
 enum class Noise3DModifier
 {
 	ImproveXY, 
 	ImproveXZ, 
+	Default = ImproveXZ,
 	Fallback
 };
 
 enum class Noise4DModifier
 {
 	ImproveXYZ, 
-	ImproveXY, 
-	ImproveXZ, 
-	ImproveYZ, 
-	ImproveXYZW, 
+	Default = ImproveXYZ,
+	ImproveXYZ_ImproveXY, 
+	ImproveXYZ_ImproveXZ, 
+	ImproveXY_ImproveZW, 
 	Fallback
 };
 
@@ -54,9 +55,9 @@ public:
 	OpenSimplex2Noise(
 		std::uint64_t seed, 
 		OpenSimplex2Variant variant, 
-		Noise2DModifier noise_2d_modifier = Noise2DModifier::ImproveXY,
-		Noise3DModifier noise_3d_modifier = Noise3DModifier::ImproveXZ,
-		Noise4DModifier noise_4d_modifier = Noise4DModifier::ImproveXYZ);
+		Noise2DModifier noise_2d_modifier = Noise2DModifier::Default,
+		Noise3DModifier noise_3d_modifier = Noise3DModifier::Default,
+		Noise4DModifier noise_4d_modifier = Noise4DModifier::Default);
 
 	double Noise(double x, double y) const noexcept;
 
@@ -79,11 +80,11 @@ public:
 	void SetNoise4DModifier(Noise4DModifier noise_4d_modifier) noexcept { noise_4d_modifier_ = noise_4d_modifier; }
 
 private:
-	void RotateCoords(double& rx, double& ry) const noexcept;
+	void RotateCoords(double& xr, double& yr) const noexcept;
 
-	void RotateCoords(double& rx, double& ry, double& rz) const noexcept;
+	void RotateCoords(double& xr, double& yr, double& zr) const noexcept;
 	
-	void RotateCoords(double& rx, double& ry, double& rz, double& rw) const noexcept;
+	void RotateCoords(double& xr, double& yr, double& zr, double& wr) const noexcept;
 };
 
 #endif // OPEN_SIMPLEX_2_NOISE_HPP
