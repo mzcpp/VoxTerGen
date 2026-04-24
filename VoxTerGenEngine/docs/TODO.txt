@@ -20,6 +20,7 @@ TODO comments in codebase
 SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix
 
 opengl/glad correct version check when init, initialization of subsystems review
+better math::DotGrad?
 
 tick rate - 20/60?
 

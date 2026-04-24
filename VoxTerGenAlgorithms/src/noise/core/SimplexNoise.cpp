@@ -17,10 +17,10 @@
 
  namespace
  {
-	const double skew_2d_ = 0.366025403784439;
-	const double unskew_2d_ = -0.21132486540518713;
-	const double skew_4d_ = 0.309016994374947f;
-    const double unskew_4d_ = -0.138196601125011f;
+	constexpr double skew_2d = 0.366025403784439;
+	constexpr double unskew_2d = -0.21132486540518713;
+	constexpr double skew_4d = 0.309016994374947f;
+	constexpr double unskew_4d = -0.138196601125011f;
  }
 
 SimplexNoise::SimplexNoise(std::uint64_t seed) : seed_(seed)

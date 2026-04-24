@@ -6,6 +6,16 @@
 
 namespace math
 {
+	inline double Lerp(double a, double b, double t) noexcept
+	{
+		return a + t * (b - a);
+	}
+
+	inline double Fade(double t) noexcept
+	{
+		return t * t * t * (t * (t * 6 - 15) + 10);
+	}
+
 	inline double DotGrad(std::uint64_t hash, double x) noexcept
 	{
 		return (hash & 1) ? x : -x;

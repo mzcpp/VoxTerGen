@@ -15,7 +15,17 @@
 
 namespace
 {
+	constexpr double root2_over2 = 0.7071067811865476;
+	constexpr double skew_2d = 0.366025403784439;
+	constexpr double unskew_2d = -0.21132486540518713;
 
+	constexpr double root3_over3 = 0.577350269189626;
+	constexpr double fallback_rotate_2d = 2.0 / 3.0;
+	constexpr double rotate_3d_orthogonalizer = unskew_2d;
+
+	constexpr double skew_4d = -0.138196601125011;
+	constexpr double unskew_4d = 0.309016994374947;
+	constexpr double lattice_step_4d = 0.2;
 }
 
 OpenSimplex2Noise::OpenSimplex2Noise(
@@ -44,7 +54,7 @@ double OpenSimplex2Noise::Noise(double x, double y) const noexcept
 	{
 
 	}
-	else
+	else if (variant_ == OpenSimplex2Variant::Smooth)
 	{
 
 	}
@@ -64,7 +74,7 @@ double OpenSimplex2Noise::Noise(double x, double y, double z) const noexcept
 	{
 
 	}
-	else
+	else if (variant_ == OpenSimplex2Variant::Smooth)
 	{
 
 	}
@@ -87,7 +97,7 @@ double OpenSimplex2Noise::Noise(double x, double y, double z, double w) const no
 	{
 
 	}
-	else
+	else if (variant_ == OpenSimplex2Variant::Smooth)
 	{
 
 	}
