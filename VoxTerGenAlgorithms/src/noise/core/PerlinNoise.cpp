@@ -86,8 +86,7 @@ double PerlinNoise::Noise(double x, double y, double z) const noexcept
 	return math::Lerp(y1, y2, w);
 }
 
-double PerlinNoise::Noise(double x, double y, double z, double w) const noexcept
-{
-	// TODO
-	return 0.0;
-}
+//double PerlinNoise::Noise(double x, double y, double z, double w) const noexcept
+//{
+//	return 0.0;
+//}

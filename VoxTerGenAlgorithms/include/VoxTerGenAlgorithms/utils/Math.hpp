@@ -21,6 +21,12 @@ namespace math
 		return (hash & 1) ? x : -x;
 	}
 
+	inline double Pow4(double x) noexcept
+	{
+		double x2 = x * x;
+		return x2 * x2;
+	}
+
 	inline double DotGrad(std::uint64_t hash, double x, double y) noexcept
 	{
 		switch (hash & 0x7)
@@ -94,6 +100,12 @@ namespace math
 		assert(false);
 		return 0.0;
 	}
+
+	//inline double DotGrad(std::uint64_t hash, double x, double y, double z, double w) noexcept
+	//{
+	//	assert(false);
+	//	return 0.0;
+	//}
 }
 
 #endif

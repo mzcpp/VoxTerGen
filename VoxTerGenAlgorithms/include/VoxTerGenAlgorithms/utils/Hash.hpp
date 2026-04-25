@@ -2,6 +2,7 @@
 #define HASH_HPP
 
 #include <cstdint>
+#include <concepts>
 
 namespace hash
 {
@@ -17,36 +18,15 @@ namespace hash
         return z ^ (z >> 31);
     }
 
-    inline std::uint64_t HashCoords(std::uint64_t seed, std::int64_t x) noexcept
+    template<std::integral... Args>
+    inline std::uint64_t HashCoords(std::uint64_t seed, Args... xyzw) noexcept
     {
         std::uint64_t h = seed;
 
-        h = hash::SplitMix64(h ^ static_cast<uint64_t>(x));
+        ((h = hash::SplitMix64(h ^ static_cast<std::uint64_t>(xyzw))), ...);
 
         return h;
     }
-
-    inline std::uint64_t HashCoords(std::uint64_t seed, std::int64_t x, std::int64_t y) noexcept
-    {
-        std::uint64_t h = seed;
-
-        h = hash::SplitMix64(h ^ static_cast<uint64_t>(x));
-        h = hash::SplitMix64(h ^ static_cast<uint64_t>(y));
-
-        return h;
-    }
-
-    inline std::uint64_t HashCoords(std::uint64_t seed, std::int64_t x, std::int64_t y, std::int64_t z) noexcept
-    {
-        std::uint64_t h = seed;
-
-        h = hash::SplitMix64(h ^ static_cast<uint64_t>(x));
-        h = hash::SplitMix64(h ^ static_cast<uint64_t>(y));
-        h = hash::SplitMix64(h ^ static_cast<uint64_t>(z));
-
-        return h;
-    }
-
 } // namespace hash
 
 #endif // HASH_HPP

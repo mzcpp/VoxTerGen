@@ -56,7 +56,7 @@ public:
 
 	double Noise(double x, double y, double z) const noexcept;
 
-	double Noise(double x, double y, double z, double w) const noexcept;
+	//double Noise(double x, double y, double z, double w) const noexcept;
 
 	double NormalizeF1(double distance) const noexcept;
 

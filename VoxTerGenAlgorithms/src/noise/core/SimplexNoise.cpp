@@ -54,9 +54,9 @@ double SimplexNoise::Noise(double x, double y) const noexcept
 
 	const dvec4 corner_contributions = 
 	{ 
-		(t0 < 0) ? 0.0 : t0 * t0 * t0 * t0 * math::DotGrad(p0_hash, p0[0], p0[1]), 
-		(t1 < 0) ? 0.0 : t1 * t1 * t1 * t1 * math::DotGrad(p1_hash, p1[0], p1[1]), 
-		(t2 < 0) ? 0.0 : t2 * t2 * t2 * t2 * math::DotGrad(p2_hash, p2[0], p2[1])
+		(t0 < 0) ? 0.0 : math::Pow4(t0) * math::DotGrad(p0_hash, p0[0], p0[1]), 
+		(t1 < 0) ? 0.0 : math::Pow4(t1) * math::DotGrad(p1_hash, p1[0], p1[1]),
+		(t2 < 0) ? 0.0 : math::Pow4(t2) * math::DotGrad(p2_hash, p2[0], p2[1])
 	};
 
 	return std::accumulate(corner_contributions.begin(), corner_contributions.end(), 0.0); // normalize
@@ -94,20 +94,19 @@ double SimplexNoise::Noise(double x, double y, double z) const noexcept
 	
 	const dvec4 corner_contributions = 
 	{ 
-		(t0 < 0) ? 0.0 : t0 * t0 * t0 * t0 * math::DotGrad(p0_hash, p0[0], p0[1], p0[2]), 
-		(t1 < 0) ? 0.0 : t1 * t1 * t1 * t1 * math::DotGrad(p1_hash, p1[0], p1[1], p1[2]), 
-		(t2 < 0) ? 0.0 : t2 * t2 * t2 * t2 * math::DotGrad(p2_hash, p2[0], p2[1], p2[2]), 
-		(t3 < 0) ? 0.0 : t3 * t3 * t3 * t3 * math::DotGrad(p3_hash, p3[0], p3[1], p3[2]) 
+		(t0 < 0) ? 0.0 : math::Pow4(t0) * math::DotGrad(p0_hash, p0[0], p0[1], p0[2]), 
+		(t1 < 0) ? 0.0 : math::Pow4(t1) * math::DotGrad(p1_hash, p1[0], p1[1], p1[2]), 
+		(t2 < 0) ? 0.0 : math::Pow4(t2) * math::DotGrad(p2_hash, p2[0], p2[1], p2[2]), 
+		(t3 < 0) ? 0.0 : math::Pow4(t3) * math::DotGrad(p3_hash, p3[0], p3[1], p3[2])
 	};
 
 	return std::accumulate(corner_contributions.begin(), corner_contributions.end(), 0.0); // normalize
 }
 
-double SimplexNoise::Noise(double x, double y, double z, double w) const noexcept
-{
-	// TODO
-	return 0.0;
-}
+//double SimplexNoise::Noise(double x, double y, double z, double w) const noexcept
+//{
+//	return 0.0;
+//}
 
 void SimplexNoise::GetP2P3Offsets(const dvec3& p1, ivec3& p2_offsets, ivec3& p3_offsets) const noexcept
 {

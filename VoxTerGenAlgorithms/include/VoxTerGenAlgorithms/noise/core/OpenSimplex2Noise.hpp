@@ -56,28 +56,27 @@ public:
 		std::uint64_t seed, 
 		OpenSimplex2Variant variant, 
 		Noise2DModifier noise_2d_modifier = Noise2DModifier::Default,
-		Noise3DModifier noise_3d_modifier = Noise3DModifier::Default,
-		Noise4DModifier noise_4d_modifier = Noise4DModifier::Default);
+		Noise3DModifier noise_3d_modifier = Noise3DModifier::Default);
 
 	double Noise(double x, double y) const noexcept;
 
 	double Noise(double x, double y, double z) const noexcept;
 
-	double Noise(double x, double y, double z, double w) const noexcept;
+	//double Noise(double x, double y, double z, double w) const noexcept;
 
 	// Getters
 	std::uint64_t Seed() const noexcept { return seed_; }
 	OpenSimplex2Variant Variant() const noexcept { return variant_; }
 	Noise2DModifier GetNoise2DModifier() const noexcept { return noise_2d_modifier_; }
 	Noise3DModifier GetNoise3DModifier() const noexcept { return noise_3d_modifier_; }
-	Noise4DModifier GetNoise4DModifier() const noexcept { return noise_4d_modifier_; }
+	//Noise4DModifier GetNoise4DModifier() const noexcept { return noise_4d_modifier_; }
 
 	// Setters
 	void SetSeed(std::uint64_t seed) noexcept { seed_ = seed; }
 	void SetVariant(OpenSimplex2Variant variant) noexcept { variant_ = variant; }
 	void SetNoise2DModifier(Noise2DModifier noise_2d_modifier) noexcept { noise_2d_modifier_ = noise_2d_modifier; }
 	void SetNoise3DModifier(Noise3DModifier noise_3d_modifier) noexcept { noise_3d_modifier_ = noise_3d_modifier; }
-	void SetNoise4DModifier(Noise4DModifier noise_4d_modifier) noexcept { noise_4d_modifier_ = noise_4d_modifier; }
+	//void SetNoise4DModifier(Noise4DModifier noise_4d_modifier) noexcept { noise_4d_modifier_ = noise_4d_modifier; }
 
 private:
 	void RotateCoords(double& xr, double& yr) const noexcept;
@@ -85,6 +84,10 @@ private:
 	void RotateCoords(double& xr, double& yr, double& zr) const noexcept;
 	
 	void RotateCoords(double& xr, double& yr, double& zr, double& wr) const noexcept;
+
+	double NoiseFast(double x, double y, double z) const noexcept;
+
+	double NoiseSmooth(double x, double y, double z) const noexcept;
 };
 
 #endif // OPEN_SIMPLEX_2_NOISE_HPP

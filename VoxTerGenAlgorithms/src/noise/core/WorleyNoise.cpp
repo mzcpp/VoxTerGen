@@ -120,11 +120,10 @@ double WorleyNoise::Noise(double x, double y, double z) const noexcept
 	return GetResult(min_distances);
 }
 
-double WorleyNoise::Noise(double x, double y, double z, double w) const noexcept
-{
-	// TODO
-	return 0.0;
-}
+//double WorleyNoise::Noise(double x, double y, double z, double w) const noexcept
+//{
+//	return 0.0;
+//}
 
 std::uint64_t WorleyNoise::HashCell(const ivec3& coords) const noexcept
 {
