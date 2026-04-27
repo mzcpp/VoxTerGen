@@ -666,21 +666,17 @@ namespace
 		return result;
 		}();
 
-	std::vector<std::int64_t> lookup_4d_a = [] {
-		std::vector<std::int64_t> a(vec_size);
+	struct Lookup4DData 
+	{
+		std::vector<std::int64_t> a;
+		std::vector<LatticeVertex4D> b;
+	};
 
-		std::int64_t j = 0;
+	Lookup4DData lookup_4d = [] {
+		Lookup4DData data;
 
-		for (std::int64_t i = 0; i < vec_size; i++)
-		{
-			a[i] = j | ((j + static_cast<std::int64_t>(lookup_4d_vertex_codes[i].size())) << 16);
-			j += static_cast<std::int64_t>(lookup_4d_vertex_codes[i].size());
-		}
+		data.a.resize(vec_size);
 
-		return a;
-		}();
-
-	std::vector<LatticeVertex4D> lookup_4d_b = [] {
 		std::int64_t total = 0;
 
 		for (std::int64_t i = 0; i < vec_size; i++)
@@ -688,20 +684,25 @@ namespace
 			total += static_cast<std::int64_t>(lookup_4d_vertex_codes[i].size());
 		}
 
-		std::vector<LatticeVertex4D> b(total);
+		data.b.resize(total);
 
 		std::int64_t j = 0;
 
 		for (std::int64_t i = 0; i < vec_size; i++)
 		{
+			data.a[i] = j | ((j + static_cast<std::int64_t>(lookup_4d_vertex_codes[i].size())) << 16);
+
 			for (std::size_t k = 0; k < lookup_4d_vertex_codes[i].size(); k++)
 			{
-				b[j++] = lattice_vertices_by_code[lookup_4d_vertex_codes[i][k]];
+				data.b[j++] = lattice_vertices_by_code[lookup_4d_vertex_codes[i][k]];
 			}
 		}
 
-		return b;
+		return data;
 		}();
+
+	auto& lookup_4d_a = lookup_4d.a;
+	auto& lookup_4d_b = lookup_4d.b;
 
 	constexpr double Grad(std::int64_t seed, std::int64_t xsvp, std::int64_t ysvp, double dx, double dy)
 	{
