@@ -15,10 +15,10 @@
 
 namespace
 {
-	constexpr std::int64_t prime_x = 0x5205402B9270C86FULL;
-	constexpr std::int64_t prime_y = 0x598CD327003817B5ULL;
-	constexpr std::int64_t prime_z = 0x5BCC226E9FA0BACBULL;
-	constexpr std::int64_t prime_w = 0x56CC5227E58F554BLL;
+	constexpr std::uint64_t prime_x = 0x5205402B9270C86FULL;
+	constexpr std::uint64_t prime_y = 0x598CD327003817B5ULL;
+	constexpr std::uint64_t prime_z = 0x5BCC226E9FA0BACBULL;
+	constexpr std::uint64_t prime_w = 0x56CC5227E58F554BLL;
 	constexpr std::int64_t hash_multiplier = 0x53A3F72DEEC546F5LL;
 	constexpr std::int64_t seed_flip_3d = -0x52D547B2E96ED629LL;
 

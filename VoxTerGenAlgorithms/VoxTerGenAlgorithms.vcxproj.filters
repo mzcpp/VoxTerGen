@@ -71,5 +71,8 @@
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2SNoise.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\VectorFieldWalker.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
