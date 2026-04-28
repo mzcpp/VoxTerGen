@@ -29,3 +29,5 @@ glEnable(GL_FRAMEBUFFER_SRGB);
 vsync
 Test with multiple compilers!
 VERY IMPORTANT, MAKE THE WINDOWS CORRECT SIZE BASED ON MONITOR SIZE SO IT DOES NOT CUTOFF LIKE THE MAZE GENERATOR ON MBA 13
+
+add Graphics Device Interface - move all graphics apis inits into it - App will own it along with engine

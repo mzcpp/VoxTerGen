@@ -415,11 +415,11 @@ double OpenSimplex2F::Noise(double x, double y) const noexcept
 
 	const std::int64_t xrb = static_cast<std::int64_t>(std::floor(xr));
 	const std::int64_t yrb = static_cast<std::int64_t>(std::floor(yr));
-	const double xi = static_cast<double>(xr - xrb);
-	const double yi = static_cast<double>(yr - yrb);
+	const double xi = xr - static_cast<double>(xrb);
+	const double yi = yr - static_cast<double>(yrb);
 
-	const std::int64_t xsbp = static_cast<std::int64_t>(xrb) * prime_x;
-	const std::int64_t ysbp = static_cast<std::int64_t>(yrb) * prime_y;
+	const std::int64_t xsbp = xrb * prime_x;
+	const std::int64_t ysbp = yrb * prime_y;
 
 	const double t = (xi + yi) * unskew_2d;
 	const double dx0 = xi + t;
@@ -430,7 +430,7 @@ double OpenSimplex2F::Noise(double x, double y) const noexcept
 
 	if (a0 > 0.0)
 	{
-		value = (a0 * a0) * (a0 * a0) * Grad(seed_, xsbp, ysbp, dx0, dy0);
+		value = math::Pow4(a0) * Grad(seed_, xsbp, ysbp, dx0, dy0);
 	}
 
 	constexpr double k1 = 1.0 + 2.0 * unskew_2d;
@@ -439,8 +439,9 @@ double OpenSimplex2F::Noise(double x, double y) const noexcept
 	
 	if (a1 > 0.0)
 	{
-		double dx1 = dx0 - static_cast<double>(1 + 2 * unskew_2d);
-		double dy1 = dy0 - static_cast<double>(1 + 2 * unskew_2d);
+		const double dx1 = dx0 - k1
+		const double dy1 = dy0 - k1;
+		
 		value += math::Pow4(a1) * Grad(seed_, xsbp + prime_x, ysbp + prime_y, dx1, dy1);
 	}
 
@@ -459,7 +460,6 @@ double OpenSimplex2F::Noise(double x, double y) const noexcept
 	{
 		double dx2 = dx0 - (unskew_2d + 1.0);
 		double dy2 = dy0 - unskew_2d;
-
 		double a2 = rsquared_2d - dx2 * dx2 - dy2 * dy2;
 
 		if (a2 > 0.0)
@@ -485,9 +485,9 @@ double OpenSimplex2F::Noise(double x, double y, double z) const noexcept
 	const std::int64_t yrb = static_cast<std::int64_t>(std::round(yr));
 	const std::int64_t zrb = static_cast<std::int64_t>(std::round(zr));
 
-	double xri = static_cast<double>(xr - xrb);
-	double yri = static_cast<double>(yr - yrb);
-	double zri = static_cast<double>(zr - zrb);
+	double xri = xr - static_cast<double>(xrb);
+	double yri = yr - static_cast<double>(yrb);
+	double zri = zr - static_cast<double>(zrb);
 
 	std::int64_t x_n_sign = static_cast<std::int64_t>(-1.0 - xri) | 1;
 	std::int64_t y_n_sign = static_cast<std::int64_t>(-1.0 - yri) | 1;
@@ -504,7 +504,7 @@ double OpenSimplex2F::Noise(double x, double y, double z) const noexcept
 	double value = 0.0;
 	double a = (rsquared_3d - xri * xri) - (yri * yri + zri * zri);
 
-	for (int l = 0;;l++)
+	for (int l = 0; ; ++l)
 	{
 		if (a > 0) 
 		{
@@ -587,13 +587,13 @@ double OpenSimplex2F::Noise(double x, double y, double z, double w) const noexce
 	const std::int64_t zsb = static_cast<std::int64_t>(std::floor(zr));
 	const std::int64_t wsb = static_cast<std::int64_t>(std::floor(wr));
 
-	double xsi = static_cast<double>(xr - xsb);
-	double ysi = static_cast<double>(yr - ysb);
-	double zsi = static_cast<double>(zr - zsb);
-	double wsi = static_cast<double>(wr - wsb);
+	double xsi = xr - static_cast<double>(xsb);
+	double ysi = yr - static_cast<double>(ysb);
+	double zsi = zr - static_cast<double>(zsb);
+	double wsi = wr - static_cast<double>(wsb);
 
 	const double si_sum = (xsi + ysi) + (zsi + wsi);
-	const std::uint64_t starting_lattice = static_cast<std::uint64_t>(si_sum * 1.25);
+	const std::int64_t starting_lattice = static_cast<std::int64_t>(si_sum * 1.25);
 
 	seed += starting_lattice * seed_offset_4d;
 
@@ -612,7 +612,7 @@ double OpenSimplex2F::Noise(double x, double y, double z, double w) const noexce
 
 	double value = 0.0;
 
-	for (int i = 0;; i++)
+	for (int i = 0; ; i++)
 	{
 		const double score0 = 1.0 + ssi * (-1.0 / unskew_4d);
 

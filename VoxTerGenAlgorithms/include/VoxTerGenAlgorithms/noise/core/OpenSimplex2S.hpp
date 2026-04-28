@@ -29,13 +29,6 @@ enum class Noise4DModifier
 	Fallback
 };
 
-using ivec2 = std::array<std::int64_t, 2>;
-using ivec3 = std::array<std::int64_t, 3>;
-using uivec2 = std::array<std::uint64_t, 2>;
-using uivec3 = std::array<std::uint64_t, 3>;
-using dvec2 = std::array<double, 2>;
-using dvec3 = std::array<double, 3>;
-
 class OpenSimplex2S
 {
 private:

@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include "VoxTerGenAlgorithms/noise/core/OpenSimplex2S.hpp"
-#include "VoxTerGenAlgorithms/utils/Hash.hpp"
 #include "VoxTerGenAlgorithms/utils/Math.hpp"
 
 #include <cstdint>
@@ -16,10 +15,10 @@
 
 namespace
 {
-	constexpr std::uint64_t prime_x = 0x5205402B9270C86FULL;
-	constexpr std::uint64_t prime_y = 0x598CD327003817B5ULL;
-	constexpr std::uint64_t prime_z = 0x5BCC226E9FA0BACBULL;
-	constexpr std::uint64_t prime_w = 0x56CC5227E58F554BLL;
+	constexpr std::int64_t prime_x = 0x5205402B9270C86FULL;
+	constexpr std::int64_t prime_y = 0x598CD327003817B5ULL;
+	constexpr std::int64_t prime_z = 0x5BCC226E9FA0BACBULL;
+	constexpr std::int64_t prime_w = 0x56CC5227E58F554BLL;
 	constexpr std::int64_t hash_multiplier = 0x53A3F72DEEC546F5LL;
 	constexpr std::int64_t seed_flip_3d = -0x52D547B2E96ED629LL;
 
@@ -361,7 +360,8 @@ namespace
 	}();
 
 	constexpr std::size_t vec_size = 256;
-	constexpr std::array<std::array<std::int64_t, 20>, vec_size> lookup_4d_vertex_codes =
+	constexpr std::size_t row_size = 20;
+	constexpr std::array<std::array<std::int64_t, row_size>, vec_size> lookup_4d_vertex_codes =
 	{{
 		{{ 0x15, 0x45, 0x51, 0x54, 0x55, 0x56, 0x59, 0x5A, 0x65, 0x66, 0x69, 0x6A, 0x95, 0x96, 0x99, 0x9A, 0xA5, 0xA6, 0xA9, 0xAA }},
 		{{ 0x15, 0x45, 0x51, 0x55, 0x56, 0x59, 0x5A, 0x65, 0x66, 0x6A, 0x95, 0x96, 0x9A, 0xA6, 0xAA }},
@@ -679,7 +679,7 @@ namespace
 
 		std::int64_t total = 0;
 
-		for (std::int64_t i = 0; i < vec_size; i++)
+		for (std::int64_t i = 0; i < vec_size; ++i)
 		{
 			total += static_cast<std::int64_t>(lookup_4d_vertex_codes[i].size());
 		}
@@ -688,11 +688,11 @@ namespace
 
 		std::int64_t j = 0;
 
-		for (std::int64_t i = 0; i < vec_size; i++)
+		for (std::int64_t i = 0; i < vec_size; ++i)
 		{
 			data.a[i] = j | ((j + static_cast<std::int64_t>(lookup_4d_vertex_codes[i].size())) << 16);
 
-			for (std::size_t k = 0; k < lookup_4d_vertex_codes[i].size(); k++)
+			for (std::size_t k = 0; k < lookup_4d_vertex_codes[i].size(); ++k)
 			{
 				data.b[j++] = lattice_vertices_by_code[lookup_4d_vertex_codes[i][k]];
 			}
@@ -760,8 +760,8 @@ double OpenSimplex2S::Noise(double x, double y) const noexcept
 
 	const std::int64_t xrb = static_cast<std::int64_t>(std::floor(xr));
 	const std::int64_t yrb = static_cast<std::int64_t>(std::floor(yr));
-	const double xi = static_cast<double>(xr - xrb);
-	const double yi = static_cast<double>(yr - yrb);
+	const double xi = xr - static_cast<double>(xrb);
+	const double yi = yr - static_cast<double>(yrb);
 
 	const std::int64_t xsbp = xrb * prime_x;
 	const std::int64_t ysbp = yrb * prime_y;
@@ -901,20 +901,20 @@ double OpenSimplex2S::Noise(double x, double y, double z) const noexcept
 	const double yi = yr - static_cast<double>(yrb);
 	const double zi = zr - static_cast<double>(zrb);
 
-	const std::int64_t xrbp = static_cast<std::int64_t>(xrb) * prime_x;
-	const std::int64_t yrbp = static_cast<std::int64_t>(yrb) * prime_y;
-	const std::int64_t zrbp = static_cast<std::int64_t>(zrb) * prime_z;
+	const std::int64_t xrbp = xrb * prime_x;
+	const std::int64_t yrbp = yrb * prime_y;
+	const std::int64_t zrbp = zrb * prime_z;
 
 	const std::int64_t x_n_mask = static_cast<std::int64_t>(-0.5 - xi);
 	const std::int64_t y_n_mask = static_cast<std::int64_t>(-0.5 - yi);
 	const std::int64_t z_n_mask = static_cast<std::int64_t>(-0.5 - zi);
 
-	const double x0 = xi + x_n_mask;
-	const double y0 = yi + y_n_mask;
-	const double z0 = zi + z_n_mask;
+	const double x0 = xi + static_cast<double>(x_n_mask);
+	const double y0 = yi + static_cast<double>(y_n_mask);
+	const double z0 = zi + static_cast<double>(z_n_mask);
 	const double a0 = rsquared_3d - x0 * x0 - y0 * y0 - z0 * z0;
 	
-	double value = math::Pow4(a0) * Grad(seed_, xrbp + (static_cast<std::int64_t>(x_n_mask) & prime_x), yrbp + (static_cast<std::int64_t>(y_n_mask) & prime_y), zrbp + (static_cast<std::int64_t>(z_n_mask) & prime_z), x0, y0, z0);
+	double value = math::Pow4(a0) * Grad(seed_, xrbp + (x_n_mask & prime_x), yrbp + (y_n_mask & prime_y), zrbp + (z_n_mask & prime_z), x0, y0, z0);
 
 	const double x1 = xi - 0.5;
 	const double y1 = yi - 0.5;
@@ -922,12 +922,12 @@ double OpenSimplex2S::Noise(double x, double y, double z) const noexcept
 	const double a1 = rsquared_3d - x1 * x1 - y1 * y1 - z1 * z1;
 	value += math::Pow4(a1) * Grad(seed2, xrbp + prime_x, yrbp + prime_y, zrbp + prime_z, x1, y1, z1);
 
-	const double x_a_flip_mask0 = ((x_n_mask | 1) << 1) * x1;
-	const double y_a_flip_mask0 = ((y_n_mask | 1) << 1) * y1;
-	const double z_a_flip_mask0 = ((z_n_mask | 1) << 1) * z1;
-	const double x_a_flip_mask1 = (-2 - (x_n_mask << 2)) * x1 - 1.0;
-	const double y_a_flip_mask1 = (-2 - (y_n_mask << 2)) * y1 - 1.0;
-	const double z_a_flip_mask1 = (-2 - (z_n_mask << 2)) * z1 - 1.0;
+	const double x_a_flip_mask0 = static_cast<double>((x_n_mask | 1) << 1) * x1;
+	const double y_a_flip_mask0 = static_cast<double>((y_n_mask | 1) << 1) * y1;
+	const double z_a_flip_mask0 = static_cast<double>((z_n_mask | 1) << 1) * z1;
+	const double x_a_flip_mask1 = static_cast<double>(-2 - (x_n_mask << 2)) * x1 - 1.0;
+	const double y_a_flip_mask1 = static_cast<double>(-2 - (y_n_mask << 2)) * y1 - 1.0;
+	const double z_a_flip_mask1 = static_cast<double>(-2 - (z_n_mask << 2)) * z1 - 1.0;
 
 	bool skip5 = false;
 	const double a2 = x_a_flip_mask0 + a0;
@@ -942,7 +942,7 @@ double OpenSimplex2S::Noise(double x, double y, double z) const noexcept
 	}
 	else
 	{
-		double a3 = y_a_flip_mask0 + z_a_flip_mask0 + a0;
+		const double a3 = y_a_flip_mask0 + z_a_flip_mask0 + a0;
 		
 		if (a3 > 0.0)
 		{
@@ -990,7 +990,7 @@ double OpenSimplex2S::Noise(double x, double y, double z) const noexcept
 			value += math::Pow4(a7) * Grad(seed_, xrbp + ((~x_n_mask) & prime_x), yrbp + (y_n_mask & prime_y), zrbp + ((~z_n_mask) & prime_z), x7, y7, z7);
 		}
 
-		double a8 = y_a_flip_mask1 + a1;
+		const double a8 = y_a_flip_mask1 + a1;
 
 		if (a8 > 0.0)
 		{
@@ -1161,7 +1161,7 @@ void OpenSimplex2S::RotateCoords(double& xr, double& yr) const noexcept
 	else if (noise_2d_modifier_ == Noise2DModifier::ImproveX)
 	{
 		const double xx = xr * root2_over_2;
-		const double yy = yr * (root2_over_2 * (1 + 2 * skew_2d));
+		const double yy = yr * (root2_over_2 * (1.0 + 2.0 * skew_2d));
 
 		xr = yy + xx;
 		yr = yy - xx;
