@@ -1,5 +1,5 @@
-#ifndef OPEN_SIMPLEX_2_F_HPP
-#define OPEN_SIMPLEX_2_F_HPP
+#ifndef OPEN_SIMPLEX2S_NOISE_HPP
+#define OPEN_SIMPLEX2S_NOISE_HPP
 
 #include <cstdint>
 #include <array>
@@ -29,7 +29,7 @@ enum class Noise4DModifier
 	Fallback
 };
 
-class OpenSimplex2F
+class OpenSimplex2SNoise
 {
 private:
 	std::uint64_t seed_;
@@ -38,7 +38,7 @@ private:
 	Noise4DModifier noise_4d_modifier_;
 
 public:
-	OpenSimplex2F(
+	OpenSimplex2SNoise(
 		std::uint64_t seed, 
 		Noise2DModifier noise_2d_modifier = Noise2DModifier::Default,
 		Noise3DModifier noise_3d_modifier = Noise3DModifier::Default, 
@@ -70,4 +70,4 @@ private:
 	void RotateCoords(double& xr, double& yr, double& zr, double& wr) const noexcept;
 };
 
-#endif // OPEN_SIMPLEX_2_F_HPP
+#endif // OPEN_SIMPLEX2S_NOISE_HPP

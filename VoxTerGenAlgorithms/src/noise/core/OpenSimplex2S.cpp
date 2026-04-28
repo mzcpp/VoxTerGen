@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "VoxTerGenAlgorithms/noise/core/OpenSimplex2S.hpp"
+#include "VoxTerGenAlgorithms/noise/core/OpenSimplex2SNoise.hpp"
 #include "VoxTerGenAlgorithms/utils/Math.hpp"
 
 #include <cstdint>
@@ -738,7 +738,7 @@ namespace
 	}
 }
 
-OpenSimplex2S::OpenSimplex2S(
+OpenSimplex2SNoise::OpenSimplex2SNoise(
 	std::uint64_t seed, 
 	Noise2DModifier noise_2d_modifier, 
 	Noise3DModifier noise_3d_modifier, 
@@ -751,7 +751,7 @@ OpenSimplex2S::OpenSimplex2S(
 {
 }
 
-double OpenSimplex2S::Noise(double x, double y) const noexcept
+double OpenSimplex2SNoise::Noise(double x, double y) const noexcept
 {
 	double xr = x;
 	double yr = y;
@@ -883,7 +883,7 @@ double OpenSimplex2S::Noise(double x, double y) const noexcept
 	return value;
 }
 
-double OpenSimplex2S::Noise(double x, double y, double z) const noexcept
+double OpenSimplex2SNoise::Noise(double x, double y, double z) const noexcept
 {
 	const std::uint64_t seed2 = seed_ ^ -0x52D547B2E96ED629LL;
 
@@ -1085,7 +1085,7 @@ double OpenSimplex2S::Noise(double x, double y, double z) const noexcept
 	return value;
 }
 
-double OpenSimplex2S::Noise(double x, double y, double z, double w) const noexcept
+double OpenSimplex2SNoise::Noise(double x, double y, double z, double w) const noexcept
 {
 	double xr = x;
 	double yr = y;
@@ -1149,7 +1149,7 @@ double OpenSimplex2S::Noise(double x, double y, double z, double w) const noexce
 	return value;
 }
 
-void OpenSimplex2S::RotateCoords(double& xr, double& yr) const noexcept
+void OpenSimplex2SNoise::RotateCoords(double& xr, double& yr) const noexcept
 {
 	if (noise_2d_modifier_ == Noise2DModifier::Skew)
 	{
@@ -1168,7 +1168,7 @@ void OpenSimplex2S::RotateCoords(double& xr, double& yr) const noexcept
 	}
 }
 
-void OpenSimplex2S::RotateCoords(double& xr, double& yr, double& zr) const noexcept
+void OpenSimplex2SNoise::RotateCoords(double& xr, double& yr, double& zr) const noexcept
 {
 	if (noise_3d_modifier_ == Noise3DModifier::ImproveXZ)
 	{
@@ -1200,7 +1200,7 @@ void OpenSimplex2S::RotateCoords(double& xr, double& yr, double& zr) const noexc
 	}
 }
 
-void OpenSimplex2S::RotateCoords(double& xr, double& yr, double& zr, double& wr) const noexcept
+void OpenSimplex2SNoise::RotateCoords(double& xr, double& yr, double& zr, double& wr) const noexcept
 {
 	if (noise_4d_modifier_ == Noise4DModifier::ImproveXYZ)
 	{

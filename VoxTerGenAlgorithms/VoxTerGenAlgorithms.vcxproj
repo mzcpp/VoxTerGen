@@ -32,8 +32,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2F.hpp" />
-    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2S.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2FNoise.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2SNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\SimplexNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\Fractal.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms.hpp" />

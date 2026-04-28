@@ -65,10 +65,10 @@
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Math.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2F.hpp">
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2FNoise.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2S.hpp">
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2SNoise.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
