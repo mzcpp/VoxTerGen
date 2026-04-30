@@ -33,9 +33,9 @@ namespace
 	constexpr int fp_threshold_20 = 230;
 }
 
-WorleyNoise::WorleyNoise(std::uint64_t seed, DistanceMetric dist_metric, DistanceResultType dist_result_type, 
+WorleyNoise::WorleyNoise(std::uint64_t seed, DistanceMetric dist_metric, DistanceResultType dist_result_type,
 	FeaturePointMode fp_mode, int n_feature_points, float minkowski_p, int dimension) :
-	seed_(seed), 
+	seed_(seed),
 	dist_metric_(dist_metric),
 	dist_result_type_(dist_result_type),
 	fp_mode_(fp_mode),
@@ -45,7 +45,7 @@ WorleyNoise::WorleyNoise(std::uint64_t seed, DistanceMetric dist_metric, Distanc
 {
 }
 
-double WorleyNoise::Noise(double x) const noexcept
+double WorleyNoise::Sample(double x) const noexcept
 {
 	const dvec3 current_cell_coords = { x, 0.0, 0.0 };
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
@@ -66,7 +66,7 @@ double WorleyNoise::Noise(double x) const noexcept
 	return GetResult(min_distances);
 }
 
-double WorleyNoise::Noise(double x, double y) const noexcept
+double WorleyNoise::Sample(double x, double y) const noexcept
 {
 	const dvec3 current_cell_coords = { x, y, 0.0 };
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
@@ -87,17 +87,17 @@ double WorleyNoise::Noise(double x, double y) const noexcept
 	{
 		return closest_hash;
 	}
-	
+
 	return GetResult(min_distances);
 }
 
-double WorleyNoise::Noise(double x, double y, double z) const noexcept
+double WorleyNoise::Sample(double x, double y, double z) const noexcept
 {
 	const dvec3 current_cell_coords = { x, y, z };
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
 	const std::int64_t yi = static_cast<std::int64_t>(std::floor(y));
 	const std::int64_t zi = static_cast<std::int64_t>(std::floor(z));
-	
+
 	dvec3 min_distances = { std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max() };
 	double closest_hash = 0.0;
 
@@ -120,7 +120,7 @@ double WorleyNoise::Noise(double x, double y, double z) const noexcept
 	return GetResult(min_distances);
 }
 
-//double WorleyNoise::Noise(double x, double y, double z, double w) const noexcept
+//double WorleyNoise::Sample(double x, double y, double z, double w) const noexcept
 //{
 //	return 0.0;
 //}
@@ -142,7 +142,7 @@ std::uint64_t WorleyNoise::HashCell(const ivec3& coords) const noexcept
 std::uint64_t WorleyNoise::HashCellFast(const ivec3& coords) const noexcept
 {
 	std::uint64_t cell_hash = seed_;
-	
+
 	return cell_hash;
 }
 
@@ -154,7 +154,7 @@ dvec3 WorleyNoise::GetRandomPoint(std::uint64_t hash, const ivec3& cell_coords) 
 	for (int i = 0; i < dimension_; ++i)
 	{
 		h = hash::SplitMix64(h);
-		
+
 		// [0, 2^53) -> [0, 1)
 		// Discard the lower 11 bits, then multiply with (1 / 2^53).
 		const double u = (h >> 11) * (1.0 / (1ULL << 53));
@@ -233,7 +233,7 @@ double WorleyNoise::NormalizeF1(double distance) const noexcept
 	}
 	else if (dist_metric_ == DistanceMetric::MINKOWSKI)
 	{
-		return (distance / (std::pow(dimension_ , 1.0 / minkowski_p_)));
+		return (distance / (std::pow(dimension_, 1.0 / minkowski_p_)));
 	}
 
 	assert(false);
@@ -315,7 +315,7 @@ void WorleyNoise::CalculateMinDistances(const dvec3& current_cell, const ivec3& 
 {
 	const std::uint64_t neighbor_cell_hash = HashCell(neighbor_cell);
 	const int feature_points_count = GetFeaturePointsNumber(neighbor_cell_hash);
-	
+
 	for (int i = 0; i < feature_points_count; ++i)
 	{
 		const std::uint64_t point_hash = hash::SplitMix64(neighbor_cell_hash ^ (i * hash_constants::D));

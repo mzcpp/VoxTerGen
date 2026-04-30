@@ -17,7 +17,7 @@ PerlinNoise::PerlinNoise(std::uint64_t seed) : seed_(seed)
 {
 }
 
-double PerlinNoise::Noise(double x) const noexcept
+double PerlinNoise::Sample(double x) const noexcept
 {
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
 	const double xd = x - xi;
@@ -30,7 +30,7 @@ double PerlinNoise::Noise(double x) const noexcept
 	return math::Lerp(math::DotGrad(a, xd), math::DotGrad(b, xd - 1.0), u);
 }
 
-double PerlinNoise::Noise(double x, double y) const noexcept
+double PerlinNoise::Sample(double x, double y) const noexcept
 {
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
 	const std::int64_t yi = static_cast<std::int64_t>(std::floor(y));
@@ -52,7 +52,7 @@ double PerlinNoise::Noise(double x, double y) const noexcept
 	return math::Lerp(x1, x2, v);
 }
 
-double PerlinNoise::Noise(double x, double y, double z) const noexcept
+double PerlinNoise::Sample(double x, double y, double z) const noexcept
 {
 	const std::int64_t xi = static_cast<std::int64_t>(std::floor(x));
 	const std::int64_t yi = static_cast<std::int64_t>(std::floor(y));
@@ -86,7 +86,7 @@ double PerlinNoise::Noise(double x, double y, double z) const noexcept
 	return math::Lerp(y1, y2, w);
 }
 
-//double PerlinNoise::Noise(double x, double y, double z, double w) const noexcept
+//double PerlinNoise::Sample(double x, double y, double z, double w) const noexcept
 //{
 //	return 0.0;
 //}

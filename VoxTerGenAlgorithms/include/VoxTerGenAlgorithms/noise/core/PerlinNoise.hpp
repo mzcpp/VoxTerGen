@@ -13,13 +13,13 @@ private:
 public:
 	PerlinNoise(std::uint64_t seed);
 
-	double Noise(double x) const noexcept;
+	double Sample(double x) const noexcept;
 
-	double Noise(double x, double y) const noexcept;
+	double Sample(double x, double y) const noexcept;
 
-	double Noise(double x, double y, double z) const noexcept;
+	double Sample(double x, double y, double z) const noexcept;
 
-	//double Noise(double x, double y, double z, double w) const noexcept;
+	//double Sample(double x, double y, double z, double w) const noexcept;
 
 	// Getters
 	std::uint64_t Seed() const noexcept { return seed_; }

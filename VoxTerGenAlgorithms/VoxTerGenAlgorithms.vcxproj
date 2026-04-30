@@ -41,6 +41,8 @@
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\WorleyNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\VectorFieldWalker.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Math.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Vec2.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Vec3.hpp" />
     <ClInclude Include="internal\framework.h" />
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Hash.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Rng.hpp" />

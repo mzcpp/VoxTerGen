@@ -6,23 +6,23 @@
 
 enum class DistanceResultType
 {
-	F1, 
-	F2, 
-	F3, 
-	F1_ADD_F2, 
-	F2_SUB_F1, 
-	F1_MUL_F2, 
-	F2_DIV_F1, 
-	F3_SUB_F1, 
+	F1,
+	F2,
+	F3,
+	F1_ADD_F2,
+	F2_SUB_F1,
+	F1_MUL_F2,
+	F2_DIV_F1,
+	F3_SUB_F1,
 	CELL_VALUE
 };
 
 enum class DistanceMetric
 {
-	EUCLIDEAN, 
-	EUCLIDEAN_SQ, 
-	MANHATTAN, 
-	CHEBYSHEV, 
+	EUCLIDEAN,
+	EUCLIDEAN_SQ,
+	MANHATTAN,
+	CHEBYSHEV,
 	MINKOWSKI
 };
 
@@ -50,13 +50,13 @@ public:
 	WorleyNoise(std::uint64_t seed, DistanceMetric dist_metric, DistanceResultType dist_result_type, FeaturePointMode fp_mode,
 		int n_feature_points, float minkowski_p, int dimension);
 
-	double Noise(double x) const noexcept;
+	double Sample(double x) const noexcept;
 
-	double Noise(double x, double y) const noexcept;
+	double Sample(double x, double y) const noexcept;
 
-	double Noise(double x, double y, double z) const noexcept;
+	double Sample(double x, double y, double z) const noexcept;
 
-	//double Noise(double x, double y, double z, double w) const noexcept;
+	//double Sample(double x, double y, double z, double w) const noexcept;
 
 	double NormalizeF1(double distance) const noexcept;
 
@@ -65,7 +65,7 @@ public:
 
 	// Setters
 	void SetSeed(std::uint64_t seed) noexcept { seed_ = seed; }
-	
+
 private:
 	std::uint64_t HashCell(const ivec3& coords) const noexcept;
 

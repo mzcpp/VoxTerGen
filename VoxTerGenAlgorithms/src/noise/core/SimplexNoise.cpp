@@ -15,19 +15,19 @@
  * Sources: https://www.researchgate.net/publication/216813608_Simplex_noise_demystified
  */
 
- namespace
- {
+namespace
+{
 	constexpr double skew_2d = 0.366025403784439;
 	constexpr double unskew_2d = -0.21132486540518713;
 	constexpr double skew_4d = 0.309016994374947f;
 	constexpr double unskew_4d = -0.138196601125011f;
- }
+}
 
 SimplexNoise::SimplexNoise(std::uint64_t seed) : seed_(seed)
 {
 }
 
-double SimplexNoise::Noise(double x, double y) const noexcept
+double SimplexNoise::Sample(double x, double y) const noexcept
 {
 	// Skew the coordinate system to determine the simplex we're in.
 	const double F2 = 0.5 * (std::numbers::sqrt3 - 1.0);
@@ -52,9 +52,9 @@ double SimplexNoise::Noise(double x, double y) const noexcept
 	const double t1 = 0.5 - (p1[0] * p1[0]) - (p1[1] * p1[1]);
 	const double t2 = 0.5 - (p2[0] * p2[0]) - (p2[1] * p2[1]);
 
-	const dvec4 corner_contributions = 
-	{ 
-		(t0 < 0) ? 0.0 : math::Pow4(t0) * math::DotGrad(p0_hash, p0[0], p0[1]), 
+	const dvec4 corner_contributions =
+	{
+		(t0 < 0) ? 0.0 : math::Pow4(t0) * math::DotGrad(p0_hash, p0[0], p0[1]),
 		(t1 < 0) ? 0.0 : math::Pow4(t1) * math::DotGrad(p1_hash, p1[0], p1[1]),
 		(t2 < 0) ? 0.0 : math::Pow4(t2) * math::DotGrad(p2_hash, p2[0], p2[1])
 	};
@@ -62,7 +62,7 @@ double SimplexNoise::Noise(double x, double y) const noexcept
 	return std::accumulate(corner_contributions.begin(), corner_contributions.end(), 0.0); // normalize
 }
 
-double SimplexNoise::Noise(double x, double y, double z) const noexcept
+double SimplexNoise::Sample(double x, double y, double z) const noexcept
 {
 	// Skew the coordinate system to determine the simplex we're in.
 	const double F3 = 1.0 / 3.0;
@@ -86,24 +86,24 @@ double SimplexNoise::Noise(double x, double y, double z) const noexcept
 	const std::uint64_t p1_hash = hash::HashCoords(seed_, simplex_coords[0] + p1_offsets[0], simplex_coords[1] + p1_offsets[1], simplex_coords[2] + p1_offsets[2]);
 	const std::uint64_t p2_hash = hash::HashCoords(seed_, simplex_coords[0] + p2_offsets[0], simplex_coords[1] + p2_offsets[1], simplex_coords[2] + p2_offsets[2]);
 	const std::uint64_t p3_hash = hash::HashCoords(seed_, simplex_coords[0] + 1, simplex_coords[1] + 1, simplex_coords[2] + 1);
-	
+
 	const double t0 = 0.5 - (p0[0] * p0[0]) - (p0[1] * p0[1]) - (p0[2] * p0[2]);
 	const double t1 = 0.5 - (p1[0] * p1[0]) - (p1[1] * p1[1]) - (p1[2] * p1[2]);
 	const double t2 = 0.5 - (p2[0] * p2[0]) - (p2[1] * p2[1]) - (p2[2] * p2[2]);
 	const double t3 = 0.5 - (p3[0] * p3[0]) - (p3[1] * p3[1]) - (p3[2] * p3[2]);
-	
-	const dvec4 corner_contributions = 
-	{ 
-		(t0 < 0) ? 0.0 : math::Pow4(t0) * math::DotGrad(p0_hash, p0[0], p0[1], p0[2]), 
-		(t1 < 0) ? 0.0 : math::Pow4(t1) * math::DotGrad(p1_hash, p1[0], p1[1], p1[2]), 
-		(t2 < 0) ? 0.0 : math::Pow4(t2) * math::DotGrad(p2_hash, p2[0], p2[1], p2[2]), 
+
+	const dvec4 corner_contributions =
+	{
+		(t0 < 0) ? 0.0 : math::Pow4(t0) * math::DotGrad(p0_hash, p0[0], p0[1], p0[2]),
+		(t1 < 0) ? 0.0 : math::Pow4(t1) * math::DotGrad(p1_hash, p1[0], p1[1], p1[2]),
+		(t2 < 0) ? 0.0 : math::Pow4(t2) * math::DotGrad(p2_hash, p2[0], p2[1], p2[2]),
 		(t3 < 0) ? 0.0 : math::Pow4(t3) * math::DotGrad(p3_hash, p3[0], p3[1], p3[2])
 	};
 
 	return std::accumulate(corner_contributions.begin(), corner_contributions.end(), 0.0); // normalize
 }
 
-//double SimplexNoise::Noise(double x, double y, double z, double w) const noexcept
+//double SimplexNoise::Sample(double x, double y, double z, double w) const noexcept
 //{
 //	return 0.0;
 //}

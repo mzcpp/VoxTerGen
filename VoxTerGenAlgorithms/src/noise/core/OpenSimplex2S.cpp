@@ -117,39 +117,39 @@ namespace
 		 1.0,                -2.22474487139,       2.22474487139,       0.0,
 		 0.0,                -1.1721513422464978,  3.0862664687972017,  0.0,
 		 0.0,                -3.0862664687972017,  1.1721513422464978,  0.0,
-		//--------------------------------------------------------------------//
-		-2.22474487139,      -2.22474487139,      -1.0,                 0.0,
-		-2.22474487139,      -2.22474487139,       1.0,                 0.0,
-		-3.0862664687972017, -1.1721513422464978,  0.0,                 0.0,
-		-1.1721513422464978, -3.0862664687972017,  0.0,                 0.0,
-		-2.22474487139,      -1.0,                -2.22474487139,       0.0,
-		-2.22474487139,       1.0,                -2.22474487139,       0.0,
-		-1.1721513422464978,  0.0,                -3.0862664687972017,  0.0,
-		-3.0862664687972017,  0.0,                -1.1721513422464978,  0.0,
-		-2.22474487139,      -1.0,                 2.22474487139,       0.0,
-		-2.22474487139,       1.0,                 2.22474487139,       0.0,
-		-3.0862664687972017,  0.0,                 1.1721513422464978,  0.0,
-		-1.1721513422464978,  0.0,                 3.0862664687972017,  0.0,
-		-1.0,                 2.22474487139,      -2.22474487139,       0.0,
-		 1.0,                 2.22474487139,      -2.22474487139,       0.0,
-		 0.0,                 1.1721513422464978, -3.0862664687972017,  0.0,
-		 0.0,                 3.0862664687972017, -1.1721513422464978,  0.0,
-		-1.0,                 2.22474487139,       2.22474487139,       0.0,
-		 1.0,                 2.22474487139,       2.22474487139,       0.0,
-		 0.0,                 3.0862664687972017,  1.1721513422464978,  0.0,
-		 0.0,                 1.1721513422464978,  3.0862664687972017,  0.0,
-		 2.22474487139,      -2.22474487139,      -1.0,                 0.0,
-		 2.22474487139,      -2.22474487139,       1.0,                 0.0,
-		 1.1721513422464978, -3.0862664687972017,  0.0,                 0.0,
-		 3.0862664687972017, -1.1721513422464978,  0.0,                 0.0,
-		 2.22474487139,      -1.0,                -2.22474487139,       0.0,
-		 2.22474487139,       1.0,                -2.22474487139,       0.0,
-		 3.0862664687972017,  0.0,                -1.1721513422464978,  0.0,
-		 1.1721513422464978,  0.0,                -3.0862664687972017,  0.0,
-		 2.22474487139,      -1.0,                 2.22474487139,       0.0,
-		 2.22474487139,       1.0,                 2.22474487139,       0.0,
-		 1.1721513422464978,  0.0,                 3.0862664687972017,  0.0,
-		 3.0862664687972017,  0.0,                 1.1721513422464978,  0.0,
+		 //--------------------------------------------------------------------//
+		 -2.22474487139,      -2.22474487139,      -1.0,                 0.0,
+		 -2.22474487139,      -2.22474487139,       1.0,                 0.0,
+		 -3.0862664687972017, -1.1721513422464978,  0.0,                 0.0,
+		 -1.1721513422464978, -3.0862664687972017,  0.0,                 0.0,
+		 -2.22474487139,      -1.0,                -2.22474487139,       0.0,
+		 -2.22474487139,       1.0,                -2.22474487139,       0.0,
+		 -1.1721513422464978,  0.0,                -3.0862664687972017,  0.0,
+		 -3.0862664687972017,  0.0,                -1.1721513422464978,  0.0,
+		 -2.22474487139,      -1.0,                 2.22474487139,       0.0,
+		 -2.22474487139,       1.0,                 2.22474487139,       0.0,
+		 -3.0862664687972017,  0.0,                 1.1721513422464978,  0.0,
+		 -1.1721513422464978,  0.0,                 3.0862664687972017,  0.0,
+		 -1.0,                 2.22474487139,      -2.22474487139,       0.0,
+		  1.0,                 2.22474487139,      -2.22474487139,       0.0,
+		  0.0,                 1.1721513422464978, -3.0862664687972017,  0.0,
+		  0.0,                 3.0862664687972017, -1.1721513422464978,  0.0,
+		 -1.0,                 2.22474487139,       2.22474487139,       0.0,
+		  1.0,                 2.22474487139,       2.22474487139,       0.0,
+		  0.0,                 3.0862664687972017,  1.1721513422464978,  0.0,
+		  0.0,                 1.1721513422464978,  3.0862664687972017,  0.0,
+		  2.22474487139,      -2.22474487139,      -1.0,                 0.0,
+		  2.22474487139,      -2.22474487139,       1.0,                 0.0,
+		  1.1721513422464978, -3.0862664687972017,  0.0,                 0.0,
+		  3.0862664687972017, -1.1721513422464978,  0.0,                 0.0,
+		  2.22474487139,      -1.0,                -2.22474487139,       0.0,
+		  2.22474487139,       1.0,                -2.22474487139,       0.0,
+		  3.0862664687972017,  0.0,                -1.1721513422464978,  0.0,
+		  1.1721513422464978,  0.0,                -3.0862664687972017,  0.0,
+		  2.22474487139,      -1.0,                 2.22474487139,       0.0,
+		  2.22474487139,       1.0,                 2.22474487139,       0.0,
+		  1.1721513422464978,  0.0,                 3.0862664687972017,  0.0,
+		  3.0862664687972017,  0.0,                 1.1721513422464978,  0.0,
 	};
 
 	const std::array<double, n_grads_3d * 4> gradients_3d = [] {
@@ -362,7 +362,7 @@ namespace
 	constexpr std::size_t vec_size = 256;
 	constexpr std::size_t row_size = 20;
 	constexpr std::array<std::array<std::int64_t, row_size>, vec_size> lookup_4d_vertex_codes =
-	{{
+	{ {
 		{{ 0x15, 0x45, 0x51, 0x54, 0x55, 0x56, 0x59, 0x5A, 0x65, 0x66, 0x69, 0x6A, 0x95, 0x96, 0x99, 0x9A, 0xA5, 0xA6, 0xA9, 0xAA }},
 		{{ 0x15, 0x45, 0x51, 0x55, 0x56, 0x59, 0x5A, 0x65, 0x66, 0x6A, 0x95, 0x96, 0x9A, 0xA6, 0xAA }},
 		{{ 0x01, 0x05, 0x11, 0x15, 0x41, 0x45, 0x51, 0x55, 0x56, 0x5A, 0x66, 0x6A, 0x96, 0x9A, 0xA6, 0xAA }},
@@ -619,7 +619,7 @@ namespace
 		{{ 0x55, 0x59, 0x65, 0x69, 0x95, 0x99, 0xA5, 0xA9, 0xAA, 0xAE, 0xBA, 0xEA, 0xFE }},
 		{{ 0x55, 0x59, 0x65, 0x69, 0x6A, 0x95, 0x99, 0x9A, 0xA5, 0xA6, 0xA9, 0xAA, 0xAE, 0xBA, 0xEA }},
 		{{ 0x55, 0x56, 0x59, 0x5A, 0x65, 0x66, 0x69, 0x6A, 0x95, 0x96, 0x99, 0x9A, 0xA5, 0xA6, 0xA9, 0xAA, 0xAB, 0xAE, 0xBA, 0xEA }}
-	}};
+	} };
 
 	struct LatticeVertex4D
 	{
@@ -666,7 +666,7 @@ namespace
 		return result;
 	}();
 
-	struct Lookup4DData 
+	struct Lookup4DData
 	{
 		std::vector<std::int64_t> a;
 		std::vector<LatticeVertex4D> b;
@@ -739,19 +739,19 @@ namespace
 }
 
 OpenSimplex2SNoise::OpenSimplex2SNoise(
-	std::uint64_t seed, 
-	Noise2DModifier noise_2d_modifier, 
-	Noise3DModifier noise_3d_modifier, 
+	std::uint64_t seed,
+	Noise2DModifier noise_2d_modifier,
+	Noise3DModifier noise_3d_modifier,
 	Noise4DModifier noise_4d_modifier)
-	: 
-	seed_(seed), 
-	noise_2d_modifier_(noise_2d_modifier), 
-	noise_3d_modifier_(noise_3d_modifier), 
+	:
+	seed_(seed),
+	noise_2d_modifier_(noise_2d_modifier),
+	noise_3d_modifier_(noise_3d_modifier),
 	noise_4d_modifier_(noise_4d_modifier)
 {
 }
 
-double OpenSimplex2SNoise::Noise(double x, double y) const noexcept
+double OpenSimplex2SNoise::Sample(double x, double y) const noexcept
 {
 	double xr = x;
 	double yr = y;
@@ -883,7 +883,7 @@ double OpenSimplex2SNoise::Noise(double x, double y) const noexcept
 	return value;
 }
 
-double OpenSimplex2SNoise::Noise(double x, double y, double z) const noexcept
+double OpenSimplex2SNoise::Sample(double x, double y, double z) const noexcept
 {
 	const std::uint64_t seed2 = seed_ ^ -0x52D547B2E96ED629LL;
 
@@ -913,7 +913,7 @@ double OpenSimplex2SNoise::Noise(double x, double y, double z) const noexcept
 	const double y0 = yi + static_cast<double>(y_n_mask);
 	const double z0 = zi + static_cast<double>(z_n_mask);
 	const double a0 = rsquared_3d - x0 * x0 - y0 * y0 - z0 * z0;
-	
+
 	double value = math::Pow4(a0) * Grad(seed_, xrbp + (x_n_mask & prime_x), yrbp + (y_n_mask & prime_y), zrbp + (z_n_mask & prime_z), x0, y0, z0);
 
 	const double x1 = xi - 0.5;
@@ -931,7 +931,7 @@ double OpenSimplex2SNoise::Noise(double x, double y, double z) const noexcept
 
 	bool skip5 = false;
 	const double a2 = x_a_flip_mask0 + a0;
-	
+
 	if (a2 > 0.0)
 	{
 		const double x2 = x0 - (x_n_mask | 1);
@@ -943,7 +943,7 @@ double OpenSimplex2SNoise::Noise(double x, double y, double z) const noexcept
 	else
 	{
 		const double a3 = y_a_flip_mask0 + z_a_flip_mask0 + a0;
-		
+
 		if (a3 > 0.0)
 		{
 			double x3 = x0;
@@ -954,7 +954,7 @@ double OpenSimplex2SNoise::Noise(double x, double y, double z) const noexcept
 		}
 
 		const double a4 = x_a_flip_mask1 + a1;
-		
+
 		if (a4 > 0.0)
 		{
 			const double x4 = (x_n_mask | 1) + x1;
@@ -1043,7 +1043,7 @@ double OpenSimplex2SNoise::Noise(double x, double y, double z) const noexcept
 	if (!skip5)
 	{
 		const double a5 = y_a_flip_mask1 + z_a_flip_mask1 + a1;
-		
+
 		if (a5 > 0.0)
 		{
 			const double x5 = x1;
@@ -1057,7 +1057,7 @@ double OpenSimplex2SNoise::Noise(double x, double y, double z) const noexcept
 	if (!skip9)
 	{
 		const double a9 = x_a_flip_mask1 + z_a_flip_mask1 + a1;
-		
+
 		if (a9 > 0.0)
 		{
 			const double x9 = (x_n_mask | 1) + x1;
@@ -1071,7 +1071,7 @@ double OpenSimplex2SNoise::Noise(double x, double y, double z) const noexcept
 	if (!skip_d)
 	{
 		const double aD = x_a_flip_mask1 + y_a_flip_mask1 + a1;
-		
+
 		if (aD > 0.0)
 		{
 			const double xD = (x_n_mask | 1) + x1;
@@ -1085,7 +1085,7 @@ double OpenSimplex2SNoise::Noise(double x, double y, double z) const noexcept
 	return value;
 }
 
-double OpenSimplex2SNoise::Noise(double x, double y, double z, double w) const noexcept
+double OpenSimplex2SNoise::Sample(double x, double y, double z, double w) const noexcept
 {
 	double xr = x;
 	double yr = y;
@@ -1121,11 +1121,11 @@ double OpenSimplex2SNoise::Noise(double x, double y, double z, double w) const n
 		((static_cast<std::int64_t>(std::floor(yr * 4.0)) & 3) << 2) |
 		((static_cast<std::int64_t>(std::floor(zr * 4.0)) & 3) << 4) |
 		((static_cast<std::int64_t>(std::floor(wr * 4.0)) & 3) << 6);
-	
+
 	const std::int64_t secondary_index_start_and_stop = lookup_4d_a[index];
 	const std::int64_t secondary_index_start = secondary_index_start_and_stop & 0xFFFF;
 	const std::int64_t secondary_index_stop = secondary_index_start_and_stop >> 16;
-	
+
 	double value = 0.0;
 
 	for (std::int64_t i = secondary_index_start; i < secondary_index_stop; ++i)
@@ -1175,7 +1175,7 @@ void OpenSimplex2SNoise::RotateCoords(double& xr, double& yr, double& zr) const 
 		const double xz = xr + zr;
 		const double s2 = xz * rotate_3d_orthogonalizer;
 		const double yy = yr * root3_over_3;
-		
+
 		xr = xr + s2 + yy;
 		zr = zr + s2 + yy;
 		yr = xz * -root3_over_3 + yy;
@@ -1185,7 +1185,7 @@ void OpenSimplex2SNoise::RotateCoords(double& xr, double& yr, double& zr) const 
 		const double xy = xr + yr;
 		const double s2 = xy * rotate_3d_orthogonalizer;
 		const double zz = zr * root3_over_3;
-		
+
 		xr = xr + s2 + zz;
 		yr = yr + s2 + zz;
 		zr = xy * -root3_over_3 + zz;
@@ -1205,10 +1205,10 @@ void OpenSimplex2SNoise::RotateCoords(double& xr, double& yr, double& zr, double
 	if (noise_4d_modifier_ == Noise4DModifier::ImproveXYZ)
 	{
 		const double xyz = xr + yr + zr;
-        const double ww = wr * 1.118033988749894;
-        const double s2 = xyz * -0.16666666666666666 + ww;
+		const double ww = wr * 1.118033988749894;
+		const double s2 = xyz * -0.16666666666666666 + ww;
 
-        xr += s2;
+		xr += s2;
 		yr += s2;
 		zr += s2;
 		wr = -0.5 * xyz + ww;
@@ -1216,33 +1216,33 @@ void OpenSimplex2SNoise::RotateCoords(double& xr, double& yr, double& zr, double
 	else if (noise_4d_modifier_ == Noise4DModifier::ImproveXYZ_ImproveXY)
 	{
 		const double xy = xr + yr;
-        const double s2 = xy * -0.21132486540518699998;
-        const double zz = zr * 0.28867513459481294226;
-        const double ww = wr * 1.118033988749894;
-        
+		const double s2 = xy * -0.21132486540518699998;
+		const double zz = zr * 0.28867513459481294226;
+		const double ww = wr * 1.118033988749894;
+
 		xr = xr + (zz + ww + s2);
 		yr = yr + (zz + ww + s2);
-        zr = xy * -0.57735026918962599998 + (zz + ww);
-        wr = zr * -0.866025403784439 + ww;
+		zr = xy * -0.57735026918962599998 + (zz + ww);
+		wr = zr * -0.866025403784439 + ww;
 	}
 	else if (noise_4d_modifier_ == Noise4DModifier::ImproveXYZ_ImproveXZ)
 	{
 		const double xz = xr + zr;
-        const double s2 = xz * -0.21132486540518699998;
-        const double yy = yr * 0.28867513459481294226;
-        const double ww = wr * 1.118033988749894;
+		const double s2 = xz * -0.21132486540518699998;
+		const double yy = yr * 0.28867513459481294226;
+		const double ww = wr * 1.118033988749894;
 
-        xr = xr + (yy + ww + s2);
+		xr = xr + (yy + ww + s2);
 		zr = zr + (yy + ww + s2);
-        yr = xz * -0.57735026918962599998 + (yy + ww);
-        wr = yr * -0.866025403784439 + ww;
+		yr = xz * -0.57735026918962599998 + (yy + ww);
+		wr = yr * -0.866025403784439 + ww;
 	}
 	else if (noise_4d_modifier_ == Noise4DModifier::ImproveXY_ImproveZW)
 	{
 		const double s2 = (xr + yr) * -0.28522513987434876941 + (zr + wr) * 0.83897065470611435718;
-        const double t2 = (zr + wr) * 0.21939749883706435719 + (xr + yr) * -0.48214856493302476942;
+		const double t2 = (zr + wr) * 0.21939749883706435719 + (xr + yr) * -0.48214856493302476942;
 
-        xr += s2;
+		xr += s2;
 		yr += s2;
 		zr += t2;
 		wr += t2;
@@ -1251,7 +1251,7 @@ void OpenSimplex2SNoise::RotateCoords(double& xr, double& yr, double& zr, double
 	{
 		const double s = skew_4d * (xr + yr + zr + wr);
 
-        xr += s;
+		xr += s;
 		yr += s;
 		zr += s;
 		wr += s;

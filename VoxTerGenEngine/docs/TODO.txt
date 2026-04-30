@@ -34,3 +34,5 @@ add Graphics Device Interface - move all graphics apis inits into it - App will 
 create a single templated class for opensimplex, they are the same headers only different names! 
 	template <typename Variant>
 	class OpenSimplexNoise
+
+add a proper templated Vec class into "VoxTerGenAlgorithms/utils/Math.hpp"

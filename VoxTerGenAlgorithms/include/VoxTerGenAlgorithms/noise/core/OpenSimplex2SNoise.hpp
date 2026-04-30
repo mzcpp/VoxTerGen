@@ -6,26 +6,26 @@
 
 enum class Noise2DModifier
 {
-	Skew, 
+	Skew,
 	Default = Skew,
-	ImproveX, 
+	ImproveX,
 };
 
 enum class Noise3DModifier
 {
-	ImproveXY, 
-	ImproveXZ, 
+	ImproveXY,
+	ImproveXZ,
 	Default = ImproveXZ,
 	Fallback
 };
 
 enum class Noise4DModifier
 {
-	ImproveXYZ, 
+	ImproveXYZ,
 	Default = ImproveXYZ,
-	ImproveXYZ_ImproveXY, 
-	ImproveXYZ_ImproveXZ, 
-	ImproveXY_ImproveZW, 
+	ImproveXYZ_ImproveXY,
+	ImproveXYZ_ImproveXZ,
+	ImproveXY_ImproveZW,
 	Fallback
 };
 
@@ -39,16 +39,16 @@ private:
 
 public:
 	OpenSimplex2SNoise(
-		std::uint64_t seed, 
+		std::uint64_t seed,
 		Noise2DModifier noise_2d_modifier = Noise2DModifier::Default,
-		Noise3DModifier noise_3d_modifier = Noise3DModifier::Default, 
+		Noise3DModifier noise_3d_modifier = Noise3DModifier::Default,
 		Noise4DModifier noise_4d_modifier = Noise4DModifier::Default);
 
-	double Noise(double x, double y) const noexcept;
+	double Sample(double x, double y) const noexcept;
 
-	double Noise(double x, double y, double z) const noexcept;
+	double Sample(double x, double y, double z) const noexcept;
 
-	double Noise(double x, double y, double z, double w) const noexcept;
+	double Sample(double x, double y, double z, double w) const noexcept;
 
 	// Getters
 	std::uint64_t Seed() const noexcept { return seed_; }
@@ -66,7 +66,7 @@ private:
 	void RotateCoords(double& xr, double& yr) const noexcept;
 
 	void RotateCoords(double& xr, double& yr, double& zr) const noexcept;
-	
+
 	void RotateCoords(double& xr, double& yr, double& zr, double& wr) const noexcept;
 };
 

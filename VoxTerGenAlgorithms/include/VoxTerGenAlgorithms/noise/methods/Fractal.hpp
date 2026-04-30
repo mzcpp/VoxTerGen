@@ -10,9 +10,9 @@
 template<typename Noise>
 concept NoiseType = requires(Noise noise, double x, double y, double z)
 {
-    noise.Noise(x);
-    noise.Noise(x, y);
-    noise.Noise(x, y, z);
+    noise.Sample(x);
+    noise.Sample(x, y);
+    noise.Sample(x, y, z);
 };
 
 namespace domain_transform
@@ -52,16 +52,16 @@ namespace signal_transform
     struct Abs { double operator()(double n) const { return std::abs(n); } };
     struct InvertAbs { double operator()(double n) const { return 1.0 - std::abs(n); } };
     struct Square { double operator()(double n) const { return n * n; } };
-    
+
     struct RidgedShape
-    { 
-        double operator()(double n) const 
-        { 
+    {
+        double operator()(double n) const
+        {
             n = std::abs(n);
             n = 1.0 - n;
             n = n * n;
             return n;
-        } 
+        }
     };
 }  // namespace domain_transform
 
@@ -93,8 +93,8 @@ namespace accumulation
             return result_sum + signal * amplitude;
         }
 
-        void Reset() 
-        {  
+        void Reset()
+        {
             weight_ = 1.0;
         }
     };
@@ -124,20 +124,20 @@ private:
 
 public:
     Fractal(
-        const Noise& noise, 
-        const DomainTransform& domain, 
-        const SignalTransform& signal, 
-        const Accumulator& acc, 
-        int octaves, 
-        double amplitude_decay, 
-        double lacunarity) 
-        : 
-        noise_(noise), 
-        domain_transform_(domain), 
-        signal_transform_(signal), 
-        accumulator_(acc), 
-        octaves_(octaves), 
-        amplitude_decay_(amplitude_decay), 
+        const Noise& noise,
+        const DomainTransform& domain,
+        const SignalTransform& signal,
+        const Accumulator& acc,
+        int octaves,
+        double amplitude_decay,
+        double lacunarity)
+        :
+        noise_(noise),
+        domain_transform_(domain),
+        signal_transform_(signal),
+        accumulator_(acc),
+        octaves_(octaves),
+        amplitude_decay_(amplitude_decay),
         lacunarity_(lacunarity)
     {
     }
@@ -154,9 +154,9 @@ public:
 
         for (int octave = 0; octave < octaves_; ++octave)
         {
-            double signal = std::apply([&](auto... coord) { 
+            double signal = std::apply([&](auto... coord) {
                 return noise_.Noise((coord * frequency)...);
-            }, warped_coords);
+                }, warped_coords);
 
             signal = signal_transform_(signal);
 
