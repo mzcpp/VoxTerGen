@@ -40,7 +40,7 @@ private:
     double step_size_;
 
 public:
-    VectorFieldWalker(Field field, std::uint64_t seed, double step_size) : field_(field), seed_(seed), step_size_(step_size)
+    VectorFieldWalker(Field field, std::uint64_t seed, double step_size) : field_(field), seed_(seed), step_size_(step_size), offsets_(0.0)
     {
         constexpr double low_range = -1000.0;
         constexpr double high_range = 1000.0;
