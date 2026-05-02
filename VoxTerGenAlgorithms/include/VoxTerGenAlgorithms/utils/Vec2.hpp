@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <limits>
 
-namespace vtg
+namespace math
 {
 	template<std::floating_point T>
 	class Vec2

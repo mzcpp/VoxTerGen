@@ -23,7 +23,7 @@ namespace math
 
 	inline double Pow4(double x) noexcept
 	{
-		double x2 = x * x;
+		const double x2 = x * x;
 		return x2 * x2;
 	}
 

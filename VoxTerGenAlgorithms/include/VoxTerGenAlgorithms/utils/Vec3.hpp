@@ -7,7 +7,7 @@
 #include <type_traits>
 #include <algorithm>
 
-namespace vtg
+namespace math
 {
 	template<std::floating_point T>
 	class Vec3
