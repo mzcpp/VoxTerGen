@@ -1,5 +1,5 @@
-#ifndef TEXTURE2D_HPP
-#define TEXTURE2D_HPP
+#ifndef TEXTURE_2D_HPP
+#define TEXTURE_2D_HPP
 
 #include <glad/glad/glad.h>
 
@@ -55,4 +55,4 @@ namespace TextureUtils
 
 } // namespace TextureUtils
 
-#endif
+#endif // TEXTURE_2D_HPP

@@ -11,6 +11,8 @@
 
 #include <queue>
 
+union SDL_Event;
+
 class Engine
 {
 private:
@@ -45,5 +47,5 @@ public:
 	const WorldRenderer& WorldRenderer() const noexcept { return world_renderer_; }
 };
 
-#endif
+#endif // ENGINE_HPP
 

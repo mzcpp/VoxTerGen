@@ -19,18 +19,33 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\noise\core\OpenSimplex2F.cpp" />
+    <ClCompile Include="src\noise\core\OpenSimplex2S.cpp" />
+    <ClCompile Include="src\noise\core\PerlinNoise.cpp" />
+    <ClCompile Include="src\noise\core\SimplexNoise.cpp" />
+    <ClCompile Include="src\noise\core\WorleyNoise.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\VoxTerGenAlgorithms.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2FNoise.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2SNoise.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\SimplexNoise.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\Fractal.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms.hpp" />
-    <ClInclude Include="include\VoxTerGenAlgorithms\VoxTerGenAlgorithms.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\PerlinNoise.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\WorleyNoise.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\VectorFieldWalker.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Math.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Vec2.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Vec3.hpp" />
     <ClInclude Include="internal\framework.h" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Hash.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Rng.hpp" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -133,7 +148,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)internal;$(ProjectDir)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ProgramDataBaseFileName>$(SolutionDir)$(ProjectName)\build\$(Configuration)\$(Platform)\obj\$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
@@ -158,7 +173,7 @@ del /Q $(SolutionDir)$(ProjectName)\lib\$(Configuration)\$(Platform)\$(TargetNam
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)internal;$(ProjectDir)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ProgramDataBaseFileName>$(SolutionDir)$(ProjectName)\build\$(Configuration)\$(Platform)\obj\$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>

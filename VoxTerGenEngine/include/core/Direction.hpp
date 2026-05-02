@@ -96,4 +96,4 @@ constexpr Direction ToDirection(MajorAxis axis, bool positive)
     return direction_table[static_cast<std::uint8_t>(axis)][positive];
 }
 
-#endif
+#endif // DIRECTION_HPP

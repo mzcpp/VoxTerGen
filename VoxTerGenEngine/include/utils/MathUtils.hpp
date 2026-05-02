@@ -9,100 +9,103 @@
 #include <limits>
 #include <concepts>
 
-/**
- * @brief Checks if a floating-point number is approximately zero.
- *
- * @tparam T Floating-point type
- * @param a Value to check
- * @param epsilon Tolerance (default: constants::math::float_epsilon)
- * 
- * @return true if |a| <= epsilon, false otherwise
- */
-template <std::floating_point T>
-inline bool FloatingPointNearZero(T a, T epsilon = static_cast<T>(constants::math::float_epsilon))
+namespace math_utils
 {
-    return std::fabs(a) <= epsilon;
-}
+    /**
+     * @brief Checks if a floating-point number is approximately zero.
+     *
+     * @tparam T Floating-point type
+     * @param a Value to check
+     * @param epsilon Tolerance (default: constants::math::float_epsilon)
+     *
+     * @return true if |a| <= epsilon, false otherwise
+     */
+    template <std::floating_point T>
+    inline bool FloatingPointNearZero(T a, T epsilon = static_cast<T>(constants::math::float_epsilon))
+    {
+        return std::fabs(a) <= epsilon;
+    }
 
-/**
- * @brief Checks if two floating-point numbers are approximately equal.
- *
- * @tparam T Floating-point type
- * @param a First value
- * @param b Second value
- * @param epsilon Relative tolerance (default: constants::math::float_epsilon)
- * 
- * @return true if the numbers are considered equal, false otherwise
- */
-template <std::floating_point T>
-inline bool FloatingPointSame(T a, T b, T epsilon = static_cast<T>(constants::math::float_epsilon))
-{
-    return std::fabs(a - b) <= std::fmax(std::fabs(a), std::fabs(b)) * epsilon;
-}
+    /**
+     * @brief Checks if two floating-point numbers are approximately equal.
+     *
+     * @tparam T Floating-point type
+     * @param a First value
+     * @param b Second value
+     * @param epsilon Relative tolerance (default: constants::math::float_epsilon)
+     *
+     * @return true if the numbers are considered equal, false otherwise
+     */
+    template <std::floating_point T>
+    inline bool FloatingPointSame(T a, T b, T epsilon = static_cast<T>(constants::math::float_epsilon))
+    {
+        return std::fabs(a - b) <= std::fmax(std::fabs(a), std::fabs(b)) * epsilon;
+    }
 
-/**
- * @brief Checks if one floating-point number is significantly greater than another.
- *
- * @tparam T Floating-point type
- * @param a First value
- * @param b Second value
- * @param epsilon Relative tolerance (default: constants::math::float_epsilon)
- * 
- * @return true if a > b by more than epsilon, false otherwise
- */
-template <std::floating_point T>
-inline bool FloatingPointGreaterThan(T a, T b, T epsilon = static_cast<T>(constants::math::float_epsilon))
-{
-    return (a - b) > std::fmax(std::fabs(a), std::fabs(b)) * epsilon;
-}
+    /**
+     * @brief Checks if one floating-point number is significantly greater than another.
+     *
+     * @tparam T Floating-point type
+     * @param a First value
+     * @param b Second value
+     * @param epsilon Relative tolerance (default: constants::math::float_epsilon)
+     *
+     * @return true if a > b by more than epsilon, false otherwise
+     */
+    template <std::floating_point T>
+    inline bool FloatingPointGreaterThan(T a, T b, T epsilon = static_cast<T>(constants::math::float_epsilon))
+    {
+        return (a - b) > std::fmax(std::fabs(a), std::fabs(b)) * epsilon;
+    }
 
-/**
- * @brief Checks if one floating-point number is significantly less than another.
- *
- * @tparam T Floating-point type
- * @param a First value
- * @param b Second value
- * @param epsilon Relative tolerance (default: constants::math::float_epsilon)
- * 
- * @return true if a < b by more than epsilon, false otherwise
- */
-template <std::floating_point T>
-inline bool FloatingPointLessThan(T a, T b, T epsilon = static_cast<T>(constants::math::float_epsilon))
-{
-    return (b - a) > std::fmax(std::fabs(a), std::fabs(b)) * epsilon;
-}
+    /**
+     * @brief Checks if one floating-point number is significantly less than another.
+     *
+     * @tparam T Floating-point type
+     * @param a First value
+     * @param b Second value
+     * @param epsilon Relative tolerance (default: constants::math::float_epsilon)
+     *
+     * @return true if a < b by more than epsilon, false otherwise
+     */
+    template <std::floating_point T>
+    inline bool FloatingPointLessThan(T a, T b, T epsilon = static_cast<T>(constants::math::float_epsilon))
+    {
+        return (b - a) > std::fmax(std::fabs(a), std::fabs(b)) * epsilon;
+    }
 
-/**
- * @brief Returns the sign of a value.
- *
- * @tparam T Numeric type
- * @param val Value to check
- * 
- * @return -1 if val < 0, 0 if val == 0, 1 if val > 0
- */
-template <std::integral T>
-inline constexpr int Sgn(T val)
-{
-    return (T(0) < val) - (val < T(0));
-}
+    /**
+     * @brief Returns the sign of a value.
+     *
+     * @tparam T Numeric type
+     * @param val Value to check
+     *
+     * @return -1 if val < 0, 0 if val == 0, 1 if val > 0
+     */
+    template <std::integral T>
+    inline constexpr int Sgn(T val)
+    {
+        return (T(0) < val) - (val < T(0));
+    }
 
-/**
- * @brief Checks if two 3D vectors are approximately equal.
- *
- * @param a First vector
- * @param b Second vector
- * @param eps Tolerance (default: constants::math::float_epsilon)
- * 
- * @return true if vectors are approximately equal, false otherwise
- */
-inline bool Vec3Equal(const glm::vec3& a, const glm::vec3& b, float eps = constants::math::float_epsilon)
-{
-    return glm::length(a - b) < eps;
-}
+    /**
+     * @brief Checks if two 3D vectors are approximately equal.
+     *
+     * @param a First vector
+     * @param b Second vector
+     * @param eps Tolerance (default: constants::math::float_epsilon)
+     *
+     * @return true if vectors are approximately equal, false otherwise
+     */
+    inline bool Vec3Equal(const glm::vec3& a, const glm::vec3& b, float eps = constants::math::float_epsilon)
+    {
+        return glm::length(a - b) < eps;
+    }
 
-inline int FloorDiv(int a, int b)
-{
-    return (a >= 0) ? (a / b) : ((a - (b - 1)) / b);
-}
+    inline int FloorDiv(int a, int b)
+    {
+        return (a >= 0) ? (a / b) : ((a - (b - 1)) / b);
+    }
+} // namespace math_utils
 
 #endif // MATH_UTILS_HPP

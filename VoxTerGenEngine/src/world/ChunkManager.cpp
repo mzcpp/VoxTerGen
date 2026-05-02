@@ -163,8 +163,8 @@ Block ChunkManager::WorldBlockQuery(const glm::ivec2& current_chunk_coord, const
 		return Block();
 	}
 	
-	const int x_chunk_offset = FloorDiv(block_coords.x, constants::chunk::width);
-	const int z_chunk_offset = FloorDiv(block_coords.z, constants::chunk::depth);
+	const int x_chunk_offset = math_utils::FloorDiv(block_coords.x, constants::chunk::width);
+	const int z_chunk_offset = math_utils::FloorDiv(block_coords.z, constants::chunk::depth);
 	const glm::ivec3 target_block_coords = 
 	{ 
 		block_coords.x - (x_chunk_offset * constants::chunk::width), 

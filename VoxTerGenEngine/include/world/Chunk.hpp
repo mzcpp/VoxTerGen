@@ -15,9 +15,9 @@
 #include <variant>
 #include <cstdint>
 
-using ChunkID = std::uint64_t;
-
 class Mesh;
+
+using ChunkID = std::uint64_t;
 
 struct ChunkRenderData
 {

@@ -28,8 +28,7 @@ public:
 	void ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue);
 
 	void RenderChunks(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
-
 };
 
-#endif
+#endif // CHUNK_MESH_RENDER_PASS
 

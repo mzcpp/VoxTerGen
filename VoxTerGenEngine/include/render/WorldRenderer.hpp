@@ -10,9 +10,7 @@
 #include <memory>
 #include <queue>
 
-class Chunk;
 class ResourceManager;
-struct ivec2_hash;
 
 class WorldRenderer
 {
@@ -29,5 +27,5 @@ public:
 	void RenderWorld(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
 };
 
-#endif
+#endif // WORLD_RENDERER_HPP
 

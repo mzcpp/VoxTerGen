@@ -16,4 +16,4 @@ enum class Material : std::uint8_t
     Bedrock
 };
 
-#endif
+#endif // MATERIAL_HPP
