@@ -65,8 +65,19 @@ namespace constants
      */
     namespace math
     {
-        inline constexpr float float_epsilon = 1e-5f;
+        inline constexpr float float_abs_epsilon = 1e-6f;
+        inline constexpr float float_rel_epsilon = 1e-5f;
+        inline constexpr double double_abs_epsilon = 1e-12;
+        inline constexpr double double_rel_epsilon = 1e-9;
     } // namespace math
+
+    /**
+     * @brief Physics-related constants.
+     */
+    namespace physics
+    {
+        inline constexpr double g = 9.6;
+    } // namespace physics
 
     /**
      * @brief Paths to resources.
