@@ -20,17 +20,18 @@ verify the camera is working correctly for big floats
 TODO comments in codebase
 SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix
 
-opengl/glad correct version check when init, initialization of subsystems review
 better math::DotGrad?
 
 tick rate - 20/60?
-
+rework MathUtils
 glEnable(GL_FRAMEBUFFER_SRGB);
 vsync
 Test with multiple compilers!
 VERY IMPORTANT, MAKE THE WINDOWS CORRECT SIZE BASED ON MONITOR SIZE SO IT DOES NOT CUTOFF LIKE THE MAZE GENERATOR ON MBA 13
 
+opengl/glad correct version check when init, initialization of subsystems review
 add Graphics Device Interface - move all graphics apis inits into it - App will own it along with engine
+
 create a single templated class for opensimplex, they are the same headers only different names! 
 	template <typename Variant>
 	class OpenSimplexNoise
