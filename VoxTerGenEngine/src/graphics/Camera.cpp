@@ -174,7 +174,7 @@ bool Camera::PointInsideFrustum(const glm::vec3& point) const
 {
 	for (int i = 0; i < 6; ++i)
 	{
-		if (glm::dot(frustum_planes_[i].normal_, point) + frustum_planes_[i].dist_ < constants::math::float_epsilon)
+		if (glm::dot(frustum_planes_[i].normal_, point) + frustum_planes_[i].dist_ < constants::math::float_rel_epsilon)
 		{
 			//Logger::Log(LogLevel::ERROR, "Sanity fail: Point {} {} {} is outside frustum!", point.x, point.y, point.z);
 			return false;
