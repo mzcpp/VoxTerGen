@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <glm/vec3.hpp>
+
 enum class MovementState
 {
 	GROUNDED,
@@ -14,6 +16,8 @@ enum class MovementState
 class Observer
 {
 private:
+	glm::dvec3 pos_;
+	glm::dvec3 prev_pos_;
 	MovementState movement_state_;
 	bool noclip_;
 

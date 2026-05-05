@@ -43,20 +43,20 @@ void InputManager::ProcessEvent(const SDL_Event& e)
 
 bool InputManager::KeyPressed(SDL_Scancode key) const
 {
-    const bool curr = keys_.contains(key) ? keys_[key] : false;
-    const bool prev = prev_keys_.contains(key) ? prev_keys_[key] : false;
+    const bool curr = keys_.contains(key) ? keys_.at(key) : false;
+    const bool prev = prev_keys_.contains(key) ? prev_keys_.at(key) : false;
     return curr && !prev;
 }
 
 bool InputManager::KeyDown(SDL_Scancode key) const
 {
-    return keys_.contains(key) ? keys_[key] : false;
+    return keys_.contains(key) ? keys_.at(key) : false;
 }
 
 bool InputManager::KeyReleased(SDL_Scancode key) const
 {
-    const bool curr = keys_.contains(key) ? keys_.[key] : false;
-    const bool prev = prev_keys_.contains(key) ? prev_keys_[key] : false;
+    const bool curr = keys_.contains(key) ? keys_.at(key) : false;
+    const bool prev = prev_keys_.contains(key) ? prev_keys_.at(key) : false;
     return !curr && prev;
 }
 

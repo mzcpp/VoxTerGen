@@ -18,6 +18,15 @@ The format follows Keep a Changelog and Semantic Versioning.
 
 ---
 
+## [0.4.0] - 2 May 2026
+
+### Added
+- Basic gradient and cellular noise algorithms to static lib project for procedural generation of terrain and caves.
+- Fractal class for combining multiple octaves of noise.
+- Vector field based walker for generating procedural caves.
+
+---
+
 ## [0.3.0] - 3 April 2026
 
 ### Added

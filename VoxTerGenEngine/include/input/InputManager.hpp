@@ -36,7 +36,7 @@ public:
 
     bool KeyReleased(SDL_Scancode key) const;
 
-    bool MouseButtonDown(Uint8 button) const;
+    bool MouseButtonDown(std::uint8_t button) const;
 
     // Getters
     const MouseState& Mouse() const noexcept { return mouse_; }
