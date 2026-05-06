@@ -9,7 +9,7 @@
 
 #include <algorithm>
 
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : 
+Camera::Camera(glm::dvec3 position, glm::vec3 up, float yaw, float pitch) : 
 	position_(position), 
 	front_(glm::vec3(0.0f, 0.0f, -1.0f)), 
 	up_(glm::vec3(0.0f, 0.0f, 0.0f)), 

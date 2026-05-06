@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL.h>
 
-Observer::Observer() : movement_state_(MovementState::GROUNDED), noclip_(false)
+Observer::Observer(const glm::dvec3& position) : pos_(position), movement_state_(MovementState::GROUNDED), noclip_(false)
 {
 
 }

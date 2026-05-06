@@ -18,11 +18,12 @@ class Observer
 private:
 	glm::dvec3 pos_;
 	glm::dvec3 prev_pos_;
+	glm::dvec3 velocity_;
 	MovementState movement_state_;
 	bool noclip_;
 
 public:
-	Observer();
+	Observer(const glm::dvec3& position);
 
 	void HandleEvents(SDL_Event e) noexcept;
 
