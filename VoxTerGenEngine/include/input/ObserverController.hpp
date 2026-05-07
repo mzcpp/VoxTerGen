@@ -10,6 +10,14 @@ private:
 
 public:
 	ObserverController(Observer& observer);
+
+    ObserverController(const ObserverController& other) = delete;
+    ObserverController& operator=(const ObserverController& other) = delete;
+
+    ObserverController(ObserverController&& other) = delete;
+    ObserverController& operator=(ObserverController&& other) = delete;
+
+	void ApplyInput(const InputManager& input, const Camera& camera);
 };
 
 #endif

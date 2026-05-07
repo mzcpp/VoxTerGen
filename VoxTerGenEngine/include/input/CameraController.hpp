@@ -14,13 +14,7 @@ private:
     float zoom_sensitivity_;
 
 public:
-    CameraController(Camera& cam) :
-        camera_(cam),
-        movement_speed_(constants::camera::speed),
-        move_sensitivity_(constants::camera::move_sensitivity),
-        zoom_sensitivity_(constants::camera::zoom_sensitivity)
-    {
-    }
+    CameraController(Camera& cam);
 
     CameraController(const CameraController& other) = delete;
     CameraController& operator=(const CameraController& other) = delete;

@@ -139,7 +139,7 @@ public:
     /**
      * @brief Prints the camera's position, orientation, and vectors to the logger.
      */
-    void PrintCamera() const;
+    void PrintCameraData() const;
 
     /**
      * @brief Prints the six frustum planes to the logger.

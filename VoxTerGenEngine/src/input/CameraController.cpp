@@ -6,6 +6,15 @@
 
 #include <algorithm>
 
+CameraController::CameraController() : 
+camera_(cam), 
+movement_speed_(constants::camera::speed), 
+move_sensitivity_(constants::camera::move_sensitivity), 
+zoom_sensitivity_(constants::camera::zoom_sensitivity)
+{
+    
+}
+
 void CameraController::ApplyInput(const InputManager& input, float delta_time, float aspect_ratio)
 {
     if (!camera_.enabled_movement_)

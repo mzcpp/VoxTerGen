@@ -198,7 +198,7 @@ bool Camera::SanityCheckFrustum() const
 	return true;
 }
 
-void Camera::PrintCamera() const
+void Camera::PrintCameraData() const
 {
 	Logger::Log(LogLevel::DEBUG, "---------------------------- Camera Info ----------------------------");
 	Logger::Log(LogLevel::DEBUG, "Position: {} {} {}", position_.x, position_.y, position_.z);

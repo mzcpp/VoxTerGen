@@ -13,11 +13,15 @@ enum class MovementState
 	AIRBORNE
 };
 
+class ObserverController;
+
 class Observer
 {
+	friend class ObserverController;
+
 private:
-	glm::dvec3 pos_;
-	glm::dvec3 prev_pos_;
+	glm::dvec3 position_;
+	glm::dvec3 prev_position_;
 	glm::dvec3 velocity_;
 	MovementState movement_state_;
 	bool noclip_;
@@ -25,9 +29,9 @@ private:
 public:
 	Observer(const glm::dvec3& position);
 
-	void HandleEvents(SDL_Event e) noexcept;
-
 	void Tick() noexcept;
+
+	void PrintObserverData() const;
 
 	// Getters
 	bool Noclip() const noexcept { return noclip_; }
