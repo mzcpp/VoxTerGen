@@ -37,3 +37,11 @@ create a single templated class for opensimplex, they are the same headers only 
 	class OpenSimplexNoise
 
 add a proper templated Vec class into "VoxTerGenAlgorithms/utils/Math.hpp"
+
+sort all #includes by alphabetical order and these order rules:
+	// 1. Corresponding header
+	// 2. Standard library
+	// 3. Third-party libraries
+	// 4. Project headers
+
+rework camera - WoW style

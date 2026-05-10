@@ -2,7 +2,9 @@
 #define CHUNK_MESH_RENDER_PASS
 
 #include "core/ResourceManager.hpp"
+
 #include "render/MeshRenderer.hpp"
+
 #include "world/Chunk.hpp"
 
 #include <glm/mat4x4.hpp>

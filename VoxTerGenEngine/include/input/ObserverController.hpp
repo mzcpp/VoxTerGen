@@ -3,6 +3,9 @@
 
 #include "world/Observer.hpp"
 
+class Camera;
+class InputManager;
+
 class ObserverController
 {
 private:

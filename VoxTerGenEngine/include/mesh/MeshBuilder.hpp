@@ -1,12 +1,16 @@
 #ifndef MESH_BUILDER_HPP
 #define MESH_BUILDER_HPP
 
+#include "core/Direction.hpp"
+
 #include "mesh/Mesh.hpp"
+
+#include "render/Material.hpp"
+
+#include "utils/constants.hpp"
+
 #include "world/Chunk.hpp"
 #include "world/Block.hpp"
-#include "utils/constants.hpp"
-#include "core/Direction.hpp"
-#include "render/Material.hpp"
 
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"

@@ -1,9 +1,10 @@
 #ifndef CAMERA_CONTROLLER_HPP
 #define CAMERA_CONTROLLER_HPP
 
-#include "input/InputManager.hpp"
-#include "graphics/Camera.hpp"
 #include "utils/Constants.hpp"
+
+class Camera;
+class InputManager;
 
 class CameraController
 {

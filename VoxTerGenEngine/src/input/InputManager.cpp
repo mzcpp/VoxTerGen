@@ -9,10 +9,13 @@ void InputManager::ResetFrameState()
     prev_keys_ = keys_;
     mouse_.delta_ = glm::vec2(0.0f);
     mouse_.wheel_ = 0.0f;
+    state_changed_ = false;
 }
 
 void InputManager::ProcessEvent(const SDL_Event& e)
 {
+    state_changed_ = true;
+
     switch (e.type)
     {
     case SDL_KEYDOWN:
@@ -37,6 +40,7 @@ void InputManager::ProcessEvent(const SDL_Event& e)
         mouse_.buttons_ = SDL_GetMouseState(&mouse_.pos_.x, &mouse_.pos_.y);
         break;
     default:
+        state_changed_ = false;
         break;
     }
 }
@@ -45,6 +49,7 @@ bool InputManager::KeyPressed(SDL_Scancode key) const
 {
     const bool curr = keys_.contains(key) ? keys_.at(key) : false;
     const bool prev = prev_keys_.contains(key) ? prev_keys_.at(key) : false;
+    
     return curr && !prev;
 }
 
@@ -57,6 +62,7 @@ bool InputManager::KeyReleased(SDL_Scancode key) const
 {
     const bool curr = keys_.contains(key) ? keys_.at(key) : false;
     const bool prev = prev_keys_.contains(key) ? prev_keys_.at(key) : false;
+    
     return !curr && prev;
 }
 

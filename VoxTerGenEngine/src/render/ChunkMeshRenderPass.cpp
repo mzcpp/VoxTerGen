@@ -1,14 +1,16 @@
 #include "render/ChunkMeshRenderPass.hpp"
-#include "world/Chunk.hpp"
+
 #include "core/ResourceManager.hpp"
 
-#include <glm/vec2.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "world/Chunk.hpp"
 
-#include <ranges>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/vec2.hpp>
+
 #include <iostream>
 #include <memory>
+#include <ranges>
 #include <variant>
 
 void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue)

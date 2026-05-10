@@ -1,8 +1,10 @@
 #include "core/Application.hpp"
+
 #include "utils/constants.hpp"
 #include "utils/Logger.hpp"
 
 #include <glad/glad/glad.h>
+
 #include <stb_image.h>
 
 #define SDL_MAIN_HANDLED
@@ -11,11 +13,11 @@
 #include <SDL2_ttf/SDL_ttf.h>
 #include <SDL2_mixer/SDL_mixer.h>
 
-#include <iostream>
-#include <vector>
-#include <cstdint>
-#include <string>
 #include <algorithm>
+#include <cstdint>
+#include <iostream>
+#include <string>
+#include <vector>
 
 Application::Application() :
 	initialized_image_(false),
@@ -231,10 +233,7 @@ bool Application::CreateWindow()
 		return false;
 	}
 
-	if (engine_.Camera().EnabledMovement())
-	{
-		SDL_SetRelativeMouseMode(SDL_TRUE);
-	}
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	return true;
 }

@@ -2,12 +2,14 @@
 
 #include <SDL2/SDL.h>
 
+#include "utils/Logger.hpp"
+
 Observer::Observer(const glm::dvec3& position) : 
-position_(position), 
-prev_position_(position), 
-velocity_(glm::dvec3(0.0)), 
-movement_state_(MovementState::GROUNDED), 
-noclip_(false)
+	position_(position), 
+	prev_position_(position), 
+	velocity_(glm::dvec3(0.0)), 
+	movement_state_(MovementState::GROUNDED), 
+	noclip_(false)
 {
 }
 

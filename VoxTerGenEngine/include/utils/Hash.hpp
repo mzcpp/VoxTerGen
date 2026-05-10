@@ -1,6 +1,11 @@
 #ifndef HASH_HPP
 #define HASH_HPP
 
+#include "glm/vec2.hpp"
+
+#include <cstddef>
+#include <functional>
+
 namespace utils
 {
 	struct ivec2_hash

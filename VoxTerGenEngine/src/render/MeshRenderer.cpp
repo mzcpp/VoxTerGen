@@ -1,6 +1,9 @@
 #include "render/MeshRenderer.hpp"
+
 #include "world/Chunk.hpp"
+
 #include "utils/Constants.hpp"
+
 #include "render/GpuMesh.hpp"
 
 #include <glad/glad.h>

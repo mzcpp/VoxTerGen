@@ -5,8 +5,8 @@
 
 #include <SDL2/SDL.h>
 
-#include <unordered_map>
 #include <cstdint>
+#include <unordered_map>
 
 struct MouseState
 {
@@ -22,6 +22,7 @@ private:
     std::unordered_map<SDL_Scancode, bool> keys_;
     std::unordered_map<SDL_Scancode, bool> prev_keys_;
     MouseState mouse_;
+    bool state_changed_ = false;
 
 public:
     InputManager() = default;
@@ -43,6 +44,7 @@ public:
     const glm::vec2& MouseDelta() const noexcept { return mouse_.delta_; }
     const glm::ivec2& MousePos() const noexcept { return mouse_.pos_; }
     float MouseWheel() const noexcept { return mouse_.wheel_; }
+    bool StateChanged() const noexcept { return state_changed_; }
 };
 
 #endif // INPUT_MANAGER_HPP

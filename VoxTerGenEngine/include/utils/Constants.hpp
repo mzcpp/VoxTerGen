@@ -112,6 +112,14 @@ namespace constants
     } // namespace camera
 
     /**
+     * @brief Observer-related constants.
+     */
+    namespace observer
+    {
+        inline constexpr float movement_speed = 10.0f;
+    } // namespace observer
+
+    /**
      * @brief Texture-related constants such as atlas size, columns, and rows.
      */
     namespace texture

@@ -1,10 +1,12 @@
 #ifndef CHUNK_MANAGER_HPP
 #define CHUNK_MANAGER_HPP
 
+#include "utils/Hash.hpp"
+
+#include "graphics/Camera.hpp"
+
 #include "world/Chunk.hpp"
 #include "world/Block.hpp"
-#include "utils/Hash.hpp"
-#include "graphics/Camera.hpp"
 
 #include <glm/vec2.hpp>
 

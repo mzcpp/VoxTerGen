@@ -1,7 +1,9 @@
 #include "world/ChunkManager.hpp"
 #include "mesh/MeshBuilder.hpp"
-#include "world/Chunk.hpp"
+
 #include "utils/MathUtils.hpp"
+
+#include "world/Chunk.hpp"
 
 #include <queue>
 #include <cmath>

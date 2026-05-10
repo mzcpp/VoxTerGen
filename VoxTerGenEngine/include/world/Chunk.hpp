@@ -1,10 +1,13 @@
 #ifndef CHUNK_HPP
 #define CHUNK_HPP
 
-#include "world/Block.hpp"
-#include "utils/Constants.hpp"
-#include "render/GpuMesh.hpp"
 #include "core/Direction.hpp"
+
+#include "render/GpuMesh.hpp"
+
+#include "utils/Constants.hpp"
+
+#include "world/Block.hpp"
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>

@@ -6,8 +6,8 @@
 #include <glm/glm.hpp>
 
 #include <cmath>
-#include <limits>
 #include <concepts>
+#include <limits>
 
 namespace math_utils
 {

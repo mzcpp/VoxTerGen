@@ -1,18 +1,20 @@
 #include "input/CameraController.hpp"
 #include "input/InputManager.hpp"
 #include "utils/MathUtils.hpp"
+#include "graphics/Camera.hpp"
+
+#include <glm/glm.hpp>
 
 #include <SDL2/SDL.h>
 
 #include <algorithm>
 
-CameraController::CameraController() : 
-camera_(cam), 
-movement_speed_(constants::camera::speed), 
-move_sensitivity_(constants::camera::move_sensitivity), 
-zoom_sensitivity_(constants::camera::zoom_sensitivity)
-{
-    
+CameraController::CameraController(Camera& camera) :
+    camera_(camera),
+    movement_speed_(constants::camera::speed), 
+    move_sensitivity_(constants::camera::move_sensitivity), 
+    zoom_sensitivity_(constants::camera::zoom_sensitivity)
+{   
 }
 
 void CameraController::ApplyInput(const InputManager& input, float delta_time, float aspect_ratio)
@@ -49,7 +51,7 @@ void CameraController::ApplyInput(const InputManager& input, float delta_time, f
         move_dir += camera_.world_up_;
     }
 
-    if (input.KeyDown(SDL_SCANCODE_X))
+    if (input.KeyDown(SDL_SCANCODE_LCTRL))
     { 
         move_dir -= camera_.world_up_;
     }
