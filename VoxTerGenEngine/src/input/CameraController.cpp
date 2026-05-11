@@ -17,7 +17,7 @@ CameraController::CameraController(Camera& camera) :
 {   
 }
 
-void CameraController::ApplyInput(const InputManager& input, float delta_time, float aspect_ratio)
+void CameraController::ApplyInput(const InputManager& input, float delta_time)
 {
     if (!camera_.enabled_movement_)
     {

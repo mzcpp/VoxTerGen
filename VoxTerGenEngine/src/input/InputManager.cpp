@@ -9,13 +9,10 @@ void InputManager::ResetFrameState()
     prev_keys_ = keys_;
     mouse_.delta_ = glm::vec2(0.0f);
     mouse_.wheel_ = 0.0f;
-    state_changed_ = false;
 }
 
 void InputManager::ProcessEvent(const SDL_Event& e)
 {
-    state_changed_ = true;
-
     switch (e.type)
     {
     case SDL_KEYDOWN:
@@ -40,7 +37,6 @@ void InputManager::ProcessEvent(const SDL_Event& e)
         mouse_.buttons_ = SDL_GetMouseState(&mouse_.pos_.x, &mouse_.pos_.y);
         break;
     default:
-        state_changed_ = false;
         break;
     }
 }

@@ -57,11 +57,6 @@ void Camera::Tick(float aspect_ratio)
 
 glm::mat4 Camera::InterpolatedViewMatrix(float alpha) const
 {
-	if (!stale_)
-	{
-		return;
-	}
-	
 	const glm::vec3 interp_pos = glm::vec3(glm::mix(prev_position_, position_, alpha));
 	const float interp_yaw = glm::mix(prev_yaw_, yaw_, alpha);
 	const float interp_pitch = glm::mix(prev_pitch_, pitch_, alpha);

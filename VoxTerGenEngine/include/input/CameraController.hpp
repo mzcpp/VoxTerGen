@@ -23,7 +23,7 @@ public:
     CameraController(CameraController&& other) = delete;
     CameraController& operator=(CameraController&& other) = delete;
 
-    void ApplyInput(const InputManager& input, float delta_time, float aspect_ratio);
+    void ApplyInput(const InputManager& input, float delta_time);
 
     void ApplyRotation(const InputManager& input);
 

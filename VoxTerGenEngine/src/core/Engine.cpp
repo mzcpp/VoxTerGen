@@ -24,41 +24,20 @@ void Engine::Initialize()
 
 void Engine::HandleEvents(SDL_Event e)
 {
-	input_manager_.ResetFrameState();
 	input_manager_.ProcessEvent(e);
-
-	if (e.type == SDL_MOUSEMOTION)
-	{
-		camera_controller_.ApplyRotation(input_manager_);
-	}
-
-	if (e.type == SDL_MOUSEWHEEL)
-	{
-		camera_controller_.ApplyZoom(input_manager_);
-	}
-
-	//if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_f)
-	//{
-	//	for (auto& [world_coords, chunk] : world_.ChunkManagerRef().Chunks())
-	//	{
-	//		std::cout << "invalidated mesh!\n";
-	//		chunk->SetMeshValid(false);
-	//		world_.ChunkManagerRef().PushChunkIntoQueue(chunk.get());
-	//	}
-	//	//world_.ChunkManagerRef().GetChunkAt({ 0, 0 })->SetMeshValid(false);
-	//}
 }
 
 void Engine::Tick(float aspect_ratio)
 {
 	camera_.PreTick();
-	//camera_controller_.ApplyRotation(input_manager_);
-	//camera_controller_.ApplyZoom(input_manager_);
-	camera_controller_.ApplyInput(input_manager_, static_cast<float>(constants::engine::tick_dt), aspect_ratio);
+	camera_controller_.ApplyRotation(input_manager_);
+	camera_controller_.ApplyZoom(input_manager_);
+	camera_controller_.ApplyInput(input_manager_, static_cast<float>(constants::engine::tick_dt));
 	camera_.Tick(aspect_ratio);
 
 	world_.Tick(chunk_event_queue_, camera_);
 	world_renderer_.Tick(chunk_event_queue_);
+	input_manager_.ResetFrameState();
 }
 
 void Engine::Render(float alpha)
