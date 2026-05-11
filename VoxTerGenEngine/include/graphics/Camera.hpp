@@ -58,7 +58,7 @@ private:
 	float prev_pitch_;
 
 	bool enabled_movement_;
-	bool changed_;
+	bool stale_;
 	bool moving_;
 
 public:
@@ -159,7 +159,7 @@ public:
 	float Zoom() const noexcept { return zoom_; }
 	const std::array<Plane, 6>& GetFrustumPlanes() const noexcept { return frustum_planes_; }
 	bool EnabledMovement() const noexcept { return enabled_movement_; }
-	bool Changed() const noexcept { return changed_; }
+	bool Stale() const noexcept { return stale_; }
 	bool Moving() const noexcept { return moving_; }
     glm::dvec3 PrevPos() const noexcept { return prev_position_; }
     float PrevYaw() const noexcept { return prev_yaw_; }

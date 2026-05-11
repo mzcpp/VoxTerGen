@@ -24,7 +24,7 @@ Camera::Camera(glm::dvec3 position, glm::vec3 up, float yaw, float pitch) :
 	prev_yaw_(yaw), 
 	prev_pitch_(pitch), 
 	enabled_movement_(true),
-	changed_(true), 
+	stale_(true), 
 	moving_(true)
 {
 	UpdateCameraVectors();
@@ -57,6 +57,11 @@ void Camera::Tick(float aspect_ratio)
 
 glm::mat4 Camera::InterpolatedViewMatrix(float alpha) const
 {
+	if (!stale_)
+	{
+		return;
+	}
+	
 	const glm::vec3 interp_pos = glm::vec3(glm::mix(prev_position_, position_, alpha));
 	const float interp_yaw = glm::mix(prev_yaw_, yaw_, alpha);
 	const float interp_pitch = glm::mix(prev_pitch_, pitch_, alpha);
@@ -74,7 +79,12 @@ glm::mat4 Camera::InterpolatedViewMatrix(float alpha) const
 
 void Camera::UpdateSimulationMatrices(float aspect_ratio)
 {
-	glm::vec3 pos = glm::vec3(position_);
+	if (!stale_)
+	{
+		return;
+	}
+
+	const glm::vec3 pos = glm::vec3(position_);
 	view_ = glm::lookAt(pos, pos + front_, up_);
 	projection_ = glm::perspective(glm::radians(zoom_), aspect_ratio, near_plane_, far_plane_);
 	view_proj_ = projection_ * view_;
@@ -82,6 +92,11 @@ void Camera::UpdateSimulationMatrices(float aspect_ratio)
 
 void Camera::UpdateCameraVectors()
 {
+	if (!stale_)
+	{
+		return;
+	}
+
 	const glm::vec3 front = { 
 		cos(glm::radians(yaw_)) * cos(glm::radians(pitch_)), 
 		sin(glm::radians(pitch_)), 
@@ -95,12 +110,12 @@ void Camera::UpdateCameraVectors()
 
 void Camera::UpdateFrustumPlanes()
 {
-	if (!changed_)
+	if (!stale_)
 	{
 		return;
 	}
 
-	changed_ = false;
+	stale_ = false;
 
 	// Plane order: 0 = left, 1 = right, 2 = bottom, 3 = top, 4 = near, 5 = far
 
