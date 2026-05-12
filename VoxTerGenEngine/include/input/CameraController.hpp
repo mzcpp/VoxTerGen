@@ -23,11 +23,13 @@ public:
     CameraController(CameraController&& other) = delete;
     CameraController& operator=(CameraController&& other) = delete;
 
-    void ApplyInput(const InputManager& input, float delta_time);
+    void Tick(const InputManager& input_manager);
 
-    void ApplyRotation(const InputManager& input);
+    void ApplyInput(const InputManager& input_manager);
 
-    void ApplyZoom(const InputManager& input);
+    void ApplyRotation(const InputManager& input_manager);
+
+    void ApplyZoom(const InputManager& input_manager);
 };
 
 #endif // CAMERA_CONTROLLER_HPP

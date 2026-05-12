@@ -83,16 +83,6 @@ public:
     Camera& operator=(Camera&& other) = delete;
 
     /**
-     * @brief Stores the camera's state for interpolation in the next frame.
-     */
-    void PreTick();
-
-	/**
-	 * @brief Resets flags at the end of frame.
-	 */
-	void EndTick();
-
-    /**
      * @brief Updates the camera state for the current frame.
      *
      * @param aspect_ratio The aspect ratio of the viewport

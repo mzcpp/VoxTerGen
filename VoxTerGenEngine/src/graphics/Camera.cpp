@@ -30,18 +30,6 @@ Camera::Camera(glm::dvec3 position, glm::vec3 up, float yaw, float pitch) :
 	UpdateCameraVectors();
 }
 
-void Camera::PreTick()
-{
-	prev_position_ = position_;
-	prev_yaw_ = yaw_;
-	prev_pitch_ = pitch_;
-}
-
-void Camera::EndTick()
-{
-	moving_ = false;
-}
-
 void Camera::Tick(float aspect_ratio)
 {
 	UpdateSimulationMatrices(aspect_ratio);
@@ -53,6 +41,8 @@ void Camera::Tick(float aspect_ratio)
 	//PrintFrustumPlanes();
 	SanityCheckFrustum();
 #endif
+
+	moving_ = false;
 }
 
 glm::mat4 Camera::InterpolatedViewMatrix(float alpha) const

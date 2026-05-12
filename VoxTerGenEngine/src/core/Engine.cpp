@@ -29,14 +29,11 @@ void Engine::HandleEvents(SDL_Event e)
 
 void Engine::Tick(float aspect_ratio)
 {
-	camera_.PreTick();
-	camera_controller_.ApplyRotation(input_manager_);
-	camera_controller_.ApplyZoom(input_manager_);
-	camera_controller_.ApplyInput(input_manager_, static_cast<float>(constants::engine::tick_dt));
+	camera_controller_.Tick(input_manager_);
 	camera_.Tick(aspect_ratio);
-
 	world_.Tick(chunk_event_queue_, camera_);
 	world_renderer_.Tick(chunk_event_queue_);
+	
 	input_manager_.ResetFrameState();
 }
 
@@ -49,6 +46,4 @@ void Engine::Render(float alpha)
 	const glm::mat4 proj = camera_.ProjectionMatrix();
 
 	world_renderer_.RenderWorld(interpolated_view, proj, resource_manager_);
-	
-	camera_.EndTick();
 }
