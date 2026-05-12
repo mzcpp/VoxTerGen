@@ -21,6 +21,8 @@ public:
     ObserverController& operator=(ObserverController&& other) = delete;
 
 	void ApplyInput(const InputManager& input, const Camera& camera);
+
+	void ApplyMouseRotation(const InputManager& input, const Camera& camera);
 };
 
 #endif

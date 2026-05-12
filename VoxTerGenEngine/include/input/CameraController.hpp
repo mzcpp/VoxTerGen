@@ -25,9 +25,9 @@ public:
 
     void Tick(const InputManager& input_manager);
 
-    void ApplyInput(const InputManager& input_manager);
+    void ApplyKeyboardInput(const InputManager& input_manager);
 
-    void ApplyRotation(const InputManager& input_manager);
+    void ApplyMouseRotation(const InputManager& input_manager);
 
     void ApplyZoom(const InputManager& input_manager);
 };

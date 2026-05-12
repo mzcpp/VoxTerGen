@@ -9,12 +9,11 @@
 
 #include <algorithm>
 
-Camera::Camera(glm::dvec3 position, glm::vec3 up, float yaw, float pitch) : 
+Camera::Camera(glm::dvec3 position, float yaw, float pitch) : 
 	position_(position), 
 	front_(glm::vec3(0.0f, 0.0f, -1.0f)), 
 	up_(glm::vec3(0.0f)), 
 	right_(glm::vec3(0.0f)), 
-	world_up_(up), 
 	yaw_(yaw), 
 	pitch_(pitch), 
 	zoom_(constants::camera::zoom), 
@@ -24,6 +23,8 @@ Camera::Camera(glm::dvec3 position, glm::vec3 up, float yaw, float pitch) :
 	prev_yaw_(yaw), 
 	prev_pitch_(pitch), 
 	enabled_movement_(true),
+	enabled_rotation_(true),
+	enabled_zoom_(true),
 	stale_(true), 
 	moving_(true)
 {
@@ -59,7 +60,7 @@ glm::mat4 Camera::InterpolatedViewMatrix(float alpha) const
 
 	front = glm::normalize(front);
 
-	return glm::lookAt(interp_pos, interp_pos + front, world_up_);
+	return glm::lookAt(interp_pos, interp_pos + front, constants::math::world_up);
 }
 
 void Camera::UpdateSimulationMatrices(float aspect_ratio)
@@ -89,7 +90,7 @@ void Camera::UpdateCameraVectors()
 	};
 
 	front_ = glm::normalize(front);
-	right_ = glm::normalize(glm::cross(front_, world_up_));
+	right_ = glm::normalize(glm::cross(front_, constants::math::world_up));
 	up_ = glm::normalize(glm::cross(right_, front_));
 }
 
@@ -200,7 +201,7 @@ bool Camera::SanityCheckFrustum() const
 	return true;
 }
 
-void Camera::PrintCameraData() const
+void Camera::LogCameraData() const
 {
 	Logger::Log(LogLevel::DEBUG, "---------------------------- Camera Info ----------------------------");
 	Logger::Log(LogLevel::DEBUG, "Position: {} {} {}", position_.x, position_.y, position_.z);

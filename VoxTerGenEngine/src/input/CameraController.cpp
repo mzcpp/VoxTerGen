@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 
 #include <algorithm>
+#include <cassert>
 
 CameraController::CameraController(Camera& camera) :
     camera_(camera),
@@ -19,17 +20,25 @@ CameraController::CameraController(Camera& camera) :
 
 void CameraController::Tick(const InputManager& input_manager)
 {
-    ApplyRotation(input_manager);
-    ApplyZoom(input_manager);
-    ApplyInput(input_manager);
+    if (camera_.enabled_rotation_)
+    {
+        ApplyMouseRotation(input_manager);
+    }
+
+    if (camera_.enabled_zoom_)
+    {
+        ApplyZoom(input_manager);
+    }
+
+    if (camera_.enabled_movement_)
+    {
+        ApplyKeyboardInput(input_manager);
+    }
 }
 
-void CameraController::ApplyInput(const InputManager& input_manager)
+void CameraController::ApplyKeyboardInput(const InputManager& input_manager)
 {
-    if (!camera_.enabled_movement_)
-    {
-        return;
-    }
+    assert(camera_.enabled_movement_);
 
     camera_.prev_position_ = camera_.position_;
 
@@ -76,12 +85,9 @@ void CameraController::ApplyInput(const InputManager& input_manager)
     }
 }
 
-void CameraController::ApplyRotation(const InputManager& input_manager)
+void CameraController::ApplyMouseRotation(const InputManager& input_manager)
 {
-    if (!camera_.enabled_movement_)
-    {
-        return;
-    }
+    assert(camera_.enabled_rotation_);
 
     camera_.prev_yaw_ = camera_.yaw_;
     camera_.prev_pitch_ = camera_.pitch_;
@@ -101,7 +107,9 @@ void CameraController::ApplyRotation(const InputManager& input_manager)
 
 void CameraController::ApplyZoom(const InputManager& input_manager)
 {
-    if (!camera_.enabled_movement_ || math_utils::FloatingPointNearZero(input_manager.MouseWheel()))
+    assert(camera_.enabled_zoom_);
+    
+    if (math_utils::FloatingPointNearZero(input_manager.MouseWheel()))
     {
         return;
     }

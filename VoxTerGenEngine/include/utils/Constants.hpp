@@ -1,6 +1,8 @@
 #ifndef CONSTANTS_HPP
 #define CONSTANTS_HPP
 
+#include <glm/vec3.hpp>
+
 #include <string_view>
 
 /**
@@ -69,6 +71,7 @@ namespace constants
         inline constexpr float float_rel_epsilon = 1e-5f;
         inline constexpr double double_abs_epsilon = 1e-12;
         inline constexpr double double_rel_epsilon = 1e-9;
+        inline constexpr glm::vec3 world_up = { 0.0f, 1.0f, 0.0f };
     } // namespace math
 
     /**

@@ -10,7 +10,7 @@ ObserverController::ObserverController(Observer& observer) : observer_(observer)
 {
 }
 
-void ObserverController::ApplyInput(const InputManager& input, const Camera& camera)
+void ObserverController::ApplyKeyboardInput(const InputManager& input, const Camera& camera)
 {
     //if (!input.StateChanged())
     //{
@@ -53,9 +53,14 @@ void ObserverController::ApplyInput(const InputManager& input, const Camera& cam
     //{
     //    move_dir = glm::normalize(move_dir);
 
-    //    camera_.position_ += move_dir * movement_speed_ * delta_time;
+    //    observer_.position_ += move_dir * movement_speed_ * delta_time;
 
-    //    camera_.changed_ = true;
-    //    camera_.moving_ = true;
+    //    observer_.changed_ = true;
+    //    observer_.moving_ = true;
     //}
+}
+
+void ObserverController::ApplyMouseRotation(const InputManager& input, const Camera& camera)
+{
+    // TODO: 
 }

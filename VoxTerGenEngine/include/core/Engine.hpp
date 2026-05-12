@@ -55,6 +55,9 @@ public:
 	const Settings& Settings() const noexcept { return settings_; }
 	const World& World() const noexcept { return world_; }
 	const WorldRenderer& WorldRenderer() const noexcept { return world_renderer_; }
+
+private:
+	glm::dvec3 CalculateObserverPosition() const;
 };
 
 #endif // ENGINE_HPP

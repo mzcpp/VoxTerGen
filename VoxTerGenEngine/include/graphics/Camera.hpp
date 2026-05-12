@@ -3,8 +3,8 @@
 
 #include "utils/Constants.hpp"
 
-#include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
 
 #include <array>
 
@@ -38,7 +38,6 @@ private:
 	glm::vec3 front_;
 	glm::vec3 up_;
 	glm::vec3 right_;
-	glm::vec3 world_up_;
 
 	float yaw_;
 	float pitch_;
@@ -58,6 +57,8 @@ private:
 	float prev_pitch_;
 
 	bool enabled_movement_;
+    bool enabled_rotation_;
+    bool enabled_zoom_;
 	bool stale_;
 	bool moving_;
 
@@ -65,14 +66,12 @@ public:
     /**
      * @brief Constructs a Camera with optional initial position, up vector, yaw, and pitch.
      *
-     * @param position Initial position in world space (default: origin)
-     * @param up Up vector (default: world Y-axis)
+     * @param position Initial position in world space
      * @param yaw Initial yaw angle in degrees
      * @param pitch Initial pitch angle in degrees
      */
     Camera(
         glm::dvec3 position = glm::vec3(10.0, 15.0, 10.0), 
-        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
         float yaw = constants::camera::yaw, 
         float pitch = constants::camera::pitch);
 
@@ -129,7 +128,7 @@ public:
     /**
      * @brief Prints the camera's position, orientation, and vectors to the logger.
      */
-    void PrintCameraData() const;
+    void LogCameraData() const;
 
     /**
      * @brief Prints the six frustum planes to the logger.
@@ -143,7 +142,6 @@ public:
 	glm::vec3 Front() const noexcept { return front_; }
 	glm::vec3 Up() const noexcept { return up_; }
 	glm::vec3 Right() const noexcept { return right_; }
-	glm::vec3 WorldUp() const noexcept { return world_up_; }
 	float Yaw() const noexcept { return yaw_; }
 	float Pitch() const noexcept { return pitch_; }
 	float Zoom() const noexcept { return zoom_; }

@@ -17,7 +17,7 @@ void Engine::Initialize()
 {
 	resource_manager_.InitializeResources();
 	
-	// find spawn point for observer
+	observer_.SetPosition(CalculateObserverPosition());
 	
 	world_.InitChunks(constants::chunk::default_radius);
 }
@@ -46,4 +46,10 @@ void Engine::Render(float alpha)
 	const glm::mat4 proj = camera_.ProjectionMatrix();
 
 	world_renderer_.RenderWorld(interpolated_view, proj, resource_manager_);
+}
+
+glm::dvec3 Engine::CalculateObserverPosition() const
+{
+	// TODO:
+	return glm::dvec3(0.0);
 }
