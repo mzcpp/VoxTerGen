@@ -45,3 +45,5 @@ sort all #includes by alphabetical order and these order rules:
 	// 4. Project headers
 
 rework camera - WoW style
+
+move world_up into better nested namespace

@@ -66,12 +66,12 @@ void CameraController::ApplyKeyboardInput(const InputManager& input_manager)
 
     if (input_manager.KeyDown(SDL_SCANCODE_SPACE))
     {
-        move_dir += camera_.world_up_;
+        move_dir += constants::math::world_up;
     }
 
     if (input_manager.KeyDown(SDL_SCANCODE_LCTRL))
     { 
-        move_dir -= camera_.world_up_;
+        move_dir -= constants::math::world_up;
     }
 
 

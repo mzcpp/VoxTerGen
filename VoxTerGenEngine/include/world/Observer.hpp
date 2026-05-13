@@ -59,7 +59,7 @@ public:
 	bool Noclip() const noexcept { return noclip_; }
 	
 	// Setters
-	void SetPosition(glm::dvec3 new_pos) noexcept { pos_ = new_pos; }
+	void SetPosition(glm::dvec3 new_pos) noexcept { position_ = new_pos; }
 	void SetMovementState(MovementState state) noexcept { movement_state_ = state; }
 	void ToggleNoclip() noexcept { noclip_ = !noclip_; }
 };
