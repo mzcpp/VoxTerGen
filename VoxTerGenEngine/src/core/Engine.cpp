@@ -32,8 +32,8 @@ void Engine::Tick(float aspect_ratio)
 	camera_controller_.Tick(input_manager_);
 	camera_.Tick(aspect_ratio);
 
-	observer_controller_.Tick(input_manager_);
-	observer_.Tick();
+	/*observer_controller_.Tick(input_manager_, camera_);
+	observer_.Tick();*/
 
 	world_.Tick(chunk_event_queue_, camera_);
 	world_renderer_.Tick(chunk_event_queue_);

@@ -5,6 +5,8 @@
 
 #include <glm/vec3.hpp>
 
+#include "utils/Constants.hpp"
+
 enum class MovementState
 {
 	GROUNDED,

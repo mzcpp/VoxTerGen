@@ -20,6 +20,8 @@ public:
     ObserverController(ObserverController&& other) = delete;
     ObserverController& operator=(ObserverController&& other) = delete;
 
+	void Tick(const InputManager& input, Camera& camera);
+
 	void ApplyKeyboardInput(const InputManager& input, Camera& camera);
 
 	void ApplyMouseRotation(const InputManager& input, Camera& camera);
