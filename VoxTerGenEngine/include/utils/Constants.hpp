@@ -74,6 +74,12 @@ namespace constants
         inline constexpr glm::vec3 world_up = { 0.0f, 1.0f, 0.0f };
     } // namespace math
 
+    namespace geometry
+    {
+        inline constexpr glm::vec3 world_up = { 0.0f, 1.0f, 0.0f };
+        inline constexpr glm::dvec3 spawn_point = { 10.0, 15.0, 10.0 };
+    }
+
     /**
      * @brief Physics-related constants.
      */

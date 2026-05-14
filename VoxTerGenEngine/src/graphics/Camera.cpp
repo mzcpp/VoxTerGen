@@ -38,7 +38,7 @@ void Camera::Tick(float aspect_ratio)
 	UpdateFrustumPlanes();
 
 #if _DEBUG
-	//PrintCamera();
+	//LogCameraData();
 	//PrintFrustumPlanes();
 	SanityCheckFrustum();
 #endif
@@ -70,6 +70,8 @@ void Camera::UpdateSimulationMatrices(float aspect_ratio)
 		return;
 	}
 
+	stale_ = false;
+
 	const glm::vec3 pos = glm::vec3(position_);
 	view_ = glm::lookAt(pos, pos + front_, up_);
 	projection_ = glm::perspective(glm::radians(zoom_), aspect_ratio, near_plane_, far_plane_);
@@ -82,6 +84,8 @@ void Camera::UpdateCameraVectors()
 	{
 		return;
 	}
+
+	stale_ = false;
 
 	const glm::vec3 front = { 
 		cos(glm::radians(yaw_)) * cos(glm::radians(pitch_)), 

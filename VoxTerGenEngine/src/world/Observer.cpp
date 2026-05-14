@@ -1,5 +1,9 @@
 #include "world/Observer.hpp"
 
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <SDL2/SDL.h>
 
 #include "utils/Logger.hpp"
@@ -16,13 +20,40 @@ Observer::Observer(const glm::dvec3& position, float yaw, float pitch) :
 	prev_pitch_(pitch), 
 	velocity_(glm::dvec3(0.0)), 
 	movement_state_(MovementState::GROUNDED), 
-	noclip_(false)
+	noclip_(false), 
+    stale_(true)
 {
+    width_ = 1;
+    height_ = 2;
+    depth_ = 1;
 }
 
 void Observer::Tick() noexcept
 {
+    UpdateObserverVectors();
+#if _DEBUG
+	LogObserverData();
+#endif
+}
 
+void Observer::UpdateObserverVectors()
+{
+	if (!stale_)
+	{
+		return;
+	}
+
+	stale_ = false;
+
+	const glm::vec3 front = { 
+		cos(glm::radians(yaw_)) * cos(glm::radians(pitch_)), 
+		sin(glm::radians(pitch_)), 
+		sin(glm::radians(yaw_)) * cos(glm::radians(pitch_)) 
+	};
+
+	front_ = glm::normalize(front);
+	right_ = glm::normalize(glm::cross(front_, constants::math::world_up));
+	up_ = glm::normalize(glm::cross(right_, front_));
 }
 
 void Observer::LogObserverData() const

@@ -35,13 +35,20 @@ private:
 	glm::dvec3 prev_position_;
 	float prev_yaw_;
 	float prev_pitch_;
+
+	std::size_t width_;
+	std::size_t height_;
+	std::size_t depth_;
 	
 	bool noclip_;
+	bool stale_;
 
 public:
-	Observer(const glm::dvec3& position = glm::dvec3{ 0.0, 1.0, 0.0 }, float yaw = 0.0f, float pitch = 0.0f);
+	Observer(const glm::dvec3& position = constants::geometry::spawn_point, float yaw = 0.0f, float pitch = 0.0f);
 
 	void Tick() noexcept;
+
+	void UpdateObserverVectors();
 
 	void LogObserverData() const;
 
@@ -57,11 +64,17 @@ public:
     float PrevYaw() const noexcept { return prev_yaw_; }
 	float PrevPitch() const noexcept { return prev_pitch_; }
 	bool Noclip() const noexcept { return noclip_; }
+	std::size_t Width() const noexcept { return width_; }
+	std::size_t Height() const noexcept { return height_; }
+	std::size_t Depth() const noexcept { return depth_; }
 	
 	// Setters
 	void SetPosition(glm::dvec3 new_pos) noexcept { position_ = new_pos; }
 	void SetMovementState(MovementState state) noexcept { movement_state_ = state; }
 	void ToggleNoclip() noexcept { noclip_ = !noclip_; }
+	void SetWidth(std::size_t width) noexcept { width_ = width; }
+	void SetHeight(std::size_t height) noexcept { height_ = height; }
+	void SetDepth(std::size_t depth) noexcept { depth_ = depth; }
 };
 
 #endif // OBSERVER_HPP
