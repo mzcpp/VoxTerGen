@@ -65,12 +65,10 @@ glm::mat4 Camera::InterpolatedViewMatrix(float alpha) const
 
 void Camera::UpdateSimulationMatrices(float aspect_ratio)
 {
-	if (!stale_)
+	if (!moving_)
 	{
 		return;
 	}
-
-	stale_ = false;
 
 	const glm::vec3 pos = glm::vec3(position_);
 	view_ = glm::lookAt(pos, pos + front_, up_);
@@ -80,12 +78,10 @@ void Camera::UpdateSimulationMatrices(float aspect_ratio)
 
 void Camera::UpdateCameraVectors()
 {
-	if (!stale_)
+	if (!moving_)
 	{
 		return;
 	}
-
-	stale_ = false;
 
 	const glm::vec3 front = { 
 		cos(glm::radians(yaw_)) * cos(glm::radians(pitch_)), 
@@ -100,12 +96,10 @@ void Camera::UpdateCameraVectors()
 
 void Camera::UpdateFrustumPlanes()
 {
-	if (!stale_)
+	if (!moving_)
 	{
 		return;
 	}
-
-	stale_ = false;
 
 	// Plane order: 0 = left, 1 = right, 2 = bottom, 3 = top, 4 = near, 5 = far
 

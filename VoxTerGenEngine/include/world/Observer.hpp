@@ -43,7 +43,7 @@ private:
 	std::size_t depth_;
 	
 	bool noclip_;
-	bool stale_;
+	bool moving_;
 
 public:
 	Observer(const glm::dvec3& position = constants::geometry::spawn_point, float yaw = 0.0f, float pitch = 0.0f);

@@ -60,7 +60,7 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
 
        observer_.position_ += move_dir * constants::observer::movement_speed * static_cast<float>(constants::engine::tick_dt);
 
-       observer_.stale_ = true;
+       observer_.moving_ = true;
     }
 
     // TODO
@@ -81,7 +81,7 @@ void ObserverController::ApplyMouseRotation(const InputManager& input, Camera& c
 
     observer_.yaw_ += mouse_delta.x * constants::camera::move_sensitivity;
     observer_.pitch_ = std::clamp(observer_.pitch_ + (mouse_delta.y * constants::camera::move_sensitivity), constants::camera::pitch_min, constants::camera::pitch_max);
-    observer_.stale_ = true;
+    observer_.moving_ = true;
 
     //camera.SetYaw(observer_.yaw_);
     //camera.SetPitch(observer_.pitch_); 

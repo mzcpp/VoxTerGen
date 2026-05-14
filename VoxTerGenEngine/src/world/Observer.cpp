@@ -20,8 +20,8 @@ Observer::Observer(const glm::dvec3& position, float yaw, float pitch) :
 	prev_pitch_(pitch), 
 	velocity_(glm::dvec3(0.0)), 
 	movement_state_(MovementState::GROUNDED), 
-	noclip_(false), 
-    stale_(true)
+	noclip_(false),
+	moving_(true)
 {
     width_ = 1;
     height_ = 2;
@@ -34,16 +34,16 @@ void Observer::Tick() noexcept
 #if _DEBUG
 	LogObserverData();
 #endif
+
+	moving_ = false;
 }
 
 void Observer::UpdateObserverVectors()
 {
-	if (!stale_)
+	if (!moving_)
 	{
 		return;
 	}
-
-	stale_ = false;
 
 	const glm::vec3 front = { 
 		cos(glm::radians(yaw_)) * cos(glm::radians(pitch_)), 
