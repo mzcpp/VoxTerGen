@@ -106,8 +106,8 @@ namespace constants
      */
     namespace camera
     {
-        inline constexpr float yaw = -46.0f;
-        inline constexpr float pitch = -20.0f;
+        inline constexpr float yaw = -90.0f;
+        inline constexpr float pitch = 0.0f;
         inline constexpr float pitch_min = -89.0f;
         inline constexpr float pitch_max = 89.0f;
         inline constexpr float speed = 10.0f;
@@ -126,6 +126,9 @@ namespace constants
     namespace observer
     {
         inline constexpr float movement_speed = 10.0f;
+        inline constexpr float width = 1.0;
+        inline constexpr float height = 2.0;
+        inline constexpr float depth = 1.0;
     } // namespace observer
 
     /**

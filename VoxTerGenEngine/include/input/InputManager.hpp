@@ -26,8 +26,6 @@ private:
 public:
     InputManager() = default;
 
-    void ResetFrameState();
-
     void ProcessEvent(const SDL_Event& e);
 
     bool KeyPressed(SDL_Scancode key) const;
@@ -37,6 +35,8 @@ public:
     bool KeyReleased(SDL_Scancode key) const;
 
     bool MouseButtonDown(std::uint8_t button) const;
+    
+    void ResetFrameState();
 
     // Getters
     const MouseState& Mouse() const noexcept { return mouse_; }

@@ -4,13 +4,6 @@
 
 #include <cstdint>
 
-void InputManager::ResetFrameState()
-{
-    prev_keys_ = keys_;
-    mouse_.delta_ = glm::vec2(0.0f);
-    mouse_.wheel_ = 0.0f;
-}
-
 void InputManager::ProcessEvent(const SDL_Event& e)
 {
     switch (e.type)
@@ -65,4 +58,11 @@ bool InputManager::KeyReleased(SDL_Scancode key) const
 bool InputManager::MouseButtonDown(std::uint8_t button) const 
 {
     return mouse_.buttons_ & SDL_BUTTON(button); 
+}
+
+void InputManager::ResetFrameState()
+{
+    prev_keys_ = keys_;
+    mouse_.delta_ = glm::vec2(0.0f);
+    mouse_.wheel_ = 0.0f;
 }

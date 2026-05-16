@@ -38,15 +38,18 @@ private:
 	float prev_yaw_;
 	float prev_pitch_;
 
-	std::size_t width_;
-	std::size_t height_;
-	std::size_t depth_;
+	float width_;
+	float height_;
+	float depth_;
 	
 	bool noclip_;
 	bool moving_;
 
 public:
-	Observer(const glm::dvec3& position = constants::geometry::spawn_point, float yaw = 0.0f, float pitch = 0.0f);
+	Observer(
+        glm::dvec3 position = constants::geometry::spawn_point, 
+        float yaw = constants::camera::yaw, 
+        float pitch = constants::camera::pitch);
 
 	void Tick() noexcept;
 

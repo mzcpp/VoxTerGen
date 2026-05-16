@@ -8,7 +8,7 @@
 
 #include "utils/Logger.hpp"
 
-Observer::Observer(const glm::dvec3& position, float yaw, float pitch) : 
+Observer::Observer(const glm::dvec3 position, float yaw, float pitch) : 
 	position_(position), 
 	front_(glm::vec3(0.0f, 0.0f, -1.0f)), 
 	up_(glm::vec3(0.0f)), 
@@ -20,19 +20,20 @@ Observer::Observer(const glm::dvec3& position, float yaw, float pitch) :
 	prev_pitch_(pitch), 
 	velocity_(glm::dvec3(0.0)), 
 	movement_state_(MovementState::GROUNDED), 
+	width_(constants::observer::width), 
+	height_(constants::observer::height),
+	depth_(constants::observer::depth),
 	noclip_(false),
 	moving_(true)
 {
-    width_ = 1;
-    height_ = 2;
-    depth_ = 1;
-}
+	UpdateObserverVectors();
+}	
 
 void Observer::Tick() noexcept
 {
     UpdateObserverVectors();
 #if _DEBUG
-	LogObserverData();
+	//LogObserverData();
 #endif
 
 	moving_ = false;

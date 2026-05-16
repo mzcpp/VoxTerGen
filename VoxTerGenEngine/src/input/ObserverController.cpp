@@ -10,15 +10,16 @@
 
 #include <algorithm>
 
+ObserverController::ObserverController(Observer& observer) : observer_(observer)
+{
+}
+
 void ObserverController::Tick(const InputManager& input, Camera& camera)
 {
     ApplyKeyboardInput(input, camera);
     ApplyMouseRotation(input, camera);
 }
 
-ObserverController::ObserverController(Observer& observer) : observer_(observer)
-{
-}
 
 void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& camera)
 {
@@ -46,12 +47,12 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
 
     if (input.KeyDown(SDL_SCANCODE_SPACE))
     {
-       move_dir += observer_.Up();
+       move_dir += constants::math::world_up;
     }
 
     if (input.KeyDown(SDL_SCANCODE_LCTRL))
     {
-       move_dir -= observer_.Up();
+       move_dir -= constants::math::world_up;
     }
 
     if (glm::length(move_dir) > 0.0f)
@@ -59,7 +60,6 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
        move_dir = glm::normalize(move_dir);
 
        observer_.position_ += move_dir * constants::observer::movement_speed * static_cast<float>(constants::engine::tick_dt);
-
        observer_.moving_ = true;
     }
 
