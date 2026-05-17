@@ -69,17 +69,17 @@ public:
     float PrevYaw() const noexcept { return prev_yaw_; }
 	float PrevPitch() const noexcept { return prev_pitch_; }
 	bool Noclip() const noexcept { return noclip_; }
-	std::size_t Width() const noexcept { return width_; }
-	std::size_t Height() const noexcept { return height_; }
-	std::size_t Depth() const noexcept { return depth_; }
+	float Width() const noexcept { return width_; }
+	float Height() const noexcept { return height_; }
+	float Depth() const noexcept { return depth_; }
 	
 	// Setters
 	void SetPosition(glm::dvec3 new_pos) noexcept { position_ = new_pos; }
 	void SetMovementState(MovementState state) noexcept { movement_state_ = state; }
 	void ToggleNoclip() noexcept { noclip_ = !noclip_; }
-	void SetWidth(std::size_t width) noexcept { width_ = width; }
-	void SetHeight(std::size_t height) noexcept { height_ = height; }
-	void SetDepth(std::size_t depth) noexcept { depth_ = depth; }
+	void SetWidth(float width) noexcept { width_ = width; }
+	void SetHeight(float height) noexcept { height_ = height; }
+	void SetDepth(float depth) noexcept { depth_ = depth; }
 };
 
 #endif // OBSERVER_HPP
