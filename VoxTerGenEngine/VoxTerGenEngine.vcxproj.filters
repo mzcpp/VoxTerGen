@@ -96,6 +96,12 @@
     <ClCompile Include="src\input\ObserverController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\physics\CollisionSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\physics\DigitalDifferentialAnalyzer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Constants.hpp">
@@ -1218,6 +1224,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\input\ObserverController.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\physics\CollisionSystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\physics\DigitalDifferentialAnalyzer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

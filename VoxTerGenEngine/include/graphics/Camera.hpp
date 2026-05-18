@@ -157,6 +157,7 @@ public:
 	void SetEnableMovement(bool value) noexcept { enabled_movement_ = value; }
 	void SetEnableRotation(bool value) noexcept { enabled_rotation_ = value; }
 	void SetEnableZoom(bool value) noexcept { enabled_zoom_ = value; }
+	void SetStale(bool value) noexcept { stale_ = value; }
     void SetPos(glm::dvec3 new_pos) noexcept { position_ = new_pos; }
     void SetYaw(float yaw) noexcept { yaw_ = yaw; }
     void SetPitch(float pitch) noexcept { pitch_ = pitch; }

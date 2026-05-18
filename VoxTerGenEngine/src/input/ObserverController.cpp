@@ -71,7 +71,7 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
        if (!camera.EnabledMovement())
        {
            camera.SetPos(observer_.position_);
-           camera.SetMoving(true);
+           camera.SetStale(true);
        }
     }
 }
@@ -102,7 +102,7 @@ void ObserverController::ApplyMouseRotation(const InputManager& input, Camera& c
     {
         camera.SetYaw(observer_.yaw_);
         camera.SetPitch(observer_.pitch_);
-        camera.SetMoving(true);
+        camera.SetStale(true);
     }
 
     // more TODO later (WoW style camera) 
