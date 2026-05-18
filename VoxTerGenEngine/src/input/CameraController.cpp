@@ -74,7 +74,6 @@ void CameraController::ApplyKeyboardInput(const InputManager& input_manager)
         move_dir -= constants::math::world_up;
     }
 
-
     if (glm::length(move_dir) > 0.0f)
     {
         move_dir = glm::normalize(move_dir);

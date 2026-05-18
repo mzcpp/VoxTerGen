@@ -147,6 +147,8 @@ public:
 	float Zoom() const noexcept { return zoom_; }
 	const std::array<Plane, 6>& GetFrustumPlanes() const noexcept { return frustum_planes_; }
 	bool EnabledMovement() const noexcept { return enabled_movement_; }
+	bool EnabledRotation() const noexcept { return enabled_rotation_; }
+	bool EnabledZoom() const noexcept { return enabled_zoom_; }
 	bool Stale() const noexcept { return stale_; }
 	bool Moving() const noexcept { return moving_; }
     glm::dvec3 PrevPos() const noexcept { return prev_position_; }
@@ -154,11 +156,16 @@ public:
 	float PrevPitch() const noexcept { return prev_pitch_; }
 
 	// Setters
-	void EnableMovement(bool value) noexcept { enabled_movement_ = value; }
+	void SetEnableMovement(bool value) noexcept { enabled_movement_ = value; }
+	void SetEnableRotation(bool value) noexcept { enabled_rotation_ = value; }
+	void SetEnableZoom(bool value) noexcept { enabled_zoom_ = value; }
 	void SetMoving(bool value) noexcept { moving_ = value; }
-    void SetPos(const glm::dvec3& new_pos) noexcept { position_ = new_pos; }
+    void SetPos(glm::dvec3 new_pos) noexcept { position_ = new_pos; }
     void SetYaw(float yaw) noexcept { yaw_ = yaw; }
     void SetPitch(float pitch) noexcept { pitch_ = pitch; }
+    void SetPrevPos(const glm::dvec3 new_prev_pos) noexcept { prev_position_ = new_prev_pos; }
+    void SetPrevYaw(float new_prev_yaw) noexcept { prev_yaw_ = new_prev_yaw; }
+    void SetPrevPitch(float new_prev_pitch) noexcept { prev_pitch_ = new_prev_pitch; }
 
 private:
 	/**

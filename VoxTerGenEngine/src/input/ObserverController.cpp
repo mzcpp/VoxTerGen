@@ -20,9 +20,15 @@ void ObserverController::Tick(const InputManager& input, Camera& camera)
     ApplyMouseRotation(input, camera);
 }
 
-
 void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& camera)
 {
+    observer_.prev_position_ = observer_.position_;
+
+    if (!camera.EnabledMovement())
+    {
+        camera.SetPrevPos(observer_.prev_position_);
+    }
+
     glm::vec3 move_dir(0.0f);
 
     if (input.KeyDown(SDL_SCANCODE_W))
@@ -61,16 +67,25 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
 
        observer_.position_ += move_dir * constants::observer::movement_speed * static_cast<float>(constants::engine::tick_dt);
        observer_.moving_ = true;
+      
+       if (!camera.EnabledMovement())
+       {
+           camera.SetPos(observer_.position_);
+           camera.SetMoving(true);
+       }
     }
-
-    // TODO
-    //camera.SetPos(observer_.position_);
 }
 
 void ObserverController::ApplyMouseRotation(const InputManager& input, Camera& camera)
 {
     observer_.prev_yaw_ = observer_.yaw_;
     observer_.prev_pitch_ = observer_.pitch_;
+
+    if (!camera.EnabledRotation())
+    {
+        camera.SetPrevYaw(observer_.prev_yaw_);
+        camera.SetPrevPitch(observer_.prev_pitch_);
+    }
 
     const glm::vec2 mouse_delta = input.MouseDelta();
 
@@ -83,8 +98,12 @@ void ObserverController::ApplyMouseRotation(const InputManager& input, Camera& c
     observer_.pitch_ = std::clamp(observer_.pitch_ + (mouse_delta.y * constants::camera::move_sensitivity), constants::camera::pitch_min, constants::camera::pitch_max);
     observer_.moving_ = true;
 
-    //camera.SetYaw(observer_.yaw_);
-    //camera.SetPitch(observer_.pitch_); 
+    if (!camera.EnabledRotation())
+    {
+        camera.SetYaw(observer_.yaw_);
+        camera.SetPitch(observer_.pitch_);
+        camera.SetMoving(true);
+    }
 
     // more TODO later (WoW style camera) 
 }

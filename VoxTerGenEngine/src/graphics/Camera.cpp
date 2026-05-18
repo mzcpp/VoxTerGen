@@ -22,8 +22,8 @@ Camera::Camera(glm::dvec3 position, float yaw, float pitch) :
 	prev_position_(position), 
 	prev_yaw_(yaw), 
 	prev_pitch_(pitch), 
-	enabled_movement_(true),
-	enabled_rotation_(true),
+	enabled_movement_(false),
+	enabled_rotation_(false),
 	enabled_zoom_(true),
 	stale_(true), 
 	moving_(true)
@@ -38,7 +38,7 @@ void Camera::Tick(float aspect_ratio)
 	UpdateFrustumPlanes();
 
 #if _DEBUG
-	//LogCameraData();
+	LogCameraData();
 	//PrintFrustumPlanes();
 	SanityCheckFrustum();
 #endif
