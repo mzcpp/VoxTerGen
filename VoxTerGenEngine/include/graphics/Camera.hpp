@@ -56,6 +56,8 @@ private:
 	float prev_yaw_;
 	float prev_pitch_;
 
+    glm::dvec3 fps_offset_;
+
 	bool enabled_movement_;
     bool enabled_rotation_;
     bool enabled_zoom_;
@@ -152,6 +154,7 @@ public:
     glm::dvec3 PrevPos() const noexcept { return prev_position_; }
     float PrevYaw() const noexcept { return prev_yaw_; }
 	float PrevPitch() const noexcept { return prev_pitch_; }
+	glm::dvec3 FPSOffset() const noexcept { return fps_offset_; }
 
 	// Setters
 	void SetEnableMovement(bool value) noexcept { enabled_movement_ = value; }

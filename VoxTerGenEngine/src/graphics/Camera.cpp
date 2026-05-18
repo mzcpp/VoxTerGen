@@ -27,16 +27,14 @@ Camera::Camera(glm::dvec3 position, float yaw, float pitch) :
 	enabled_zoom_(true),
 	stale_(true)
 {
-	const glm::dvec3 pos_offset = 
-	{ 
-		static_cast<double>(constants::observer::width) / 2.0, 
-		static_cast<double>(constants::observer::height), 
-		0.0 
+	fps_offset_ =
+	{
+		static_cast<double>(constants::observer::width) / 2.0,
+		static_cast<double>(constants::observer::height),
+		0.0
 	};
 
-	position_ += pos_offset;
-	
-	UpdateCameraVectors();
+	position_ += fps_offset_;
 }
 
 void Camera::Tick(float aspect_ratio)
