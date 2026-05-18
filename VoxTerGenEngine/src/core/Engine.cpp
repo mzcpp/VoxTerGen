@@ -55,6 +55,6 @@ void Engine::Render(float alpha)
 
 glm::dvec3 Engine::CalculateObserverPosition() const
 {
-	// TODO:
+	// TODO
 	return glm::dvec3(0.0);
 }

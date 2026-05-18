@@ -48,8 +48,8 @@ private:
 public:
 	Observer(
         glm::dvec3 position = constants::geometry::spawn_point, 
-        float yaw = constants::camera::yaw, 
-        float pitch = constants::camera::pitch);
+        float yaw = constants::observer::yaw, 
+        float pitch = constants::observer::pitch);
 
 	void Tick() noexcept;
 

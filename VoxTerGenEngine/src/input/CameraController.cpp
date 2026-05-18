@@ -12,7 +12,7 @@
 
 CameraController::CameraController(Camera& camera) :
     camera_(camera),
-    movement_speed_(constants::camera::speed), 
+    movement_speed_(constants::camera::movement_speed), 
     move_sensitivity_(constants::camera::move_sensitivity), 
     zoom_sensitivity_(constants::camera::zoom_sensitivity)
 {   
@@ -80,7 +80,6 @@ void CameraController::ApplyKeyboardInput(const InputManager& input_manager)
         
         camera_.position_ += move_dir * movement_speed_ * static_cast<float>(constants::engine::tick_dt);
         camera_.stale_ = true;
-        camera_.moving_ = true;
     }
 }
 
@@ -101,7 +100,6 @@ void CameraController::ApplyMouseRotation(const InputManager& input_manager)
     camera_.yaw_ += mouse_delta.x * move_sensitivity_;
     camera_.pitch_ = std::clamp(camera_.pitch_ + (mouse_delta.y * move_sensitivity_), constants::camera::pitch_min, constants::camera::pitch_max);
     camera_.stale_ = true;
-    camera_.moving_ = true;
 }
 
 void CameraController::ApplyZoom(const InputManager& input_manager)
@@ -115,5 +113,4 @@ void CameraController::ApplyZoom(const InputManager& input_manager)
 
     camera_.zoom_ = std::clamp(camera_.zoom_ - (input_manager.MouseWheel() * zoom_sensitivity_), constants::camera::zoom_min, constants::camera::zoom_max);
     camera_.stale_ = true;
-    camera_.moving_ = true;
 }

@@ -21,9 +21,9 @@ Observer::Observer(const glm::dvec3 position, float yaw, float pitch) :
 	velocity_(glm::dvec3(0.0)), 
 	movement_state_(MovementState::GROUNDED), 
 	width_(constants::observer::width), 
-	height_(constants::observer::height),
-	depth_(constants::observer::depth),
-	noclip_(false),
+	height_(constants::observer::height), 
+	depth_(constants::observer::depth), 
+	noclip_(false), 
 	moving_(true)
 {
 	UpdateObserverVectors();
@@ -33,7 +33,6 @@ void Observer::Tick() noexcept
 {
     UpdateObserverVectors();
 #if _DEBUG
-	//
 	LogObserverData();
 #endif
 

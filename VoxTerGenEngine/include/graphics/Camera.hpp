@@ -60,11 +60,10 @@ private:
     bool enabled_rotation_;
     bool enabled_zoom_;
 	bool stale_;
-	bool moving_;
 
 public:
     /**
-     * @brief Constructs a Camera with optional initial position, up vector, yaw, and pitch.
+     * @brief Constructs a Camera with initial position, up vector, yaw, and pitch.
      *
      * @param position Initial position in world space
      * @param yaw Initial yaw angle in degrees
@@ -150,7 +149,6 @@ public:
 	bool EnabledRotation() const noexcept { return enabled_rotation_; }
 	bool EnabledZoom() const noexcept { return enabled_zoom_; }
 	bool Stale() const noexcept { return stale_; }
-	bool Moving() const noexcept { return moving_; }
     glm::dvec3 PrevPos() const noexcept { return prev_position_; }
     float PrevYaw() const noexcept { return prev_yaw_; }
 	float PrevPitch() const noexcept { return prev_pitch_; }
@@ -159,11 +157,10 @@ public:
 	void SetEnableMovement(bool value) noexcept { enabled_movement_ = value; }
 	void SetEnableRotation(bool value) noexcept { enabled_rotation_ = value; }
 	void SetEnableZoom(bool value) noexcept { enabled_zoom_ = value; }
-	void SetMoving(bool value) noexcept { moving_ = value; }
     void SetPos(glm::dvec3 new_pos) noexcept { position_ = new_pos; }
     void SetYaw(float yaw) noexcept { yaw_ = yaw; }
     void SetPitch(float pitch) noexcept { pitch_ = pitch; }
-    void SetPrevPos(const glm::dvec3 new_prev_pos) noexcept { prev_position_ = new_prev_pos; }
+    void SetPrevPos(glm::dvec3 new_prev_pos) noexcept { prev_position_ = new_prev_pos; }
     void SetPrevYaw(float new_prev_yaw) noexcept { prev_yaw_ = new_prev_yaw; }
     void SetPrevPitch(float new_prev_pitch) noexcept { prev_pitch_ = new_prev_pitch; }
 

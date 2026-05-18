@@ -94,8 +94,8 @@ void ObserverController::ApplyMouseRotation(const InputManager& input, Camera& c
         return;
     }
 
-    observer_.yaw_ += mouse_delta.x * constants::camera::move_sensitivity;
-    observer_.pitch_ = std::clamp(observer_.pitch_ + (mouse_delta.y * constants::camera::move_sensitivity), constants::camera::pitch_min, constants::camera::pitch_max);
+    observer_.yaw_ += mouse_delta.x * constants::observer::move_sensitivity;
+    observer_.pitch_ = std::clamp(observer_.pitch_ + (mouse_delta.y * constants::observer::move_sensitivity), constants::observer::pitch_min, constants::observer::pitch_max);
     observer_.moving_ = true;
 
     if (!camera.EnabledRotation())
