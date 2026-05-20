@@ -72,6 +72,8 @@ public:
 	float Width() const noexcept { return width_; }
 	float Height() const noexcept { return height_; }
 	float Depth() const noexcept { return depth_; }
+	glm::dvec3 GetBBoxMin() const noexcept { return position_; }
+	glm::dvec3 GetBBoxMax() const noexcept { return { position_.x + width_, position_.y + height_, position_.z + depth_ }; }
 	
 	// Setters
 	void SetPosition(glm::dvec3 new_pos) noexcept { position_ = new_pos; }

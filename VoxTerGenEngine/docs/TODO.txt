@@ -48,3 +48,5 @@ rework camera - WoW style
 
 move world_up into better nested namespace
 when the spawn point is found outside 0,0 chunk, need to stream the chunks from that spawn point chunk!
+
+correct for external libs #include <...> or #include "..."

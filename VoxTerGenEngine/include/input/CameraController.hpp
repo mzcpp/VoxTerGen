@@ -15,7 +15,7 @@ private:
     float zoom_sensitivity_;
 
 public:
-    CameraController(Camera& cam);
+    CameraController(Camera& camera);
 
     CameraController(const CameraController& other) = delete;
     CameraController& operator=(const CameraController& other) = delete;
