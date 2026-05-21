@@ -10,6 +10,8 @@
 #include "input/InputManager.hpp"
 #include "input/ObserverController.hpp"
 
+#include "physics/CollisionSystem.hpp"
+
 #include "render/WorldRenderer.hpp"
 
 #include "world/Observer.hpp"
@@ -31,6 +33,7 @@ private:
 	Settings settings_;
 	World world_;
 	WorldRenderer world_renderer_;
+	CollisionSystem collision_system_;
 
 	std::queue<ChunkEvent> chunk_event_queue_;
 

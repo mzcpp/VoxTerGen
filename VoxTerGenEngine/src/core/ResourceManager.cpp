@@ -12,10 +12,6 @@
 #include <memory>
 #include <filesystem>
 
-ResourceManager::ResourceManager()
-{
-}
-
 void ResourceManager::InitializeResources()
 {
     AddTexture("atlas", std::make_unique<TextureUtils::Texture2D>(constants::paths::texture_atlas, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));

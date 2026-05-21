@@ -75,21 +75,23 @@ Mesh MeshBuilder::BuildMeshNaive(const glm::ivec2& chunk_world_coords, BlockQuer
 		{
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				if (!world_block_query({ x, y, z }).IsSolid())
+				const glm::ivec3 block_coords = { x, y, z };
+
+				if (!world_block_query(block_coords).IsSolid())
 				{
 					continue;
 				}
 
 				for (Direction dir : AllDirections())
 				{
-					const glm::ivec3 neighbor_coords = NeighborCoords({ x, y, z }, dir);
+					const glm::ivec3 neighbor_coords = NeighborCoords(block_coords, dir);
 
 					if (world_block_query(neighbor_coords).IsSolid())
 					{
 						continue;
 					}
 
-					SaveQuadMesh(chunk_world_coords, world_block_query({ x, y, z }).Type(), { x, y, z }, dir, chunk_mesh);
+					SaveQuadMesh(chunk_world_coords, world_block_query(block_coords).Type(), block_coords, dir, chunk_mesh);
 				}
 			}
 		}
@@ -154,20 +156,29 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 			glm::ivec3 left_query_coords = { 0, 0, 0 };
 			glm::ivec3 right_query_coords = { 0, 0, 0 };
 
-			if (major_axis == MajorAxis::X)
+			switch (major_axis)
+			{
+			case MajorAxis::X:
 			{
 				left_query_coords = { major_axis_index, cross_axis_1_index, cross_axis_2_index };
 				right_query_coords = { major_axis_index + 1, cross_axis_1_index, cross_axis_2_index };
+				break;
 			}
-			else if (major_axis == MajorAxis::Y)
+			case MajorAxis::Y:
 			{
 				left_query_coords = { cross_axis_2_index, major_axis_index, cross_axis_1_index };
 				right_query_coords = { cross_axis_2_index, major_axis_index + 1, cross_axis_1_index };
+				break;
 			}
-			else
+			case MajorAxis::Z:
 			{
 				left_query_coords = { cross_axis_2_index, cross_axis_1_index, major_axis_index };
 				right_query_coords = { cross_axis_2_index, cross_axis_1_index, major_axis_index + 1 };
+				break;
+			}
+			default:
+				assert(false && "Invalid major axis!");
+				break;
 			}
 
 			const Block& left_block = world_block_query(left_query_coords);

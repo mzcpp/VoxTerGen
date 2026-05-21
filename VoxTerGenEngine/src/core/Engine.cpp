@@ -30,10 +30,13 @@ void Engine::HandleEvents(SDL_Event e)
 
 void Engine::Tick(float aspect_ratio)
 {
+	// TODO Collisions
+
+	// TODO which first? observer or camera? figure out the correct order.
 	observer_controller_.Tick(input_manager_, camera_);
-	observer_.Tick();
-	
 	camera_controller_.Tick(input_manager_);
+	
+	observer_.Tick();
 	camera_.Tick(aspect_ratio);
 
 	world_.Tick(chunk_event_queue_, camera_);
@@ -55,6 +58,6 @@ void Engine::Render(float alpha)
 
 glm::dvec3 Engine::CalculateObserverPosition() const
 {
-	// TODO
+	// TODO, move this from engine! To chunk manager?
 	return glm::dvec3(0.0);
 }

@@ -12,7 +12,7 @@
 
 /**
  * @note This source code was adapted from Stefan Gustavson's paper on Ken Perlin's Simplex Noise.
- * Sources: https://www.researchgate.net/publication/216813608_Simplex_noise_demystified
+ * Source: https://www.researchgate.net/publication/216813608_Simplex_noise_demystified
  */
 
 namespace
