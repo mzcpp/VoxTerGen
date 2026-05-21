@@ -30,7 +30,7 @@ bool CollisionSystem::AABBIntersects(glm::dvec3 min_a, glm::dvec3 max_a, glm::dv
     return AABBIntersectsX(min_a, max_a, min_b, max_b) && AABBIntersectsY(min_a, max_a, min_b, max_b) && AABBIntersectsZ(min_a, max_a, min_b, max_b);
 }
 
-float GetClipX(glm::dvec3 min_a, glm::dvec3 max_a, glm::dvec3 min_b, glm::dvec3 max_b, float delta_x) const noexcept
+float CollisionSystem::GetClipX(glm::dvec3 min_a, glm::dvec3 max_a, glm::dvec3 min_b, glm::dvec3 max_b, float delta_x) const noexcept
 {
     if (!AABBIntersectsY(min_a, max_a, min_b, max_b) || !AABBIntersectsZ(min_a, max_a, min_b, max_b))
     {
@@ -56,7 +56,7 @@ float GetClipX(glm::dvec3 min_a, glm::dvec3 max_a, glm::dvec3 min_b, glm::dvec3 
     return delta_x;
 }
 
-float GetClipY(glm::dvec3 min_a, glm::dvec3 max_a, glm::dvec3 min_b, glm::dvec3 max_b, float delta_y) const noexcept
+float CollisionSystem::GetClipY(glm::dvec3 min_a, glm::dvec3 max_a, glm::dvec3 min_b, glm::dvec3 max_b, float delta_y) const noexcept
 {
     if (!AABBIntersectsX(min_a, max_a, min_b, max_b) || !AABBIntersectsZ(min_a, max_a, min_b, max_b))
     {
@@ -82,7 +82,7 @@ float GetClipY(glm::dvec3 min_a, glm::dvec3 max_a, glm::dvec3 min_b, glm::dvec3 
     return delta_y;
 }
 
-float GetClipZ(glm::dvec3 min_a, glm::dvec3 max_a, glm::dvec3 min_b, glm::dvec3 max_b, float delta_z) const noexcept
+float CollisionSystem::GetClipZ(glm::dvec3 min_a, glm::dvec3 max_a, glm::dvec3 min_b, glm::dvec3 max_b, float delta_z) const noexcept
 {
     if (!AABBIntersectsX(min_a, max_a, min_b, max_b) || !AABBIntersectsY(min_a, max_a, min_b, max_b))
     {
