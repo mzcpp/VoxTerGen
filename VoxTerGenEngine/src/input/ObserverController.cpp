@@ -21,7 +21,7 @@ void ObserverController::Tick(const InputManager& input, Camera& camera)
     ApplyMouseRotation(input, camera);
 }
 
-glm::vec3 ObserverController::GetMovementVector(const InputManager& input) const noexcept
+glm::vec3 ObserverController::GetMovementVector(const InputManager& input) const
 {
     glm::vec3 move_vec(0.0f);
 

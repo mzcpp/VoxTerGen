@@ -22,7 +22,7 @@ public:
 
 	void Tick(const InputManager& input, Camera& camera);
 
-	glm::vec3 GetMovementVector(const InputManager& input) const noexcept;
+	glm::vec3 GetMovementVector(const InputManager& input) const;
 
 	void ApplyKeyboardInput(const InputManager& input, Camera& camera);
 
