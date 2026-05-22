@@ -32,7 +32,12 @@ void Engine::Tick(float aspect_ratio)
 {
 	// TODO Collisions
 
-	// TODO which first? observer or camera? figure out the correct order.
+	const glm::vec3 movement_vector = observer_controller_.GetMovementVector(input_manager_);
+
+	// collision system detect collision & resolve (get a new movement vector from the previous one)
+	
+	// observer controller apply input
+
 	observer_controller_.Tick(input_manager_, camera_);
 	camera_controller_.Tick(input_manager_);
 	

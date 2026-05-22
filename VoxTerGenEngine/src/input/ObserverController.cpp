@@ -16,8 +16,51 @@ ObserverController::ObserverController(Observer& observer) : observer_(observer)
 
 void ObserverController::Tick(const InputManager& input, Camera& camera)
 {
+    // TODO: do not pass input into this Tick at all! Only the movement vector and mouse delta!
     ApplyKeyboardInput(input, camera);
     ApplyMouseRotation(input, camera);
+}
+
+glm::vec3 ObserverController::GetMovementVector(const InputManager& input) const noexcept
+{
+    glm::vec3 move_vec(0.0f);
+
+    if (input.KeyDown(SDL_SCANCODE_W))
+    {
+       move_vec += observer_.Front();
+    }
+
+    if (input.KeyDown(SDL_SCANCODE_S))
+    {
+       move_vec -= observer_.Front();
+    }
+
+    if (input.KeyDown(SDL_SCANCODE_A))
+    {
+       move_vec -= observer_.Right();
+    }
+
+    if (input.KeyDown(SDL_SCANCODE_D))
+    {
+       move_vec += observer_.Right();
+    }
+
+    if (input.KeyDown(SDL_SCANCODE_SPACE))
+    {
+       move_vec += constants::math::world_up;
+    }
+
+    if (input.KeyDown(SDL_SCANCODE_LCTRL))
+    {
+       move_vec -= constants::math::world_up;
+    }
+
+    if (glm::length(move_vec) > 0.0f)
+    {
+       move_vec = glm::normalize(move_vec);
+    }
+
+    return move_vec;
 }
 
 void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& camera)
@@ -28,51 +71,41 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
     {
         camera.SetPrevPos(camera.Pos());
     }
+    
+    const glm::vec3 move_vec = GetMovementVector(input);
 
-    glm::vec3 move_dir(0.0f);
-
-    if (input.KeyDown(SDL_SCANCODE_W))
+    if (glm::length(move_vec) > 0.0f)
     {
-       move_dir += observer_.Front();
+        observer_.position_ += move_vec * constants::observer::movement_speed * static_cast<float>(constants::engine::tick_dt);
+        observer_.moving_ = true;
+        
+        if (!camera.EnabledMovement())
+        {
+            camera.SetPos(observer_.position_ + camera.FPSOffset());
+            camera.SetStale(true);
+        }
+    }
+}
+
+void ObserverController::ApplyMovementVector(const glm::vec3& move_vec, Camera& camera)
+{
+    observer_.prev_position_ = observer_.position_;
+
+    if (!camera.EnabledMovement())
+    {
+        camera.SetPrevPos(camera.Pos());
     }
 
-    if (input.KeyDown(SDL_SCANCODE_S))
+    if (glm::length(move_vec) > 0.0f)
     {
-       move_dir -= observer_.Front();
-    }
-
-    if (input.KeyDown(SDL_SCANCODE_A))
-    {
-       move_dir -= observer_.Right();
-    }
-
-    if (input.KeyDown(SDL_SCANCODE_D))
-    {
-       move_dir += observer_.Right();
-    }
-
-    if (input.KeyDown(SDL_SCANCODE_SPACE))
-    {
-       move_dir += constants::math::world_up;
-    }
-
-    if (input.KeyDown(SDL_SCANCODE_LCTRL))
-    {
-       move_dir -= constants::math::world_up;
-    }
-
-    if (glm::length(move_dir) > 0.0f)
-    {
-       move_dir = glm::normalize(move_dir);
-
-       observer_.position_ += move_dir * constants::observer::movement_speed * static_cast<float>(constants::engine::tick_dt);
-       observer_.moving_ = true;
-      
-       if (!camera.EnabledMovement())
-       {
-           camera.SetPos(observer_.position_ + camera.FPSOffset());
-           camera.SetStale(true);
-       }
+        observer_.position_ += move_vec * constants::observer::movement_speed * static_cast<float>(constants::engine::tick_dt);
+        observer_.moving_ = true;
+        
+        if (!camera.EnabledMovement())
+        {
+            camera.SetPos(observer_.position_ + camera.FPSOffset());
+            camera.SetStale(true);
+        }
     }
 }
 

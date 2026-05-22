@@ -40,8 +40,6 @@ create a single templated class for opensimplex, they are the same headers only 
 
 add a proper templated Vec class into "VoxTerGenAlgorithms/utils/Math.hpp"
 
-Unify MeshBuilder? Not half in .cpp and half in .hpp
-
 correct for external libs #include <...> or #include "..."
 sort all #includes by alphabetical order and these order rules:
 	// 1. Corresponding header

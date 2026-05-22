@@ -9,7 +9,6 @@ CollisionSystem::CollisionSystem()
 {
 }
 
-
 bool CollisionSystem::AABBIntersectsX(glm::dvec3 min_a, glm::dvec3 max_a, glm::dvec3 min_b, glm::dvec3 max_b) const noexcept
 {
     return min_a.x < max_b.x && max_a.x > min_b.x; 
