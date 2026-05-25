@@ -1,11 +1,16 @@
 #ifndef COLLISION_SYSTEM_HPP
 #define COLLISION_SYSTEM_HPP
 
+#include "world/Observer.hpp"
+#include "world/Block.hpp"
+
 #include "glm/vec3.hpp"
 
 #include <concepts>
+#include <vector>
 
 class Block;
+class Observer;
 
 template <typename Fnc>
 concept BlockQuery = std::invocable<Fnc, glm::ivec3> && std::convertible_to<std::invoke_result_t<Fnc, glm::ivec3>, Block>;
@@ -35,17 +40,17 @@ public:
     {
         glm::vec3 clipped_movement_vector = movement_vector;
         const glm::dvec3 observer_min_coords = observer.Pos();
-        const glm::dvec3 observer_max_coords = { observer_min_coords.x + observer.GetWidth(), observer_min_coords.y + observer.GetHeight(), observer_min_coords.z + observer.GetDepth() };
+        const glm::dvec3 observer_max_coords = { observer_min_coords.x + observer.Width(), observer_min_coords.y + observer.Height(), observer_min_coords.z + observer.Depth() };
         const glm::ivec3 observer_block_coords = observer.BlockPos();
         const glm::ivec3 start_coords = { observer_block_coords.x - 1, observer_block_coords.y - 1, observer_block_coords.z - 1 };
 
-        std::vector<std::dvec3> neighbor_block_coords;
+        std::vector<glm::dvec3> neighbor_block_coords_vec;
 
-        for (int y = 0; y < static_cast<int>(observer.GetHeight()) + 2; ++y)
+        for (int y = 0; y < static_cast<int>(observer.Height()) + 2; ++y)
         {
-            for (int z = 0; z < static_cast<int>(observer.GetDepth()) + 2; ++z)
+            for (int z = 0; z < static_cast<int>(observer.Depth()) + 2; ++z)
             {
-                for (int x = 0; x < static_cast<int>(observer.GetWidth()) + 2; ++x)
+                for (int x = 0; x < static_cast<int>(observer.Width()) + 2; ++x)
                 {
                     const glm::ivec3 neighbor_block_coords = { start_coords.x + x, start_coords.y + y, start_coords.z + z };
                     const Block neighbor_block = world_block_query(neighbor_block_coords);
@@ -55,15 +60,16 @@ public:
                         continue;
                     }
 
-                    neighbor_block_coords.push_back({ static_cast<double>(neighbor_block_coords.x), static_cast<double>(neighbor_block_coords.y), static_cast<double>(neighbor_block_coords.z) });
+                    const glm::dvec3 neighbor_block_coords = { static_cast<double>(neighbor_block_coords.x), static_cast<double>(neighbor_block_coords.y), static_cast<double>(neighbor_block_coords.z) };
+                    neighbor_block_coords_vec.push_back(neighbor_block_coords);
                 }
             }
         }
 
-        for (std::dvec3 neighbor_min_pos : neighbor_block_coords)
+        for (glm::dvec3 neighbor_min_pos : neighbor_block_coords_vec)
         {
             // TODO
-            const std::dvec3 neighbor_max_pos = { neighbor_min_pos.x + 1.0, neighbor_min_pos.y + 1.0, neighbor_min_pos.z + 1.0 };
+            const glm::dvec3 neighbor_max_pos = { neighbor_min_pos.x + 1.0, neighbor_min_pos.y + 1.0, neighbor_min_pos.z + 1.0 };
             clipped_movement_vector.x = GetClipX(observer_min_coords, observer_max_coords, neighbor_min_pos, neighbor_max_pos, movement_vector.x);
             clipped_movement_vector.y = GetClipY(observer_min_coords, observer_max_coords, neighbor_min_pos, neighbor_max_pos, movement_vector.y);
             clipped_movement_vector.z = GetClipZ(observer_min_coords, observer_max_coords, neighbor_min_pos, neighbor_max_pos, movement_vector.z);
