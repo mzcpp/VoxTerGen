@@ -35,8 +35,7 @@ struct MergedQuad
 };
 
 template <typename Fnc> 
-concept BlockQuery = std::invocable<Fnc, const glm::ivec3&> &&
-	std::convertible_to<std::invoke_result_t<Fnc, const glm::ivec3&>, Block>;
+concept BlockQuery = std::invocable<Fnc, glm::ivec3> && std::convertible_to<std::invoke_result_t<Fnc, glm::ivec3>, Block>;
 
 class MeshBuilder final
 {
@@ -45,12 +44,12 @@ public:
 	MeshBuilder(const MeshBuilder& other) = delete;
 	MeshBuilder& operator=(const MeshBuilder& other) = delete;
 
-	static Mesh BuildMeshNaive(const glm::ivec2& chunk_world_coords, BlockQuery auto&& world_block_query);
+	static Mesh BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query);
 	
 	static Mesh BuildMeshGreedy(BlockQuery auto&& world_block_query);
 
 private:
-	static void SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType type, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh);
+	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_coords, Direction dir, Mesh& chunk_mesh);
 
 	static std::uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 
@@ -65,7 +64,7 @@ private:
 	static void MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh);
 };
 
-Mesh MeshBuilder::BuildMeshNaive(const glm::ivec2& chunk_world_coords, BlockQuery auto&& world_block_query)
+Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query)
 {
 	Mesh chunk_mesh;
 

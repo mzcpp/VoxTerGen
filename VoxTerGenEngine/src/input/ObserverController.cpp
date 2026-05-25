@@ -14,11 +14,10 @@ ObserverController::ObserverController(Observer& observer) : observer_(observer)
 {
 }
 
-void ObserverController::Tick(const InputManager& input, Camera& camera)
+void ObserverController::Tick(glm::vec3 movement_vector, glm::vec2 mouse_delta, Camera& camera)
 {
-    // TODO: do not pass input into this Tick at all! Only the movement vector and mouse delta!
-    ApplyKeyboardInput(input, camera);
-    ApplyMouseRotation(input, camera);
+    ApplyMovementVector(movement_vector, camera);
+    ApplyMouseRotation(mouse_delta, camera);
 }
 
 glm::vec3 ObserverController::GetMovementVector(const InputManager& input) const
@@ -87,7 +86,7 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
     }
 }
 
-void ObserverController::ApplyMovementVector(const glm::vec3& move_vec, Camera& camera)
+void ObserverController::ApplyMovementVector(glm::vec3 move_vec, Camera& camera)
 {
     observer_.prev_position_ = observer_.position_;
 
@@ -109,7 +108,7 @@ void ObserverController::ApplyMovementVector(const glm::vec3& move_vec, Camera& 
     }
 }
 
-void ObserverController::ApplyMouseRotation(const InputManager& input, Camera& camera)
+void ObserverController::ApplyMouseRotation(glm::vec2 mouse_delta, Camera& camera)
 {
     observer_.prev_yaw_ = observer_.yaw_;
     observer_.prev_pitch_ = observer_.pitch_;
@@ -119,8 +118,6 @@ void ObserverController::ApplyMouseRotation(const InputManager& input, Camera& c
         camera.SetPrevYaw(observer_.prev_yaw_);
         camera.SetPrevPitch(observer_.prev_pitch_);
     }
-
-    const glm::vec2 mouse_delta = input.MouseDelta();
 
     if (math_utils::FloatingPointNearZero(mouse_delta.x) && math_utils::FloatingPointNearZero(mouse_delta.y))
     {

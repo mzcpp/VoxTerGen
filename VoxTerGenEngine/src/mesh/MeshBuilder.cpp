@@ -13,7 +13,7 @@
 #include <array>
 #include <cassert>
 
-void MeshBuilder::SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType type, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh)
+void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_coords, Direction dir, Mesh& chunk_mesh)
 {
 	glm::vec3 vertex = { 0.0f, 0.0f, 0.0f };
 	glm::vec3 normal = { 0.0f, 0.0f, 0.0f };

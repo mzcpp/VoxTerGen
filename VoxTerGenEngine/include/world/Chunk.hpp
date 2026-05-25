@@ -57,21 +57,21 @@ private:
 public:
 	explicit Chunk(ChunkID id, glm::ivec2 world_coords);
 
-    Block& BlockAt(const glm::ivec3& coords, bool check_index = false);
+    Block& BlockAt(glm::ivec3 coords, bool check_index = false);
 
-    const Block& BlockAt(const glm::ivec3& coords, bool check_index = false) const;
+    const Block& BlockAt(glm::ivec3 coords, bool check_index = false) const;
 
     glm::ivec3 Pos(int index) const;
 
-    bool IsValidIndex(const glm::ivec3& coords) const;
+    bool IsValidIndex(glm::ivec3 coords) const;
 
-    Block NeighborAt(const glm::ivec3& coords, Direction dir) const;
+    Block NeighborAt(glm::ivec3 coords, Direction dir) const;
 
-    Block& NeighborRefAt(const glm::ivec3& coords, Direction dir);
+    Block& NeighborRefAt(glm::ivec3 coords, Direction dir);
 
     // Getters
     ChunkID Id() const noexcept { return id_; }
-    const glm::ivec2& WorldCoords() const noexcept { return world_coords_; }
+    glm::ivec2 WorldCoords() const noexcept { return world_coords_; }
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
     bool MeshValid() const noexcept { return mesh_valid_; }
 
@@ -79,7 +79,7 @@ public:
     void SetMeshValid(bool mesh_valid) { mesh_valid_ = mesh_valid; }
 
 private:
-    int Index(const glm::ivec3& coords) const;
+    int Index(glm::ivec3 coords) const;
 };
 
 #endif // CHUNK_HPP

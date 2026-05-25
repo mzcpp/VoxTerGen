@@ -137,7 +137,7 @@ std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk)
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 		
 	*chunk_mesh = MeshBuilder::BuildMeshGreedy(
-		[this, &chunk](const glm::ivec3& block_coords)
+		[this, &chunk](glm::ivec3 block_coords)
 		{
 			return WorldBlockQuery(chunk.WorldCoords(), block_coords);
 		}
@@ -158,7 +158,7 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 	return chunk_it->second.get();
 }
 
-Block ChunkManager::WorldBlockQuery(const glm::ivec2& current_chunk_coord, const glm::ivec3& block_coords) const
+Block ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const
 {	
 	if (block_coords.y < 0 || block_coords.y >= constants::chunk::height)
 	{
@@ -187,7 +187,7 @@ void ChunkManager::PushChunkIntoQueue(Chunk* chunk)
 	chunk_build_queue_.push(chunk);
 }
 
-glm::ivec2 ChunkManager::GetChunkCoords(const glm::dvec3& pos) noexcept
+glm::ivec2 ChunkManager::GetChunkCoords(glm::dvec3 pos) noexcept
 {
 	return { static_cast<int>(std::floor(pos.x / constants::chunk::width)), static_cast<int>(std::floor(pos.z / constants::chunk::depth)) };
 }

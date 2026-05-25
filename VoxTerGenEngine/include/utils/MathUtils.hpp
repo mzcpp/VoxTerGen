@@ -97,7 +97,7 @@ namespace math_utils
      *
      * @return true if vectors are approximately equal, false otherwise
      */
-    inline bool Vec3Equal(const glm::vec3& a, const glm::vec3& b, float eps = constants::math::float_rel_epsilon)
+    inline bool Vec3Equal(glm::vec3 a, glm::vec3 b, float eps = constants::math::float_rel_epsilon)
     {
         return glm::length(a - b) < eps;
     }

@@ -19,12 +19,16 @@ Camera::Camera(glm::dvec3 position, float yaw, float pitch) :
 	zoom_(constants::camera::zoom), 
 	near_plane_(constants::camera::near_plane), 
 	far_plane_(constants::camera::far_plane), 
+	view_(0.0f), 
+	projection_(0.0f), 
+	view_proj_(0.0f), 
+	frustum_planes_(), 
 	prev_position_(position), 
 	prev_yaw_(yaw), 
 	prev_pitch_(pitch), 
-	enabled_movement_(false),
-	enabled_rotation_(false),
-	enabled_zoom_(true),
+	enabled_movement_(false), 
+	enabled_rotation_(false), 
+	enabled_zoom_(true), 
 	stale_(true)
 {
 	fps_offset_ =
@@ -177,7 +181,7 @@ void Camera::UpdateFrustumPlanes()
 	}
 }
 
-bool Camera::PointInsideFrustum(const glm::vec3& point) const
+bool Camera::PointInsideFrustum(glm::vec3 point) const
 {
 	for (int i = 0; i < 6; ++i)
 	{

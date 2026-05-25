@@ -30,15 +30,11 @@ void Engine::HandleEvents(SDL_Event e)
 
 void Engine::Tick(float aspect_ratio)
 {
-	// TODO Collisions
-
 	const glm::vec3 movement_vector = observer_controller_.GetMovementVector(input_manager_);
 
 	// collision system detect collision & resolve (get a new movement vector from the previous one)
 	
-	// observer controller apply input
-
-	observer_controller_.Tick(input_manager_, camera_);
+	observer_controller_.Tick(movement_vector, input_manager_.MouseDelta(), camera_);
 	camera_controller_.Tick(input_manager_);
 	
 	observer_.Tick();

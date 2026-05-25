@@ -13,7 +13,7 @@ private:
 	std::vector<std::uint32_t> indices_;
 
 public:
-	void AddVertex(const glm::vec3& position, const glm::vec3& normal, const glm::vec2& uv, std::uint8_t material);
+	void AddVertex(glm::vec3 position, glm::vec3 normal, glm::vec2 uv, std::uint8_t material);
 
 	void AddIndex(std::uint32_t index);
 	

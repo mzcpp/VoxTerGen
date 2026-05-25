@@ -16,8 +16,8 @@
  */
 struct Plane
 {
-	glm::vec3 normal_;
-	float dist_;
+    glm::vec3 normal_ = { 0.0f, 0.0f, 0.0f };
+	float dist_ = 0.0f;
 };
 
 class CameraController;
@@ -117,7 +117,7 @@ public:
 	 * 
      * @return True if the point is inside the frustum, false otherwise
      */
-    bool PointInsideFrustum(const glm::vec3& point) const;
+    bool PointInsideFrustum(glm::vec3 point) const;
 
     /**
      * @brief Performs a sanity check on the frustum.

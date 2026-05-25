@@ -33,13 +33,13 @@ public:
 
 	std::unique_ptr<Mesh> BuildChunkMesh(Chunk& chunk);
 
-	Block WorldBlockQuery(const glm::ivec2& current_chunk_coord, const glm::ivec3& block_coords) const;
+	Block WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const;
 
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
 
 	void PushChunkIntoQueue(Chunk* chunk);
 
-	glm::ivec2 GetChunkCoords(const glm::dvec3& pos) noexcept;
+	glm::ivec2 GetChunkCoords(glm::dvec3 pos) noexcept;
 
 	// TODO: TEMPORARY CHUNK FILL - REMOVE LATER!
 	void FillChunkTmp(Chunk& chunk);

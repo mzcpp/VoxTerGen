@@ -40,8 +40,8 @@ public:
 
     // Getters
     const MouseState& Mouse() const noexcept { return mouse_; }
-    const glm::vec2& MouseDelta() const noexcept { return mouse_.delta_; }
-    const glm::ivec2& MousePos() const noexcept { return mouse_.pos_; }
+    glm::vec2 MouseDelta() const noexcept { return mouse_.delta_; }
+    glm::ivec2 MousePos() const noexcept { return mouse_.pos_; }
     float MouseWheel() const noexcept { return mouse_.wheel_; }
 };
 
