@@ -60,6 +60,7 @@ public:
 	// Getters
 	MovementState GetMovementState() const noexcept { return movement_state_; }
 	glm::dvec3 Pos() const noexcept { return position_; }
+	glm::ivec3 BlockPos() const noexcept { return { static_cast<int>(position_.x), static_cast<int>(position_.y), static_cast<int>(position_.z) }; }
 	glm::vec3 Front() const noexcept { return front_; }
 	glm::vec3 Up() const noexcept { return up_; }
 	glm::vec3 Right() const noexcept { return right_; }
