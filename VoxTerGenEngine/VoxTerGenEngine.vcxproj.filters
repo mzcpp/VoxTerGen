@@ -1232,6 +1232,9 @@
     <ClInclude Include="include\physics\DigitalDifferentialAnalyzer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\physics\AABB.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\external\glm\detail\func_common.inl">

@@ -209,6 +209,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\world\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\physics\AABB.hpp" />
     <ClInclude Include="include\physics\DigitalDifferentialAnalyzer.hpp" />
     <ClInclude Include="include\physics\CollisionSystem.hpp" />
     <ClInclude Include="include\Constants.hpp" />

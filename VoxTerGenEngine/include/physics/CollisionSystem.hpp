@@ -1,82 +1,15 @@
 #ifndef COLLISION_SYSTEM_HPP
 #define COLLISION_SYSTEM_HPP
 
+#include "physics/AABB.hpp"
 #include "world/Observer.hpp"
 #include "world/Block.hpp"
-//#include "AABB.hpp"
 
 #include "glm/vec3.hpp"
 
 #include <concepts>
 #include <vector>
-
-struct AABB
-{
-    glm::dvec3 min_;
-    glm::dvec3 max_;
-
-    AABB(double min_x, double min_y, double min_z, double max_x, double max_y, double max_z)
-    {
-        min_ = { min_x, min_y, min_z };
-        max_ = { max_x, max_y, max_z };
-    }
-
-    AABB Expand(glm::dvec3 value)
-    {
-        AABB result;
-
-        if (value.x > 0.0)
-        {
-            result.max_.x = max_.x + value.x;
-        }
-        else
-        {
-            result.min_.x = min_.x + value.x;
-        }
-
-        if (value.y > 0.0)
-        {
-            result.max_.y = max_.y + value.y;
-        }
-        else
-        {
-            result.min_.y = min_.y + value.y;
-        }
-
-        if (value.z > 0.0)
-        {
-            result.max_.z = max_.z + value.z;
-        }
-        else
-        {
-            result.min_.z = min_.z + value.z;
-        }
-
-        return result;
-    }
-
-    AABB Grow(glm::dvec3 value)
-    {
-        AABB result;
-
-        result.max_.x = max_.x + value.x;
-        result.max_.y = max_.y + value.y;
-        result.max_.z = max_.z + value.z;
-
-        result.min_.x = min_.x - value.x;      
-        result.min_.y = min_.y - value.y;
-        result.min_.z = min_.z - value.z;
-
-        return result;
-    }
-
-    void Move(glm::dvec3 vec)
-    {
-        min_.x += vec.x;
-        min_.y += vec.y;
-        min_.z += vec.z;
-    }
-};
+#include <cmath>
 
 class Block;
 class Observer;
@@ -107,18 +40,16 @@ public:
 
     glm::vec3 GetClippedMovementVector(BlockQuery auto&& world_block_query, const Observer& observer, glm::vec3 movement_vector) const noexcept
     {
-        const glm::dvec3 observer_min_coords = observer.Pos();
-        const glm::dvec3 observer_max_coords = { observer_min_coords.x + observer.Width(), observer_min_coords.y + observer.Height(), observer_min_coords.z + observer.Depth() };
         const glm::ivec3 observer_block_coords = observer.BlockPos();
         const glm::ivec3 start_coords = { observer_block_coords.x - 1, observer_block_coords.y - 1, observer_block_coords.z - 1 };
 
         std::vector<glm::dvec3> neighbor_blocks_coords;
 
-        for (int y = 0; y < static_cast<int>(observer.Height()) + 2; ++y)
+        for (int y = 0; y < static_cast<int>(std::ceil(observer.Height())) + 2; ++y)
         {
-            for (int z = 0; z < static_cast<int>(observer.Depth()) + 2; ++z)
+            for (int z = 0; z < static_cast<int>(std::ceil(observer.Depth())) + 2; ++z)
             {
-                for (int x = 0; x < static_cast<int>(observer.Width()) + 2; ++x)
+                for (int x = 0; x < static_cast<int>(std::ceil(observer.Width())) + 2; ++x)
                 {
                     const glm::ivec3 neighbor_block_coords = { start_coords.x + x, start_coords.y + y, start_coords.z + z };
 
@@ -134,6 +65,8 @@ public:
         }
 
         glm::vec3 clipped_movement_vector = movement_vector;
+        glm::dvec3 observer_min_coords = observer.Pos();
+        glm::dvec3 observer_max_coords = { observer_min_coords.x + observer.Width(), observer_min_coords.y + observer.Height(), observer_min_coords.z + observer.Depth() };
 
         for (glm::dvec3 neighbor_block_min_coord : neighbor_blocks_coords)
         {
@@ -170,4 +103,3 @@ public:
 };
 
 #endif // COLLISION_SYSTEM_HPP
-

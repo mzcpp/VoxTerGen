@@ -1,5 +1,5 @@
-#include "physics/CollisionSystem.hpp" // <<< physics??
-//#include "AABB.hpp"
+#include "physics/AABB.hpp"
+#include "physics/CollisionSystem.hpp"
 
 /**
  * @note Portion of this source code was adapted from an article by Andre Blunt.
@@ -27,12 +27,12 @@ bool CollisionSystem::AABBIntersectsZ(AABB first, AABB second) const noexcept
 
 bool CollisionSystem::AABBIntersects(AABB first, AABB second) const noexcept
 {
-    return AABBIntersectsX(first.min_, first.max_, second.min_, second.max_) && AABBIntersectsY(first.min_, first.max_, second.min_, second.max_) && AABBIntersectsZ(first.min_, first.max_, second.min_, second.max_);
+    return AABBIntersectsX(first, second) && AABBIntersectsY(first, second) && AABBIntersectsZ(first, second);
 }
 
 float CollisionSystem::GetClipX(AABB first, AABB second, float delta_x) const noexcept
 {
-    if (!AABBIntersectsY(first.min_, first.max_, second.min_, second.max_) || !AABBIntersectsZ(first.min_, first.max_, second.min_, second.max_))
+    if (!AABBIntersectsY(first, second) || !AABBIntersectsZ(first, second))
     {
         return delta_x;
     }
@@ -58,7 +58,7 @@ float CollisionSystem::GetClipX(AABB first, AABB second, float delta_x) const no
 
 float CollisionSystem::GetClipY(AABB first, AABB second, float delta_y) const noexcept
 {
-    if (!AABBIntersectsX(first.min_, first.max_, second.min_, second.max_) || !AABBIntersectsZ(first.min_, first.max_, second.min_, second.max_))
+    if (!AABBIntersectsX(first, second) || !AABBIntersectsZ(first, second))
     {
         return delta_y;
     }
@@ -84,7 +84,7 @@ float CollisionSystem::GetClipY(AABB first, AABB second, float delta_y) const no
 
 float CollisionSystem::GetClipZ(AABB first, AABB second, float delta_z) const noexcept
 {
-    if (!AABBIntersectsX(first.min_, first.max_, second.min_, second.max_) || !AABBIntersectsY(first.min_, first.max_, second.min_, second.max_))
+    if (!AABBIntersectsX(first, second) || !AABBIntersectsY(first, second))
     {
         return delta_z;
     }
