@@ -58,8 +58,7 @@ public:
                         continue;
                     }
 
-                    const glm::dvec3 neighbor_block_coords = { static_cast<double>(neighbor_block_coords.x), static_cast<double>(neighbor_block_coords.y), static_cast<double>(neighbor_block_coords.z) };
-                    neighbor_blocks_coords.push_back(neighbor_block_coords);
+                    neighbor_blocks_coords.push_back({ static_cast<double>(neighbor_block_coords.x), static_cast<double>(neighbor_block_coords.y), static_cast<double>(neighbor_block_coords.z) });
                 }
             }
         }
@@ -71,7 +70,7 @@ public:
         for (glm::dvec3 neighbor_block_min_coord : neighbor_blocks_coords)
         {
             const glm::dvec3 neighbor_block_max_coord = { neighbor_block_min_coord.x + 1.0, neighbor_block_min_coord.y + 1.0, neighbor_block_min_coord.z + 1.0 };
-            const float clipped_x = GetClipX(observer_min_coords, observer_max_coords, neighbor_block_min_coord, neighbor_block_max_coord, movement_vector.x);
+            const float clipped_x = GetClipX({ observer_min_coords, observer_max_coords }, { neighbor_block_min_coord, neighbor_block_max_coord }, movement_vector.x);
             clipped_movement_vector.x = clipped_x > 0.0f ? std::fmin(clipped_x, clipped_movement_vector.x) : std::fmax(clipped_x, clipped_movement_vector.x);
         }
 
@@ -81,7 +80,7 @@ public:
         for (glm::dvec3 neighbor_block_min_coord : neighbor_blocks_coords)
         {
             const glm::dvec3 neighbor_block_max_coord = { neighbor_block_min_coord.x + 1.0, neighbor_block_min_coord.y + 1.0, neighbor_block_min_coord.z + 1.0 };
-            const float clipped_y = GetClipY(observer_min_coords, observer_max_coords, neighbor_block_min_coord, neighbor_block_max_coord, movement_vector.y);
+            const float clipped_y = GetClipY({ observer_min_coords, observer_max_coords }, { neighbor_block_min_coord, neighbor_block_max_coord }, movement_vector.y);
             clipped_movement_vector.y = clipped_y > 0.0f ? std::fmin(clipped_y, clipped_movement_vector.y) : std::fmax(clipped_y, clipped_movement_vector.y);
         }
 
@@ -91,7 +90,7 @@ public:
         for (glm::dvec3 neighbor_block_min_coord : neighbor_blocks_coords)
         {
             const glm::dvec3 neighbor_block_max_coord = { neighbor_block_min_coord.x + 1.0, neighbor_block_min_coord.y + 1.0, neighbor_block_min_coord.z + 1.0 };
-            const float clipped_z = GetClipZ(observer_min_coords, observer_max_coords, neighbor_block_min_coord, neighbor_block_max_coord, movement_vector.z);
+            const float clipped_z = GetClipZ({ observer_min_coords, observer_max_coords }, { neighbor_block_min_coord, neighbor_block_max_coord }, movement_vector.z);
             clipped_movement_vector.z = clipped_z > 0.0f ? std::fmin(clipped_z, clipped_movement_vector.z) : std::fmax(clipped_z, clipped_movement_vector.z);
         }
 

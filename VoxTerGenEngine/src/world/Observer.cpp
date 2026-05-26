@@ -33,7 +33,7 @@ void Observer::Tick() noexcept
 {
     UpdateObserverVectors();
 #if _DEBUG
-	LogObserverData();
+	//LogObserverData();
 #endif
 
 	moving_ = false;

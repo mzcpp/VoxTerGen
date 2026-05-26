@@ -30,9 +30,14 @@ void Engine::HandleEvents(SDL_Event e)
 
 void Engine::Tick(float aspect_ratio)
 {
-	const glm::vec3 movement_vector = observer_controller_.GetMovementVector(input_manager_);
+	glm::vec3 movement_vector = observer_controller_.GetMovementVector(input_manager_);
 
-	// collision system detect collision & resolve (get a new movement vector from the previous one)
+
+	movement_vector = collision_system_.GetClippedMovementVector([this](glm::ivec3 coords)
+		{
+			return world_.ChunkManagerRef().WorldBlockQuery(observer_.BlockPos(), coords);
+		}, 
+		observer_, movement_vector);
 	
 	observer_controller_.Tick(movement_vector, input_manager_.MouseDelta(), camera_);
 	camera_controller_.Tick(input_manager_);

@@ -48,7 +48,7 @@ void Camera::Tick(float aspect_ratio)
 	UpdateFrustumPlanes();
 
 #if _DEBUG
-	LogCameraData();
+	//LogCameraData();
 	//PrintFrustumPlanes();
 	SanityCheckFrustum();
 #endif

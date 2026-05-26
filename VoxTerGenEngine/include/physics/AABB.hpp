@@ -20,6 +20,12 @@ struct AABB
         max_ = { max_x, max_y, max_z };
     }
 
+    AABB(glm::dvec3 min, glm::dvec3 max)
+    {
+        min_ = min;
+        max_ = max;
+    }
+
     AABB Expand(glm::dvec3 value)
     {
         AABB result;
