@@ -67,3 +67,37 @@ void Observer::LogObserverData() const
 	Logger::Log(LogLevel::DEBUG, "Yaw: {}", yaw_);
 	Logger::Log(LogLevel::DEBUG, "Pitch: {}", pitch_);
 }
+
+glm::ivec3 Observer::BlockPos() const noexcept
+{
+	glm::ivec3 block_pos(0);
+
+	if (position_.x < 0.0)
+	{
+		block_pos.x = static_cast<int>(std::floor(position_.x));
+	}
+	else
+	{
+		block_pos.x = static_cast<int>(position_.x);
+	}
+
+	if (position_.y < 0.0)
+	{
+		block_pos.y = static_cast<int>(std::floor(position_.y));
+	}
+	else
+	{
+		block_pos.y = static_cast<int>(position_.y);
+	}
+
+	if (position_.z < 0.0)
+	{
+		block_pos.z = static_cast<int>(std::floor(position_.z));
+	}
+	else
+	{
+		block_pos.z = static_cast<int>(position_.z);
+	}
+
+	return block_pos;
+}
