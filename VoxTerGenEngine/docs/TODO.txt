@@ -54,5 +54,6 @@ when the spawn point is found outside 0,0 chunk, need to stream the chunks from 
 
 use & fix GetChunkCoords - math_utils
 rename math_utils & all namespaces using snake_case
+rename MathUtils class
 
 Wireframe of chunks!
