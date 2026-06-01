@@ -9,6 +9,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <iostream>
+
 Engine::Engine() : camera_controller_(camera_), observer_controller_(observer_)
 {
 }
@@ -30,12 +32,17 @@ void Engine::HandleEvents(SDL_Event e)
 
 void Engine::Tick(float aspect_ratio)
 {
-	glm::vec3 movement_vector = observer_controller_.GetMovementVector(input_manager_);
+	std::cout << "------------------------------------------------------------" << '\n';
+	std::cout << "POSITION" << '\n';
+	//std::cout << observer_.RelativeBlockPos().x << ' ' << observer_.RelativeBlockPos().y << ' ' << observer_.RelativeBlockPos().z << ' ' << '\n';
+	std::cout << observer_.Pos().x << ' ' << observer_.Pos().y << ' ' << observer_.Pos().z << ' ' << '\n';
 
+	glm::vec3 movement_vector = observer_controller_.GetMovementVector(input_manager_);
 
 	movement_vector = collision_system_.GetClippedMovementVector([this](glm::ivec3 coords)
 		{
-			return world_.ChunkManagerRef().WorldBlockQuery(observer_.BlockPos(), coords);
+			glm::ivec2 chunk_coords = world_.ChunkManagerRef().GetChunkCoords(observer_.AbsoluteBlockPos());
+			return world_.ChunkManagerRef().WorldBlockQuery(chunk_coords, coords);
 		}, 
 		observer_, movement_vector);
 	
@@ -49,6 +56,8 @@ void Engine::Tick(float aspect_ratio)
 	world_renderer_.Tick(chunk_event_queue_);
 	
 	input_manager_.ResetFrameState();
+	std::cout << "------------------------------------------------------------" << '\n';
+
 }
 
 void Engine::Render(float alpha)

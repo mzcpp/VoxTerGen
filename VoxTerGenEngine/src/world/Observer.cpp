@@ -68,7 +68,7 @@ void Observer::LogObserverData() const
 	Logger::Log(LogLevel::DEBUG, "Pitch: {}", pitch_);
 }
 
-glm::ivec3 Observer::BlockPos() const noexcept
+glm::ivec3 Observer::AbsoluteBlockPos() const noexcept
 {
 	glm::ivec3 block_pos(0);
 
@@ -78,7 +78,7 @@ glm::ivec3 Observer::BlockPos() const noexcept
 	}
 	else
 	{
-		block_pos.x = static_cast<int>(position_.x);
+		block_pos.x = static_cast<int>(position_.x) % constants::chunk::width;
 	}
 
 	if (position_.y < 0.0)
@@ -97,6 +97,42 @@ glm::ivec3 Observer::BlockPos() const noexcept
 	else
 	{
 		block_pos.z = static_cast<int>(position_.z);
+	}
+
+	return block_pos;
+}
+
+glm::ivec3 Observer::RelativeBlockPos() const noexcept
+{
+	glm::ivec3 block_pos(0);
+
+	if (position_.x < 0.0)
+	{
+		const int chunk_x_offset = (std::abs(static_cast<int>(position_.x)) / constants::chunk::width) + 1;
+		block_pos.x = (static_cast<int>(position_.x) + chunk_x_offset * constants::chunk::width) - 1;
+	}
+	else
+	{
+		block_pos.x = static_cast<int>(position_.x) % constants::chunk::width;
+	}
+
+	if (position_.y < 0.0)
+	{
+		block_pos.y = static_cast<int>(std::floor(position_.y));
+	}
+	else
+	{
+		block_pos.y = static_cast<int>(position_.y);
+	}
+
+	if (position_.z < 0.0)
+	{
+		const int chunk_z_offset = (std::abs(static_cast<int>(position_.z)) / constants::chunk::depth) + 1;
+		block_pos.z = (static_cast<int>(position_.z) + chunk_z_offset * constants::chunk::depth) - 1;
+	}
+	else
+	{
+		block_pos.z = static_cast<int>(position_.z) % constants::chunk::depth;
 	}
 
 	return block_pos;

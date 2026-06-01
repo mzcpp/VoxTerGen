@@ -80,7 +80,8 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
         
         if (!camera.EnabledMovement())
         {
-            camera.SetPos(observer_.position_ + camera.FPSOffset());
+            camera.SetPos(observer_.position_);
+            //camera.SetPos(observer_.position_ + camera.FPSOffset());
             camera.SetStale(true);
         }
     }
@@ -102,7 +103,8 @@ void ObserverController::ApplyMovementVector(glm::vec3 move_vec, Camera& camera)
         
         if (!camera.EnabledMovement())
         {
-            camera.SetPos(observer_.position_ + camera.FPSOffset());
+            camera.SetPos(observer_.position_);
+            //camera.SetPos(observer_.position_ + camera.FPSOffset());
             camera.SetStale(true);
         }
     }

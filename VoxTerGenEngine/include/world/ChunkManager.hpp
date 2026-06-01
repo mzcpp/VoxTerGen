@@ -33,7 +33,7 @@ public:
 
 	std::unique_ptr<Mesh> BuildChunkMesh(Chunk& chunk);
 
-	Block WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const;
+	BlockInfo WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const;
 
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
 

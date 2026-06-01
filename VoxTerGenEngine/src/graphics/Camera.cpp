@@ -38,7 +38,7 @@ Camera::Camera(glm::dvec3 position, float yaw, float pitch) :
 		0.0
 	};
 
-	position_ += fps_offset_;
+	//position_ += fps_offset_;
 }
 
 void Camera::Tick(float aspect_ratio)

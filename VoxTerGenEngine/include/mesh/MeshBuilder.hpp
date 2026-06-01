@@ -35,7 +35,7 @@ struct MergedQuad
 };
 
 template <typename Fnc> 
-concept BlockQuery = std::invocable<Fnc, glm::ivec3> && std::convertible_to<std::invoke_result_t<Fnc, glm::ivec3>, Block>;
+concept BlockQuery = std::invocable<Fnc, glm::ivec3> && std::convertible_to<std::invoke_result_t<Fnc, glm::ivec3>, BlockInfo>;
 
 class MeshBuilder final
 {
@@ -76,7 +76,7 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&
 			{
 				const glm::ivec3 block_coords = { x, y, z };
 
-				if (!world_block_query(block_coords).IsSolid())
+				if (!world_block_query(block_coords).block_.IsSolid())
 				{
 					continue;
 				}
@@ -85,7 +85,7 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&
 				{
 					const glm::ivec3 neighbor_coords = NeighborCoords(block_coords, dir);
 
-					if (world_block_query(neighbor_coords).IsSolid())
+					if (world_block_query(neighbor_coords).block_.IsSolid())
 					{
 						continue;
 					}
@@ -180,8 +180,8 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 				break;
 			}
 
-			const Block& left_block = world_block_query(left_query_coords);
-			const Block& right_block = world_block_query(right_query_coords);
+			const Block& left_block = world_block_query(left_query_coords).block_;
+			const Block& right_block = world_block_query(right_query_coords).block_;
 
 			const bool left_block_inside = major_axis_index != -1;
 			const bool right_block_inside = (major_axis_index + 1) != major_axis_size;
