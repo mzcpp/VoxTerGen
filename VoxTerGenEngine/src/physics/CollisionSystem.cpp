@@ -16,7 +16,7 @@ bool CollisionSystem::AABBIntersectsX(AABB first, AABB second) const noexcept
 {
     if (first.min_.x < second.max_.x && first.max_.x > second.min_.x)
     {
-        //std::cout << "x\n";
+        std::cout << "x\n";
     }
 
     return first.min_.x < second.max_.x && first.max_.x > second.min_.x; 
@@ -26,7 +26,7 @@ bool CollisionSystem::AABBIntersectsY(AABB first, AABB second) const noexcept
 {
     if (first.min_.y < second.max_.y && first.max_.y > second.min_.y)
     {
-        //std::cout << "y\n";
+        std::cout << "y\n";
     }
 
     return first.min_.y < second.max_.y && first.max_.y > second.min_.y;
@@ -36,7 +36,7 @@ bool CollisionSystem::AABBIntersectsZ(AABB first, AABB second) const noexcept
 {
     if (first.min_.z < second.max_.z && first.max_.z > second.min_.z)
     {
-        //std::cout << "z\n";
+        std::cout << "z\n";
     }
 
     return first.min_.z < second.max_.z && first.max_.z > second.min_.z;

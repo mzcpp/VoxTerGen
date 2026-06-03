@@ -40,15 +40,21 @@ void Engine::Tick(float aspect_ratio)
 	const glm::vec3 direction_vector = observer_controller_.GetDirectionVector(input_manager_);
 
 	glm::vec3 displacement_vector = observer_controller_.GetDisplacementVector(direction_vector);
-
+	auto displacement_vector2 = displacement_vector;
 	displacement_vector = collision_system_.GetClippedDisplacementVector([this](glm::ivec3 coords)
 		{
 			glm::ivec2 chunk_coords = world_.ChunkManagerRef().GetChunkCoords(observer_.AbsoluteBlockPos());
 			return world_.ChunkManagerRef().WorldBlockQuery(chunk_coords, coords);
 		}, 
 		observer_, displacement_vector);
-	
+
+	//std::cout << "BEFORE: " << displacement_vector2.x << ' ' << displacement_vector2.y << ' ' << displacement_vector2.z << ' ' << '\n';
+	//std::cout << "AFTER: " << displacement_vector.x << ' ' << displacement_vector.y << ' ' << displacement_vector.z << ' ' << '\n';
+
+	std::cout << "BEFORE " << observer_.Pos().x << ' ' << observer_.Pos().y << ' ' << observer_.Pos().z << ' ' << '\n';
+
 	observer_controller_.Tick(displacement_vector, input_manager_.MouseDelta(), camera_);
+	std::cout << "AFTER " << observer_.Pos().x << ' ' << observer_.Pos().y << ' ' << observer_.Pos().z << ' ' << '\n';
 	camera_controller_.Tick(input_manager_);
 	
 	observer_.Tick();

@@ -108,8 +108,8 @@ void ObserverController::ApplyDirectionVector(glm::vec3 dir_vec, Camera& camera)
         
         if (!camera.EnabledMovement())
         {
-            camera.SetPos(observer_.position_);
-            //camera.SetPos(observer_.position_ + camera.FPSOffset());
+            //camera.SetPos(observer_.position_);
+            camera.SetPos(observer_.position_ + camera.FPSOffset());
             camera.SetStale(true);
         }
     }
@@ -131,8 +131,8 @@ void ObserverController::ApplyDisplacementVector(glm::vec3 displacement_vec, Cam
         
         if (!camera.EnabledMovement())
         {
-            camera.SetPos(observer_.position_);
-            //camera.SetPos(observer_.position_ + camera.FPSOffset());
+            //camera.SetPos(observer_.position_);
+            camera.SetPos(observer_.position_ + camera.FPSOffset());
             camera.SetStale(true);
         }
     }
