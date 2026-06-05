@@ -14,15 +14,15 @@ ObserverController::ObserverController(Observer& observer) : observer_(observer)
 {
 }
 
-void ObserverController::Tick(glm::vec3 displacement_vector, glm::vec2 mouse_delta, Camera& camera)
+void ObserverController::Tick(glm::dvec3 displacement_vector, glm::vec2 mouse_delta, Camera& camera)
 {
     ApplyDisplacementVector(displacement_vector, camera);
     ApplyMouseRotation(mouse_delta, camera);
 }
 
-glm::vec3 ObserverController::GetDirectionVector(const InputManager& input) const
+glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input) const
 {
-    glm::vec3 dir_vec(0.0f);
+    glm::dvec3 dir_vec(0.0f);
 
     if (input.KeyDown(SDL_SCANCODE_W))
     {
@@ -62,9 +62,10 @@ glm::vec3 ObserverController::GetDirectionVector(const InputManager& input) cons
     return dir_vec;
 }
 
-glm::vec3 ObserverController::GetDisplacementVector(glm::vec3 dir_vec) const
+glm::dvec3 ObserverController::GetDisplacementVector(glm::dvec3 dir_vec) const
 {
-    return dir_vec * constants::observer::movement_speed * static_cast<float>(constants::engine::tick_dt);   
+    const double multiplier = constants::observer::movement_speed * constants::engine::tick_dt;
+    return { dir_vec.x * multiplier, dir_vec.y * multiplier, dir_vec.z * multiplier };
 }
 
 void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& camera)
@@ -76,7 +77,7 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
         camera.SetPrevPos(camera.Pos());
     }
     
-    const glm::vec3 dir_vec = GetDirectionVector(input);
+    const glm::dvec3 dir_vec = GetDirectionVector(input);
 
     if (glm::length(dir_vec) > 0.0f)
     {
@@ -92,7 +93,7 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
     }
 }
 
-void ObserverController::ApplyDirectionVector(glm::vec3 dir_vec, Camera& camera)
+void ObserverController::ApplyDirectionVector(glm::dvec3 dir_vec, Camera& camera)
 {
     observer_.prev_position_ = observer_.position_;
 
@@ -115,7 +116,7 @@ void ObserverController::ApplyDirectionVector(glm::vec3 dir_vec, Camera& camera)
     }
 }
 
-void ObserverController::ApplyDisplacementVector(glm::vec3 displacement_vec, Camera& camera)
+void ObserverController::ApplyDisplacementVector(glm::dvec3 displacement_vec, Camera& camera)
 {
     observer_.prev_position_ = observer_.position_;
 

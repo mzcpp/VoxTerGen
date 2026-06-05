@@ -23,17 +23,17 @@ public:
     ObserverController(ObserverController&& other) = delete;
     ObserverController& operator=(ObserverController&& other) = delete;
 
-	void Tick(glm::vec3 displacement_vector, glm::vec2 mouse_delta, Camera& camera);
+	void Tick(glm::dvec3 displacement_vector, glm::vec2 mouse_delta, Camera& camera);
 
-	glm::vec3 GetDirectionVector(const InputManager& input) const;
+	glm::dvec3 GetDirectionVector(const InputManager& input) const;
 
-	glm::vec3 GetDisplacementVector(glm::vec3 dir_vec) const;
+	glm::dvec3 GetDisplacementVector(glm::dvec3 dir_vec) const;
 
 	void ApplyKeyboardInput(const InputManager& input, Camera& camera);
 
-	void ApplyDirectionVector(glm::vec3 move_vec, Camera& camera);
+	void ApplyDirectionVector(glm::dvec3 move_vec, Camera& camera);
 
-	void ApplyDisplacementVector(glm::vec3 displacement_vec, Camera& camera);
+	void ApplyDisplacementVector(glm::dvec3 displacement_vec, Camera& camera);
 
 	void ApplyMouseRotation(glm::vec2 mouse_delta, Camera& camera);
 };

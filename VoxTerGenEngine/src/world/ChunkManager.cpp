@@ -17,7 +17,8 @@ ChunkManager::ChunkManager()
 void ChunkManager::FillChunkTmp(Chunk& chunk)
 {
 	chunk.BlockAt({ 0, 0, 0 }).SetType(static_cast<BlockType>(1));
-	//chunk.BlockAt({ 1, 0, 0 }).SetType(static_cast<BlockType>(1));
+	//chunk.BlockAt({ 1, 1, 0 }).SetType(static_cast<BlockType>(1));
+	//chunk.BlockAt({ 2, 2, 0 }).SetType(static_cast<BlockType>(1));
 	return;
 
 	static int i = 1;

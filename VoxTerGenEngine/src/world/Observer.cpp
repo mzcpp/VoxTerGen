@@ -106,6 +106,13 @@ glm::ivec3 Observer::RelativeBlockPos() const noexcept
 {
 	glm::ivec3 block_pos(0);
 
+	const glm::dvec3 offset_center = 
+	{ 
+		position_.x + (constants::observer::width / 2.0), 
+		position_.y, 
+		position_.z + (constants::observer::depth / 2.0) 
+	};
+
 	if (position_.x < 0.0)
 	{
 		const int chunk_x_offset = (std::abs(static_cast<int>(position_.x)) / constants::chunk::width) + 1;

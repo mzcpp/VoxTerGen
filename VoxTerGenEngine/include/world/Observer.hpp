@@ -38,9 +38,9 @@ private:
 	float prev_yaw_;
 	float prev_pitch_;
 
-	float width_;
-	float height_;
-	float depth_;
+	double width_;
+	double height_;
+	double depth_;
 	
 	bool noclip_;
 	bool moving_;
@@ -71,9 +71,9 @@ public:
     float PrevYaw() const noexcept { return prev_yaw_; }
 	float PrevPitch() const noexcept { return prev_pitch_; }
 	bool Noclip() const noexcept { return noclip_; }
-	float Width() const noexcept { return width_; }
-	float Height() const noexcept { return height_; }
-	float Depth() const noexcept { return depth_; }
+	double Width() const noexcept { return width_; }
+	double Height() const noexcept { return height_; }
+	double Depth() const noexcept { return depth_; }
 	glm::dvec3 GetBBoxMin() const noexcept { return position_; }
 	glm::dvec3 GetBBoxMax() const noexcept { return { position_.x + width_, position_.y + height_, position_.z + depth_ }; }
 	

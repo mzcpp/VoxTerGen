@@ -86,6 +86,7 @@ namespace constants
     namespace physics
     {
         inline constexpr double g = 9.6;
+        inline constexpr double collision_epsilon = 1e-8;
     } // namespace physics
 
     /**
@@ -129,11 +130,11 @@ namespace constants
         inline constexpr float pitch = 0.0f;
         inline constexpr float pitch_min = -89.0f;
         inline constexpr float pitch_max = 89.0f;
-        inline constexpr float movement_speed = 1.0f;
+        inline constexpr double movement_speed = 2.5;
         inline constexpr float move_sensitivity = 0.1f;
-        inline constexpr float width = 1.0;
-        inline constexpr float height = 1.0;
-        inline constexpr float depth = 1.0;
+        inline constexpr double width = 1.0;
+        inline constexpr double height = 1.0;
+        inline constexpr double depth = 1.0;
     } // namespace observer
 
     /**
