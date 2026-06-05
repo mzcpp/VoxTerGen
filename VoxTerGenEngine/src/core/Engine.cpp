@@ -9,8 +9,6 @@
 
 #include <SDL2/SDL.h>
 
-#include <iostream>
-
 Engine::Engine() : camera_controller_(camera_), observer_controller_(observer_)
 {
 }
@@ -32,18 +30,12 @@ void Engine::HandleEvents(SDL_Event e)
 
 void Engine::Tick(float aspect_ratio)
 {
-	std::cout << "------------------------------------------------------------" << '\n';
-	std::cout << "POSITION" << '\n';
-	std::cout << observer_.RelativeBlockPos().x << ' ' << observer_.RelativeBlockPos().y << ' ' << observer_.RelativeBlockPos().z << ' ' << '\n';
-	std::cout << observer_.Pos().x << ' ' << observer_.Pos().y << ' ' << observer_.Pos().z << ' ' << '\n';
-
 	const glm::dvec3 direction_vector = observer_controller_.GetDirectionVector(input_manager_);
-
 	glm::dvec3 displacement_vector = observer_controller_.GetDisplacementVector(direction_vector);
 	
 	displacement_vector = collision_system_.GetClippedDisplacementVector([this](glm::ivec3 coords)
 		{
-			glm::ivec2 chunk_coords = world_.ChunkManagerRef().GetChunkCoords(observer_.AbsoluteBlockPos());
+			glm::ivec2 chunk_coords = world_.ChunkManagerRef().GetChunkCoords(observer_.AbsoluteBlockPos(constants::observer::pos_offset));
 			return world_.ChunkManagerRef().WorldBlockQuery(chunk_coords, coords);
 		}, 
 		observer_, displacement_vector);
@@ -58,8 +50,6 @@ void Engine::Tick(float aspect_ratio)
 	world_renderer_.Tick(chunk_event_queue_);
 	
 	input_manager_.ResetFrameState();
-	std::cout << "------------------------------------------------------------" << '\n';
-
 }
 
 void Engine::Render(float alpha)

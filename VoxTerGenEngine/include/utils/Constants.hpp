@@ -132,9 +132,14 @@ namespace constants
         inline constexpr float pitch_max = 89.0f;
         inline constexpr double movement_speed = 2.5;
         inline constexpr float move_sensitivity = 0.1f;
-        inline constexpr double width = 1.0;
-        inline constexpr double height = 1.0;
-        inline constexpr double depth = 1.0;
+        inline constexpr double width = 0.6;
+        inline constexpr double height = 1.8;
+        inline constexpr double depth = 0.6;
+        inline constexpr glm::dvec3 pos_offset = {
+            constants::observer::width / 2.0,
+            constants::observer::height / 2.0,
+            constants::observer::depth / 2.0
+        };
     } // namespace observer
 
     /**

@@ -4,6 +4,7 @@
 #include "graphics/Camera.hpp"
 
 #include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
 
 #include <SDL2/SDL.h>
 
@@ -74,7 +75,7 @@ void CameraController::ApplyKeyboardInput(const InputManager& input_manager)
         move_dir -= constants::math::world_up;
     }
 
-    if (glm::length(move_dir) > 0.0f)
+    if (glm::length2(move_dir) > 0.0f)
     {
         move_dir = glm::normalize(move_dir);
         

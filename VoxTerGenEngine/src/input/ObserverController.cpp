@@ -5,6 +5,7 @@
 #include "utils/MathUtils.hpp"
 
 #include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
 
 #include <SDL2/SDL.h>
 
@@ -54,7 +55,7 @@ glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input) con
        dir_vec -= constants::math::world_up;
     }
 
-    if (glm::length(dir_vec) > 0.0f)
+    if (glm::length2(dir_vec) > 0.0f)
     {
        dir_vec = glm::normalize(dir_vec);
     }
@@ -79,7 +80,7 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
     
     const glm::dvec3 dir_vec = GetDirectionVector(input);
 
-    if (glm::length(dir_vec) > 0.0f)
+    if (glm::length2(dir_vec) > 0.0f)
     {
         observer_.position_ += GetDisplacementVector(dir_vec);
         observer_.moving_ = true;
@@ -102,7 +103,7 @@ void ObserverController::ApplyDirectionVector(glm::dvec3 dir_vec, Camera& camera
         camera.SetPrevPos(camera.Pos());
     }
 
-    if (glm::length(dir_vec) > 0.0f)
+    if (glm::length2(dir_vec) > 0.0f)
     {
         observer_.position_ += GetDisplacementVector(dir_vec);
         observer_.moving_ = true;
@@ -125,7 +126,7 @@ void ObserverController::ApplyDisplacementVector(glm::dvec3 displacement_vec, Ca
         camera.SetPrevPos(camera.Pos());
     }
 
-    if (glm::length(displacement_vec) > 0.0f)
+    if (glm::length2(displacement_vec) > 0.0f)
     {
         observer_.position_ += displacement_vec;
         observer_.moving_ = true;

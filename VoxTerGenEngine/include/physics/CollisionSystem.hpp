@@ -7,11 +7,11 @@
 
 #include "glm/vec3.hpp"
 #include "glm/glm.hpp"
+#include <glm/gtx/norm.hpp>
 
 #include <concepts>
 #include <vector>
 #include <cmath>
-#include <iostream>
 
 class Block;
 class Observer;
@@ -42,17 +42,14 @@ public:
 
     glm::dvec3 GetClippedDisplacementVector(BlockQuery auto&& world_block_query, const Observer& observer, glm::dvec3 displacement_vector) const noexcept
     {
-        if (glm::length(displacement_vector) <= 0.0)
+        if (glm::length2(displacement_vector) <= 0.0)
         {
-            //return displacement_vector;
+            return displacement_vector;
         }
-
-        const glm::ivec3 observer_block_coords = observer.RelativeBlockPos();
-        const glm::ivec3 start_coords = { observer_block_coords.x - 1, observer_block_coords.y - 1, observer_block_coords.z - 1 };
-
-        std::vector<glm::dvec3> neighbor_blocks_coords;
-        std::cout << "NEIGHBORS\n";
+        
+        const glm::ivec3 start_coords = observer.RelativeBlockPos(constants::observer::pos_offset) - glm::ivec3(1);
         constexpr int neighbor_radius = 2;
+        std::vector<AABB> neighbor_blocks;
 
         for (int y = 0; y < static_cast<int>(std::ceil(observer.Height())) + neighbor_radius; ++y)
         {
@@ -60,62 +57,57 @@ public:
             {
                 for (int x = 0; x < static_cast<int>(std::ceil(observer.Width())) + neighbor_radius; ++x)
                 {
-                    const glm::ivec3 neighbor_block_coords = { start_coords.x + x, start_coords.y + y, start_coords.z + z };
-
-                    const BlockInfo neighbor_block_info = world_block_query(neighbor_block_coords);
+                    const BlockInfo neighbor_block_info = world_block_query(start_coords + glm::ivec3{ x, y, z });
 
                     if (!neighbor_block_info.block_.IsSolid())
                     {
                         continue;
                     }
 
-                    std::cout << neighbor_block_info.absolute_pos_.x << ' ' << neighbor_block_info.absolute_pos_.y << ' ' << neighbor_block_info.absolute_pos_.z << '\n';
-                    neighbor_blocks_coords.push_back({ static_cast<double>(neighbor_block_info.absolute_pos_.x), static_cast<double>(neighbor_block_info.absolute_pos_.y), static_cast<double>(neighbor_block_info.absolute_pos_.z) });
+                    const glm::dvec3 neighbor_block_min = {
+                        static_cast<double>(neighbor_block_info.absolute_pos_.x), 
+                        static_cast<double>(neighbor_block_info.absolute_pos_.y), 
+                        static_cast<double>(neighbor_block_info.absolute_pos_.z)
+                    };
+
+                    const AABB neighbor_block(neighbor_block_min, neighbor_block_min + glm::dvec3(1.0));
+
+                    neighbor_blocks.push_back(neighbor_block);
                 }
             }
         }
 
-        const glm::dvec3 observer_min_coords = observer.Pos();
-        const glm::dvec3 observer_max_coords =
-        {
-            observer_min_coords.x + static_cast<double>(observer.Width()),
-            observer_min_coords.y + static_cast<double>(observer.Height()),
-            observer_min_coords.z + static_cast<double>(observer.Depth())
+        const glm::dvec3 observer_coords_offset = {
+            static_cast<double>(observer.Width()),
+            static_cast<double>(observer.Height()),
+            static_cast<double>(observer.Depth())
         };
 
         glm::dvec3 clipped_movement_vector = displacement_vector;
-        AABB observer_aabb = { observer_min_coords, observer_max_coords };
+        AABB observer_aabb = { observer.Pos(), observer.Pos(observer_coords_offset) };
 
-        for (const glm::dvec3& neighbor_block_min_coord : neighbor_blocks_coords)
+        for (const AABB& neighbor_block : neighbor_blocks)
         {
-            const glm::dvec3 neighbor_block_max_coord = { neighbor_block_min_coord.x + 1.0, neighbor_block_min_coord.y + 1.0, neighbor_block_min_coord.z + 1.0 };
-            const AABB neighbor_block_aabb = { neighbor_block_min_coord, neighbor_block_max_coord };
-            const double clipped_x = GetClipX(observer_aabb, neighbor_block_aabb, displacement_vector.x);
-            clipped_movement_vector.x = displacement_vector.x > 0.0f ? std::fmin(clipped_x, clipped_movement_vector.x) : std::fmax(clipped_x, clipped_movement_vector.x);
+            const double clipped_x = GetClipX(observer_aabb, neighbor_block, displacement_vector.x);
+            clipped_movement_vector.x = displacement_vector.x > 0.0 ? std::fmin(clipped_x, clipped_movement_vector.x) : std::fmax(clipped_x, clipped_movement_vector.x);
         }
 
         observer_aabb.min_.x += clipped_movement_vector.x;
         observer_aabb.max_.x += clipped_movement_vector.x;
 
-        //std::cout << "vector " << clipped_movement_vector.x << ' ' << clipped_movement_vector.y << ' ' << clipped_movement_vector.z << '\n';
-
-        for (const glm::dvec3& neighbor_block_min_coord : neighbor_blocks_coords)
+        for (const AABB& neighbor_block : neighbor_blocks)
         {
-            const glm::dvec3 neighbor_block_max_coord = { neighbor_block_min_coord.x + 1.0, neighbor_block_min_coord.y + 1.0, neighbor_block_min_coord.z + 1.0 };
-            const AABB neighbor_block_aabb = { neighbor_block_min_coord, neighbor_block_max_coord };
-            const double clipped_y = GetClipY(observer_aabb, neighbor_block_aabb, displacement_vector.y);
-            clipped_movement_vector.y = displacement_vector.y > 0.0f ? std::fmin(clipped_y, clipped_movement_vector.y) : std::fmax(clipped_y, clipped_movement_vector.y);
+            const double clipped_y = GetClipY(observer_aabb, neighbor_block, displacement_vector.y);
+            clipped_movement_vector.y = displacement_vector.y > 0.0 ? std::fmin(clipped_y, clipped_movement_vector.y) : std::fmax(clipped_y, clipped_movement_vector.y);
         }
 
         observer_aabb.min_.y += clipped_movement_vector.y;
         observer_aabb.max_.y += clipped_movement_vector.y;
 
-        for (const glm::dvec3& neighbor_block_min_coord : neighbor_blocks_coords)
+        for (const AABB& neighbor_block : neighbor_blocks)
         {
-            const glm::dvec3 neighbor_block_max_coord = { neighbor_block_min_coord.x + 1.0, neighbor_block_min_coord.y + 1.0, neighbor_block_min_coord.z + 1.0 };
-            const AABB neighbor_block_aabb = { neighbor_block_min_coord, neighbor_block_max_coord };
-            const double clipped_z = GetClipZ(observer_aabb, neighbor_block_aabb, displacement_vector.z);
-            clipped_movement_vector.z = displacement_vector.z > 0.0f ? std::fmin(clipped_z, clipped_movement_vector.z) : std::fmax(clipped_z, clipped_movement_vector.z);
+            const double clipped_z = GetClipZ(observer_aabb, neighbor_block, displacement_vector.z);
+            clipped_movement_vector.z = displacement_vector.z > 0.0 ? std::fmin(clipped_z, clipped_movement_vector.z) : std::fmax(clipped_z, clipped_movement_vector.z);
         }
 
         observer_aabb.min_.z += clipped_movement_vector.z;

@@ -59,9 +59,9 @@ public:
 
 	// Getters
 	MovementState GetMovementState() const noexcept { return movement_state_; }
-	glm::dvec3 Pos() const noexcept { return position_; }
-	glm::ivec3 AbsoluteBlockPos() const noexcept;
-	glm::ivec3 RelativeBlockPos() const noexcept;
+	glm::dvec3 Pos(glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept { return position_ + pos_offset; }
+	glm::ivec3 AbsoluteBlockPos(glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;
+	glm::ivec3 RelativeBlockPos(glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;
 	glm::vec3 Front() const noexcept { return front_; }
 	glm::vec3 Up() const noexcept { return up_; }
 	glm::vec3 Right() const noexcept { return right_; }
