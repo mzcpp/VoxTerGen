@@ -3,6 +3,8 @@
 #include "graphics/Camera.hpp"
 #include "utils/Constants.hpp"
 #include "utils/MathUtils.hpp"
+#include "physics/CollisionSystem.hpp"
+#include "world/World.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
@@ -15,42 +17,42 @@ ObserverController::ObserverController(Observer& observer) : observer_(observer)
 {
 }
 
-void ObserverController::Tick(glm::dvec3 displacement_vector, glm::vec2 mouse_delta, Camera& camera)
+void ObserverController::Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const World& world, Camera& camera)
 {
-    ApplyDisplacementVector(displacement_vector, camera);
-    ApplyMouseRotation(mouse_delta, camera);
+    ApplyDisplacementVector(GetClippedDisplacementVector(input_manager, collision_system, world), camera);
+    ApplyMouseRotation(input_manager.MouseDelta(), camera);
 }
 
-glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input) const
+glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input_manager) const
 {
     glm::dvec3 dir_vec(0.0f);
 
-    if (input.KeyDown(SDL_SCANCODE_W))
+    if (input_manager.KeyDown(SDL_SCANCODE_W))
     {
        dir_vec += observer_.Front();
     }
 
-    if (input.KeyDown(SDL_SCANCODE_S))
+    if (input_manager.KeyDown(SDL_SCANCODE_S))
     {
        dir_vec -= observer_.Front();
     }
 
-    if (input.KeyDown(SDL_SCANCODE_A))
+    if (input_manager.KeyDown(SDL_SCANCODE_A))
     {
        dir_vec -= observer_.Right();
     }
 
-    if (input.KeyDown(SDL_SCANCODE_D))
+    if (input_manager.KeyDown(SDL_SCANCODE_D))
     {
        dir_vec += observer_.Right();
     }
 
-    if (input.KeyDown(SDL_SCANCODE_SPACE))
+    if (input_manager.KeyDown(SDL_SCANCODE_SPACE))
     {
        dir_vec += constants::math::world_up;
     }
 
-    if (input.KeyDown(SDL_SCANCODE_LCTRL))
+    if (input_manager.KeyDown(SDL_SCANCODE_LCTRL))
     {
        dir_vec -= constants::math::world_up;
     }
@@ -69,7 +71,22 @@ glm::dvec3 ObserverController::GetDisplacementVector(glm::dvec3 dir_vec) const
     return { dir_vec.x * multiplier, dir_vec.y * multiplier, dir_vec.z * multiplier };
 }
 
-void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& camera)
+glm::dvec3 ObserverController::GetClippedDisplacementVector(const InputManager& input_manager, const CollisionSystem& collision_system, const World& world) const
+{
+    const glm::dvec3 direction_vector = GetDirectionVector(input_manager);
+    glm::dvec3 displacement_vector = GetDisplacementVector(direction_vector);
+
+    displacement_vector = collision_system.GetClippedDisplacementVector([this, &world](glm::ivec3 coords)
+        {
+            const glm::ivec2 chunk_coords = world.ChunkManagerRef().GetChunkCoords(observer_.AbsoluteBlockPos(constants::observer::pos_offset));
+            return world.ChunkManagerRef().WorldBlockQuery(chunk_coords, coords);
+        },
+        observer_, displacement_vector);
+
+    return displacement_vector;
+}
+
+void ObserverController::ApplyKeyboardInput(const InputManager& input_manager, Camera& camera)
 {
     observer_.prev_position_ = observer_.position_;
 
@@ -78,7 +95,7 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
         camera.SetPrevPos(camera.Pos());
     }
     
-    const glm::dvec3 dir_vec = GetDirectionVector(input);
+    const glm::dvec3 dir_vec = GetDirectionVector(input_manager);
 
     if (glm::length2(dir_vec) > 0.0f)
     {

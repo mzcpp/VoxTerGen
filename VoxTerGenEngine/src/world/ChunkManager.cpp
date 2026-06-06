@@ -207,7 +207,7 @@ void ChunkManager::PushChunkIntoQueue(Chunk* chunk)
 	chunk_build_queue_.push(chunk);
 }
 
-glm::ivec2 ChunkManager::GetChunkCoords(glm::dvec3 pos) noexcept
+glm::ivec2 ChunkManager::GetChunkCoords(glm::dvec3 pos) const noexcept
 {
 	return { static_cast<int>(std::floor(pos.x / constants::chunk::width)), static_cast<int>(std::floor(pos.z / constants::chunk::depth)) };
 }

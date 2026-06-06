@@ -39,7 +39,7 @@ public:
 
 	void PushChunkIntoQueue(Chunk* chunk);
 
-	glm::ivec2 GetChunkCoords(glm::dvec3 pos) noexcept;
+	glm::ivec2 GetChunkCoords(glm::dvec3 pos) const noexcept;
 
 	// TODO: TEMPORARY CHUNK FILL - REMOVE LATER!
 	void FillChunkTmp(Chunk& chunk);

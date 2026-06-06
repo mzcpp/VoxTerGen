@@ -30,17 +30,7 @@ void Engine::HandleEvents(SDL_Event e)
 
 void Engine::Tick(float aspect_ratio)
 {
-	const glm::dvec3 direction_vector = observer_controller_.GetDirectionVector(input_manager_);
-	glm::dvec3 displacement_vector = observer_controller_.GetDisplacementVector(direction_vector);
-	
-	displacement_vector = collision_system_.GetClippedDisplacementVector([this](glm::ivec3 coords)
-		{
-			glm::ivec2 chunk_coords = world_.ChunkManagerRef().GetChunkCoords(observer_.AbsoluteBlockPos(constants::observer::pos_offset));
-			return world_.ChunkManagerRef().WorldBlockQuery(chunk_coords, coords);
-		}, 
-		observer_, displacement_vector);
-
-	observer_controller_.Tick(displacement_vector, input_manager_.MouseDelta(), camera_);
+	observer_controller_.Tick(input_manager_, collision_system_, world_, camera_);
 	camera_controller_.Tick(input_manager_);
 	
 	observer_.Tick();
