@@ -19,13 +19,25 @@ ObserverController::ObserverController(Observer& observer) : observer_(observer)
 
 void ObserverController::Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const World& world, Camera& camera)
 {
-    ApplyDisplacementVector(GetClippedDisplacementVector(input_manager, collision_system, world), camera);
+    glm::dvec3 displacement_vector(0.0);
+
+    if (observer_.Noclip())
+    {
+        displacement_vector = GetClippedDisplacementVector(input_manager, collision_system, world);
+    }
+    else
+    {
+        const glm::dvec3 direction_vector = GetDirectionVector(input_manager);
+        displacement_vector = GetDisplacementVector(direction_vector);
+    }
+        
+    ApplyDisplacementVector(displacement_vector, camera);
     ApplyMouseRotation(input_manager.MouseDelta(), camera);
 }
 
 glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input_manager) const
 {
-    glm::dvec3 dir_vec(0.0f);
+    glm::dvec3 dir_vec(0.0);
 
     if (input_manager.KeyDown(SDL_SCANCODE_W))
     {
@@ -57,7 +69,7 @@ glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input_mana
        dir_vec -= constants::math::world_up;
     }
 
-    if (glm::length2(dir_vec) > 0.0f)
+    if (glm::length2(dir_vec) > 0.0)
     {
        dir_vec = glm::normalize(dir_vec);
     }
@@ -97,7 +109,7 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input_manager, C
     
     const glm::dvec3 dir_vec = GetDirectionVector(input_manager);
 
-    if (glm::length2(dir_vec) > 0.0f)
+    if (glm::length2(dir_vec) > 0.0)
     {
         observer_.position_ += GetDisplacementVector(dir_vec);
         observer_.moving_ = true;
@@ -119,7 +131,7 @@ void ObserverController::ApplyDirectionVector(glm::dvec3 dir_vec, Camera& camera
         camera.SetPrevPos(camera.Pos());
     }
 
-    if (glm::length2(dir_vec) > 0.0f)
+    if (glm::length2(dir_vec) > 0.0)
     {
         observer_.position_ += GetDisplacementVector(dir_vec);
         observer_.moving_ = true;
@@ -142,7 +154,7 @@ void ObserverController::ApplyDisplacementVector(glm::dvec3 displacement_vec, Ca
         camera.SetPrevPos(camera.Pos());
     }
 
-    if (glm::length2(displacement_vec) > 0.0f)
+    if (glm::length2(displacement_vec) > 0.0)
     {
         observer_.position_ += displacement_vec;
         observer_.moving_ = true;

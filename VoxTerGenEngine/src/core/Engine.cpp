@@ -26,6 +26,11 @@ void Engine::Initialize()
 void Engine::HandleEvents(SDL_Event e)
 {
 	input_manager_.ProcessEvent(e);
+
+	if (input_manager_.KeyReleased(SDL_SCANCODE_F))
+	{
+		observer_.ToggleNoclip();
+	}
 }
 
 void Engine::Tick(float aspect_ratio)

@@ -35,11 +35,11 @@ void ChunkManager::FillChunkTmp(Chunk& chunk)
 		{
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				chunk.BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(i++));
-				if (i >= 8)
-				{
-					i = 1;
-				}
+				chunk.BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(i));
+				//if (i >= 8)
+				//{
+				//	i = 1;
+				//}
 			}
 		}
 	}
@@ -77,7 +77,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 
 void ChunkManager::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
-	LoadChunks(chunk_event_queue, camera);
+	//LoadChunks(chunk_event_queue, camera);
 	BuildChunkMeshes(chunk_event_queue);
 }
 

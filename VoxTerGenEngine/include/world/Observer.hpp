@@ -67,6 +67,7 @@ public:
 	glm::vec3 Right() const noexcept { return right_; }
 	float Yaw() const noexcept { return yaw_; }
 	float Pitch() const noexcept { return pitch_; }
+	glm::dvec3 Velocity() const noexcept { return velocity_; }
 	glm::dvec3 PrevPos() const noexcept { return prev_position_; }
     float PrevYaw() const noexcept { return prev_yaw_; }
 	float PrevPitch() const noexcept { return prev_pitch_; }
