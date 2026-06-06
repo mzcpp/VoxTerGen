@@ -87,8 +87,7 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
         
         if (!camera.EnabledMovement())
         {
-            camera.SetPos(observer_.position_);
-            //camera.SetPos(observer_.position_ + camera.FPSOffset());
+            camera.SetPos(observer_.position_ + camera.FPSOffset());
             camera.SetStale(true);
         }
     }
@@ -110,7 +109,7 @@ void ObserverController::ApplyDirectionVector(glm::dvec3 dir_vec, Camera& camera
         
         if (!camera.EnabledMovement())
         {
-            //camera.SetPos(observer_.position_);
+            camera.SetPos(observer_.position_);
             camera.SetPos(observer_.position_ + camera.FPSOffset());
             camera.SetStale(true);
         }
@@ -133,7 +132,6 @@ void ObserverController::ApplyDisplacementVector(glm::dvec3 displacement_vec, Ca
         
         if (!camera.EnabledMovement())
         {
-            //camera.SetPos(observer_.position_);
             camera.SetPos(observer_.position_ + camera.FPSOffset());
             camera.SetStale(true);
         }

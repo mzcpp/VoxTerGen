@@ -18,6 +18,17 @@ void ChunkManager::FillChunkTmp(Chunk& chunk)
 {
 	static int i = 1;
 
+	//chunk.BlockAt({ 0, 0, 0 }).SetType(static_cast<BlockType>(i));
+	//chunk.BlockAt({ 1, 0, 0 }).SetType(static_cast<BlockType>(i));
+	////chunk.BlockAt({ 2, 2, 0 }).SetType(static_cast<BlockType>(1));
+
+	//if (++i >= 8)
+	//{
+	//	i = 1;
+	//}
+
+	//return;
+
 	for (int y = 0; y < constants::chunk::height; ++y)
 	{
 		for (int z = 0; z < constants::chunk::depth; ++z)
@@ -66,7 +77,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 
 void ChunkManager::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
-	//LoadChunks(chunk_event_queue, camera);
+	LoadChunks(chunk_event_queue, camera);
 	BuildChunkMeshes(chunk_event_queue);
 }
 
@@ -171,16 +182,21 @@ BlockInfo ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ive
 	
 	const int x_chunk_offset = math_utils::FloorDiv(block_coords.x, constants::chunk::width);
 	const int z_chunk_offset = math_utils::FloorDiv(block_coords.z, constants::chunk::depth);
-	const glm::ivec3 target_block_coords = 
-	{ 
+	const glm::ivec3 target_block_coords = { 
 		block_coords.x - (x_chunk_offset * constants::chunk::width), 
 		block_coords.y, 
 		block_coords.z - (z_chunk_offset * constants::chunk::depth) 
 	};
+
+	const glm::ivec2 chunk_coords = { current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset };
+	const glm::ivec3 absolute_block_coords = { 
+		target_block_coords.x + chunk_coords.x * constants::chunk::width, 
+		target_block_coords.y, 
+		target_block_coords.z + chunk_coords.y * constants::chunk::depth };
 	
-	if (const Chunk* target_chunk = GetChunkAt({ current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset }))
+	if (const Chunk* target_chunk = GetChunkAt(chunk_coords))
 	{
-		return { target_chunk->BlockAt(target_block_coords), target_block_coords };
+		return { target_chunk->BlockAt(target_block_coords), absolute_block_coords };
 	}
 
 	return { Block(), glm::ivec3(0) };
