@@ -18,13 +18,28 @@ void ChunkManager::FillChunkTmp(Chunk& chunk)
 {
 	static int i = 1;
 
+	//chunk.BlockAt({ 0, 0, 0 }).SetType(static_cast<BlockType>(i));
+	//chunk.BlockAt({ 1, 0, 0 }).SetType(static_cast<BlockType>(i));
+	////chunk.BlockAt({ 2, 2, 0 }).SetType(static_cast<BlockType>(1));
+
+	//if (++i >= 8)
+	//{
+	//	i = 1;
+	//}
+
+	//return;
+
 	for (int y = 0; y < constants::chunk::height; ++y)
 	{
 		for (int z = 0; z < constants::chunk::depth; ++z)
 		{
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				chunk.BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(i));
+				chunk.BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(i++));
+				if (i >= 8)
+				{
+					i = 1;
+				}
 			}
 		}
 	}
@@ -158,28 +173,33 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 	return chunk_it->second.get();
 }
 
-Block ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const
+BlockInfo ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const
 {	
 	if (block_coords.y < 0 || block_coords.y >= constants::chunk::height)
 	{
-		return Block();
+		return { Block(), glm::ivec3(0) };
 	}
 	
 	const int x_chunk_offset = math_utils::FloorDiv(block_coords.x, constants::chunk::width);
 	const int z_chunk_offset = math_utils::FloorDiv(block_coords.z, constants::chunk::depth);
-	const glm::ivec3 target_block_coords = 
-	{ 
+	const glm::ivec3 target_block_coords = { 
 		block_coords.x - (x_chunk_offset * constants::chunk::width), 
 		block_coords.y, 
 		block_coords.z - (z_chunk_offset * constants::chunk::depth) 
 	};
+
+	const glm::ivec2 chunk_coords = { current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset };
+	const glm::ivec3 absolute_block_coords = { 
+		target_block_coords.x + chunk_coords.x * constants::chunk::width, 
+		target_block_coords.y, 
+		target_block_coords.z + chunk_coords.y * constants::chunk::depth };
 	
-	if (const Chunk* target_chunk = GetChunkAt({ current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset }))
+	if (const Chunk* target_chunk = GetChunkAt(chunk_coords))
 	{
-		return target_chunk->BlockAt(target_block_coords);
+		return { target_chunk->BlockAt(target_block_coords), absolute_block_coords };
 	}
 
-	return Block();
+	return { Block(), glm::ivec3(0) };
 }
 
 void ChunkManager::PushChunkIntoQueue(Chunk* chunk)

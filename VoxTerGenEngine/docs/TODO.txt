@@ -12,6 +12,7 @@ rethink hashing for noise
 
 occlusion culling on the chunk borders!
 Vertex pulling?, binary greedy meshing?, chunk object pooling?
+rethink the world block query implicit passing of chunk! at the call site it's not clear at all which chunk is the current!
 
 make class MeshBuilder a namespace
 

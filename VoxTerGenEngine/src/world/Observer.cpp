@@ -68,35 +68,71 @@ void Observer::LogObserverData() const
 	Logger::Log(LogLevel::DEBUG, "Pitch: {}", pitch_);
 }
 
-glm::ivec3 Observer::BlockPos() const noexcept
+glm::ivec3 Observer::AbsoluteBlockPos(glm::dvec3 pos_offset) const noexcept
 {
 	glm::ivec3 block_pos(0);
 
-	if (position_.x < 0.0)
+	if (position_.x + pos_offset.x < 0.0)
 	{
-		block_pos.x = static_cast<int>(std::floor(position_.x));
+		block_pos.x = static_cast<int>(std::floor(position_.x + pos_offset.x));
 	}
 	else
 	{
-		block_pos.x = static_cast<int>(position_.x);
+		block_pos.x = static_cast<int>(position_.x + pos_offset.x);
 	}
 
-	if (position_.y < 0.0)
+	if (position_.y + pos_offset.y < 0.0)
 	{
-		block_pos.y = static_cast<int>(std::floor(position_.y));
+		block_pos.y = static_cast<int>(std::floor(position_.y + pos_offset.y));
 	}
 	else
 	{
-		block_pos.y = static_cast<int>(position_.y);
+		block_pos.y = static_cast<int>(position_.y + pos_offset.y);
 	}
 
-	if (position_.z < 0.0)
+	if (position_.z + pos_offset.z < 0.0)
 	{
-		block_pos.z = static_cast<int>(std::floor(position_.z));
+		block_pos.z = static_cast<int>(std::floor(position_.z + pos_offset.z));
 	}
 	else
 	{
-		block_pos.z = static_cast<int>(position_.z);
+		block_pos.z = static_cast<int>(position_.z + pos_offset.z);
+	}
+
+	return block_pos;
+}
+
+glm::ivec3 Observer::RelativeBlockPos(glm::dvec3 pos_offset) const noexcept
+{
+	glm::ivec3 block_pos(0);
+
+	if (position_.x + pos_offset.x < 0.0)
+	{
+		const int chunk_x_offset = (std::abs(static_cast<int>(position_.x + pos_offset.x)) / constants::chunk::width) + 1;
+		block_pos.x = (static_cast<int>(position_.x + pos_offset.x) + chunk_x_offset * constants::chunk::width) - 1;
+	}
+	else
+	{
+		block_pos.x = static_cast<int>(position_.x + pos_offset.x) % constants::chunk::width;
+	}
+
+	if (position_.y + pos_offset.y < 0.0)
+	{
+		block_pos.y = static_cast<int>(std::floor(position_.y + pos_offset.y));
+	}
+	else
+	{
+		block_pos.y = static_cast<int>(position_.y + pos_offset.y);
+	}
+
+	if (position_.z + pos_offset.z < 0.0)
+	{
+		const int chunk_z_offset = (std::abs(static_cast<int>(position_.z + pos_offset.z)) / constants::chunk::depth) + 1;
+		block_pos.z = (static_cast<int>(position_.z + pos_offset.z) + chunk_z_offset * constants::chunk::depth) - 1;
+	}
+	else
+	{
+		block_pos.z = static_cast<int>(position_.z + pos_offset.z) % constants::chunk::depth;
 	}
 
 	return block_pos;

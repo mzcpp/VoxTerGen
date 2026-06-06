@@ -59,7 +59,7 @@ namespace constants
         inline constexpr int depth = 16;
         inline constexpr int height = 128;
         inline constexpr int size = width * depth * height;
-        inline constexpr int default_radius = 3;
+        inline constexpr int default_radius = 1;
     } // namespace chunk
 
     /**
@@ -77,7 +77,7 @@ namespace constants
     namespace geometry
     {
         inline constexpr glm::vec3 world_up = { 0.0f, 1.0f, 0.0f };
-        inline constexpr glm::dvec3 spawn_point = { 10.0, 15.0, 10.0 };
+        inline constexpr glm::dvec3 spawn_point = { 0.0, 5.0, 0.0 };
     } // namespace geometry
 
     /**
@@ -86,6 +86,7 @@ namespace constants
     namespace physics
     {
         inline constexpr double g = 9.6;
+        inline constexpr double collision_epsilon = 1e-8;
     } // namespace physics
 
     /**
@@ -129,11 +130,16 @@ namespace constants
         inline constexpr float pitch = 0.0f;
         inline constexpr float pitch_min = -89.0f;
         inline constexpr float pitch_max = 89.0f;
-        inline constexpr float movement_speed = 10.0f;
+        inline constexpr double movement_speed = 2.5;
         inline constexpr float move_sensitivity = 0.1f;
-        inline constexpr float width = 1.0;
-        inline constexpr float height = 2.0;
-        inline constexpr float depth = 1.0;
+        inline constexpr double width = 0.6;
+        inline constexpr double height = 1.8;
+        inline constexpr double depth = 0.6;
+        inline constexpr glm::dvec3 pos_offset = {
+            constants::observer::width / 2.0,
+            constants::observer::height / 2.0,
+            constants::observer::depth / 2.0
+        };
     } // namespace observer
 
     /**

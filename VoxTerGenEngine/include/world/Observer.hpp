@@ -38,9 +38,9 @@ private:
 	float prev_yaw_;
 	float prev_pitch_;
 
-	float width_;
-	float height_;
-	float depth_;
+	double width_;
+	double height_;
+	double depth_;
 	
 	bool noclip_;
 	bool moving_;
@@ -59,8 +59,9 @@ public:
 
 	// Getters
 	MovementState GetMovementState() const noexcept { return movement_state_; }
-	glm::dvec3 Pos() const noexcept { return position_; }
-	glm::ivec3 BlockPos() const noexcept;
+	glm::dvec3 Pos(glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept { return position_ + pos_offset; }
+	glm::ivec3 AbsoluteBlockPos(glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;
+	glm::ivec3 RelativeBlockPos(glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;
 	glm::vec3 Front() const noexcept { return front_; }
 	glm::vec3 Up() const noexcept { return up_; }
 	glm::vec3 Right() const noexcept { return right_; }
@@ -70,9 +71,9 @@ public:
     float PrevYaw() const noexcept { return prev_yaw_; }
 	float PrevPitch() const noexcept { return prev_pitch_; }
 	bool Noclip() const noexcept { return noclip_; }
-	float Width() const noexcept { return width_; }
-	float Height() const noexcept { return height_; }
-	float Depth() const noexcept { return depth_; }
+	double Width() const noexcept { return width_; }
+	double Height() const noexcept { return height_; }
+	double Depth() const noexcept { return depth_; }
 	glm::dvec3 GetBBoxMin() const noexcept { return position_; }
 	glm::dvec3 GetBBoxMax() const noexcept { return { position_.x + width_, position_.y + height_, position_.z + depth_ }; }
 	

@@ -5,6 +5,7 @@
 #include "utils/MathUtils.hpp"
 
 #include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
 
 #include <SDL2/SDL.h>
 
@@ -14,52 +15,58 @@ ObserverController::ObserverController(Observer& observer) : observer_(observer)
 {
 }
 
-void ObserverController::Tick(glm::vec3 movement_vector, glm::vec2 mouse_delta, Camera& camera)
+void ObserverController::Tick(glm::dvec3 displacement_vector, glm::vec2 mouse_delta, Camera& camera)
 {
-    ApplyMovementVector(movement_vector, camera);
+    ApplyDisplacementVector(displacement_vector, camera);
     ApplyMouseRotation(mouse_delta, camera);
 }
 
-glm::vec3 ObserverController::GetMovementVector(const InputManager& input) const
+glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input) const
 {
-    glm::vec3 move_vec(0.0f);
+    glm::dvec3 dir_vec(0.0f);
 
     if (input.KeyDown(SDL_SCANCODE_W))
     {
-       move_vec += observer_.Front();
+       dir_vec += observer_.Front();
     }
 
     if (input.KeyDown(SDL_SCANCODE_S))
     {
-       move_vec -= observer_.Front();
+       dir_vec -= observer_.Front();
     }
 
     if (input.KeyDown(SDL_SCANCODE_A))
     {
-       move_vec -= observer_.Right();
+       dir_vec -= observer_.Right();
     }
 
     if (input.KeyDown(SDL_SCANCODE_D))
     {
-       move_vec += observer_.Right();
+       dir_vec += observer_.Right();
     }
 
     if (input.KeyDown(SDL_SCANCODE_SPACE))
     {
-       move_vec += constants::math::world_up;
+       dir_vec += constants::math::world_up;
     }
 
     if (input.KeyDown(SDL_SCANCODE_LCTRL))
     {
-       move_vec -= constants::math::world_up;
+       dir_vec -= constants::math::world_up;
     }
 
-    if (glm::length(move_vec) > 0.0f)
+    if (glm::length2(dir_vec) > 0.0f)
     {
-       move_vec = glm::normalize(move_vec);
+       dir_vec = glm::normalize(dir_vec);
     }
 
-    return move_vec;
+    return dir_vec;
+}
+
+glm::dvec3 ObserverController::GetDisplacementVector(glm::dvec3 dir_vec) const
+{
+    const double multiplier = constants::observer::movement_speed * constants::engine::tick_dt;
+    return { dir_vec.x * multiplier, dir_vec.y * multiplier, dir_vec.z * multiplier };
 }
 
 void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& camera)
@@ -71,11 +78,11 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
         camera.SetPrevPos(camera.Pos());
     }
     
-    const glm::vec3 move_vec = GetMovementVector(input);
+    const glm::dvec3 dir_vec = GetDirectionVector(input);
 
-    if (glm::length(move_vec) > 0.0f)
+    if (glm::length2(dir_vec) > 0.0f)
     {
-        observer_.position_ += move_vec * constants::observer::movement_speed * static_cast<float>(constants::engine::tick_dt);
+        observer_.position_ += GetDisplacementVector(dir_vec);
         observer_.moving_ = true;
         
         if (!camera.EnabledMovement())
@@ -86,7 +93,7 @@ void ObserverController::ApplyKeyboardInput(const InputManager& input, Camera& c
     }
 }
 
-void ObserverController::ApplyMovementVector(glm::vec3 move_vec, Camera& camera)
+void ObserverController::ApplyDirectionVector(glm::dvec3 dir_vec, Camera& camera)
 {
     observer_.prev_position_ = observer_.position_;
 
@@ -95,9 +102,32 @@ void ObserverController::ApplyMovementVector(glm::vec3 move_vec, Camera& camera)
         camera.SetPrevPos(camera.Pos());
     }
 
-    if (glm::length(move_vec) > 0.0f)
+    if (glm::length2(dir_vec) > 0.0f)
     {
-        observer_.position_ += move_vec * constants::observer::movement_speed * static_cast<float>(constants::engine::tick_dt);
+        observer_.position_ += GetDisplacementVector(dir_vec);
+        observer_.moving_ = true;
+        
+        if (!camera.EnabledMovement())
+        {
+            camera.SetPos(observer_.position_);
+            camera.SetPos(observer_.position_ + camera.FPSOffset());
+            camera.SetStale(true);
+        }
+    }
+}
+
+void ObserverController::ApplyDisplacementVector(glm::dvec3 displacement_vec, Camera& camera)
+{
+    observer_.prev_position_ = observer_.position_;
+
+    if (!camera.EnabledMovement())
+    {
+        camera.SetPrevPos(camera.Pos());
+    }
+
+    if (glm::length2(displacement_vec) > 0.0f)
+    {
+        observer_.position_ += displacement_vec;
         observer_.moving_ = true;
         
         if (!camera.EnabledMovement())

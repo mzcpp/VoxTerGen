@@ -33,9 +33,9 @@ Camera::Camera(glm::dvec3 position, float yaw, float pitch) :
 {
 	fps_offset_ =
 	{
-		static_cast<double>(constants::observer::width) / 2.0,
-		static_cast<double>(constants::observer::height),
-		0.0
+		static_cast<double>(constants::observer::width) / 2.0, 
+		static_cast<double>(constants::observer::height) * (3.0 / 4.0), 
+		static_cast<double>(constants::observer::depth) / 2.0
 	};
 
 	position_ += fps_offset_;
