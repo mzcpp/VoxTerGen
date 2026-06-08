@@ -59,6 +59,7 @@ public:
 
 	// Getters
 	MovementState GetMovementState() const noexcept { return movement_state_; }
+	bool Grounded() const noexcept { return movement_state_ == MovementState::GROUNDED; }
 	glm::dvec3 Pos(glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept { return position_ + pos_offset; }
 	glm::ivec3 AbsoluteBlockPos(glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;
 	glm::ivec3 RelativeBlockPos(glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;

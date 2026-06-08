@@ -20,15 +20,26 @@ ObserverController::ObserverController(Observer& observer) : observer_(observer)
 void ObserverController::Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const World& world, Camera& camera)
 {
     glm::dvec3 displacement_vector(0.0);
+    const glm::dvec3 direction_vector = GetDirectionVector(input_manager);
 
     if (observer_.Noclip())
     {
-        displacement_vector = GetClippedDisplacementVector(input_manager, collision_system, world);
+        displacement_vector = GetDisplacementVector(direction_vector);
     }
     else
     {
-        const glm::dvec3 direction_vector = GetDirectionVector(input_manager);
-        displacement_vector = GetDisplacementVector(direction_vector);
+        glm::dvec3 velocity_vector = GetHorinzontalVelocityVector(direction_vector);
+        
+        if (!observer_.Grounded())
+        {
+            velocity_vector.y += constants::physics::gravity * constants::engine::tick_dt;
+        }
+            
+        displacement_vector.x = velocity_vector.x * constants::engine::tick_dt
+        displacement_vector.y = velocity_vector.y * constants::engine::tick_dt
+        displacement_vector.z = velocity_vector.z * constants::engine::tick_dt
+
+        displacement_vector = GetClippedDisplacementVector(displacement_vector, input_manager, collision_system, world);
     }
         
     ApplyDisplacementVector(displacement_vector, camera);
@@ -61,7 +72,14 @@ glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input_mana
 
     if (input_manager.KeyDown(SDL_SCANCODE_SPACE))
     {
-       dir_vec += constants::math::world_up;
+        if (observer_.Noclip())
+        {
+            dir_vec += constants::math::world_up;
+        }
+        else
+        {
+            // JUMP
+        }
     }
 
     if (input_manager.KeyDown(SDL_SCANCODE_LCTRL))
@@ -77,25 +95,38 @@ glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input_mana
     return dir_vec;
 }
 
-glm::dvec3 ObserverController::GetDisplacementVector(glm::dvec3 dir_vec) const
+glm::dvec3 ObserverController::GetHorizontalVelocityVector(glm::dvec3 dir_vec) const noexcept
 {
-    const double multiplier = constants::observer::movement_speed * constants::engine::tick_dt;
-    return { dir_vec.x * multiplier, dir_vec.y * multiplier, dir_vec.z * multiplier };
+    const double velocity_multiplier = constants::observer::movement_speed;
+
+    return { 
+        dir_vec.x * velocity_multiplier, 
+        0.0, 
+        dir_vec.z * velocity_multiplier 
+    };
 }
 
-glm::dvec3 ObserverController::GetClippedDisplacementVector(const InputManager& input_manager, const CollisionSystem& collision_system, const World& world) const
+glm::dvec3 ObserverController::GetDisplacementVector(glm::dvec3 dir_vec) const noexcept
 {
-    const glm::dvec3 direction_vector = GetDirectionVector(input_manager);
-    glm::dvec3 displacement_vector = GetDisplacementVector(direction_vector);
+    const double displacement_multiplier = constants::observer::movement_speed * constants::engine::tick_dt;
+    
+    return { 
+        dir_vec.x * displacement_multiplier, 
+        dir_vec.y * displacement_multiplier, 
+        dir_vec.z * displacement_multiplier 
+    };
+}
 
-    displacement_vector = collision_system.GetClippedDisplacementVector([this, &world](glm::ivec3 coords)
+glm::dvec3 ObserverController::GetClippedDisplacementVector(glm::dvec3 result_displacement_vector, const InputManager& input_manager, const CollisionSystem& collision_system, const World& world) const
+{
+    result_displacement_vector = collision_system.GetClippedDisplacementVector([this, &world](glm::ivec3 coords)
         {
             const glm::ivec2 chunk_coords = world.ChunkManagerRef().GetChunkCoords(observer_.AbsoluteBlockPos(constants::observer::pos_offset));
             return world.ChunkManagerRef().WorldBlockQuery(chunk_coords, coords);
         },
-        observer_, displacement_vector);
+        observer_, result_displacement_vector);
 
-    return displacement_vector;
+    return result_displacement_vector;
 }
 
 void ObserverController::ApplyKeyboardInput(const InputManager& input_manager, Camera& camera)
@@ -158,6 +189,8 @@ void ObserverController::ApplyDisplacementVector(glm::dvec3 displacement_vec, Ca
     {
         observer_.position_ += displacement_vec;
         observer_.moving_ = true;
+
+        // set grounded if I hit the ground
         
         if (!camera.EnabledMovement())
         {
@@ -193,6 +226,4 @@ void ObserverController::ApplyMouseRotation(glm::vec2 mouse_delta, Camera& camer
         camera.SetPitch(observer_.pitch_);
         camera.SetStale(true);
     }
-
-    // more TODO later (WoW style camera) 
 }

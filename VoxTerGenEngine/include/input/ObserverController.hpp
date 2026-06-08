@@ -6,7 +6,6 @@
 
 #include "world/Observer.hpp"
 
-
 class Camera;
 class InputManager;
 class World;
@@ -30,9 +29,11 @@ public:
 
 	glm::dvec3 GetDirectionVector(const InputManager& input_manager) const;
 
-	glm::dvec3 GetDisplacementVector(glm::dvec3 dir_vec) const;
+	glm::dvec3 GetHorizontalVelocityVector(glm::dvec3 dir_vec) const noexcept;
+
+	glm::dvec3 GetDisplacementVector(glm::dvec3 dir_vec) const noexcept;
 	
-	glm::dvec3 GetClippedDisplacementVector(const InputManager& input_manager, const CollisionSystem& collision_system, const World& world) const;
+	glm::dvec3 GetClippedDisplacementVector(glm::dvec3 result_displacement_vector, const InputManager& input_manager, const CollisionSystem& collision_system, const World& world) const;
 
 	void ApplyKeyboardInput(const InputManager& input_manager, Camera& camera);
 

@@ -30,6 +30,7 @@ glEnable(GL_FRAMEBUFFER_SRGB);
 vsync
 Test with multiple compilers, GPU's, etc.!
 VERY IMPORTANT, MAKE THE WINDOWS CORRECT SIZE BASED ON MONITOR SIZE SO IT DOES NOT CUTOFF LIKE THE MAZE GENERATOR ON MBA 13
+remove noclip_ from observer, it's already in movement state!
 
 opengl/glad correct version check when init, initialization of subsystems review
 add Graphics Device Interface - move all graphics apis inits into it - App will own it along with engine
@@ -57,5 +58,7 @@ when the spawn point is found outside 0,0 chunk, need to stream the chunks from 
 use & fix GetChunkCoords - math_utils
 rename math_utils & all namespaces using snake_case
 rename MathUtils class
+
+start simplifying constructors, for example in Texture2D, move parameters that belong together into struct Texture2DSettings, Observer, etc
 
 Wireframe of chunks!
