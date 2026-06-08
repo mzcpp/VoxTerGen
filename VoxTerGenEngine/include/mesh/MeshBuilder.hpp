@@ -12,8 +12,8 @@
 #include "world/Chunk.hpp"
 #include "world/Block.hpp"
 
-#include "glm/vec2.hpp"
-#include "glm/vec3.hpp"
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 #include <concepts>
 #include <cstdint>

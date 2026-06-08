@@ -1,7 +1,7 @@
 #ifndef AABB_HPP
 #define AABB_HPP
 
-#include "glm/vec3.hpp"
+#include <glm/vec3.hpp>
 
 struct AABB
 {

@@ -1,8 +1,8 @@
 #ifndef VERTEX_HPP
 #define VERTEX_HPP
 
-#include "glm/vec2.hpp"
-#include "glm/vec3.hpp"
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 #include <cstdint>
 

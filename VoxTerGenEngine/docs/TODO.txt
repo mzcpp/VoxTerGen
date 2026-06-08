@@ -40,7 +40,8 @@ create a single templated class for opensimplex, they are the same headers only 
 
 add a proper templated Vec class into "VoxTerGenAlgorithms/utils/Math.hpp"
 
-correct for external libs #include <...> or #include "..."
+fix when looking down and holding 'w', sliding very slowly forward, pitch [-89,89] ?
+
 sort all #includes by alphabetical order and these order rules:
 	// 1. Corresponding header
 	// 2. Standard library
