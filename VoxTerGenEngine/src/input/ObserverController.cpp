@@ -28,16 +28,16 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
     }
     else
     {
-        glm::dvec3 velocity_vector = GetHorinzontalVelocityVector(direction_vector);
+        glm::dvec3 velocity_vector = GetHorizontalVelocityVector(direction_vector);
         
         if (!observer_.Grounded())
         {
             velocity_vector.y += constants::physics::gravity * constants::engine::tick_dt;
         }
             
-        displacement_vector.x = velocity_vector.x * constants::engine::tick_dt
-        displacement_vector.y = velocity_vector.y * constants::engine::tick_dt
-        displacement_vector.z = velocity_vector.z * constants::engine::tick_dt
+        displacement_vector.x = velocity_vector.x * constants::engine::tick_dt;
+        displacement_vector.y = velocity_vector.y * constants::engine::tick_dt;
+        displacement_vector.z = velocity_vector.z * constants::engine::tick_dt;
 
         displacement_vector = GetClippedDisplacementVector(displacement_vector, input_manager, collision_system, world);
     }
