@@ -28,7 +28,7 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
     }
     else
     {
-        observer_.velocity_ = GetHorizontalVelocityVector(direction_vector);
+        observer_.velocity_ += GetHorizontalVelocityVector(direction_vector);
         
         if (!observer_.Grounded())
         {
@@ -43,10 +43,10 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
 
         displacement_vector = GetClippedDisplacementVector(displacement_vector, input_manager, collision_system, world);
 
-        if (displacement_vector.y < desired_y)
+        if (displacement_vector.y > desired_y)
         {
             observer_.SetMovementState(MovementState::GROUNDED);
-            //observer_.velocity_.y = 0.0;
+            observer_.velocity_.y = 0.0;
         }
     }
         
