@@ -82,7 +82,7 @@ public:
 	// Setters
 	void SetPosition(glm::dvec3 new_pos) noexcept { position_ = new_pos; }
 	void SetMovementState(MovementState state) noexcept { movement_state_ = state; }
-	void ToggleNoclip() noexcept { noclip_ = !noclip_; }
+	void ToggleNoclip() noexcept;
 	void SetWidth(float width) noexcept { width_ = width; }
 	void SetHeight(float height) noexcept { height_ = height; }
 	void SetDepth(float depth) noexcept { depth_ = depth; }

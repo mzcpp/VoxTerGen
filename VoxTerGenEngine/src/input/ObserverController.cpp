@@ -28,18 +28,26 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
     }
     else
     {
-        glm::dvec3 velocity_vector = GetHorizontalVelocityVector(direction_vector);
+        observer_.velocity_ = GetHorizontalVelocityVector(direction_vector);
         
         if (!observer_.Grounded())
         {
-            velocity_vector.y += constants::physics::gravity * constants::engine::tick_dt;
+            observer_.velocity_.y += constants::physics::gravity * constants::engine::tick_dt;
         }
             
-        displacement_vector.x = velocity_vector.x * constants::engine::tick_dt;
-        displacement_vector.y = velocity_vector.y * constants::engine::tick_dt;
-        displacement_vector.z = velocity_vector.z * constants::engine::tick_dt;
+        displacement_vector.x = observer_.velocity_.x * constants::engine::tick_dt;
+        displacement_vector.y = observer_.velocity_.y * constants::engine::tick_dt;
+        displacement_vector.z = observer_.velocity_.z * constants::engine::tick_dt;
+
+        const double desired_y = displacement_vector.y;
 
         displacement_vector = GetClippedDisplacementVector(displacement_vector, input_manager, collision_system, world);
+
+        if (displacement_vector.y < desired_y)
+        {
+            observer_.SetMovementState(MovementState::GROUNDED);
+            //observer_.velocity_.y = 0.0;
+        }
     }
         
     ApplyDisplacementVector(displacement_vector, camera);
@@ -189,8 +197,6 @@ void ObserverController::ApplyDisplacementVector(glm::dvec3 displacement_vec, Ca
     {
         observer_.position_ += displacement_vec;
         observer_.moving_ = true;
-
-        // set grounded if I hit the ground
         
         if (!camera.EnabledMovement())
         {
