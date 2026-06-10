@@ -12,7 +12,6 @@ enum class MovementState
 	GROUNDED,
 	SWIMMING,
 	AIRBORNE,
-	NOCLIP
 };
 
 class ObserverController;

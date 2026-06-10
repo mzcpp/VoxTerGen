@@ -19,7 +19,7 @@ Observer::Observer(const glm::dvec3 position, float yaw, float pitch) :
     prev_yaw_(yaw), 
 	prev_pitch_(pitch), 
 	velocity_(glm::dvec3(0.0)), 
-	movement_state_(MovementState::NOCLIP), 
+	movement_state_(MovementState::GROUNDED), 
 	width_(constants::observer::width), 
 	height_(constants::observer::height), 
 	depth_(constants::observer::depth), 
@@ -141,9 +141,4 @@ glm::ivec3 Observer::RelativeBlockPos(glm::dvec3 pos_offset) const noexcept
 void Observer::ToggleNoclip() noexcept
 {
 	noclip_ = !noclip_;
-
-	if (noclip_)
-	{
-		movement_state_ = MovementState::NOCLIP;
-	}
 }
