@@ -13,7 +13,7 @@
 
 #include <algorithm>
 
-ObserverController::ObserverController(Observer& observer) : observer_(observer)
+ObserverController::ObserverController(Observer& observer) : observer_(observer), noclip_(true)
 {
 }
 
@@ -22,7 +22,7 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
     glm::dvec3 displacement_vector(0.0);
     const glm::dvec3 direction_vector = GetDirectionVector(input_manager);
 
-    if (observer_.Noclip())
+    if (noclip_)
     {
         displacement_vector = GetDisplacementVector(direction_vector);
     }
@@ -80,7 +80,7 @@ glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input_mana
 
     if (input_manager.KeyDown(SDL_SCANCODE_SPACE))
     {
-        if (observer_.Noclip())
+        if (noclip_)
         {
             dir_vec += constants::math::world_up;
         }
@@ -232,4 +232,9 @@ void ObserverController::ApplyMouseRotation(glm::vec2 mouse_delta, Camera& camer
         camera.SetPitch(observer_.pitch_);
         camera.SetStale(true);
     }
+}
+
+void Observer::ToggleNoclip()
+{
+    noclip_ = !noclip_;
 }

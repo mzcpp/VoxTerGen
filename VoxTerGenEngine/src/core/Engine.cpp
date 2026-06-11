@@ -29,7 +29,7 @@ void Engine::HandleEvents(SDL_Event e)
 
 	if (input_manager_.KeyReleased(SDL_SCANCODE_F))
 	{
-		observer_.ToggleNoclip();
+		observer_controller_.ToggleNoclip();
 	}
 }
 

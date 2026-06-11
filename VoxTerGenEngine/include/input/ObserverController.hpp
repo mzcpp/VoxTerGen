@@ -15,6 +15,7 @@ class ObserverController
 {
 private:
 	Observer& observer_;
+	bool noclip_;
 
 public:
 	ObserverController(Observer& observer);
@@ -42,6 +43,8 @@ public:
 	void ApplyDisplacementVector(glm::dvec3 displacement_vec, Camera& camera);
 
 	void ApplyMouseRotation(glm::vec2 mouse_delta, Camera& camera);
+
+	void ToggleNoclip();
 };
 
 #endif

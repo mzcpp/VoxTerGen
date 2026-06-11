@@ -41,7 +41,6 @@ private:
 	double height_;
 	double depth_;
 	
-	bool noclip_;
 	bool moving_;
 
 public:
@@ -71,7 +70,6 @@ public:
 	glm::dvec3 PrevPos() const noexcept { return prev_position_; }
     float PrevYaw() const noexcept { return prev_yaw_; }
 	float PrevPitch() const noexcept { return prev_pitch_; }
-	bool Noclip() const noexcept { return noclip_; }
 	double Width() const noexcept { return width_; }
 	double Height() const noexcept { return height_; }
 	double Depth() const noexcept { return depth_; }
@@ -81,7 +79,6 @@ public:
 	// Setters
 	void SetPosition(glm::dvec3 new_pos) noexcept { position_ = new_pos; }
 	void SetMovementState(MovementState state) noexcept { movement_state_ = state; }
-	void ToggleNoclip() noexcept;
 	void SetWidth(float width) noexcept { width_ = width; }
 	void SetHeight(float height) noexcept { height_ = height; }
 	void SetDepth(float depth) noexcept { depth_ = depth; }
