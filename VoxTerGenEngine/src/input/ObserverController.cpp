@@ -234,7 +234,12 @@ void ObserverController::ApplyMouseRotation(glm::vec2 mouse_delta, Camera& camer
     }
 }
 
-void Observer::ToggleNoclip()
+void ObserverController::ToggleNoclip()
 {
     noclip_ = !noclip_;
+
+    if (noclip_)
+    {
+        observer_.movement_state_ = MovementState::AIRBORNE;
+    }
 }

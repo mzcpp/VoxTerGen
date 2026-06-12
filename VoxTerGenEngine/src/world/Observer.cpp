@@ -19,7 +19,7 @@ Observer::Observer(const glm::dvec3 position, float yaw, float pitch) :
     prev_yaw_(yaw), 
 	prev_pitch_(pitch), 
 	velocity_(glm::dvec3(0.0)), 
-	movement_state_(MovementState::GROUNDED), 
+	movement_state_(MovementState::AIRBORNE), 
 	width_(constants::observer::width), 
 	height_(constants::observer::height), 
 	depth_(constants::observer::depth), 
