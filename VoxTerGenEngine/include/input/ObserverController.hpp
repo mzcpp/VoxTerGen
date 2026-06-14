@@ -5,11 +5,13 @@
 #include <glm/vec3.hpp>
 
 #include "world/Observer.hpp"
+#include "world/Block.hpp"
 
+class Block;
 class Camera;
-class InputManager;
-class World;
 class CollisionSystem;
+class InputManager;
+class ChunkManager;
 
 class ObserverController
 {
@@ -26,7 +28,7 @@ public:
     ObserverController(ObserverController&& other) = delete;
     ObserverController& operator=(ObserverController&& other) = delete;
 
-	void Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const World& world, Camera& camera);
+	void Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera);
 
 	glm::dvec3 GetDirectionVector(const InputManager& input_manager) const;
 
@@ -34,7 +36,7 @@ public:
 
 	glm::dvec3 GetDisplacementVector(glm::dvec3 dir_vec) const noexcept;
 	
-	glm::dvec3 GetClippedDisplacementVector(glm::dvec3 result_displacement_vector, const InputManager& input_manager, const CollisionSystem& collision_system, const World& world) const;
+	glm::dvec3 GetClippedDisplacementVector(glm::dvec3 result_displacement_vector, const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager) const;
 
 	void ApplyKeyboardInput(const InputManager& input_manager, Camera& camera);
 
@@ -43,6 +45,8 @@ public:
 	void ApplyDisplacementVector(glm::dvec3 displacement_vec, Camera& camera);
 
 	void ApplyMouseRotation(glm::vec2 mouse_delta, Camera& camera);
+
+	BlockInfo GetBlockInfoBelowObserver(const ChunkManager& chunk_manager);
 
 	void ToggleNoclip();
 };

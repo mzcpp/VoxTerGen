@@ -137,7 +137,7 @@ namespace constants
         inline constexpr double depth = 0.6;
         inline constexpr glm::dvec3 pos_offset = {
             constants::observer::width / 2.0,
-            constants::observer::height / 2.0,
+            constants::observer::height / 4.0,
             constants::observer::depth / 2.0
         };
     } // namespace observer

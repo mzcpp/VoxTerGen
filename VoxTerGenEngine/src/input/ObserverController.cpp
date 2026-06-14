@@ -4,7 +4,7 @@
 #include "utils/Constants.hpp"
 #include "utils/MathUtils.hpp"
 #include "physics/CollisionSystem.hpp"
-#include "world/World.hpp"
+#include "world/ChunkManager.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
@@ -12,25 +12,44 @@
 #include <SDL2/SDL.h>
 
 #include <algorithm>
+#include <iostream>
 
 ObserverController::ObserverController(Observer& observer) : observer_(observer), noclip_(true)
 {
 }
 
-void ObserverController::Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const World& world, Camera& camera)
+void ObserverController::Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera)
 {
+    // TODO CAMERA POSITION DOUBLE?!
+    // TODO JUMPING BELOW A BLOCK COLLIDES AND CAMERA DOES NOT PENETRATE! Because you moved the pos_offset to height / 4.0
+    // 
+    //std::cout << static_cast<int>(observer_.GetMovementState()) << '\n';
+    /*std::cout << "------------------------------------------------------------" << '\n';
+    std::cout << "POSITION" << '\n';
+    std::cout << "Relative Block " << observer_.RelativeBlockPos(constants::observer::pos_offset).x << ' ' << observer_.RelativeBlockPos(constants::observer::pos_offset).y << ' ' << observer_.RelativeBlockPos(constants::observer::pos_offset).z << ' ' << '\n';
+    std::cout << "Absolute Block " << observer_.AbsoluteBlockPos(constants::observer::pos_offset).x << ' ' << observer_.AbsoluteBlockPos(constants::observer::pos_offset).y << ' ' << observer_.AbsoluteBlockPos(constants::observer::pos_offset).z << ' ' << '\n';
+    std::cout << "Observer Pos " << observer_.Pos().x << ' ' << observer_.Pos().y << ' ' << observer_.Pos().z << ' ' << '\n';
+    */
+
     glm::dvec3 displacement_vector(0.0);
     const glm::dvec3 direction_vector = GetDirectionVector(input_manager);
 
     if (noclip_)
     {
         displacement_vector = GetDisplacementVector(direction_vector);
+
+        auto block_below = GetBlockInfoBelowObserver(chunk_manager);
+        std::cout << static_cast<int>(block_below.block_.Type()) << '\n';
     }
     else
     {
-        observer_.velocity_ += GetHorizontalVelocityVector(direction_vector);
+        //observer_.velocity_ = GetHorizontalVelocityVector(direction_vector);
+
+        observer_.velocity_.x = direction_vector.x * constants::observer::movement_speed;
+        observer_.velocity_.y += 0.0;
+        observer_.velocity_.z = direction_vector.z * constants::observer::movement_speed;
         
-        if (!observer_.Grounded())
+        //if (!observer_.Grounded())
         {
             observer_.velocity_.y += constants::physics::gravity * constants::engine::tick_dt;
         }
@@ -41,7 +60,7 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
 
         const double desired_y = displacement_vector.y;
 
-        displacement_vector = GetClippedDisplacementVector(displacement_vector, input_manager, collision_system, world);
+        displacement_vector = GetClippedDisplacementVector(displacement_vector, input_manager, collision_system, chunk_manager);
 
         if (displacement_vector.y > desired_y)
         {
@@ -125,12 +144,13 @@ glm::dvec3 ObserverController::GetDisplacementVector(glm::dvec3 dir_vec) const n
     };
 }
 
-glm::dvec3 ObserverController::GetClippedDisplacementVector(glm::dvec3 result_displacement_vector, const InputManager& input_manager, const CollisionSystem& collision_system, const World& world) const
+glm::dvec3 ObserverController::GetClippedDisplacementVector(glm::dvec3 result_displacement_vector, const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager) const
 {
-    result_displacement_vector = collision_system.GetClippedDisplacementVector([this, &world](glm::ivec3 coords)
+    result_displacement_vector = collision_system.GetClippedDisplacementVector([this, &chunk_manager](glm::ivec3 coords)
         {
-            const glm::ivec2 chunk_coords = world.ChunkManagerRef().GetChunkCoords(observer_.AbsoluteBlockPos(constants::observer::pos_offset));
-            return world.ChunkManagerRef().WorldBlockQuery(chunk_coords, coords);
+            const glm::ivec3 observer_offset_block_pos = observer_.AbsoluteBlockPos(constants::observer::pos_offset);
+            const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(observer_offset_block_pos);
+            return chunk_manager.WorldBlockQuery(chunk_coords, coords);
         },
         observer_, result_displacement_vector);
 
@@ -234,9 +254,21 @@ void ObserverController::ApplyMouseRotation(glm::vec2 mouse_delta, Camera& camer
     }
 }
 
+BlockInfo ObserverController::GetBlockInfoBelowObserver(const ChunkManager& chunk_manager)
+{
+    const glm::ivec3 observer_offset_block_pos = observer_.RelativeBlockPos(constants::observer::pos_offset);
+    const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(observer_offset_block_pos);
+    
+    glm::ivec3 block_pos_below_observer = observer_offset_block_pos;
+    --block_pos_below_observer.y;
+
+    return chunk_manager.WorldBlockQuery(chunk_coords, block_pos_below_observer);
+}
+
 void ObserverController::ToggleNoclip()
 {
     noclip_ = !noclip_;
+    observer_.velocity_ = glm::dvec3(0.0);
 
     if (noclip_)
     {
