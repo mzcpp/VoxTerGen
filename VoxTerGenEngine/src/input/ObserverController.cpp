@@ -34,12 +34,12 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
     glm::dvec3 displacement_vector(0.0);
     const glm::dvec3 direction_vector = GetDirectionVector(input_manager);
 
+    auto block_below = GetBlockInfoBelowObserver(chunk_manager);
+    std::cout << static_cast<int>(block_below.block_.Type()) << '\n';
+
     if (noclip_)
     {
         displacement_vector = GetDisplacementVector(direction_vector);
-
-        auto block_below = GetBlockInfoBelowObserver(chunk_manager);
-        std::cout << static_cast<int>(block_below.block_.Type()) << '\n';
     }
     else
     {
@@ -256,10 +256,9 @@ void ObserverController::ApplyMouseRotation(glm::vec2 mouse_delta, Camera& camer
 
 BlockInfo ObserverController::GetBlockInfoBelowObserver(const ChunkManager& chunk_manager)
 {
-    const glm::ivec3 observer_offset_block_pos = observer_.RelativeBlockPos(constants::observer::pos_offset);
-    const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(observer_offset_block_pos);
+    const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(observer_.AbsoluteBlockPos(constants::observer::pos_offset));
     
-    glm::ivec3 block_pos_below_observer = observer_offset_block_pos;
+    glm::ivec3 block_pos_below_observer = observer_.RelativeBlockPos(constants::observer::pos_offset);
     --block_pos_below_observer.y;
 
     return chunk_manager.WorldBlockQuery(chunk_coords, block_pos_below_observer);
