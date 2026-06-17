@@ -6,15 +6,36 @@
 
 void InputManager::ProcessEvent(const SDL_Event& e)
 {
+
     switch (e.type)
     {
     case SDL_KEYDOWN:
-        keys_[e.key.keysym.scancode] = true;
-        break;
+    {
+        const SDL_Scancode scancode = e.key.keysym.scancode;
 
-    case SDL_KEYUP:
-        keys_[e.key.keysym.scancode] = false;
+        if (!e.key.repeat)
+        {
+            if (!keys_[scancode])
+            {
+                pressed_.insert(scancode);
+            }
+
+            keys_[scancode] = true;
+        }
         break;
+    }
+    case SDL_KEYUP:
+    {
+        const SDL_Scancode scancode = e.key.keysym.scancode;
+
+        if (keys_[scancode])
+        {
+            released_.insert(scancode);
+        }
+
+        keys_[scancode] = false;
+        break;
+    }
 
     case SDL_MOUSEMOTION:
         mouse_.delta_.x += static_cast<float>(e.motion.xrel);
@@ -34,25 +55,19 @@ void InputManager::ProcessEvent(const SDL_Event& e)
     }
 }
 
-bool InputManager::KeyPressed(SDL_Scancode key) const
-{
-    const bool curr = keys_.contains(key) ? keys_.at(key) : false;
-    const bool prev = prev_keys_.contains(key) ? prev_keys_.at(key) : false;
-    
-    return curr && !prev;
-}
-
 bool InputManager::KeyDown(SDL_Scancode key) const
 {
     return keys_.contains(key) ? keys_.at(key) : false;
 }
 
+bool InputManager::KeyPressed(SDL_Scancode key) const
+{
+    return pressed_.contains(key);
+}
+
 bool InputManager::KeyReleased(SDL_Scancode key) const
 {
-    const bool curr = keys_.contains(key) ? keys_.at(key) : false;
-    const bool prev = prev_keys_.contains(key) ? prev_keys_.at(key) : false;
-    
-    return !curr && prev;
+    return released_.contains(key);
 }
 
 bool InputManager::MouseButtonDown(std::uint8_t button) const 
@@ -62,7 +77,10 @@ bool InputManager::MouseButtonDown(std::uint8_t button) const
 
 void InputManager::ResetFrameState()
 {
-    prev_keys_ = keys_;
-    mouse_.delta_ = glm::vec2(0.0f);
+    std::cout << "RESET\n";
+
+    pressed_.clear();
+    released_.clear();
+    mouse_.delta_ = {};
     mouse_.wheel_ = 0.0f;
 }

@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <unordered_map>
+#include <unordered_set>
 
 struct MouseState
 {
@@ -20,17 +21,21 @@ class InputManager
 {
 private:
     std::unordered_map<SDL_Scancode, bool> keys_;
-    std::unordered_map<SDL_Scancode, bool> prev_keys_;
+    std::unordered_set<SDL_Scancode> pressed_;
+    std::unordered_set<SDL_Scancode> released_;
     MouseState mouse_;
 
 public:
     InputManager() = default;
 
+    InputManager(const InputManager&) = delete;
+    InputManager& operator=(const InputManager&) = delete;
+
     void ProcessEvent(const SDL_Event& e);
 
-    bool KeyPressed(SDL_Scancode key) const;
-
     bool KeyDown(SDL_Scancode key) const;
+    
+    bool KeyPressed(SDL_Scancode key) const;
 
     bool KeyReleased(SDL_Scancode key) const;
 

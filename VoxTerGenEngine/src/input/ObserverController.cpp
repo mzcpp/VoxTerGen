@@ -18,6 +18,11 @@ ObserverController::ObserverController(Observer& observer) : observer_(observer)
 {
 }
 
+void ObserverController::GatherInput(const InputManager& input_manager)
+{
+
+}
+
 void ObserverController::Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera)
 {
     // TODO CAMERA POSITION DOUBLE?!
@@ -35,7 +40,7 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
     const glm::dvec3 direction_vector = GetDirectionVector(input_manager);
 
     auto block_below = GetBlockInfoBelowObserver(chunk_manager);
-    std::cout << static_cast<int>(block_below.block_.Type()) << '\n';
+    //std::cout << static_cast<int>(block_below.block_.Type()) << '\n';
 
     if (noclip_)
     {
@@ -71,6 +76,10 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
         
     ApplyDisplacementVector(displacement_vector, camera);
     ApplyMouseRotation(input_manager.MouseDelta(), camera);
+}
+
+void ObserverController::Apply(Camera& camera)
+{
 }
 
 glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input_manager) const

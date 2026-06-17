@@ -28,7 +28,11 @@ public:
     ObserverController(ObserverController&& other) = delete;
     ObserverController& operator=(ObserverController&& other) = delete;
 
+	void GatherInput(const InputManager& input_manager);
+
 	void Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera);
+
+	void Apply(Camera& camera);
 
 	glm::dvec3 GetDirectionVector(const InputManager& input_manager) const;
 

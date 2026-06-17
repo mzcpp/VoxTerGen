@@ -23,6 +23,15 @@ void Engine::Initialize()
 	world_.InitChunks(constants::chunk::default_radius);
 }
 
+void Engine::BeginFrame()
+{
+	input_manager_.ResetFrameState();
+}
+
+void Engine::ApplyInput()
+{
+}
+
 void Engine::HandleEvents(SDL_Event e)
 {
 	input_manager_.ProcessEvent(e);
@@ -43,8 +52,6 @@ void Engine::Tick(float aspect_ratio)
 
 	world_.Tick(chunk_event_queue_, camera_);
 	world_renderer_.Tick(chunk_event_queue_);
-	
-	input_manager_.ResetFrameState();
 }
 
 void Engine::Render(float alpha)

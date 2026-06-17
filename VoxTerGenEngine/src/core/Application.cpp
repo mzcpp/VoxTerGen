@@ -91,6 +91,8 @@ void Application::Run()
 
 	while (running_)
 	{
+		engine_.BeginFrame();
+
 		const std::uint64_t now = SDL_GetPerformanceCounter();
 		const double elapsed = static_cast<double>(now - last_time) / static_cast<double>(SDL_GetPerformanceFrequency());
 
