@@ -101,12 +101,16 @@ void Application::Run()
 
 		HandleEvents();
 
+		engine_.GatherInput();
+
 		while (delta >= constants::engine::tick_dt)
 		{
 			Tick();
 			delta -= constants::engine::tick_dt;
 			++ticks;
 		}
+
+		engine_.ApplyChanges();
 
 		const float alpha = std::clamp(static_cast<float>(delta / constants::engine::tick_dt), 0.0f, 1.0f);
 		//printf("%Lf\n", alpha);

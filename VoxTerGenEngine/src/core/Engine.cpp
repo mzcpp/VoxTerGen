@@ -30,10 +30,12 @@ void Engine::BeginFrame()
 
 void Engine::GatherInput()
 {
+	observer_controller_.GatherInput(input_manager_);
 }
 
 void Engine::ApplyInput()
 {
+	observer_controller_.ApplyChanges(camera_);
 }
 
 void Engine::HandleEvents(SDL_Event e)
