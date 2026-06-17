@@ -6,7 +6,6 @@
 
 void InputManager::ProcessEvent(const SDL_Event& e)
 {
-
     switch (e.type)
     {
     case SDL_KEYDOWN:

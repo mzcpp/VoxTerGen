@@ -23,7 +23,11 @@ public:
     CameraController(CameraController&& other) = delete;
     CameraController& operator=(CameraController&& other) = delete;
 
+    void GatherInput(const InputManager& input_manager);
+
     void Tick(const InputManager& input_manager);
+
+    void ApplyChanges();
 
     void ApplyKeyboardInput(const InputManager& input_manager);
 

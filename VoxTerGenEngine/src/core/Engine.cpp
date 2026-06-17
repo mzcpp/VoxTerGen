@@ -28,6 +28,10 @@ void Engine::BeginFrame()
 	input_manager_.ResetFrameState();
 }
 
+void Engine::GatherInput()
+{
+}
+
 void Engine::ApplyInput()
 {
 }

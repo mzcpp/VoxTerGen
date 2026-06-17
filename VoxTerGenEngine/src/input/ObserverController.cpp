@@ -20,7 +20,8 @@ ObserverController::ObserverController(Observer& observer) : observer_(observer)
 
 void ObserverController::GatherInput(const InputManager& input_manager)
 {
-
+    input_direction_ = GetDirectionVector(input_manager);
+    mouse_delta_ = input_manager.MouseDelta();
 }
 
 void ObserverController::Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera)
@@ -37,22 +38,21 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
     */
 
     glm::dvec3 displacement_vector(0.0);
-    const glm::dvec3 direction_vector = GetDirectionVector(input_manager);
 
     auto block_below = GetBlockInfoBelowObserver(chunk_manager);
     //std::cout << static_cast<int>(block_below.block_.Type()) << '\n';
 
     if (noclip_)
     {
-        displacement_vector = GetDisplacementVector(direction_vector);
+        displacement_vector = GetDisplacementVector(input_direction_);
     }
     else
     {
-        //observer_.velocity_ = GetHorizontalVelocityVector(direction_vector);
+        //observer_.velocity_ = GetHorizontalVelocityVector(input_direction_);
 
-        observer_.velocity_.x = direction_vector.x * constants::observer::movement_speed;
+        observer_.velocity_.x = input_direction_.x * constants::observer::movement_speed;
         observer_.velocity_.y += 0.0;
-        observer_.velocity_.z = direction_vector.z * constants::observer::movement_speed;
+        observer_.velocity_.z = input_direction_.z * constants::observer::movement_speed;
         
         //if (!observer_.Grounded())
         {
@@ -73,13 +73,14 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
             observer_.velocity_.y = 0.0;
         }
     }
-        
-    ApplyDisplacementVector(displacement_vector, camera);
-    ApplyMouseRotation(input_manager.MouseDelta(), camera);
+
+    pending_displacement_ = displacement_vector;
 }
 
-void ObserverController::Apply(Camera& camera)
+void ObserverController::ApplyChanges(Camera& camera)
 {
+    ApplyDisplacementVector(pending_displacement_, camera);
+    ApplyMouseRotation(mouse_delta_, camera);
 }
 
 glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input_manager) const

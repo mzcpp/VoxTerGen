@@ -19,6 +19,11 @@ CameraController::CameraController(Camera& camera) :
 {   
 }
 
+void CameraController::GatherInput(const InputManager& input_manager)
+{
+
+}
+
 void CameraController::Tick(const InputManager& input_manager)
 {
     if (camera_.enabled_rotation_)
@@ -35,6 +40,11 @@ void CameraController::Tick(const InputManager& input_manager)
     {
         ApplyKeyboardInput(input_manager);
     }
+}
+
+void CameraController::ApplyChanges()
+{
+
 }
 
 void CameraController::ApplyKeyboardInput(const InputManager& input_manager)

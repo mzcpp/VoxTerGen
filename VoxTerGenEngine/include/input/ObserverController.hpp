@@ -19,6 +19,11 @@ private:
 	Observer& observer_;
 	bool noclip_;
 
+	glm::dvec3 input_direction_;
+	glm::vec2 mouse_delta_;
+
+	glm::dvec3 pending_displacement_;
+
 public:
 	ObserverController(Observer& observer);
 
@@ -32,7 +37,7 @@ public:
 
 	void Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera);
 
-	void Apply(Camera& camera);
+	void ApplyChanges(Camera& camera);
 
 	glm::dvec3 GetDirectionVector(const InputManager& input_manager) const;
 

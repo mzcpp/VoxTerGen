@@ -44,6 +44,8 @@ public:
 
 	void BeginFrame();
 
+	void GatherInput();
+
 	void ApplyInput();
 
 	void HandleEvents(SDL_Event e);
