@@ -34,10 +34,10 @@ void Engine::GatherInput()
 	camera_controller_.GatherInput(input_manager_);
 }
 
-void Engine::ApplyInput(double delta_dt)
+void Engine::ApplyInput(double frame_dt)
 {
 	observer_controller_.ApplyChanges(camera_);
-	camera_controller_.ApplyChanges(delta_dt);
+	camera_controller_.ApplyChanges(input_manager_, frame_dt);
 }
 
 void Engine::HandleEvents(SDL_Event e)

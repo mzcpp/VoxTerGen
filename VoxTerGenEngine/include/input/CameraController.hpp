@@ -3,6 +3,9 @@
 
 #include "utils/Constants.hpp"
 
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+
 class Camera;
 class InputManager;
 
@@ -10,11 +13,11 @@ class CameraController
 {
 private:
     Camera& camera_;
-    float movement_speed_;
+    double movement_speed_;
     float move_sensitivity_;
     float zoom_sensitivity_;
 
-    glm::vec3 move_dir_;
+    glm::dvec3 move_dir_;
     glm::vec2 mouse_delta_;
     float mouse_wheel_;
 
@@ -31,7 +34,7 @@ public:
 
     void Tick(const InputManager& input_manager);
 
-    void ApplyChanges(double frame_dt);
+    void ApplyChanges(const InputManager& input_manager, double frame_dt);
 
     void ApplyKeyboardInput(const InputManager& input_manager, double frame_dt);
 

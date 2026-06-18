@@ -16,7 +16,7 @@ CameraController::CameraController(Camera& camera) :
     movement_speed_(constants::camera::movement_speed), 
     move_sensitivity_(constants::camera::move_sensitivity), 
     zoom_sensitivity_(constants::camera::zoom_sensitivity), 
-    move_dir_(0.0f), 
+    move_dir_(0.0), 
     mouse_delta_(0.0f), 
     mouse_wheel_(0.0f)
 {   
@@ -63,7 +63,7 @@ void CameraController::Tick(const InputManager& input_manager)
 
 }
 
-void CameraController::ApplyChanges(double frame_dt)
+void CameraController::ApplyChanges(const InputManager& input_manager, double frame_dt)
 {
     if (camera_.enabled_rotation_)
     {
@@ -103,7 +103,7 @@ void CameraController::ApplyMouseRotation(const InputManager& input_manager)
     camera_.prev_yaw_ = camera_.yaw_;
     camera_.prev_pitch_ = camera_.pitch_;
 
-    if (math_utils::FloatingPointNearZero(mouse_delta_.x) && math_utils::FloatingPointNearZero(mouse_delta.y))
+    if (math_utils::FloatingPointNearZero(mouse_delta_.x) && math_utils::FloatingPointNearZero(mouse_delta_.y))
     {
         return;
     }
