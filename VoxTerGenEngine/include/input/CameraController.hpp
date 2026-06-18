@@ -14,6 +14,10 @@ private:
     float move_sensitivity_;
     float zoom_sensitivity_;
 
+    glm::vec3 move_dir_;
+    glm::vec2 mouse_delta_;
+    float mouse_wheel_;
+
 public:
     CameraController(Camera& camera);
 
@@ -27,9 +31,9 @@ public:
 
     void Tick(const InputManager& input_manager);
 
-    void ApplyChanges();
+    void ApplyChanges(double frame_dt);
 
-    void ApplyKeyboardInput(const InputManager& input_manager);
+    void ApplyKeyboardInput(const InputManager& input_manager, double frame_dt);
 
     void ApplyMouseRotation(const InputManager& input_manager);
 

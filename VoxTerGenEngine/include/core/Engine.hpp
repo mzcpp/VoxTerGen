@@ -46,7 +46,7 @@ public:
 
 	void GatherInput();
 
-	void ApplyInput();
+	void ApplyInput(double delta_dt);
 
 	void HandleEvents(SDL_Event e);
 

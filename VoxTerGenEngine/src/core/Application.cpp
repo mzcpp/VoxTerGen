@@ -101,7 +101,7 @@ void Application::Run()
 
 		HandleEvents();
 
-		engine_.GatherInput();
+		engine_.GatherInput(elapsed);
 
 		while (delta >= constants::engine::tick_dt)
 		{

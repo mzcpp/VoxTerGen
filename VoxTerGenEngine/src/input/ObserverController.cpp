@@ -14,7 +14,12 @@
 #include <algorithm>
 #include <iostream>
 
-ObserverController::ObserverController(Observer& observer) : observer_(observer), noclip_(true)
+ObserverController::ObserverController(Observer& observer) : 
+    observer_(observer), 
+    noclip_(true), 
+    input_direction_(0.0), 
+    mouse_delta_(0.0), 
+    pending_displacement_(0.0)
 {
 }
 
