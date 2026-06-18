@@ -76,8 +76,6 @@ bool InputManager::MouseButtonDown(std::uint8_t button) const
 
 void InputManager::ResetFrameState()
 {
-    std::cout << "RESET\n";
-
     pressed_.clear();
     released_.clear();
     mouse_.delta_ = {};
