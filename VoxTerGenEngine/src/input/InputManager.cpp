@@ -12,7 +12,7 @@ void InputManager::ProcessEvent(const SDL_Event& e)
     {
         const SDL_Scancode scancode = e.key.keysym.scancode;
 
-        if (!e.key.repeat)
+        if (!e.key.repeat && !KeyDown(scancode))
         {
             keys_[scancode] = true;
             pressed_.insert(scancode);
@@ -23,11 +23,13 @@ void InputManager::ProcessEvent(const SDL_Event& e)
     {
         const SDL_Scancode scancode = e.key.keysym.scancode;
 
-        keys_[scancode] = false;
-        released_.insert(scancode);
+        if (KeyDown(scancode))
+        {
+            keys_[scancode] = false;
+            released_.insert(scancode);
+        }
         break;
     }
-
     case SDL_MOUSEMOTION:
         mouse_.delta_.x += static_cast<float>(e.motion.xrel);
         mouse_.delta_.y += static_cast<float>(-e.motion.yrel);

@@ -9,6 +9,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <iostream>
+
 Engine::Engine() : camera_controller_(camera_), observer_controller_(observer_)
 {
 }
@@ -36,8 +38,14 @@ void Engine::GatherInput()
 
 void Engine::ApplyInput(double frame_dt)
 {
+	if (input_manager_.KeyPressed(SDL_SCANCODE_F))
+	{
+		std::cout << "F\n";
+		observer_controller_.ToggleNoclip();
+	}
+
 	observer_controller_.ApplyChanges(camera_);
-	camera_controller_.ApplyChanges(input_manager_, frame_dt);
+	camera_controller_.ApplyChanges(frame_dt);
 }
 
 void Engine::HandleEvents(SDL_Event e)
@@ -47,12 +55,6 @@ void Engine::HandleEvents(SDL_Event e)
 
 void Engine::Tick(float aspect_ratio)
 {
-	if (input_manager_.KeyPressed(SDL_SCANCODE_F))
-	{
-		std::cout << "F\n";
-		observer_controller_.ToggleNoclip();
-	}
-
 	observer_controller_.Tick(input_manager_, collision_system_, world_.ChunkManagerRef(), camera_);
 	camera_controller_.Tick(input_manager_);
 	

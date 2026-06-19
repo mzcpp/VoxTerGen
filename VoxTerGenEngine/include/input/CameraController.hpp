@@ -34,13 +34,13 @@ public:
 
     void Tick(const InputManager& input_manager);
 
-    void ApplyChanges(const InputManager& input_manager, double frame_dt);
+    void ApplyChanges(double frame_dt);
 
-    void ApplyKeyboardInput(const InputManager& input_manager, double frame_dt);
+    void ApplyKeyboardInput(double frame_dt);
 
-    void ApplyMouseRotation(const InputManager& input_manager);
+    void ApplyMouseRotation();
 
-    void ApplyZoom(const InputManager& input_manager);
+    void ApplyZoom();
 };
 
 #endif // CAMERA_CONTROLLER_HPP

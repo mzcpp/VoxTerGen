@@ -62,28 +62,27 @@ void CameraController::GatherInput(const InputManager& input_manager)
 
 void CameraController::Tick(const InputManager& input_manager)
 {
-
 }
 
-void CameraController::ApplyChanges(const InputManager& input_manager, double frame_dt)
+void CameraController::ApplyChanges(double frame_dt)
 {
     if (camera_.enabled_rotation_)
     {
-        ApplyMouseRotation(input_manager);
+        ApplyMouseRotation();
     }
 
     if (camera_.enabled_zoom_)
     {
-        ApplyZoom(input_manager);
+        ApplyZoom();
     }
 
     if (camera_.enabled_movement_)
     {
-        ApplyKeyboardInput(input_manager, frame_dt);
+        ApplyKeyboardInput(frame_dt);
     }
 }
 
-void CameraController::ApplyKeyboardInput(const InputManager& input_manager, double frame_dt)
+void CameraController::ApplyKeyboardInput(double frame_dt)
 {
     assert(camera_.enabled_movement_);
 
@@ -98,7 +97,7 @@ void CameraController::ApplyKeyboardInput(const InputManager& input_manager, dou
     }
 }
 
-void CameraController::ApplyMouseRotation(const InputManager& input_manager)
+void CameraController::ApplyMouseRotation()
 {
     assert(camera_.enabled_rotation_);
 
@@ -115,7 +114,7 @@ void CameraController::ApplyMouseRotation(const InputManager& input_manager)
     camera_.stale_ = true;
 }
 
-void CameraController::ApplyZoom(const InputManager& input_manager)
+void CameraController::ApplyZoom()
 {
     assert(camera_.enabled_zoom_);
     

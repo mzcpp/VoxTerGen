@@ -223,8 +223,8 @@ void Camera::LogCameraData() const
 void Camera::PrintFrustumPlanes() const
 {
 	static const char* names[6] = { "Left", "Right", "Bottom", "Top", "Near", "Far" };
-
-	std::cout << "---------------------------- Frustum Planes ----------------------------\n";
+	
+	Logger::Log(LogLevel::DEBUG, "---------------------------- Frustum Planes ----------------------------");
 	
 	for (int i = 0; i < 6; ++i)
 	{
