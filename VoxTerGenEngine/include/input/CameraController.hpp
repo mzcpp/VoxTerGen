@@ -32,7 +32,7 @@ public:
 
     void GatherInput(const InputManager& input_manager);
 
-    void Tick(const InputManager& input_manager);
+    void Tick();
 
     void ApplyChanges(double frame_dt);
 

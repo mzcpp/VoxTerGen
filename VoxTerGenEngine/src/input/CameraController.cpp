@@ -60,7 +60,7 @@ void CameraController::GatherInput(const InputManager& input_manager)
     mouse_wheel_ = input_manager.MouseWheel();
 }
 
-void CameraController::Tick(const InputManager& input_manager)
+void CameraController::Tick()
 {
 }
 

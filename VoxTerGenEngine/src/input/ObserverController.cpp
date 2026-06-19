@@ -28,7 +28,7 @@ void ObserverController::GatherInput(const InputManager& input_manager)
     mouse_delta_ = input_manager.MouseDelta();
 }
 
-void ObserverController::Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera)
+void ObserverController::Tick(const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera)
 {
     // TODO JUMPING BELOW A BLOCK COLLIDES AND CAMERA DOES NOT PENETRATE! Because you moved the pos_offset to height / 4.0
     // 
@@ -68,7 +68,7 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
 
         const double desired_y = displacement_vector.y;
 
-        displacement_vector = GetClippedDisplacementVector(displacement_vector, input_manager, collision_system, chunk_manager);
+        displacement_vector = GetClippedDisplacementVector(displacement_vector, collision_system, chunk_manager);
 
         if (displacement_vector.y > desired_y)
         {
@@ -156,7 +156,7 @@ glm::dvec3 ObserverController::GetDisplacementVector(glm::dvec3 dir_vec) const n
     };
 }
 
-glm::dvec3 ObserverController::GetClippedDisplacementVector(glm::dvec3 result_displacement_vector, const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager) const
+glm::dvec3 ObserverController::GetClippedDisplacementVector(glm::dvec3 result_displacement_vector, const CollisionSystem& collision_system, const ChunkManager& chunk_manager) const
 {
     result_displacement_vector = collision_system.GetClippedDisplacementVector([this, &chunk_manager](glm::ivec3 coords)
         {

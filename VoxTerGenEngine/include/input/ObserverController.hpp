@@ -33,7 +33,7 @@ public:
 
 	void GatherInput(const InputManager& input_manager);
 
-	void Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera);
+	void Tick(const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera);
 
 	void ApplyChanges(Camera& camera);
 
@@ -43,7 +43,7 @@ public:
 
 	glm::dvec3 GetDisplacementVector(glm::dvec3 dir_vec) const noexcept;
 	
-	glm::dvec3 GetClippedDisplacementVector(glm::dvec3 result_displacement_vector, const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager) const;
+	glm::dvec3 GetClippedDisplacementVector(glm::dvec3 result_displacement_vector, const CollisionSystem& collision_system, const ChunkManager& chunk_manager) const;
 
 	void ApplyKeyboardInput(const InputManager& input_manager, Camera& camera);
 
