@@ -42,6 +42,12 @@ public:
 
 	void Initialize();
 
+	void BeginFrame();
+
+	void GatherInput();
+
+	void ApplyInput(double frame_dt);
+
 	void HandleEvents(SDL_Event e);
 
 	void Tick(float aspect_ratio);

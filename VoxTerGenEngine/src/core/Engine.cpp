@@ -9,6 +9,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <iostream>
+
 Engine::Engine() : camera_controller_(camera_), observer_controller_(observer_)
 {
 }
@@ -23,28 +25,43 @@ void Engine::Initialize()
 	world_.InitChunks(constants::chunk::default_radius);
 }
 
-void Engine::HandleEvents(SDL_Event e)
+void Engine::BeginFrame()
 {
-	input_manager_.ProcessEvent(e);
+	input_manager_.ResetFrameState();
+}
 
-	if (input_manager_.KeyReleased(SDL_SCANCODE_F))
+void Engine::GatherInput()
+{
+	observer_controller_.GatherInput(input_manager_);
+	camera_controller_.GatherInput(input_manager_);
+}
+
+void Engine::ApplyInput(double frame_dt)
+{
+	if (input_manager_.KeyPressed(SDL_SCANCODE_F))
 	{
 		observer_controller_.ToggleNoclip();
 	}
+
+	observer_controller_.ApplyChanges(camera_);
+	camera_controller_.ApplyChanges(frame_dt);
+}
+
+void Engine::HandleEvents(SDL_Event e)
+{
+	input_manager_.ProcessEvent(e);
 }
 
 void Engine::Tick(float aspect_ratio)
 {
-	observer_controller_.Tick(input_manager_, collision_system_, world_.ChunkManagerRef(), camera_);
-	camera_controller_.Tick(input_manager_);
+	observer_controller_.Tick(collision_system_, world_.ChunkManagerRef(), camera_);
+	camera_controller_.Tick();
 	
 	observer_.Tick();
 	camera_.Tick(aspect_ratio);
 
 	world_.Tick(chunk_event_queue_, camera_);
 	world_renderer_.Tick(chunk_event_queue_);
-	
-	input_manager_.ResetFrameState();
 }
 
 void Engine::Render(float alpha)

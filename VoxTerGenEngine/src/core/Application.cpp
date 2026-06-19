@@ -91,6 +91,8 @@ void Application::Run()
 
 	while (running_)
 	{
+		engine_.BeginFrame();
+
 		const std::uint64_t now = SDL_GetPerformanceCounter();
 		const double elapsed = static_cast<double>(now - last_time) / static_cast<double>(SDL_GetPerformanceFrequency());
 
@@ -99,12 +101,16 @@ void Application::Run()
 
 		HandleEvents();
 
+		engine_.GatherInput();
+
 		while (delta >= constants::engine::tick_dt)
 		{
 			Tick();
 			delta -= constants::engine::tick_dt;
 			++ticks;
 		}
+
+		engine_.ApplyInput(elapsed);
 
 		const float alpha = std::clamp(static_cast<float>(delta / constants::engine::tick_dt), 0.0f, 1.0f);
 		//printf("%Lf\n", alpha);

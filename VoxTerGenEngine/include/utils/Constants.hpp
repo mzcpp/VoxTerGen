@@ -111,7 +111,7 @@ namespace constants
         inline constexpr float pitch = 0.0f;
         inline constexpr float pitch_min = -89.0f;
         inline constexpr float pitch_max = 89.0f;
-        inline constexpr float movement_speed = 10.0f;
+        inline constexpr double movement_speed = 10.0;
         inline constexpr float move_sensitivity = 0.1f;
         inline constexpr float zoom_sensitivity = 1.0f;
         inline constexpr float zoom = 45.0f;
