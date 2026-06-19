@@ -14,12 +14,8 @@ void InputManager::ProcessEvent(const SDL_Event& e)
 
         if (!e.key.repeat)
         {
-            if (!keys_[scancode])
-            {
-                pressed_.insert(scancode);
-            }
-
             keys_[scancode] = true;
+            pressed_.insert(scancode);
         }
         break;
     }
@@ -27,12 +23,8 @@ void InputManager::ProcessEvent(const SDL_Event& e)
     {
         const SDL_Scancode scancode = e.key.keysym.scancode;
 
-        if (keys_[scancode])
-        {
-            released_.insert(scancode);
-        }
-
         keys_[scancode] = false;
+        released_.insert(scancode);
         break;
     }
 

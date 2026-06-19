@@ -22,8 +22,6 @@ private:
 	glm::dvec3 input_direction_;
 	glm::vec2 mouse_delta_;
 
-	glm::dvec3 pending_displacement_;
-
 public:
 	ObserverController(Observer& observer);
 

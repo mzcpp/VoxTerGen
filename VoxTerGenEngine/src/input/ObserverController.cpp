@@ -18,8 +18,7 @@ ObserverController::ObserverController(Observer& observer) :
     observer_(observer), 
     noclip_(true), 
     input_direction_(0.0), 
-    mouse_delta_(0.0), 
-    pending_displacement_(0.0)
+    mouse_delta_(0.0f)
 {
 }
 
@@ -31,7 +30,6 @@ void ObserverController::GatherInput(const InputManager& input_manager)
 
 void ObserverController::Tick(const InputManager& input_manager, const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera)
 {
-    // TODO CAMERA POSITION DOUBLE?!
     // TODO JUMPING BELOW A BLOCK COLLIDES AND CAMERA DOES NOT PENETRATE! Because you moved the pos_offset to height / 4.0
     // 
     //std::cout << static_cast<int>(observer_.GetMovementState()) << '\n';
@@ -79,12 +77,11 @@ void ObserverController::Tick(const InputManager& input_manager, const Collision
         }
     }
 
-    pending_displacement_ = displacement_vector;
+    ApplyDisplacementVector(displacement_vector, camera);
 }
 
 void ObserverController::ApplyChanges(Camera& camera)
 {
-    ApplyDisplacementVector(pending_displacement_, camera);
     ApplyMouseRotation(mouse_delta_, camera);
 }
 

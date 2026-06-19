@@ -43,15 +43,16 @@ void Engine::ApplyInput(double frame_dt)
 void Engine::HandleEvents(SDL_Event e)
 {
 	input_manager_.ProcessEvent(e);
-
-	if (input_manager_.KeyReleased(SDL_SCANCODE_F))
-	{
-		observer_controller_.ToggleNoclip();
-	}
 }
 
 void Engine::Tick(float aspect_ratio)
 {
+	if (input_manager_.KeyPressed(SDL_SCANCODE_F))
+	{
+		std::cout << "F\n";
+		observer_controller_.ToggleNoclip();
+	}
+
 	observer_controller_.Tick(input_manager_, collision_system_, world_.ChunkManagerRef(), camera_);
 	camera_controller_.Tick(input_manager_);
 	

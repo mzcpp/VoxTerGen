@@ -24,6 +24,8 @@ CameraController::CameraController(Camera& camera) :
 
 void CameraController::GatherInput(const InputManager& input_manager)
 {
+    move_dir_ = glm::vec3(0.0);
+
     if (input_manager.KeyDown(SDL_SCANCODE_W))
     {
         move_dir_ += camera_.front_;
