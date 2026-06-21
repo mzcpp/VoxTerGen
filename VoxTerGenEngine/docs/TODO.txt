@@ -15,7 +15,7 @@ Vertex pulling?, binary greedy meshing?, chunk object pooling?
 rethink the world block query implicit passing of chunk! at the call site it's not clear at all which chunk is the current!
 
 make class MeshBuilder a namespace
-
+add option in settings - whether or not water will change gravity
 interpolated_view!
 review the camera class thoroughly
 verify the camera is working correctly for big floats
@@ -48,6 +48,7 @@ sort all #includes by alphabetical order and these order rules:
 	// 3. Third-party libraries
 	// 4. Project headers
 
+fix bug when running very fast, I fall through the floor
 rework camera - WoW style
 
 move world_up into better nested namespace

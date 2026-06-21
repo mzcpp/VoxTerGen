@@ -86,7 +86,12 @@ namespace constants
     namespace physics
     {
         inline constexpr double gravity = -9.81;
+        inline constexpr double swimming_gravity = -9.81;
         inline constexpr double collision_epsilon = 1e-8;
+        inline constexpr double horizontal_acceleration = 0.0;
+        inline constexpr double horizontal_friction = 0.0;
+        inline constexpr double max_walk_speed = 0.0;
+        inline constexpr double jump_velocity = 1.0;
     } // namespace physics
 
     /**
@@ -107,7 +112,7 @@ namespace constants
      */
     namespace camera
     {
-        inline constexpr float yaw = -90.0f;
+        inline constexpr float yaw = 0.0f;
         inline constexpr float pitch = 0.0f;
         inline constexpr float pitch_min = -89.0f;
         inline constexpr float pitch_max = 89.0f;
@@ -126,7 +131,7 @@ namespace constants
      */
     namespace observer
     {
-        inline constexpr float yaw = -90.0f;
+        inline constexpr float yaw = 0.0f;
         inline constexpr float pitch = 0.0f;
         inline constexpr float pitch_min = -89.0f;
         inline constexpr float pitch_max = 89.0f;

@@ -22,17 +22,6 @@ enum class BlockType : std::uint8_t
     Invalid
 };
 
-inline std::unordered_map<BlockType, double> slipperiness = {
-    { BlockType::Air, 1.0 }, 
-    { BlockType::Grass, 0.6 },
-    { BlockType::Dirt, 0.6 },
-    { BlockType::Stone, 0.6 },
-    { BlockType::Sand, 0.6 },
-    { BlockType::Snow, 0.6 },
-    { BlockType::Bedrock, 0.6 }
-};
-
-
 class Block
 {
 private:

@@ -8,6 +8,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include <SDL2/SDL.h>
 
@@ -24,6 +25,11 @@ ObserverController::ObserverController(Observer& observer) :
 
 void ObserverController::GatherInput(const InputManager& input_manager)
 {
+    if (input_manager.KeyPressed(SDL_SCANCODE_F))
+    {
+        ToggleNoclip();
+    }
+
     input_direction_ = GetDirectionVector(input_manager);
     mouse_delta_ = input_manager.MouseDelta();
 }
@@ -42,29 +48,29 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
 
     glm::dvec3 displacement_vector(0.0);
 
-    auto block_below = GetBlockInfoBelowObserver(chunk_manager);
-    //std::cout << static_cast<int>(block_below.block_.Type()) << '\n';
-
     if (noclip_)
     {
         displacement_vector = GetDisplacementVector(input_direction_);
     }
     else
     {
-        //observer_.velocity_ = GetHorizontalVelocityVector(input_direction_);
-
-        observer_.velocity_.x = input_direction_.x * constants::observer::movement_speed;
-        observer_.velocity_.y += 0.0;
-        observer_.velocity_.z = input_direction_.z * constants::observer::movement_speed;
-        
-        //if (!observer_.Grounded())
-        {
-            observer_.velocity_.y += constants::physics::gravity * constants::engine::tick_dt;
-        }
+        observer_.velocity_ += GetHorizontalVelocityVector(input_direction_);
+        observer_.velocity_.y += constants::physics::gravity * constants::engine::tick_dt;
             
-        displacement_vector.x = observer_.velocity_.x * constants::engine::tick_dt;
-        displacement_vector.y = observer_.velocity_.y * constants::engine::tick_dt;
-        displacement_vector.z = observer_.velocity_.z * constants::engine::tick_dt;
+        displacement_vector = observer_.velocity_ * constants::engine::tick_dt;
+
+        //std::cout << "Vel " << glm::to_string(observer_.velocity_) << '\n';
+
+        if (glm::length2(input_direction_) == 0.0)
+        {
+            std::cout << "not moving\n";
+        }
+        else
+        {
+            std::cout << "moving\n";
+        }
+
+        // clamp to 0-10 all axis of vel?
 
         const double desired_y = displacement_vector.y;
 
@@ -147,13 +153,7 @@ glm::dvec3 ObserverController::GetHorizontalVelocityVector(glm::dvec3 dir_vec) c
 
 glm::dvec3 ObserverController::GetDisplacementVector(glm::dvec3 dir_vec) const noexcept
 {
-    const double displacement_multiplier = constants::observer::movement_speed * constants::engine::tick_dt;
-    
-    return { 
-        dir_vec.x * displacement_multiplier, 
-        dir_vec.y * displacement_multiplier, 
-        dir_vec.z * displacement_multiplier 
-    };
+    return dir_vec * constants::observer::movement_speed * constants::engine::tick_dt;
 }
 
 glm::dvec3 ObserverController::GetClippedDisplacementVector(glm::dvec3 result_displacement_vector, const CollisionSystem& collision_system, const ChunkManager& chunk_manager) const

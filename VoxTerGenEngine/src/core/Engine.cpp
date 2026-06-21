@@ -38,11 +38,6 @@ void Engine::GatherInput()
 
 void Engine::ApplyInput(double frame_dt)
 {
-	if (input_manager_.KeyPressed(SDL_SCANCODE_F))
-	{
-		observer_controller_.ToggleNoclip();
-	}
-
 	observer_controller_.ApplyChanges(camera_);
 	camera_controller_.ApplyChanges(frame_dt);
 }
