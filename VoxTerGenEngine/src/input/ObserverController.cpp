@@ -54,23 +54,22 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
     }
     else
     {
-        observer_.velocity_ += GetHorizontalVelocityVector(input_direction_);
-        observer_.velocity_.y += constants::physics::gravity * constants::engine::tick_dt;
-            
-        displacement_vector = observer_.velocity_ * constants::engine::tick_dt;
-
-        //std::cout << "Vel " << glm::to_string(observer_.velocity_) << '\n';
+        glm::dvec3 acc_vec(0.0);
 
         if (glm::length2(input_direction_) == 0.0)
         {
-            std::cout << "not moving\n";
+            // if we are not moving, acc vec is 0
         }
         else
         {
-            std::cout << "moving\n";
+            acc_vec = input_direction_ * constants::physics::horizontal_acceleration;
         }
 
-        // clamp to 0-10 all axis of vel?
+        acc_vec.y += constants::physics::gravity;
+
+        observer_.velocity_ += acc_vec * constants::engine::tick_dt;
+
+        displacement_vector = observer_.velocity_ * constants::engine::tick_dt;
 
         const double desired_y = displacement_vector.y;
 
