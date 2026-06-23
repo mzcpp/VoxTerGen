@@ -58,7 +58,15 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
 
         if (glm::length2(input_direction_) == 0.0)
         {
-            // if we are not moving, acc vec is 0
+            if (observer_.velocity_.x > 0.0)
+            {
+                observer_.velocity_.x -= constants::physics::horizontal_friction * constants::engine::tick_dt;
+            }
+
+            if (observer_.velocity_.z > 0.0)
+            {
+                observer_.velocity_.z -= constants::physics::horizontal_friction * constants::engine::tick_dt;
+            }
         }
         else
         {
