@@ -49,6 +49,7 @@ sort all #includes by alphabetical order and these order rules:
 	// 4. Project headers
 
 fix bug when running very fast, I fall through the floor
+fix bug when falling very fast, I fall through the floor
 rework camera - WoW style
 
 move world_up into better nested namespace

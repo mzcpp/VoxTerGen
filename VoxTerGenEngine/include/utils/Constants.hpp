@@ -88,8 +88,8 @@ namespace constants
         inline constexpr double gravity = -9.81;
         inline constexpr double swimming_gravity = -9.81;
         inline constexpr double collision_epsilon = 1e-8;
-        inline constexpr double horizontal_acceleration = 20.0;
-        inline constexpr double horizontal_friction = 20.0;
+        inline constexpr double horizontal_acceleration = 140.0;
+        inline constexpr double horizontal_friction = 140.0;
         inline constexpr double max_walk_speed = 0.0;
         inline constexpr double jump_velocity = 1.0;
     } // namespace physics

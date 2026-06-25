@@ -66,7 +66,7 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
                 const glm::dvec2 dir = horizontal_velocity / horizontal_speed;
                 const double new_horizontal_speed = std::fmax(0, horizontal_speed - constants::physics::horizontal_friction * constants::engine::tick_dt);
                 observer_.velocity_.x = dir.x * new_horizontal_speed;
-                observer_.velocity_.z = dir.z * new_horizontal_speed;
+                observer_.velocity_.z = dir.y * new_horizontal_speed;
             }
         }
         else
