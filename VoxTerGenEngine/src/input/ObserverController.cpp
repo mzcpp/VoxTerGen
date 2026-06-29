@@ -70,7 +70,7 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
         acc_vec.y += constants::physics::gravity;
 
         observer_.velocity_ += acc_vec * constants::engine::tick_dt;
-        ClampObserverVelocity(-10.0, 10.0);
+        ClampObserverVelocity(10.0);
         
         displacement_vector = observer_.velocity_ * constants::engine::tick_dt;
 
@@ -308,6 +308,15 @@ void ObserverController::DecayObserverVelocity(double friction)
     }
 }
 
-void ObserverController::ClampObserverVelocity(double min, double max)
+void ObserverController::ClampObserverVelocity(double max)
 {
+    const glm::dvec2 horizontal_velocity = { observer_.velocity_.x, observer_.velocity_.z };
+    const double horizontal_speed = glm::length(horizontal_velocity);
+
+    if (horizontal_speed > max)
+    {
+        const glm::dvec2 horizontal_dir = horizontal_velocity / horizontal_speed;
+        observer_.velocity_.x = horizontal_dir.x * max;
+        observer_.velocity_.z = horizontal_dir.y * max;
+    }
 }

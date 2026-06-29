@@ -59,7 +59,7 @@ public:
 
 	void DecayObserverVelocity(double friction);
 
-	void ClampObserverVelocity(double min, double max);
+	void ClampObserverVelocity(double max);
 };
 
 #endif
