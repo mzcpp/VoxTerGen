@@ -55,6 +55,8 @@ public:
 
 	void LogObserverData() const;
 
+	void PrintMovementState() const;
+
 	// Getters
 	MovementState GetMovementState() const noexcept { return movement_state_; }
 	bool Grounded() const noexcept { return movement_state_ == MovementState::GROUNDED; }

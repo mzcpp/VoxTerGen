@@ -36,6 +36,7 @@ void ObserverController::GatherInput(const InputManager& input_manager)
 
 void ObserverController::Tick(const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera)
 {
+    //observer_.PrintMovementState();
     // TODO JUMPING BELOW A BLOCK COLLIDES AND CAMERA DOES NOT PENETRATE! Because you moved the pos_offset to height / 4.0
     // 
     //std::cout << static_cast<int>(observer_.GetMovementState()) << '\n';
@@ -58,26 +59,19 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
 
         if (glm::length2(input_direction_) == 0.0)
         {
-            glm::dvec2 horizontal_velocity = { observer_.velocity_.x, observer_.velocity_.z };
-            const double horizontal_speed = glm::length(horizontal_velocity);
-
-            if (horizontal_speed > 0.0)
-            {
-                const glm::dvec2 dir = horizontal_velocity / horizontal_speed;
-                const double new_horizontal_speed = std::fmax(0, horizontal_speed - constants::physics::horizontal_friction * constants::engine::tick_dt);
-                observer_.velocity_.x = dir.x * new_horizontal_speed;
-                observer_.velocity_.z = dir.y * new_horizontal_speed;
-            }
+            DecayObserverVelocity(constants::physics::horizontal_friction);
         }
         else
         {
             acc_vec = input_direction_ * constants::physics::horizontal_acceleration;
+            acc_vec.y = 0.0;
         }
 
         acc_vec.y += constants::physics::gravity;
 
         observer_.velocity_ += acc_vec * constants::engine::tick_dt;
-
+        ClampObserverVelocity(-10.0, 10.0);
+        
         displacement_vector = observer_.velocity_ * constants::engine::tick_dt;
 
         const double desired_y = displacement_vector.y;
@@ -88,6 +82,11 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
         {
             observer_.SetMovementState(MovementState::GROUNDED);
             observer_.velocity_.y = 0.0;
+        }
+        else
+        {
+            // SWIMMING LATER
+            observer_.SetMovementState(MovementState::AIRBORNE);
         }
     }
 
@@ -293,4 +292,22 @@ void ObserverController::ToggleNoclip()
     {
         observer_.movement_state_ = MovementState::AIRBORNE;
     }
+}
+
+void ObserverController::DecayObserverVelocity(double friction)
+{
+    const glm::dvec2 horizontal_velocity = { observer_.velocity_.x, observer_.velocity_.z };
+    const double horizontal_speed = glm::length(horizontal_velocity);
+
+    if (horizontal_speed > 0.0)
+    {
+        const glm::dvec2 horizontal_dir = horizontal_velocity / horizontal_speed;
+        const double new_horizontal_speed = std::fmax(0, horizontal_speed - friction * constants::engine::tick_dt);
+        observer_.velocity_.x = horizontal_dir.x * new_horizontal_speed;
+        observer_.velocity_.z = horizontal_dir.y * new_horizontal_speed;
+    }
+}
+
+void ObserverController::ClampObserverVelocity(double min, double max)
+{
 }

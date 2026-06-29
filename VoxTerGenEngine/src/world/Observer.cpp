@@ -136,3 +136,19 @@ glm::ivec3 Observer::RelativeBlockPos(glm::dvec3 pos_offset) const noexcept
 
 	return block_pos;
 }
+
+void Observer::PrintMovementState() const
+{
+	switch (movement_state_)
+	{
+	case MovementState::GROUNDED:
+		std::cout << "Grounded" << '\n';
+		break;
+	case MovementState::AIRBORNE:
+		std::cout << "Airborne" << '\n';
+		break;
+	case MovementState::SWIMMING:
+		std::cout << "Swimming" << '\n';
+		break;
+	}
+}

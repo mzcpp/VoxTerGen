@@ -56,6 +56,10 @@ public:
 	BlockInfo GetBlockInfoBelowObserver(const ChunkManager& chunk_manager);
 
 	void ToggleNoclip();
+
+	void DecayObserverVelocity(double friction);
+
+	void ClampObserverVelocity(double min, double max);
 };
 
 #endif
