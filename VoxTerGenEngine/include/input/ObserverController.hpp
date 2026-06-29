@@ -18,7 +18,7 @@ class ObserverController
 private:
 	Observer& observer_;
 	bool noclip_;
-	bool jump_;
+	bool jump_requested_;
 
 	glm::dvec3 input_direction_;
 	glm::dvec3 horizontal_input_direction_;
@@ -61,9 +61,9 @@ public:
 
 	void ToggleNoclip();
 
-	void DecayObserverVelocity(double friction);
+	void DecayObserverHorizontalVelocity(double friction);
 
-	void ClampObserverVelocity(double max);
+	void ClampObserverHorizontalVelocity(double max);
 };
 
 #endif

@@ -75,14 +75,14 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
 
         acc_vec.y += constants::physics::gravity;
 
-        if (jump_requested_ && observer_.GetMovementState(MovementState::GROUNDED))
+        if (jump_requested_ && observer_.GetMovementState() == MovementState::GROUNDED)
         {
-            observer_.velocity_ == constants::physics::jump_velocity;
+            observer_.velocity_.y = constants::physics::jump_velocity;
             observer_.SetMovementState(MovementState::AIRBORNE);
         }
 
         observer_.velocity_ += acc_vec * constants::engine::tick_dt;
-        ClampObserverHorizontalVelocity(10.0);
+        ClampObserverHorizontalVelocity(constants::physics::max_walk_speed);
         
         displacement_vector = observer_.velocity_ * constants::engine::tick_dt;
 

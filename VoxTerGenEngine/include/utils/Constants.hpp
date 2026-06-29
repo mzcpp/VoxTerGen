@@ -90,8 +90,8 @@ namespace constants
         inline constexpr double collision_epsilon = 1e-8;
         inline constexpr double horizontal_acceleration = 140.0;
         inline constexpr double horizontal_friction = 140.0;
-        inline constexpr double max_walk_speed = 0.0;
-        inline constexpr double jump_velocity = 10.0;
+        inline constexpr double max_walk_speed = 10.0;
+        inline constexpr double jump_velocity = 5.0;
     } // namespace physics
 
     /**
@@ -135,7 +135,7 @@ namespace constants
         inline constexpr float pitch = 0.0f;
         inline constexpr float pitch_min = -89.0f;
         inline constexpr float pitch_max = 89.0f;
-        inline constexpr double movement_speed = 5.0;
+        inline constexpr double movement_speed = 25.0;
         inline constexpr float move_sensitivity = 0.1f;
         inline constexpr double width = 0.6;
         inline constexpr double height = 1.8;
