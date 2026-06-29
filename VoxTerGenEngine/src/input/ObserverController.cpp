@@ -31,6 +31,7 @@ void ObserverController::GatherInput(const InputManager& input_manager)
     }
 
     input_direction_ = GetDirectionVector(input_manager);
+    horizontal_input_direction_ = GetHorizontalDirectionVector(input_manager);
     mouse_delta_ = input_manager.MouseDelta();
 }
 
@@ -63,8 +64,7 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
         }
         else
         {
-            acc_vec = input_direction_ * constants::physics::horizontal_acceleration;
-            acc_vec.y = 0.0;
+            acc_vec = horizontal_input_direction_ * constants::physics::horizontal_acceleration;
         }
 
         acc_vec.y += constants::physics::gravity;
@@ -142,6 +142,47 @@ glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input_mana
     if (glm::length2(dir_vec) > 0.0)
     {
        dir_vec = glm::normalize(dir_vec);
+    }
+
+    return dir_vec;
+}
+
+glm::dvec3 ObserverController::GetHorizontalDirectionVector(const InputManager& input_manager) const
+{
+    glm::dvec3 dir_vec(0.0);
+    glm::dvec3 horizontal_vec(0.0);
+
+    if (input_manager.KeyDown(SDL_SCANCODE_W))
+    {
+        horizontal_vec = observer_.Front();
+        horizontal_vec.y = 0.0;
+        dir_vec += horizontal_vec;
+    }
+
+    if (input_manager.KeyDown(SDL_SCANCODE_S))
+    {
+        horizontal_vec = observer_.Front();
+        horizontal_vec.y = 0.0;
+        dir_vec -= horizontal_vec;
+    }
+
+    if (input_manager.KeyDown(SDL_SCANCODE_A))
+    {
+        horizontal_vec = observer_.Right();
+        horizontal_vec.y = 0.0;
+        dir_vec -= horizontal_vec;
+    }
+
+    if (input_manager.KeyDown(SDL_SCANCODE_D))
+    {
+        horizontal_vec = observer_.Right();
+        horizontal_vec.y = 0.0;
+        dir_vec += horizontal_vec;
+    }
+
+    if (glm::length2(dir_vec) > 0.0)
+    {
+        dir_vec = glm::normalize(dir_vec);
     }
 
     return dir_vec;

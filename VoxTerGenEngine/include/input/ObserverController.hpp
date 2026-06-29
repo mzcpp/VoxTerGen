@@ -20,6 +20,7 @@ private:
 	bool noclip_;
 
 	glm::dvec3 input_direction_;
+	glm::dvec3 horizontal_input_direction_;
 	glm::vec2 mouse_delta_;
 
 public:
@@ -38,6 +39,8 @@ public:
 	void ApplyChanges(Camera& camera);
 
 	glm::dvec3 GetDirectionVector(const InputManager& input_manager) const;
+
+	glm::dvec3 GetHorizontalDirectionVector(const InputManager& input_manager) const;
 
 	glm::dvec3 GetHorizontalVelocityVector(glm::dvec3 dir_vec) const noexcept;
 
