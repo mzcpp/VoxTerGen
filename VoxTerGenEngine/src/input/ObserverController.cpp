@@ -18,6 +18,7 @@
 ObserverController::ObserverController(Observer& observer) : 
     observer_(observer), 
     noclip_(true), 
+    jump_requested_(false), 
     input_direction_(0.0), 
     mouse_delta_(0.0f)
 {
@@ -28,6 +29,11 @@ void ObserverController::GatherInput(const InputManager& input_manager)
     if (input_manager.KeyPressed(SDL_SCANCODE_F))
     {
         ToggleNoclip();
+    }
+
+    if (input_manager.KeyPressed(SDL_SCANCODE_SPACE) && !noclip_)
+    {
+        jump_requested_ = true;
     }
 
     input_direction_ = GetDirectionVector(input_manager);
@@ -60,7 +66,7 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
 
         if (glm::length2(input_direction_) == 0.0)
         {
-            DecayObserverVelocity(constants::physics::horizontal_friction);
+            DecayObserverHorizontalVelocity(constants::physics::horizontal_friction);
         }
         else
         {
@@ -69,8 +75,14 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
 
         acc_vec.y += constants::physics::gravity;
 
+        if (jump_requested_ && observer_.GetMovementState(MovementState::GROUNDED))
+        {
+            observer_.velocity_ == constants::physics::jump_velocity;
+            observer_.SetMovementState(MovementState::AIRBORNE);
+        }
+
         observer_.velocity_ += acc_vec * constants::engine::tick_dt;
-        ClampObserverVelocity(10.0);
+        ClampObserverHorizontalVelocity(10.0);
         
         displacement_vector = observer_.velocity_ * constants::engine::tick_dt;
 
@@ -91,6 +103,7 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
     }
 
     ApplyDisplacementVector(displacement_vector, camera);
+    jump_requested_ = false;
 }
 
 void ObserverController::ApplyChanges(Camera& camera)
@@ -127,10 +140,6 @@ glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input_mana
         if (noclip_)
         {
             dir_vec += constants::math::world_up;
-        }
-        else
-        {
-            // JUMP
         }
     }
 
@@ -335,7 +344,7 @@ void ObserverController::ToggleNoclip()
     }
 }
 
-void ObserverController::DecayObserverVelocity(double friction)
+void ObserverController::DecayObserverHorizontalVelocity(double friction)
 {
     const glm::dvec2 horizontal_velocity = { observer_.velocity_.x, observer_.velocity_.z };
     const double horizontal_speed = glm::length(horizontal_velocity);
@@ -349,7 +358,7 @@ void ObserverController::DecayObserverVelocity(double friction)
     }
 }
 
-void ObserverController::ClampObserverVelocity(double max)
+void ObserverController::ClampObserverHorizontalVelocity(double max)
 {
     const glm::dvec2 horizontal_velocity = { observer_.velocity_.x, observer_.velocity_.z };
     const double horizontal_speed = glm::length(horizontal_velocity);

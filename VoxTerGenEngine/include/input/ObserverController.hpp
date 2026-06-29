@@ -18,6 +18,7 @@ class ObserverController
 private:
 	Observer& observer_;
 	bool noclip_;
+	bool jump_;
 
 	glm::dvec3 input_direction_;
 	glm::dvec3 horizontal_input_direction_;
