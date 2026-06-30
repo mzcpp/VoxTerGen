@@ -1,10 +1,12 @@
 #ifndef CHUNK_MANAGER_HPP
 #define CHUNK_MANAGER_HPP
 
+#include "utils/Hash.hpp"
+
+#include "graphics/Camera.hpp"
+
 #include "world/Chunk.hpp"
 #include "world/Block.hpp"
-#include "utils/Hash.hpp"
-#include "graphics/Camera.hpp"
 
 #include <glm/vec2.hpp>
 
@@ -31,13 +33,13 @@ public:
 
 	std::unique_ptr<Mesh> BuildChunkMesh(Chunk& chunk);
 
-	Block WorldBlockQuery(const glm::ivec2& current_chunk_coord, const glm::ivec3& block_coords) const;
+	BlockInfo WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const;
 
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
 
 	void PushChunkIntoQueue(Chunk* chunk);
 
-	glm::ivec2 GetChunkCoords(const glm::dvec3& pos) noexcept;
+	glm::ivec2 GetChunkCoords(glm::dvec3 pos) const noexcept;
 
 	// TODO: TEMPORARY CHUNK FILL - REMOVE LATER!
 	void FillChunkTmp(Chunk& chunk);

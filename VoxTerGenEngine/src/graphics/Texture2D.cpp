@@ -94,7 +94,7 @@ namespace TextureUtils
     {
        glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &texture_id_);
 
-       
+       // TODO
 
        glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_S, wrap_s);
        glTextureParameteri(texture_id_, GL_TEXTURE_WRAP_T, wrap_t);

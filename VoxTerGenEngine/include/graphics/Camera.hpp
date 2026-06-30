@@ -3,8 +3,8 @@
 
 #include "utils/Constants.hpp"
 
-#include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
 
 #include <array>
 
@@ -16,8 +16,8 @@
  */
 struct Plane
 {
-	glm::vec3 normal_;
-	float dist_;
+    glm::vec3 normal_ = { 0.0f, 0.0f, 0.0f };
+	float dist_ = 0.0f;
 };
 
 class CameraController;
@@ -38,7 +38,6 @@ private:
 	glm::vec3 front_;
 	glm::vec3 up_;
 	glm::vec3 right_;
-	glm::vec3 world_up_;
 
 	float yaw_;
 	float pitch_;
@@ -57,37 +56,31 @@ private:
 	float prev_yaw_;
 	float prev_pitch_;
 
+    glm::dvec3 fps_offset_;
+
 	bool enabled_movement_;
-	bool changed_;
-	bool moving_;
+    bool enabled_rotation_;
+    bool enabled_zoom_;
+	bool stale_;
 
 public:
     /**
-     * @brief Constructs a Camera with optional initial position, up vector, yaw, and pitch.
+     * @brief Constructs a Camera with initial position, up vector, yaw, and pitch.
      *
-     * @param position Initial position in world space (default: origin)
-     * @param up Up vector (default: world Y-axis)
+     * @param position Initial position in world space
      * @param yaw Initial yaw angle in degrees
      * @param pitch Initial pitch angle in degrees
      */
-    Camera(glm::vec3 position = glm::vec3(10.0f, 15.0f, 10.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
-        float yaw = constants::camera::yaw, float pitch = constants::camera::pitch);
+    Camera(
+        glm::dvec3 position = constants::geometry::spawn_point, 
+        float yaw = constants::camera::yaw, 
+        float pitch = constants::camera::pitch);
 
     Camera(const Camera& other) = delete;
     Camera& operator=(const Camera& other) = delete;
 
     Camera(Camera&& other) = delete;
     Camera& operator=(Camera&& other) = delete;
-
-    /**
-     * @brief Stores the camera's state for interpolation in the next frame.
-     */
-    void PreTick();
-
-	/**
-	 * @brief Resets flags at the end of frame.
-	 */
-	void EndTick();
 
     /**
      * @brief Updates the camera state for the current frame.
@@ -124,7 +117,7 @@ public:
 	 * 
      * @return True if the point is inside the frustum, false otherwise
      */
-    bool PointInsideFrustum(const glm::vec3& point) const;
+    bool PointInsideFrustum(glm::vec3 point) const;
 
     /**
      * @brief Performs a sanity check on the frustum.
@@ -136,7 +129,7 @@ public:
     /**
      * @brief Prints the camera's position, orientation, and vectors to the logger.
      */
-    void PrintCamera() const;
+    void LogCameraData() const;
 
     /**
      * @brief Prints the six frustum planes to the logger.
@@ -150,22 +143,30 @@ public:
 	glm::vec3 Front() const noexcept { return front_; }
 	glm::vec3 Up() const noexcept { return up_; }
 	glm::vec3 Right() const noexcept { return right_; }
-	glm::vec3 WorldUp() const noexcept { return world_up_; }
 	float Yaw() const noexcept { return yaw_; }
 	float Pitch() const noexcept { return pitch_; }
 	float Zoom() const noexcept { return zoom_; }
 	const std::array<Plane, 6>& GetFrustumPlanes() const noexcept { return frustum_planes_; }
 	bool EnabledMovement() const noexcept { return enabled_movement_; }
-	bool Changed() const noexcept { return changed_; }
-	bool Moving() const noexcept { return moving_; }
+	bool EnabledRotation() const noexcept { return enabled_rotation_; }
+	bool EnabledZoom() const noexcept { return enabled_zoom_; }
+	bool Stale() const noexcept { return stale_; }
     glm::dvec3 PrevPos() const noexcept { return prev_position_; }
     float PrevYaw() const noexcept { return prev_yaw_; }
 	float PrevPitch() const noexcept { return prev_pitch_; }
+	glm::dvec3 FPSOffset() const noexcept { return fps_offset_; }
 
 	// Setters
-	void EnableMovement(bool value) noexcept { enabled_movement_ = value; }
-	void SetMoving(bool value) noexcept { moving_ = value; }
-    void SetPos(const glm::dvec3& new_pos) noexcept { position_ = new_pos; }
+	void SetEnableMovement(bool value) noexcept { enabled_movement_ = value; }
+	void SetEnableRotation(bool value) noexcept { enabled_rotation_ = value; }
+	void SetEnableZoom(bool value) noexcept { enabled_zoom_ = value; }
+	void SetStale(bool value) noexcept { stale_ = value; }
+    void SetPos(glm::dvec3 new_pos) noexcept { position_ = new_pos; }
+    void SetYaw(float yaw) noexcept { yaw_ = yaw; }
+    void SetPitch(float pitch) noexcept { pitch_ = pitch; }
+    void SetPrevPos(glm::dvec3 new_prev_pos) noexcept { prev_position_ = new_prev_pos; }
+    void SetPrevYaw(float new_prev_yaw) noexcept { prev_yaw_ = new_prev_yaw; }
+    void SetPrevPitch(float new_prev_pitch) noexcept { prev_pitch_ = new_prev_pitch; }
 
 private:
 	/**

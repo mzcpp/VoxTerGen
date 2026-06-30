@@ -1,26 +1,28 @@
 #ifndef CAMERA_CONTROLLER_HPP
 #define CAMERA_CONTROLLER_HPP
 
-#include "input/InputManager.hpp"
-#include "graphics/Camera.hpp"
 #include "utils/Constants.hpp"
+
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+
+class Camera;
+class InputManager;
 
 class CameraController
 {
 private:
     Camera& camera_;
-    float movement_speed_;
+    double movement_speed_;
     float move_sensitivity_;
     float zoom_sensitivity_;
 
+    glm::dvec3 move_dir_;
+    glm::vec2 mouse_delta_;
+    float mouse_wheel_;
+
 public:
-    CameraController(Camera& cam) :
-        camera_(cam),
-        movement_speed_(constants::camera::speed),
-        move_sensitivity_(constants::camera::move_sensitivity),
-        zoom_sensitivity_(constants::camera::zoom_sensitivity)
-    {
-    }
+    CameraController(Camera& camera);
 
     CameraController(const CameraController& other) = delete;
     CameraController& operator=(const CameraController& other) = delete;
@@ -28,11 +30,17 @@ public:
     CameraController(CameraController&& other) = delete;
     CameraController& operator=(CameraController&& other) = delete;
 
-    void ApplyInput(const InputManager& input, float delta_time, float aspect_ratio);
+    void GatherInput(const InputManager& input_manager);
 
-    void ApplyRotation(const InputManager& input);
+    void Tick();
 
-    void ApplyZoom(const InputManager& input);
+    void ApplyChanges(double frame_dt);
+
+    void ApplyKeyboardInput(double frame_dt);
+
+    void ApplyMouseRotation();
+
+    void ApplyZoom();
 };
 
 #endif // CAMERA_CONTROLLER_HPP

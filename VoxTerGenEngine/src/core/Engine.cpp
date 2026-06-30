@@ -9,47 +9,50 @@
 
 #include <SDL2/SDL.h>
 
-Engine::Engine() : camera_controller_(camera_)
+#include <iostream>
+
+Engine::Engine() : camera_controller_(camera_), observer_controller_(observer_)
 {
 }
 
 void Engine::Initialize()
 {
 	resource_manager_.InitializeResources();
+	
+	// TODO
+	//observer_.SetPosition(CalculateObserverPosition());
+	
 	world_.InitChunks(constants::chunk::default_radius);
+}
+
+void Engine::BeginFrame()
+{
+	input_manager_.ResetFrameState();
+}
+
+void Engine::GatherInput()
+{
+	observer_controller_.GatherInput(input_manager_);
+	camera_controller_.GatherInput(input_manager_);
+}
+
+void Engine::ApplyInput(double frame_dt)
+{
+	observer_controller_.ApplyChanges(camera_);
+	camera_controller_.ApplyChanges(frame_dt);
 }
 
 void Engine::HandleEvents(SDL_Event e)
 {
-	input_manager_.ResetFrameState();
 	input_manager_.ProcessEvent(e);
-
-	if (e.type == SDL_MOUSEMOTION)
-	{
-		camera_controller_.ApplyRotation(input_manager_);
-	}
-
-	if (e.type == SDL_MOUSEWHEEL)
-	{
-		camera_controller_.ApplyZoom(input_manager_);
-	}
-
-	//if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_f)
-	//{
-	//	for (auto& [world_coords, chunk] : world_.ChunkManagerRef().Chunks())
-	//	{
-	//		std::cout << "invalidated mesh!\n";
-	//		chunk->SetMeshValid(false);
-	//		world_.ChunkManagerRef().PushChunkIntoQueue(chunk.get());
-	//	}
-	//	//world_.ChunkManagerRef().GetChunkAt({ 0, 0 })->SetMeshValid(false);
-	//}
 }
 
 void Engine::Tick(float aspect_ratio)
 {
-	camera_.PreTick();
-	camera_controller_.ApplyInput(input_manager_, static_cast<float>(constants::engine::tick_dt), aspect_ratio);
+	observer_controller_.Tick(collision_system_, world_.ChunkManagerRef(), camera_);
+	camera_controller_.Tick();
+	
+	observer_.Tick();
 	camera_.Tick(aspect_ratio);
 
 	world_.Tick(chunk_event_queue_, camera_);
@@ -65,6 +68,10 @@ void Engine::Render(float alpha)
 	const glm::mat4 proj = camera_.ProjectionMatrix();
 
 	world_renderer_.RenderWorld(interpolated_view, proj, resource_manager_);
-	
-	camera_.EndTick();
+}
+
+glm::dvec3 Engine::CalculateObserverPosition() const
+{
+	// TODO, move this from engine! To chunk manager?
+	return glm::dvec3(0.0);
 }

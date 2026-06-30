@@ -178,7 +178,10 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\physics\DigitalDifferentialAnalyzer.cpp" />
+    <ClCompile Include="src\physics\CollisionSystem.cpp" />
     <ClCompile Include="include\external\glm\detail\glm.cpp" />
+    <ClCompile Include="src\input\ObserverController.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\core\Engine.cpp" />
     <ClCompile Include="src\core\ResourceManager.cpp" />
@@ -206,6 +209,9 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\world\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\physics\AABB.hpp" />
+    <ClInclude Include="include\physics\DigitalDifferentialAnalyzer.hpp" />
+    <ClInclude Include="include\physics\CollisionSystem.hpp" />
     <ClInclude Include="include\Constants.hpp" />
     <ClInclude Include="include\core\Application.hpp" />
     <ClInclude Include="include\core\Direction.hpp" />
@@ -579,6 +585,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\world\ChunkManager.hpp" />
     <ClInclude Include="include\world\Observer.hpp" />
     <ClInclude Include="include\world\World.hpp" />
+    <ClInclude Include="include\input\ObserverController.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\external\glm\detail\func_common.inl" />

@@ -9,48 +9,51 @@
 
 #include <algorithm>
 
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : 
+Camera::Camera(glm::dvec3 position, float yaw, float pitch) : 
 	position_(position), 
 	front_(glm::vec3(0.0f, 0.0f, -1.0f)), 
-	up_(glm::vec3(0.0f, 0.0f, 0.0f)), 
-	right_(glm::vec3(0.0f, 0.0f, 0.0f)), 
-	world_up_(up), 
+	up_(glm::vec3(0.0f)), 
+	right_(glm::vec3(0.0f)), 
 	yaw_(yaw), 
 	pitch_(pitch), 
 	zoom_(constants::camera::zoom), 
 	near_plane_(constants::camera::near_plane), 
 	far_plane_(constants::camera::far_plane), 
+	view_(0.0f), 
+	projection_(0.0f), 
+	view_proj_(0.0f), 
+	frustum_planes_(), 
 	prev_position_(position), 
 	prev_yaw_(yaw), 
 	prev_pitch_(pitch), 
-	enabled_movement_(true),
-	changed_(true), 
-	moving_(true)
+	enabled_movement_(false), 
+	enabled_rotation_(false), 
+	enabled_zoom_(true), 
+	stale_(true)
 {
-	UpdateCameraVectors();
-}
+	fps_offset_ =
+	{
+		static_cast<double>(constants::observer::width) / 2.0, 
+		static_cast<double>(constants::observer::height) * (3.0 / 4.0), 
+		static_cast<double>(constants::observer::depth) / 2.0
+	};
 
-void Camera::PreTick()
-{
-	prev_position_ = position_;
-	prev_yaw_ = yaw_;
-	prev_pitch_ = pitch_;
-}
-
-void Camera::EndTick()
-{
-	moving_ = false;
+	position_ += fps_offset_;
 }
 
 void Camera::Tick(float aspect_ratio)
 {
 	UpdateSimulationMatrices(aspect_ratio);
+	UpdateCameraVectors();
+	UpdateFrustumPlanes();
 
 #if _DEBUG
-	//PrintCamera();
+	//LogCameraData();
 	//PrintFrustumPlanes();
 	SanityCheckFrustum();
 #endif
+
+	stale_ = false;
 }
 
 glm::mat4 Camera::InterpolatedViewMatrix(float alpha) const
@@ -67,12 +70,17 @@ glm::mat4 Camera::InterpolatedViewMatrix(float alpha) const
 
 	front = glm::normalize(front);
 
-	return glm::lookAt(interp_pos, interp_pos + front, world_up_);
+	return glm::lookAt(interp_pos, interp_pos + front, constants::math::world_up);
 }
 
 void Camera::UpdateSimulationMatrices(float aspect_ratio)
 {
-	glm::vec3 pos = glm::vec3(position_);
+	if (!stale_)
+	{
+		return;
+	}
+
+	const glm::vec3 pos = glm::vec3(position_);
 	view_ = glm::lookAt(pos, pos + front_, up_);
 	projection_ = glm::perspective(glm::radians(zoom_), aspect_ratio, near_plane_, far_plane_);
 	view_proj_ = projection_ * view_;
@@ -80,6 +88,11 @@ void Camera::UpdateSimulationMatrices(float aspect_ratio)
 
 void Camera::UpdateCameraVectors()
 {
+	if (!stale_)
+	{
+		return;
+	}
+
 	const glm::vec3 front = { 
 		cos(glm::radians(yaw_)) * cos(glm::radians(pitch_)), 
 		sin(glm::radians(pitch_)), 
@@ -87,18 +100,16 @@ void Camera::UpdateCameraVectors()
 	};
 
 	front_ = glm::normalize(front);
-	right_ = glm::normalize(glm::cross(front_, world_up_));
+	right_ = glm::normalize(glm::cross(front_, constants::math::world_up));
 	up_ = glm::normalize(glm::cross(right_, front_));
 }
 
 void Camera::UpdateFrustumPlanes()
 {
-	if (!changed_)
+	if (!stale_)
 	{
 		return;
 	}
-
-	changed_ = false;
 
 	// Plane order: 0 = left, 1 = right, 2 = bottom, 3 = top, 4 = near, 5 = far
 
@@ -170,11 +181,11 @@ void Camera::UpdateFrustumPlanes()
 	}
 }
 
-bool Camera::PointInsideFrustum(const glm::vec3& point) const
+bool Camera::PointInsideFrustum(glm::vec3 point) const
 {
 	for (int i = 0; i < 6; ++i)
 	{
-		if (glm::dot(frustum_planes_[i].normal_, point) + frustum_planes_[i].dist_ < constants::math::float_epsilon)
+		if (glm::dot(frustum_planes_[i].normal_, point) + frustum_planes_[i].dist_ < constants::math::float_rel_epsilon)
 		{
 			//Logger::Log(LogLevel::ERROR, "Sanity fail: Point {} {} {} is outside frustum!", point.x, point.y, point.z);
 			return false;
@@ -198,7 +209,7 @@ bool Camera::SanityCheckFrustum() const
 	return true;
 }
 
-void Camera::PrintCamera() const
+void Camera::LogCameraData() const
 {
 	Logger::Log(LogLevel::DEBUG, "---------------------------- Camera Info ----------------------------");
 	Logger::Log(LogLevel::DEBUG, "Position: {} {} {}", position_.x, position_.y, position_.z);
@@ -212,8 +223,8 @@ void Camera::PrintCamera() const
 void Camera::PrintFrustumPlanes() const
 {
 	static const char* names[6] = { "Left", "Right", "Bottom", "Top", "Near", "Far" };
-
-	std::cout << "---------------------------- Frustum Planes ----------------------------\n";
+	
+	Logger::Log(LogLevel::DEBUG, "---------------------------- Frustum Planes ----------------------------");
 	
 	for (int i = 0; i < 6; ++i)
 	{

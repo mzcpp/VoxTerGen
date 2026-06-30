@@ -6,8 +6,8 @@
 #include <glm/glm.hpp>
 
 #include <cmath>
-#include <limits>
 #include <concepts>
+#include <limits>
 
 namespace math_utils
 {
@@ -21,7 +21,7 @@ namespace math_utils
      * @return true if |a| <= epsilon, false otherwise
      */
     template <std::floating_point T>
-    inline bool FloatingPointNearZero(T a, T epsilon = static_cast<T>(constants::math::float_epsilon))
+    inline bool FloatingPointNearZero(T a, T epsilon = static_cast<T>(constants::math::float_rel_epsilon))
     {
         return std::fabs(a) <= epsilon;
     }
@@ -37,7 +37,7 @@ namespace math_utils
      * @return true if the numbers are considered equal, false otherwise
      */
     template <std::floating_point T>
-    inline bool FloatingPointSame(T a, T b, T epsilon = static_cast<T>(constants::math::float_epsilon))
+    inline bool FloatingPointSame(T a, T b, T epsilon = static_cast<T>(constants::math::float_rel_epsilon))
     {
         return std::fabs(a - b) <= std::fmax(std::fabs(a), std::fabs(b)) * epsilon;
     }
@@ -53,7 +53,7 @@ namespace math_utils
      * @return true if a > b by more than epsilon, false otherwise
      */
     template <std::floating_point T>
-    inline bool FloatingPointGreaterThan(T a, T b, T epsilon = static_cast<T>(constants::math::float_epsilon))
+    inline bool FloatingPointGreaterThan(T a, T b, T epsilon = static_cast<T>(constants::math::float_rel_epsilon))
     {
         return (a - b) > std::fmax(std::fabs(a), std::fabs(b)) * epsilon;
     }
@@ -69,7 +69,7 @@ namespace math_utils
      * @return true if a < b by more than epsilon, false otherwise
      */
     template <std::floating_point T>
-    inline bool FloatingPointLessThan(T a, T b, T epsilon = static_cast<T>(constants::math::float_epsilon))
+    inline bool FloatingPointLessThan(T a, T b, T epsilon = static_cast<T>(constants::math::float_rel_epsilon))
     {
         return (b - a) > std::fmax(std::fabs(a), std::fabs(b)) * epsilon;
     }
@@ -97,7 +97,7 @@ namespace math_utils
      *
      * @return true if vectors are approximately equal, false otherwise
      */
-    inline bool Vec3Equal(const glm::vec3& a, const glm::vec3& b, float eps = constants::math::float_epsilon)
+    inline bool Vec3Equal(glm::vec3 a, glm::vec3 b, float eps = constants::math::float_rel_epsilon)
     {
         return glm::length(a - b) < eps;
     }
