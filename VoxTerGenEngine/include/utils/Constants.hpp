@@ -85,13 +85,13 @@ namespace constants
      */
     namespace physics
     {
-        inline constexpr double gravity = -9.81;
+        inline constexpr double gravity = -20.0;
         inline constexpr double swimming_gravity = -9.81;
         inline constexpr double collision_epsilon = 1e-8;
         inline constexpr double horizontal_acceleration = 140.0;
         inline constexpr double horizontal_friction = 140.0;
         inline constexpr double max_walk_speed = 10.0;
-        inline constexpr double jump_velocity = 5.0;
+        inline constexpr double jump_velocity = 7.0;
     } // namespace physics
 
     /**
