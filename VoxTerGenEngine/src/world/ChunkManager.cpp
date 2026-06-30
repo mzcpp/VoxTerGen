@@ -35,7 +35,7 @@ void ChunkManager::FillChunkTmp(Chunk& chunk)
 		{
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				chunk.BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(i));
+				chunk.BlockAt({ x, i, z }).SetType(static_cast<BlockType>(i));
 				//if (i >= 8)
 				//{
 				//	i = 1;

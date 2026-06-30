@@ -42,9 +42,10 @@ private:
 	double depth_;
 
 	double walk_acceleration_;
-	double walk_friction_ = 140.0;
-	double max_walk_speed_ = 10.0;
-    double jump_velocity_ = 7.0;
+	double walk_friction_;
+	double air_friction_;
+	double max_walk_speed_;
+    double jump_velocity_;
 	
 	bool moving_;
 

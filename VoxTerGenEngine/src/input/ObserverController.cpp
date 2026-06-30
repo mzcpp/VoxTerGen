@@ -44,17 +44,7 @@ void ObserverController::GatherInput(const InputManager& input_manager)
 
 void ObserverController::Tick(const CollisionSystem& collision_system, const ChunkManager& chunk_manager, Camera& camera)
 {
-    //observer_.PrintMovementState();
-    // TODO JUMPING BELOW A BLOCK COLLIDES AND CAMERA DOES NOT PENETRATE! Because you moved the pos_offset to height / 4.0
-    // 
-    //std::cout << static_cast<int>(observer_.GetMovementState()) << '\n';
-    /*std::cout << "------------------------------------------------------------" << '\n';
-    std::cout << "POSITION" << '\n';
-    std::cout << "Relative Block " << observer_.RelativeBlockPos(constants::observer::pos_offset).x << ' ' << observer_.RelativeBlockPos(constants::observer::pos_offset).y << ' ' << observer_.RelativeBlockPos(constants::observer::pos_offset).z << ' ' << '\n';
-    std::cout << "Absolute Block " << observer_.AbsoluteBlockPos(constants::observer::pos_offset).x << ' ' << observer_.AbsoluteBlockPos(constants::observer::pos_offset).y << ' ' << observer_.AbsoluteBlockPos(constants::observer::pos_offset).z << ' ' << '\n';
-    std::cout << "Observer Pos " << observer_.Pos().x << ' ' << observer_.Pos().y << ' ' << observer_.Pos().z << ' ' << '\n';
-    */
-
+    const MovementState movement_state = observer_.GetMovementState();
     glm::dvec3 displacement_vector(0.0);
 
     if (noclip_)
@@ -67,13 +57,13 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
 
         if (glm::length2(input_direction_) == 0.0)
         {
-            if (observer_.GetMovementState() == MovementState::GROUNDED)
+            if (movement_state == MovementState::GROUNDED)
             {
                 DecayObserverHorizontalVelocity(observer_.walk_friction_);
             }
-            else if (observer_.GetMovementState() == MovementState::AIRBORNE)
+            else if (movement_state == MovementState::AIRBORNE)
             {
-                DecayObserverHorizontalVelocity(observer_.walk_friction_ / 3.0);
+                DecayObserverHorizontalVelocity(observer_.air_friction_);
             }
         }
         else
@@ -83,9 +73,9 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
 
         acc_vec.y += constants::physics::gravity;
 
-        if (jump_requested_ && observer_.GetMovementState() == MovementState::GROUNDED)
+        if (jump_requested_ && movement_state == MovementState::GROUNDED)
         {
-            observer_.velocity_.y = observer_.jump_velocity;
+            observer_.velocity_.y = observer_.jump_velocity_;
             observer_.SetMovementState(MovementState::AIRBORNE);
         }
 
@@ -101,6 +91,10 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
         if (displacement_vector.y > desired_y)
         {
             observer_.SetMovementState(MovementState::GROUNDED);
+            observer_.velocity_.y = 0.0;
+        }
+        else if (displacement_vector.y < desired_y)
+        {
             observer_.velocity_.y = 0.0;
         }
         else

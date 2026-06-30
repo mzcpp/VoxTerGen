@@ -48,7 +48,7 @@ public:
         }
         
         const glm::ivec3 start_coords = observer.RelativeBlockPos(constants::observer::pos_offset) - glm::ivec3(1);
-        constexpr int neighbor_radius = 2;
+        constexpr int neighbor_radius = 5;
         std::vector<AABB> neighbor_blocks;
 
         for (int y = 0; y < static_cast<int>(std::ceil(observer.Height())) + neighbor_radius; ++y)
@@ -86,7 +86,7 @@ public:
         glm::dvec3 clipped_movement_vector = displacement_vector;
         AABB observer_aabb = { observer.Pos(), observer.Pos(observer_coords_offset) };
 
-        for (AABB neighbor_block : neighbor_blocks)
+        for (const AABB& neighbor_block : neighbor_blocks)
         {
             const double clipped_x = GetClipX(observer_aabb, neighbor_block, displacement_vector.x);
             clipped_movement_vector.x = displacement_vector.x > 0.0 ? std::fmin(clipped_x, clipped_movement_vector.x) : std::fmax(clipped_x, clipped_movement_vector.x);
@@ -95,7 +95,7 @@ public:
         observer_aabb.min_.x += clipped_movement_vector.x;
         observer_aabb.max_.x += clipped_movement_vector.x;
 
-        for (AABB neighbor_block : neighbor_blocks)
+        for (const AABB& neighbor_block : neighbor_blocks)
         {
             const double clipped_y = GetClipY(observer_aabb, neighbor_block, displacement_vector.y);
             clipped_movement_vector.y = displacement_vector.y > 0.0 ? std::fmin(clipped_y, clipped_movement_vector.y) : std::fmax(clipped_y, clipped_movement_vector.y);
@@ -104,7 +104,7 @@ public:
         observer_aabb.min_.y += clipped_movement_vector.y;
         observer_aabb.max_.y += clipped_movement_vector.y;
 
-        for (AABB neighbor_block : neighbor_blocks)
+        for (const AABB& neighbor_block : neighbor_blocks)
         {
             const double clipped_z = GetClipZ(observer_aabb, neighbor_block, displacement_vector.z);
             clipped_movement_vector.z = displacement_vector.z > 0.0 ? std::fmin(clipped_z, clipped_movement_vector.z) : std::fmax(clipped_z, clipped_movement_vector.z);
