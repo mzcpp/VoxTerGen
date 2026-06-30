@@ -67,23 +67,30 @@ void ObserverController::Tick(const CollisionSystem& collision_system, const Chu
 
         if (glm::length2(input_direction_) == 0.0)
         {
-            DecayObserverHorizontalVelocity(constants::physics::horizontal_friction);
+            if (observer_.GetMovementState() == MovementState::GROUNDED)
+            {
+                DecayObserverHorizontalVelocity(observer_.walk_friction_);
+            }
+            else if (observer_.GetMovementState() == MovementState::AIRBORNE)
+            {
+                DecayObserverHorizontalVelocity(observer_.walk_friction_ / 3.0);
+            }
         }
         else
         {
-            acc_vec = horizontal_input_direction_ * constants::physics::horizontal_acceleration;
+            acc_vec = horizontal_input_direction_ * observer_.walk_acceleration_;
         }
 
         acc_vec.y += constants::physics::gravity;
 
         if (jump_requested_ && observer_.GetMovementState() == MovementState::GROUNDED)
         {
-            observer_.velocity_.y = constants::physics::jump_velocity;
+            observer_.velocity_.y = observer_.jump_velocity;
             observer_.SetMovementState(MovementState::AIRBORNE);
         }
 
         observer_.velocity_ += acc_vec * constants::engine::tick_dt;
-        ClampObserverHorizontalVelocity(constants::physics::max_walk_speed);
+        ClampObserverHorizontalVelocity(observer_.max_walk_speed_);
         
         displacement_vector = observer_.velocity_ * constants::engine::tick_dt;
 

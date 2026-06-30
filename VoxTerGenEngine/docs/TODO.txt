@@ -1,4 +1,5 @@
-rethink error handling. For example in Chunk.cpp. There's BOTH throw AND LOG, or throw AND assert.
+********* REFACTOR *********
+
 put stuff into UBO
 PACK vertex into uint32
 	Fix grass texture issues
@@ -6,41 +7,21 @@ PACK vertex into uint32
 		popping textures when removing solid block above grass block -> before the grass was all dirt, now after rebuilding grass popped in!
 		add a bit information into the packed uint32 top_covered = 1/0;
 
-glMultiDrawElementsIndirect rendering!
-delegate stuff to compute shaders (meshing, ...)
-rethink hashing for noise
-
-occlusion culling on the chunk borders!
-Vertex pulling?, binary greedy meshing?, chunk object pooling?
 rethink the world block query implicit passing of chunk! at the call site it's not clear at all which chunk is the current!
-
-make class MeshBuilder a namespace
-add option in settings - whether or not water will change gravity
-interpolated_view!
-review the camera class thoroughly
-verify the camera is working correctly for big floats
-TODO comments in codebase
-SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix
-how big should the far_plane be??
-better math::DotGrad?
-
-tick rate - 20/60?
+rethink error handling. For example in Chunk.cpp. There's BOTH throw AND LOG, or throw AND assert.
 rework MathUtils
-glEnable(GL_FRAMEBUFFER_SRGB);
-vsync
-Test with multiple compilers, GPU's, etc.!
-VERY IMPORTANT, MAKE THE WINDOWS CORRECT SIZE BASED ON MONITOR SIZE SO IT DOES NOT CUTOFF LIKE THE MAZE GENERATOR ON MBA 13
+make class MeshBuilder a namespace
+move world_up into better nested namespace
+use & fix GetChunkCoords - math_utils
+rename math_utils & all namespaces using snake_case?
+rename MathUtils class?
+start simplifying constructors, for example in Texture2D, move parameters that belong together into struct Texture2DSettings, Observer, etc
 
-opengl/glad correct version check when init, initialization of subsystems review
-add Graphics Device Interface - move all graphics apis inits into it - App will own it along with engine
-
+add a proper templated Vec class into "VoxTerGenAlgorithms/utils/Math.hpp"
 create a single templated class for opensimplex, they are the same headers only different names! 
 	template <typename Variant>
 	class OpenSimplexNoise
-
-add a proper templated Vec class into "VoxTerGenAlgorithms/utils/Math.hpp"
-
-fix when looking down and holding 'w', sliding very slowly forward, pitch [-89,89] ?
+rethink hashing for noise, better math::DotGrad?
 
 sort all #includes by alphabetical order and these order rules:
 	// 1. Corresponding header
@@ -48,18 +29,30 @@ sort all #includes by alphabetical order and these order rules:
 	// 3. Third-party libraries
 	// 4. Project headers
 
+********* GRAPHICS & OPENGL *********
+
+Vertex pulling?, binary greedy meshing?, chunk object pooling?
+
+interpolated_view?!
+review the camera class thoroughly
+verify the camera is working correctly for big floats
+how big should the far_plane be??
+SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix
+VERY IMPORTANT, MAKE THE WINDOWS CORRECT SIZE BASED ON MONITOR SIZE SO IT DOES NOT CUTOFF LIKE THE MAZE GENERATOR ON MBA 13
+
+glEnable(GL_FRAMEBUFFER_SRGB);
+vsync
+tick rate - 20/60?
+opengl/glad correct version check when init, initialization of subsystems review
+add Graphics Device Interface - move all graphics apis inits into it - App will own it along with engine
+
+********* BUGS *********
+
+occlusion culling on the chunk borders!
 fix bug when running very fast, I fall through the floor
 fix bug when falling very fast, I fall through the floor
-rework camera - WoW style
 
-move world_up into better nested namespace
+********* NOTES *********
+
 when the spawn point is found outside 0,0 chunk, need to stream the chunks from that spawn point chunk!
-
-
-use & fix GetChunkCoords - math_utils
-rename math_utils & all namespaces using snake_case
-rename MathUtils class
-
-start simplifying constructors, for example in Texture2D, move parameters that belong together into struct Texture2DSettings, Observer, etc
-
-Wireframe of chunks!
+Test with multiple compilers, GPU's, etc.!

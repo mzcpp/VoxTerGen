@@ -23,6 +23,10 @@ Observer::Observer(const glm::dvec3 position, float yaw, float pitch) :
 	width_(constants::observer::width), 
 	height_(constants::observer::height), 
 	depth_(constants::observer::depth), 
+	walk_acceleration_(140.0), 
+	walk_friction_(140.0), 
+	max_walk_speed_(10.0), 
+	jump_velocity_(7.0), 
 	moving_(true)
 {
 	UpdateObserverVectors();
