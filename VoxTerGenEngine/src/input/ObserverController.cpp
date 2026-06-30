@@ -19,6 +19,7 @@ ObserverController::ObserverController(Observer& observer) :
     observer_(observer), 
     noclip_(true), 
     jump_requested_(false), 
+    horizontal_input_direction_(0.0), 
     input_direction_(0.0), 
     mouse_delta_(0.0f)
 {
@@ -31,7 +32,7 @@ void ObserverController::GatherInput(const InputManager& input_manager)
         ToggleNoclip();
     }
 
-    if (input_manager.KeyPressed(SDL_SCANCODE_SPACE) && !noclip_)
+    if (input_manager.KeyDown(SDL_SCANCODE_SPACE) && !noclip_)
     {
         jump_requested_ = true;
     }
