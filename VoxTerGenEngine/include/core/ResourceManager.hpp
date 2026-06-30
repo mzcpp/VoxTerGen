@@ -21,7 +21,7 @@ private:
     std::unordered_map<std::string, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>> sounds_;
 
 public:
-    ResourceManager() = default;
+    ResourceManager();
 
     void InitializeResources();
 

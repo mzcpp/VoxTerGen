@@ -1,8 +1,6 @@
 #ifndef CONSTANTS_HPP
 #define CONSTANTS_HPP
 
-#include <glm/vec3.hpp>
-
 #include <string_view>
 
 /**
@@ -59,7 +57,7 @@ namespace constants
         inline constexpr int depth = 16;
         inline constexpr int height = 128;
         inline constexpr int size = width * depth * height;
-        inline constexpr int default_radius = 1;
+        inline constexpr int default_radius = 3;
     } // namespace chunk
 
     /**
@@ -67,28 +65,8 @@ namespace constants
      */
     namespace math
     {
-        inline constexpr float float_abs_epsilon = 1e-6f;
-        inline constexpr float float_rel_epsilon = 1e-5f;
-        inline constexpr double double_abs_epsilon = 1e-12;
-        inline constexpr double double_rel_epsilon = 1e-9;
-        inline constexpr glm::vec3 world_up = { 0.0f, 1.0f, 0.0f };
+        inline constexpr float float_epsilon = 1e-5f;
     } // namespace math
-
-    namespace geometry
-    {
-        inline constexpr glm::vec3 world_up = { 0.0f, 1.0f, 0.0f };
-        inline constexpr glm::dvec3 spawn_point = { 0.0, 5.0, 0.0 };
-    } // namespace geometry
-
-    /**
-     * @brief Physics-related constants.
-     */
-    namespace physics
-    {
-        inline constexpr double gravity = -20.0;
-        inline constexpr double swimming_gravity = -9.81;
-        inline constexpr double collision_epsilon = 1e-8;
-    } // namespace physics
 
     /**
      * @brief Paths to resources.
@@ -104,15 +82,15 @@ namespace constants
     } // namespace paths
 
     /**
-     * @brief Camera-related constants for default orientation, movement, yaw, pitch and frustum.
+     * @brief Camera-related constants for default orientation, movement, and frustum.
      */
     namespace camera
     {
-        inline constexpr float yaw = 0.0f;
-        inline constexpr float pitch = 0.0f;
+        inline constexpr float yaw = -46.0f;
+        inline constexpr float pitch = -20.0f;
         inline constexpr float pitch_min = -89.0f;
         inline constexpr float pitch_max = 89.0f;
-        inline constexpr double movement_speed = 10.0;
+        inline constexpr float speed = 10.0f;
         inline constexpr float move_sensitivity = 0.1f;
         inline constexpr float zoom_sensitivity = 1.0f;
         inline constexpr float zoom = 45.0f;
@@ -121,27 +99,6 @@ namespace constants
         inline constexpr float near_plane = 0.1f;
         inline constexpr float far_plane = 450.0f;
     } // namespace camera
-
-    /**
-     * @brief Observer-related constants for default orientation, movement, yaw, and pitch.
-     */
-    namespace observer
-    {
-        inline constexpr float yaw = 0.0f;
-        inline constexpr float pitch = 0.0f;
-        inline constexpr float pitch_min = -89.0f;
-        inline constexpr float pitch_max = 89.0f;
-        inline constexpr double movement_speed = 25.0;
-        inline constexpr float move_sensitivity = 0.1f;
-        inline constexpr double width = 0.6;
-        inline constexpr double height = 1.8;
-        inline constexpr double depth = 0.6;
-        inline constexpr glm::dvec3 pos_offset = {
-            constants::observer::width / 2.0,
-            constants::observer::height / 4.0,
-            constants::observer::depth / 2.0
-        };
-    } // namespace observer
 
     /**
      * @brief Texture-related constants such as atlas size, columns, and rows.

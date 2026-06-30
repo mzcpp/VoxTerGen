@@ -1,19 +1,15 @@
 #ifndef MESH_BUILDER_HPP
 #define MESH_BUILDER_HPP
 
-#include "core/Direction.hpp"
-
 #include "mesh/Mesh.hpp"
-
-#include "render/Material.hpp"
-
-#include "utils/constants.hpp"
-
 #include "world/Chunk.hpp"
 #include "world/Block.hpp"
+#include "utils/constants.hpp"
+#include "core/Direction.hpp"
+#include "render/Material.hpp"
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
 
 #include <concepts>
 #include <cstdint>
@@ -35,7 +31,8 @@ struct MergedQuad
 };
 
 template <typename Fnc> 
-concept BlockQuery = std::invocable<Fnc, glm::ivec3> && std::convertible_to<std::invoke_result_t<Fnc, glm::ivec3>, BlockInfo>;
+concept BlockQuery = std::invocable<Fnc, const glm::ivec3&> &&
+	std::convertible_to<std::invoke_result_t<Fnc, const glm::ivec3&>, Block>;
 
 class MeshBuilder final
 {
@@ -44,12 +41,12 @@ public:
 	MeshBuilder(const MeshBuilder& other) = delete;
 	MeshBuilder& operator=(const MeshBuilder& other) = delete;
 
-	static Mesh BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query);
+	static Mesh BuildMeshNaive(const glm::ivec2& chunk_world_coords, BlockQuery auto&& world_block_query);
 	
 	static Mesh BuildMeshGreedy(BlockQuery auto&& world_block_query);
 
 private:
-	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_coords, Direction dir, Mesh& chunk_mesh);
+	static void SaveQuadMesh(const glm::ivec2& chunk_world_coords, BlockType type, const glm::ivec3& block_coords, Direction dir, Mesh& chunk_mesh);
 
 	static std::uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 
@@ -64,7 +61,7 @@ private:
 	static void MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh);
 };
 
-Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query)
+Mesh MeshBuilder::BuildMeshNaive(const glm::ivec2& chunk_world_coords, BlockQuery auto&& world_block_query)
 {
 	Mesh chunk_mesh;
 
@@ -74,23 +71,21 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&
 		{
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				const glm::ivec3 block_coords = { x, y, z };
-
-				if (!world_block_query(block_coords).block_.IsSolid())
+				if (!world_block_query({ x, y, z }).IsSolid())
 				{
 					continue;
 				}
 
 				for (Direction dir : AllDirections())
 				{
-					const glm::ivec3 neighbor_coords = NeighborCoords(block_coords, dir);
+					const glm::ivec3 neighbor_coords = NeighborCoords({ x, y, z }, dir);
 
-					if (world_block_query(neighbor_coords).block_.IsSolid())
+					if (world_block_query(neighbor_coords).IsSolid())
 					{
 						continue;
 					}
 
-					SaveQuadMesh(chunk_world_coords, world_block_query(block_coords).Type(), block_coords, dir, chunk_mesh);
+					SaveQuadMesh(chunk_world_coords, world_block_query({ x, y, z }).Type(), { x, y, z }, dir, chunk_mesh);
 				}
 			}
 		}
@@ -155,33 +150,24 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 			glm::ivec3 left_query_coords = { 0, 0, 0 };
 			glm::ivec3 right_query_coords = { 0, 0, 0 };
 
-			switch (major_axis)
-			{
-			case MajorAxis::X:
+			if (major_axis == MajorAxis::X)
 			{
 				left_query_coords = { major_axis_index, cross_axis_1_index, cross_axis_2_index };
 				right_query_coords = { major_axis_index + 1, cross_axis_1_index, cross_axis_2_index };
-				break;
 			}
-			case MajorAxis::Y:
+			else if (major_axis == MajorAxis::Y)
 			{
 				left_query_coords = { cross_axis_2_index, major_axis_index, cross_axis_1_index };
 				right_query_coords = { cross_axis_2_index, major_axis_index + 1, cross_axis_1_index };
-				break;
 			}
-			case MajorAxis::Z:
+			else
 			{
 				left_query_coords = { cross_axis_2_index, cross_axis_1_index, major_axis_index };
 				right_query_coords = { cross_axis_2_index, cross_axis_1_index, major_axis_index + 1 };
-				break;
-			}
-			default:
-				assert(false && "Invalid major axis!");
-				break;
 			}
 
-			const Block& left_block = world_block_query(left_query_coords).block_;
-			const Block& right_block = world_block_query(right_query_coords).block_;
+			const Block& left_block = world_block_query(left_query_coords);
+			const Block& right_block = world_block_query(right_query_coords);
 
 			const bool left_block_inside = major_axis_index != -1;
 			const bool right_block_inside = (major_axis_index + 1) != major_axis_size;

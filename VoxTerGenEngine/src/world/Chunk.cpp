@@ -26,12 +26,12 @@ Chunk::Chunk(ChunkID id, glm::ivec2 world_coords) :
 {
 }
 
-Block& Chunk::BlockAt(glm::ivec3 coords, bool check_index)
+Block& Chunk::BlockAt(const glm::ivec3& coords, bool check_index)
 {
 	return const_cast<Block&>(std::as_const(*this).BlockAt(coords, check_index));
 }
 
-const Block& Chunk::BlockAt(glm::ivec3 coords, bool check_index) const
+const Block& Chunk::BlockAt(const glm::ivec3& coords, bool check_index) const
 {
 	if (check_index && !IsValidIndex(coords))
 	{
@@ -58,7 +58,7 @@ glm::ivec3 Chunk::Pos(int index) const
 	return { x, y, z };
 }
 
-bool Chunk::IsValidIndex(glm::ivec3 coords) const
+bool Chunk::IsValidIndex(const glm::ivec3& coords) const
 {
 	const bool x_range_valid = coords.x >= 0 && coords.x < constants::chunk::width;
 	const bool y_range_valid = coords.y >= 0 && coords.y < constants::chunk::height;
@@ -67,7 +67,7 @@ bool Chunk::IsValidIndex(glm::ivec3 coords) const
 	return x_range_valid && y_range_valid && z_range_valid;
 }
 
-Block Chunk::NeighborAt(glm::ivec3 coords, Direction dir) const
+Block Chunk::NeighborAt(const glm::ivec3& coords, Direction dir) const
 {
 	const std::size_t dir_index = static_cast<std::size_t>(dir);
 	
@@ -82,7 +82,7 @@ Block Chunk::NeighborAt(glm::ivec3 coords, Direction dir) const
 	return BlockAt({ coords.x + offset.x, coords.y + offset.y, coords.z + offset.z } );
 }
 
-Block& Chunk::NeighborRefAt(glm::ivec3 coords, Direction dir)
+Block& Chunk::NeighborRefAt(const glm::ivec3& coords, Direction dir)
 {
 	if (!IsValidIndex(coords))
 	{
@@ -97,7 +97,7 @@ Block& Chunk::NeighborRefAt(glm::ivec3 coords, Direction dir)
 	return BlockAt({ coords.x + offset.x, coords.y + offset.y, coords.z + offset.z });
 }
 
-int Chunk::Index(glm::ivec3 coords) const
+int Chunk::Index(const glm::ivec3& coords) const
 {
 	return coords.x + constants::chunk::width * (coords.z + constants::chunk::depth * coords.y);
 }

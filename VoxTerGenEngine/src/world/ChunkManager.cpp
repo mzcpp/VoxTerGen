@@ -1,9 +1,7 @@
 #include "world/ChunkManager.hpp"
 #include "mesh/MeshBuilder.hpp"
-
-#include "utils/MathUtils.hpp"
-
 #include "world/Chunk.hpp"
+#include "utils/MathUtils.hpp"
 
 #include <queue>
 #include <cmath>
@@ -18,28 +16,13 @@ void ChunkManager::FillChunkTmp(Chunk& chunk)
 {
 	static int i = 1;
 
-	//chunk.BlockAt({ 0, 0, 0 }).SetType(static_cast<BlockType>(i));
-	//chunk.BlockAt({ 1, 0, 0 }).SetType(static_cast<BlockType>(i));
-	////chunk.BlockAt({ 2, 2, 0 }).SetType(static_cast<BlockType>(1));
-
-	//if (++i >= 8)
-	//{
-	//	i = 1;
-	//}
-
-	//return;
-
 	for (int y = 0; y < constants::chunk::height; ++y)
 	{
 		for (int z = 0; z < constants::chunk::depth; ++z)
 		{
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				chunk.BlockAt({ x, i, z }).SetType(static_cast<BlockType>(i));
-				//if (i >= 8)
-				//{
-				//	i = 1;
-				//}
+				chunk.BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(i));
 			}
 		}
 	}
@@ -77,7 +60,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 
 void ChunkManager::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
-	//LoadChunks(chunk_event_queue, camera);
+	LoadChunks(chunk_event_queue, camera);
 	BuildChunkMeshes(chunk_event_queue);
 }
 
@@ -152,7 +135,7 @@ std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk)
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 		
 	*chunk_mesh = MeshBuilder::BuildMeshGreedy(
-		[this, &chunk](glm::ivec3 block_coords)
+		[this, &chunk](const glm::ivec3& block_coords)
 		{
 			return WorldBlockQuery(chunk.WorldCoords(), block_coords);
 		}
@@ -173,33 +156,28 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 	return chunk_it->second.get();
 }
 
-BlockInfo ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const
+Block ChunkManager::WorldBlockQuery(const glm::ivec2& current_chunk_coord, const glm::ivec3& block_coords) const
 {	
 	if (block_coords.y < 0 || block_coords.y >= constants::chunk::height)
 	{
-		return { Block(), glm::ivec3(0) };
+		return Block();
 	}
 	
 	const int x_chunk_offset = math_utils::FloorDiv(block_coords.x, constants::chunk::width);
 	const int z_chunk_offset = math_utils::FloorDiv(block_coords.z, constants::chunk::depth);
-	const glm::ivec3 target_block_coords = { 
+	const glm::ivec3 target_block_coords = 
+	{ 
 		block_coords.x - (x_chunk_offset * constants::chunk::width), 
 		block_coords.y, 
 		block_coords.z - (z_chunk_offset * constants::chunk::depth) 
 	};
-
-	const glm::ivec2 chunk_coords = { current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset };
-	const glm::ivec3 absolute_block_coords = { 
-		target_block_coords.x + chunk_coords.x * constants::chunk::width, 
-		target_block_coords.y, 
-		target_block_coords.z + chunk_coords.y * constants::chunk::depth };
 	
-	if (const Chunk* target_chunk = GetChunkAt(chunk_coords))
+	if (const Chunk* target_chunk = GetChunkAt({ current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset }))
 	{
-		return { target_chunk->BlockAt(target_block_coords), absolute_block_coords };
+		return target_chunk->BlockAt(target_block_coords);
 	}
 
-	return { Block(), glm::ivec3(0) };
+	return Block();
 }
 
 void ChunkManager::PushChunkIntoQueue(Chunk* chunk)
@@ -207,7 +185,7 @@ void ChunkManager::PushChunkIntoQueue(Chunk* chunk)
 	chunk_build_queue_.push(chunk);
 }
 
-glm::ivec2 ChunkManager::GetChunkCoords(glm::dvec3 pos) const noexcept
+glm::ivec2 ChunkManager::GetChunkCoords(const glm::dvec3& pos) noexcept
 {
 	return { static_cast<int>(std::floor(pos.x / constants::chunk::width)), static_cast<int>(std::floor(pos.z / constants::chunk::depth)) };
 }

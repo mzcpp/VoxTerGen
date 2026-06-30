@@ -1,7 +1,5 @@
 #include "render/WorldRenderer.hpp"
-
 #include "core/ResourceManager.hpp"
-
 #include "world/Chunk.hpp"
 
 #include <glad/glad.h>

@@ -1,13 +1,10 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
-#include "core/Engine.hpp"
-
-#include "input/CameraController.hpp"
 #include "input/InputManager.hpp"
-
 #include "graphics/Camera.hpp"
-
+#include "input/CameraController.hpp"
+#include "core/Engine.hpp"
 
 struct SDL_Window;
 struct TTF_Font;

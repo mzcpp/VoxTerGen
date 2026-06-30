@@ -1,5 +1,4 @@
-********* REFACTOR *********
-
+rethink error handling. For example in Chunk.cpp. There's BOTH throw AND LOG, or throw AND assert.
 put stuff into UBO
 PACK vertex into uint32
 	Fix grass texture issues
@@ -7,52 +6,33 @@ PACK vertex into uint32
 		popping textures when removing solid block above grass block -> before the grass was all dirt, now after rebuilding grass popped in!
 		add a bit information into the packed uint32 top_covered = 1/0;
 
-rethink the world block query implicit passing of chunk! at the call site it's not clear at all which chunk is the current!
-rethink error handling. For example in Chunk.cpp. There's BOTH throw AND LOG, or throw AND assert.
-rework MathUtils
-make class MeshBuilder a namespace
-move world_up into better nested namespace
-use & fix GetChunkCoords - math_utils
-rename math_utils & all namespaces using snake_case?
-rename MathUtils class?
-start simplifying constructors, for example in Texture2D, move parameters that belong together into struct Texture2DSettings, Observer, etc
-
-add a proper templated Vec class into "VoxTerGenAlgorithms/utils/Math.hpp"
-create a single templated class for opensimplex, they are the same headers only different names! 
-	template <typename Variant>
-	class OpenSimplexNoise
-rethink hashing for noise, better math::DotGrad?
-
-sort all #includes by alphabetical order and these order rules:
-	// 1. Corresponding header
-	// 2. Standard library
-	// 3. Third-party libraries
-	// 4. Project headers
-
-********* GRAPHICS & OPENGL *********
-
+glMultiDrawElementsIndirect rendering!
+rethink hashing for noise
+transparent water
+occlusion culling on the chunk borders!
 Vertex pulling?, binary greedy meshing?, chunk object pooling?
+add cubemap, texture2d function!
+make class MeshBuilder a namespace
 
-interpolated_view?!
+interpolated_view!
 review the camera class thoroughly
 verify the camera is working correctly for big floats
-how big should the far_plane be??
+TODO comments in codebase
 SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix
-VERY IMPORTANT, MAKE THE WINDOWS CORRECT SIZE BASED ON MONITOR SIZE SO IT DOES NOT CUTOFF LIKE THE MAZE GENERATOR ON MBA 13
+
+opengl/glad correct version check when init, initialization of subsystems review
+better math::DotGrad?
+
+tick rate - 20/60?
 
 glEnable(GL_FRAMEBUFFER_SRGB);
 vsync
-tick rate - 20/60?
-opengl/glad correct version check when init, initialization of subsystems review
+Test with multiple compilers!
+VERY IMPORTANT, MAKE THE WINDOWS CORRECT SIZE BASED ON MONITOR SIZE SO IT DOES NOT CUTOFF LIKE THE MAZE GENERATOR ON MBA 13
+
 add Graphics Device Interface - move all graphics apis inits into it - App will own it along with engine
+create a single templated class for opensimplex, they are the same headers only different names! 
+	template <typename Variant>
+	class OpenSimplexNoise
 
-********* BUGS *********
-
-occlusion culling on the chunk borders!
-fix bug when running very fast, I fall through the floor
-fix bug when falling very fast, I fall through the floor
-
-********* NOTES *********
-
-when the spawn point is found outside 0,0 chunk, need to stream the chunks from that spawn point chunk!
-Test with multiple compilers, GPU's, etc.!
+add a proper templated Vec class into "VoxTerGenAlgorithms/utils/Math.hpp"

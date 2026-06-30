@@ -4,13 +4,17 @@
 #include "utils/Logger.hpp"
 #include "utils/Constants.hpp"
 
-#include <SDL2_ttf/SDL_ttf.h>
-#include <SDL2_mixer/SDL_mixer.h>
+#include "SDL2_ttf/SDL_ttf.h"
+#include "SDL2_mixer/SDL_mixer.h"
 
 #include <glad/glad.h>
 
 #include <memory>
 #include <filesystem>
+
+ResourceManager::ResourceManager()
+{
+}
 
 void ResourceManager::InitializeResources()
 {

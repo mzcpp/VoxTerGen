@@ -1,10 +1,8 @@
 #include "core/Application.hpp"
-
 #include "utils/constants.hpp"
 #include "utils/Logger.hpp"
 
 #include <glad/glad/glad.h>
-
 #include <stb_image.h>
 
 #define SDL_MAIN_HANDLED
@@ -13,10 +11,11 @@
 #include <SDL2_ttf/SDL_ttf.h>
 #include <SDL2_mixer/SDL_mixer.h>
 
-#include <algorithm>
+#include <iostream>
+#include <vector>
 #include <cstdint>
 #include <string>
-#include <vector>
+#include <algorithm>
 
 Application::Application() :
 	initialized_image_(false),
@@ -91,8 +90,6 @@ void Application::Run()
 
 	while (running_)
 	{
-		engine_.BeginFrame();
-
 		const std::uint64_t now = SDL_GetPerformanceCounter();
 		const double elapsed = static_cast<double>(now - last_time) / static_cast<double>(SDL_GetPerformanceFrequency());
 
@@ -101,16 +98,12 @@ void Application::Run()
 
 		HandleEvents();
 
-		engine_.GatherInput();
-
 		while (delta >= constants::engine::tick_dt)
 		{
 			Tick();
 			delta -= constants::engine::tick_dt;
 			++ticks;
 		}
-
-		engine_.ApplyInput(elapsed);
 
 		const float alpha = std::clamp(static_cast<float>(delta / constants::engine::tick_dt), 0.0f, 1.0f);
 		//printf("%Lf\n", alpha);
@@ -238,7 +231,10 @@ bool Application::CreateWindow()
 		return false;
 	}
 
-	SDL_SetRelativeMouseMode(SDL_TRUE);
+	if (engine_.Camera().EnabledMovement())
+	{
+		SDL_SetRelativeMouseMode(SDL_TRUE);
+	}
 
 	return true;
 }
@@ -321,7 +317,7 @@ bool Application::InitOpenGL()
 	}
 
 #ifdef _DEBUG
-	//GetHardwareInfo();
+	GetHardwareInfo();
 #endif
 
 	if (IsSoftwareRenderer())
@@ -494,17 +490,7 @@ void Application::InitDebugGLCallback()
 			nullptr
 		);
 
-		// TODO
-		//glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-
-		glDebugMessageControl(
-			GL_DONT_CARE,
-			GL_DONT_CARE,
-			GL_DEBUG_SEVERITY_NOTIFICATION,
-			0,
-			nullptr,
-			GL_FALSE
-		);
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 	}
 }
 #endif

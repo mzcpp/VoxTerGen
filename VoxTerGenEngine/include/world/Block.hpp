@@ -2,9 +2,6 @@
 #define BLOCK_HPP
 
 #include <cstdint>
-#include <unordered_map>
-
-#include <glm/vec3.hpp>
 
 /**
  * @brief Enumeration of all possible block types in the world.
@@ -64,12 +61,6 @@ public:
     void SetType(BlockType type);
     void SetSunLight(std::uint8_t sun_light);
     void SetBlockLight(std::uint8_t block_light);
-};
-
-struct BlockInfo
-{
-    Block block_;
-    glm::ivec3 absolute_pos_;
 };
 
 #endif // BLOCK_HPP

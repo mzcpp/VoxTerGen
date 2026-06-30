@@ -54,12 +54,3 @@
 	//chunks_.begin()->second->BlockAt({ 0, 0, 1 }).SetType(BlockType::Grass);
 	//chunks_.begin()->second->BlockAt({ 2, 0, 1 }).SetType(BlockType::Bedrock);
 	//chunks_.begin()->second->BlockAt({ 2, 0, 1 }).SetType(BlockType::Bedrock);
-
-
-	chunk.BlockAt({ 0, 0, 0 }).SetType(static_cast<BlockType>(1));
-
-	std::cout << "------------------------------------------------------------" << '\n';
-	std::cout << "POSITION" << '\n';
-	std::cout << "Relative Block " << observer_.RelativeBlockPos(constants::observer::pos_offset).x << ' ' << observer_.RelativeBlockPos(constants::observer::pos_offset).y << ' ' << observer_.RelativeBlockPos(constants::observer::pos_offset).z << ' ' << '\n';
-	std::cout << "Absolute Block " << observer_.AbsoluteBlockPos(constants::observer::pos_offset).x << ' ' << observer_.AbsoluteBlockPos(constants::observer::pos_offset).y << ' ' << observer_.AbsoluteBlockPos(constants::observer::pos_offset).z << ' ' << '\n';
-	std::cout << "Observer Pos " << observer_.Pos().x << ' ' << observer_.Pos().y << ' ' << observer_.Pos().z << ' ' << '\n';

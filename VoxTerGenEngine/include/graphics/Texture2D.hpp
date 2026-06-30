@@ -1,7 +1,7 @@
 #ifndef TEXTURE_2D_HPP
 #define TEXTURE_2D_HPP
 
-#include <glad/glad.h>
+#include <glad/glad/glad.h>
 
 #include <string_view>
 #include <span>
