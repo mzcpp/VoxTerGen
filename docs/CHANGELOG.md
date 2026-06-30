@@ -18,6 +18,26 @@ The format follows Keep a Changelog and Semantic Versioning.
 
 ---
 
+## [0.5.0] - 30 June 2026
+
+### Added
+- Basic AABB collision detection and collision resolution against voxel terrain
+- Observer physics system
+- Walking with acceleration, friction and maximum movement speed
+- Gravity and jumping
+- Airborne and Grounded movement states
+- Noclip mode toggle
+- Fixed-timestep movement simulation
+- Horizontal movement independent of camera pitch
+- Velocity-based movement with collision clipping
+
+### Changed
+- Refactored observer movement to use acceleration and velocity instead of direct position changes
+- Separated input gathering from movement simulation
+- Camera now follows observer movement after physics simulation
+
+---
+
 ## [0.4.0] - 2 May 2026
 
 ### Added
