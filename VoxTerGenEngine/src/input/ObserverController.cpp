@@ -8,7 +8,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
-#include <glm/gtx/string_cast.hpp>
 
 #include <SDL2/SDL.h>
 
