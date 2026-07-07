@@ -5,44 +5,57 @@
 #include <glm/gtx/norm.hpp>
 #include <glm/vec3.hpp>
 
-RaycastResult DigitalDifferentialAnalyzer::CastRay(glm::dvec3 start_pos, glm::dvec3 dir, BlockQuery auto&& world_block_query)
+RaycastResult DigitalDifferentialAnalyzer::CastRay(glm::dvec3 start_pos, glm::dvec3 ray_dir, BlockQuery auto&& world_block_query)
 {
-	dir = glm::normalize(dir);
+	ray_dir = glm::normalize(ray_dir);
 
-	const glm::dvec3 step_size(1.0 / dir.x, 1.0 / dir.y, 1.0 / dir.z);
-	const glm::ivec3 step_dir = { Sgn(dir.x), Sgn(dir.y), Sgn(dir.z) };
+	const glm::dvec3 step_size(1.0 / ray_dir.x, 1.0 / ray_dir.y, 1.0 / ray_dir.z);
+	const glm::ivec3 step_dir(math_utils::Sgn(ray_dir.x), math_utils::Sgn(ray_dir.y), math_utils::Sgn(ray_dir.z));
 
 	glm::ivec3 current_block_coords(start_pos);
 	glm::dvec3 ray_length(0.0);
 
-	// setup start
+	ray_length.x = (ray_dir.x < 0) ? start_pos.x - current_block_coords.x : 1 - start_pos.x - current_block_coords.x;
+	ray_length.y = (ray_dir.y < 0) ? start_pos.y - current_block_coords.y : 1 - start_pos.y - current_block_coords.y;
+	ray_length.z = (ray_dir.z < 0) ? start_pos.z - current_block_coords.z : 1 - start_pos.z - current_block_coords.z;
+
+	ray_length.x *= step_size.x;
+	ray_length.y *= step_size.y;
+	ray_length.z *= step_size.z;
 
 	const int max_block_distance = 4;
-	int distance = 0;
-	bool block_found = false;
+	int block_distance = 0;
+	float distance = 0.0;
+	RaycastResult raycast_result;
 
-	while (block_found && distance < max_block_distance)
+	while (block_distance < max_block_distance)
 	{
 		if (ray_length.x < ray_length.y && ray_length.x < ray_length.z)
 		{
-
+			current_block_coords.x += step_dir.x;
+			distance = ray_length.x;
+			ray_length.x += step_size.x;
 		}
 		else if (ray_length.y < ray_length.x && ray_length.y < ray_length.z)
 		{
-			
+			current_block_coords.y += step_dir.y;
+			distance = ray_length.y;
+			ray_length.y += step_size.y;
 		}
 		else if (ray_length.z < ray_length.x && ray_length.z < ray_length.y)
 		{
-			
+			current_block_coords.z += step_dir.z;
+			distance = ray_length.z;
+			ray_length.z += step_size.z;
 		}
+
+		++block_distance;
+
+		// world query current_block_coords, 
+		// if solid
+		// set the coords, type, face and intersection into the result
+		// raycast_result.intersection = start_pos + ray_dir * distance;
 	}
-
-	RaycastResult raycast_result;
-
-	raycast_result.block_coords_ = current_block_coords;
-	//raycast_result.type = block_found ?  : BlockType::Air;
-	//raycast_result.face = ;
-	//raycast_result.intersection = ;
 
 	return raycast_result;
 }
