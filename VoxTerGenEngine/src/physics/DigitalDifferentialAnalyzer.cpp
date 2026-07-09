@@ -29,7 +29,7 @@ RaycastResult DigitalDifferentialAnalyzer::CastRay(glm::dvec3 start_pos, glm::dv
 
 	const int max_block_distance = 4;
 	int block_distance = 0;
-	float distance = 0.0;
+	double distance = 0.0;
 	RaycastResult raycast_result;
 
 	while (block_distance < max_block_distance)
@@ -64,7 +64,7 @@ RaycastResult DigitalDifferentialAnalyzer::CastRay(glm::dvec3 start_pos, glm::dv
 		{
 			raycast_result.block_coords_ = current_block_coords;
 			raycast_result.type_ = block.Type();
-			raycast_result.intersection = start_pos + ray_dir * distance;
+			raycast_result.intersection_ = start_pos + ray_dir * distance;
 			break;
 		}
 	}
