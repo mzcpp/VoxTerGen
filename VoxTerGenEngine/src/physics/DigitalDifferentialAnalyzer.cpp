@@ -17,22 +17,18 @@ RaycastResult DigitalDifferentialAnalyzer::CastRay(glm::dvec3 start_pos, glm::dv
 	const glm::ivec3 step_dir(math_utils::Sgn(ray_dir.x), math_utils::Sgn(ray_dir.y), math_utils::Sgn(ray_dir.z));
 
 	glm::ivec3 current_block_coords(start_pos);
-	glm::dvec3 ray_length(0.0);
+	glm::dvec3 ray_length(step_size);
 
-	ray_length.x = (ray_dir.x < 0) ? start_pos.x - current_block_coords.x : 1 - start_pos.x - current_block_coords.x;
-	ray_length.y = (ray_dir.y < 0) ? start_pos.y - current_block_coords.y : 1 - start_pos.y - current_block_coords.y;
-	ray_length.z = (ray_dir.z < 0) ? start_pos.z - current_block_coords.z : 1 - start_pos.z - current_block_coords.z;
+	ray_length.x *= (ray_dir.x < 0) ? start_pos.x - current_block_coords.x : 1 - start_pos.x - current_block_coords.x;
+	ray_length.y *= (ray_dir.y < 0) ? start_pos.y - current_block_coords.y : 1 - start_pos.y - current_block_coords.y;
+	ray_length.z *= (ray_dir.z < 0) ? start_pos.z - current_block_coords.z : 1 - start_pos.z - current_block_coords.z;
 
-	ray_length.x *= step_size.x;
-	ray_length.y *= step_size.y;
-	ray_length.z *= step_size.z;
-
-	const int max_block_distance = 4;
+	constexpr double max_distance = 4.0;
 	int block_distance = 0;
 	double distance = 0.0;
 	RaycastResult raycast_result;
 
-	while (block_distance < max_block_distance)
+	while (block_distance < max_distance)
 	{
 		if (ray_length.x < ray_length.y && ray_length.x < ray_length.z)
 		{
