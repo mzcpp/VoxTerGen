@@ -7,6 +7,8 @@
 
 #include <glm/vec3.hpp>
 
+#include <optional>
+
 struct RaycastResult
 {
 	glm::ivec3 block_coords_;
@@ -23,7 +25,7 @@ class DigitalDifferentialAnalyzer
 private:
 
 public:
-	static RaycastResult CastRay(glm::dvec3 start_pos, glm::dvec3 dir, BlockQuery auto&& world_block_query);
+	static std::optional<RaycastResult> CastRay(glm::dvec3 start_pos, glm::dvec3 dir, double max_distance, BlockQuery auto&& world_block_query);
 };
 
 #endif // DIGITAL_DIFFERENTIAL_ANALYZER_HPP
