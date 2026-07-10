@@ -16,9 +16,6 @@
 class Block;
 class Observer;
 
-template <typename Fnc>
-concept BlockQuery = std::invocable<Fnc, glm::ivec3> && std::convertible_to<std::invoke_result_t<Fnc, glm::ivec3>, BlockInfo>;
-
 class CollisionSystem
 {   
 private:

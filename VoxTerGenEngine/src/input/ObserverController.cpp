@@ -216,13 +216,14 @@ glm::dvec3 ObserverController::GetDisplacementVector(glm::dvec3 dir_vec) const n
 
 glm::dvec3 ObserverController::GetClippedDisplacementVector(glm::dvec3 result_displacement_vector, const CollisionSystem& collision_system, const ChunkManager& chunk_manager) const
 {
-    result_displacement_vector = collision_system.GetClippedDisplacementVector([this, &chunk_manager](glm::ivec3 coords)
-        {
-            const glm::ivec3 observer_offset_block_pos = observer_.AbsoluteBlockPos(constants::observer::pos_offset);
-            const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(observer_offset_block_pos);
-            return chunk_manager.WorldBlockQuery(chunk_coords, coords);
-        },
-        observer_, result_displacement_vector);
+    const auto world_block_query = [this, &chunk_manager](glm::ivec3 coords) {
+        const glm::ivec3 observer_offset_block_pos = chunk_manager.AbsoluteBlockPos(observer_.Pos(), constants::observer::pos_offset);
+        const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(observer_offset_block_pos);
+        
+        return chunk_manager.WorldBlockQuery(chunk_coords, coords);
+    }
+    
+    result_displacement_vector = collision_system.GetClippedDisplacementVector(world_block_query, observer_, result_displacement_vector);
 
     return result_displacement_vector;
 }
@@ -326,9 +327,9 @@ void ObserverController::ApplyMouseRotation(glm::vec2 mouse_delta, Camera& camer
 
 BlockInfo ObserverController::GetBlockInfoBelowObserver(const ChunkManager& chunk_manager)
 {
-    const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(observer_.AbsoluteBlockPos(constants::observer::pos_offset));
+    const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(chunk_manager.AbsoluteBlockPos(observer_.Pos(), constants::observer::pos_offset));
     
-    glm::ivec3 block_pos_below_observer = observer_.RelativeBlockPos(constants::observer::pos_offset);
+    glm::ivec3 block_pos_below_observer = chunk_manager.RelativeBlockPos(observer_.Pos(), constants::observer::pos_offset);
     --block_pos_below_observer.y;
 
     return chunk_manager.WorldBlockQuery(chunk_coords, block_pos_below_observer);

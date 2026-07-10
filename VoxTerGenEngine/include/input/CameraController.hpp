@@ -32,7 +32,7 @@ public:
 
     void GatherInput(const InputManager& input_manager);
 
-    void Tick();
+    void Tick(const ChunkManager& chunk_manager);
 
     void ApplyChanges(double frame_dt);
 

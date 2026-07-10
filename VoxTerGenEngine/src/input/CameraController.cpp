@@ -1,10 +1,17 @@
+#include "core/Direction.hpp"
+
 #include "input/CameraController.hpp"
 #include "input/InputManager.hpp"
+
 #include "utils/MathUtils.hpp"
+
 #include "graphics/Camera.hpp"
+
+#include "physics/DigitalDifferentialAnalyzer.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include <SDL2/SDL.h>
 
@@ -60,8 +67,24 @@ void CameraController::GatherInput(const InputManager& input_manager)
     mouse_wheel_ = input_manager.MouseWheel();
 }
 
-void CameraController::Tick()
+void CameraController::Tick(const ChunkManager& chunk_manager)
 {
+    const double max_distance = 4.0;
+    const auto world_block_query = [this, &chunk_manager](glm::ivec3 coords) {
+        const glm::ivec3 camera_block_pos = chunk_manager.AbsoluteBlockPos(camera_.Pos());
+        const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(camera_block_pos);
+            
+        return chunk_manager.WorldBlockQuery(chunk_coords, coords);
+    };
+
+    const RaycastResult raycast_result = DigitalDifferentialAnalyzer::CastRay(camera_.Pos(), camera_.Front(), max_distance, world_block_query);
+
+    std::cout << "--------------------------------------------" << '\n';
+    std::cout << glm::to_string(raycast_result.block_coords_) << '\n'; 
+    std::cout << raycast_result.type_ << '\n';
+    std::cout << glm::to_string(Direction::DirToNormal(raycast_result.face_)) << '\n';
+    std::cout << raycast_result.distance_ << '\n';
+    std::cout << glm::to_string(raycast_result.intersection_) << '\n'; 
 }
 
 void CameraController::ApplyChanges(double frame_dt)

@@ -1,5 +1,7 @@
 #include "physics/DigitalDifferentialAnalyzer.hpp"
 
+#include "core/Direction.hpp"
+
 #include "utils/MathUtils.hpp"
 
 #include "world/Block.hpp"
@@ -13,8 +15,6 @@
 
 std::optional<RaycastResult> DigitalDifferentialAnalyzer::CastRay(glm::dvec3 start_pos, glm::dvec3 ray_dir, double max_distance, BlockQuery auto&& world_block_query)
 {
-	RaycastResult raycast_result;
-
 	if (glm::length2(ray_dir) <= std::numeric_limits<double>::epsilon())
 	{
 		return std::nullopt;
@@ -32,6 +32,7 @@ std::optional<RaycastResult> DigitalDifferentialAnalyzer::CastRay(glm::dvec3 sta
 	ray_length.y *= (ray_dir.y < 0) ? start_pos.y - current_block_coords.y : (current_block_coords.y + 1) - start_pos.y;
 	ray_length.z *= (ray_dir.z < 0) ? start_pos.z - current_block_coords.z : (current_block_coords.z + 1) - start_pos.z;
 
+	RaycastResult raycast_result;
 	double distance = 0.0;
 	Direction last_face_hit = Direction::PosX;
 
@@ -59,13 +60,14 @@ std::optional<RaycastResult> DigitalDifferentialAnalyzer::CastRay(glm::dvec3 sta
 			last_face_hit = ToDirection(MajorAxis::Z, step_dir.z == -1);
 		}
 
-		const Block block = world_block_query(current_block_coords).block_;
+		const Block& block = world_block_query(current_block_coords).block_;
 
 		if (block.IsSolid())
 		{
 			raycast_result.block_coords_ = current_block_coords;
 			raycast_result.type_ = block.Type();
 			raycast_result.face_ = last_face_hit;
+			raycast_result.distance_ = distance;
 			raycast_result.intersection_ = start_pos + ray_dir * distance;
 			
 			return std::optional<RaycastResult>(raycast_result);

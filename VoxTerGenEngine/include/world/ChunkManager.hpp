@@ -37,6 +37,10 @@ public:
 
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
 
+	glm::ivec3 AbsoluteBlockPos(glm::dvec3 position, glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;
+
+	glm::ivec3 RelativeBlockPos(glm::dvec3 position, glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;
+
 	void PushChunkIntoQueue(Chunk* chunk);
 
 	glm::ivec2 GetChunkCoords(glm::dvec3 pos) const noexcept;

@@ -14,11 +14,9 @@ struct RaycastResult
 	glm::ivec3 block_coords_;
 	BlockType type_;
 	Direction face_;
+	double distance_;
 	glm::dvec3 intersection_;
 };
-
-template <typename Fnc>
-concept BlockQuery = std::invocable<Fnc, glm::ivec3>&& std::convertible_to<std::invoke_result_t<Fnc, glm::ivec3>, BlockInfo>;
 
 class DigitalDifferentialAnalyzer
 {

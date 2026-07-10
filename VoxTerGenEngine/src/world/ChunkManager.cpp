@@ -54,7 +54,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 {
 	assert(chunk_radius >= 0);
 	const int chunk_square_size = 2 * chunk_radius + 1;
-	// TODO: observer will not always start at 0, 0?
+	// TODO: observer will not always start at 0, 0!
 	const glm::ivec3 start_coords = { 0 - chunk_radius, 0, 0 - chunk_radius };
 
 	for (int z = 0; z < chunk_square_size; ++z)
@@ -173,6 +173,44 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 	return chunk_it->second.get();
 }
 
+glm::ivec3 ChunkManager::AbsoluteBlockPos(glm::dvec3 position, glm::dvec3 pos_offset) const noexcept
+{
+    return {
+        static_cast<int>(std::floor(position.x + pos_offset.x)),
+        static_cast<int>(std::floor(position.y + pos_offset.y)),
+        static_cast<int>(std::floor(position.z + pos_offset.z))
+    };
+}
+
+glm::ivec3 ChunkManager::RelativeBlockPos(glm::dvec3 position, glm::dvec3 pos_offset) const noexcept
+{
+	glm::ivec3 block_pos(0);
+
+	if (position.x + pos_offset.x < 0.0)
+	{
+		const int chunk_x_offset = (std::abs(static_cast<int>(position.x + pos_offset.x)) / constants::chunk::width) + 1;
+		block_pos.x = (static_cast<int>(position.x + pos_offset.x) + chunk_x_offset * constants::chunk::width) - 1;
+	}
+	else
+	{
+		block_pos.x = static_cast<int>(position.x + pos_offset.x) % constants::chunk::width;
+	}
+
+	block_pos.y = static_cast<int>(std::floor(position.y + pos_offset.y));
+
+	if (position.z + pos_offset.z < 0.0)
+	{
+		const int chunk_z_offset = (std::abs(static_cast<int>(position.z + pos_offset.z)) / constants::chunk::depth) + 1;
+		block_pos.z = (static_cast<int>(position.z + pos_offset.z) + chunk_z_offset * constants::chunk::depth) - 1;
+	}
+	else
+	{
+		block_pos.z = static_cast<int>(position.z + pos_offset.z) % constants::chunk::depth;
+	}
+
+	return block_pos;
+}
+
 BlockInfo ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const
 {	
 	if (block_coords.y < 0 || block_coords.y >= constants::chunk::height)
@@ -182,13 +220,17 @@ BlockInfo ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ive
 	
 	const int x_chunk_offset = math_utils::FloorDiv(block_coords.x, constants::chunk::width);
 	const int z_chunk_offset = math_utils::FloorDiv(block_coords.z, constants::chunk::depth);
+
 	const glm::ivec3 target_block_coords = { 
 		block_coords.x - (x_chunk_offset * constants::chunk::width), 
 		block_coords.y, 
 		block_coords.z - (z_chunk_offset * constants::chunk::depth) 
 	};
 
-	const glm::ivec2 chunk_coords = { current_chunk_coord.x + x_chunk_offset, current_chunk_coord.y + z_chunk_offset };
+	const glm::ivec2 chunk_coords = { 
+		current_chunk_coord.x + x_chunk_offset, 
+		current_chunk_coord.y + z_chunk_offset };
+
 	const glm::ivec3 absolute_block_coords = { 
 		target_block_coords.x + chunk_coords.x * constants::chunk::width, 
 		target_block_coords.y, 
@@ -209,5 +251,8 @@ void ChunkManager::PushChunkIntoQueue(Chunk* chunk)
 
 glm::ivec2 ChunkManager::GetChunkCoords(glm::dvec3 pos) const noexcept
 {
-	return { static_cast<int>(std::floor(pos.x / constants::chunk::width)), static_cast<int>(std::floor(pos.z / constants::chunk::depth)) };
+	return { 
+		static_cast<int>(std::floor(pos.x / constants::chunk::width)), 
+		static_cast<int>(std::floor(pos.z / constants::chunk::depth)) 
+	};
 }

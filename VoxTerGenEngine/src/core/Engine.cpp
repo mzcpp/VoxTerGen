@@ -49,8 +49,10 @@ void Engine::HandleEvents(SDL_Event e)
 
 void Engine::Tick(float aspect_ratio)
 {
-	observer_controller_.Tick(collision_system_, world_.ChunkManagerRef(), camera_);
-	camera_controller_.Tick();
+	const ChunkManager& chunk_manager = world_.ChunkManagerRef();
+	
+	observer_controller_.Tick(collision_system_, chunk_manager, camera_);
+	camera_controller_.Tick(chunk_manager);
 	
 	observer_.Tick();
 	camera_.Tick(aspect_ratio);
