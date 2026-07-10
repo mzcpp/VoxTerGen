@@ -22,17 +22,6 @@ enum class BlockType : std::uint8_t
     Invalid
 };
 
-class Block;
-
-struct BlockInfo
-{
-    Block block_;
-    glm::ivec3 absolute_pos_;
-};
-
-template <typename Fnc>
-concept BlockQuery = std::invocable<Fnc, glm::ivec3>&& std::convertible_to<std::invoke_result_t<Fnc, glm::ivec3>, BlockInfo>;
-
 class Block
 {
 private:
@@ -76,5 +65,14 @@ public:
     void SetSunLight(std::uint8_t sun_light);
     void SetBlockLight(std::uint8_t block_light);
 };
+
+struct BlockInfo
+{
+    Block block_;
+    glm::ivec3 absolute_pos_;
+};
+
+template <typename Fnc>
+concept BlockQuery = std::invocable<Fnc, glm::ivec3>&& std::convertible_to<std::invoke_result_t<Fnc, glm::ivec3>, BlockInfo>;
 
 #endif // BLOCK_HPP

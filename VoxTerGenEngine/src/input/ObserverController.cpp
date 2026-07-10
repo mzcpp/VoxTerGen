@@ -219,11 +219,10 @@ glm::dvec3 ObserverController::GetClippedDisplacementVector(glm::dvec3 result_di
     const auto world_block_query = [this, &chunk_manager](glm::ivec3 coords) {
         const glm::ivec3 observer_offset_block_pos = chunk_manager.AbsoluteBlockPos(observer_.Pos(), constants::observer::pos_offset);
         const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(observer_offset_block_pos);
-        
-        return chunk_manager.WorldBlockQuery(chunk_coords, coords);
-    }
+        return chunk_manager.WorldBlockQuery(chunk_coords, coords); 
+    };
     
-    result_displacement_vector = collision_system.GetClippedDisplacementVector(world_block_query, observer_, result_displacement_vector);
+    result_displacement_vector = collision_system.GetClippedDisplacementVector(world_block_query, observer_, chunk_manager, result_displacement_vector);
 
     return result_displacement_vector;
 }

@@ -8,6 +8,7 @@
 
 class Camera;
 class InputManager;
+class ChunkManager;
 
 class CameraController
 {
