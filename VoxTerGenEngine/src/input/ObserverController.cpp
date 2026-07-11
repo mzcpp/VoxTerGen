@@ -144,7 +144,7 @@ glm::dvec3 ObserverController::GetDirectionVector(const InputManager& input_mana
         }
     }
 
-    if (input_manager.KeyDown(SDL_SCANCODE_LCTRL))
+    if (noclip_ && input_manager.KeyDown(SDL_SCANCODE_LCTRL))
     {
        dir_vec -= constants::math::world_up;
     }

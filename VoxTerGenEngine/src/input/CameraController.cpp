@@ -71,12 +71,14 @@ void CameraController::GatherInput(const InputManager& input_manager)
 
 void CameraController::Tick(const ChunkManager& chunk_manager)
 {
-    const double max_distance = 4.0;
-    const auto world_block_query = [this, &chunk_manager](glm::ivec3 coords) {
-        const glm::ivec3 camera_block_pos = chunk_manager.AbsoluteBlockPos(camera_.Pos());
-        const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(camera_block_pos);
+    const double max_distance = 40.0;
 
-        return chunk_manager.WorldBlockQuery(chunk_coords, coords);
+    const auto world_block_query = [this, &chunk_manager](glm::ivec3 coords) 
+        {
+            const glm::ivec3 camera_block_pos = chunk_manager.RelativeBlockPos(camera_.Pos());
+            const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(camera_block_pos);
+            
+            return chunk_manager.WorldBlockQuery(chunk_coords, coords);
         };
 
     const std::optional<RaycastResult> raycast_result = DigitalDifferentialAnalyzer::CastRay(camera_.Pos(), camera_.Front(), max_distance, world_block_query);
@@ -89,6 +91,10 @@ void CameraController::Tick(const ChunkManager& chunk_manager)
         std::cout << glm::to_string(DirToNormal(raycast_result->face_)) << '\n';
         std::cout << raycast_result->distance_ << '\n';
         std::cout << glm::to_string(raycast_result->intersection_) << '\n'; 
+    }
+    else
+    {
+        std::cout << "NONE\n";
     }
 }
 
