@@ -13,9 +13,10 @@
 #include <queue>
 #include <optional>
 
-WorldRenderer::WorldRenderer()
+WorldRenderer::WorldRenderer() : 
+	chunk_mesh_render_pass_(mesh_renderer_), 
+	block_highlight_render_pass_(mesh_renderer_)
 {
-
 }
 
 WorldRenderer::~WorldRenderer()

@@ -12,7 +12,7 @@ MeshRenderer::MeshRenderer()
 {
 }
 
-void MeshRenderer::RenderChunkMesh(const GpuMesh& gpu_mesh)
+void MeshRenderer::RenderGpuMesh(const GpuMesh& gpu_mesh) const
 {
     glBindVertexArray(gpu_mesh.VAO());
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(gpu_mesh.IndexCount()), GL_UNSIGNED_INT, 0);

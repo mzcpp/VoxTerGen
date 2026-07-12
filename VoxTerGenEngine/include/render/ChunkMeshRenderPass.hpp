@@ -1,5 +1,5 @@
-#ifndef CHUNK_MESH_RENDER_PASS
-#define CHUNK_MESH_RENDER_PASS
+#ifndef CHUNK_MESH_RENDER_PASS_HPP
+#define CHUNK_MESH_RENDER_PASS_HPP
 
 #include "core/ResourceManager.hpp"
 
@@ -23,14 +23,16 @@ struct overloaded : Ts... { using Ts::operator()...; };
 class ChunkMeshRenderPass
 {
 private:
-	MeshRenderer mesh_renderer_;
+	const MeshRenderer& mesh_renderer_;
 	std::unordered_map<ChunkID, ChunkRenderData> chunks_render_data_;
 
 public:
+	ChunkMeshRenderPass(const MeshRenderer& mesh_renderer);
+
 	void ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue);
 
 	void RenderChunks(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
 };
 
-#endif // CHUNK_MESH_RENDER_PASS
+#endif // CHUNK_MESH_RENDER_PASS_HPP
 

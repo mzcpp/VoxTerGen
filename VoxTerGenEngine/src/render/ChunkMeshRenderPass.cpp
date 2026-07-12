@@ -1,4 +1,5 @@
 #include "render/ChunkMeshRenderPass.hpp"
+#include "render/MeshRenderer.hpp"
 
 #include "core/ResourceManager.hpp"
 
@@ -11,6 +12,11 @@
 #include <memory>
 #include <ranges>
 #include <variant>
+
+ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) : mesh_renderer_(mesh_renderer)
+{
+}
+
 
 void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue)
 {
@@ -57,7 +63,7 @@ void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& p
 	for (const ChunkRenderData& chunk_render_data : chunks_render_data_ | std::views::values)
 	{
 		shader_program->Set<glm::mat4>("model", chunk_render_data.chunk_model_);
-		mesh_renderer_.RenderChunkMesh(chunk_render_data.gpu_mesh_);
+		mesh_renderer_.RenderGpuMesh(chunk_render_data.gpu_mesh_);
 	}
 
 	glUseProgram(0);
