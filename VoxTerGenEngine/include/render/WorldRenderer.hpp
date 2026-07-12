@@ -9,8 +9,10 @@
 #include <unordered_map>
 #include <memory>
 #include <queue>
+#include <optional>
 
 class ResourceManager;
+struct RaycastResult;
 
 class WorldRenderer
 {
@@ -24,7 +26,10 @@ public:
 
 	void Tick(std::queue<ChunkEvent>& chunk_event_queue);
 
-	void RenderWorld(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
+	void RenderWorld(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager, const std::optional<RaycastResult>& raycast_result);
+
+private:
+	void RenderHighlightedBlock(const std::optional<RaycastResult>& raycast_result);
 };
 
 #endif // WORLD_RENDERER_HPP
