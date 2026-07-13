@@ -79,6 +79,7 @@ void ChunkManager::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera&
 {
 	LoadChunks(chunk_event_queue, camera);
 	BuildChunkMeshes(chunk_event_queue);
+	// BuildBlockHighlightMesh(camera.RaycastResult());
 }
 
 void ChunkManager::LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)

@@ -73,28 +73,7 @@ void CameraController::Tick(const ChunkManager& chunk_manager)
 {
     const double max_distance = 40.0;
 
-    const auto world_block_query = [this, &chunk_manager](glm::ivec3 coords) {
-        const glm::ivec3 camera_block_pos = chunk_manager.RelativeBlockPos(camera_.Pos());
-        const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(camera_block_pos);
-        
-        return chunk_manager.WorldBlockQuery(chunk_coords, coords);
-    };
-
-    camera_.raycast_result_ = DigitalDifferentialAnalyzer::CastRay(camera_.Pos(), camera_.Front(), max_distance, world_block_query);
-
-    if (camera_.raycast_result_)
-    {
-        std::cout << "--------------------------------------------" << '\n';
-        std::cout << glm::to_string(camera_.raycast_result_->block_coords_) << '\n';
-        std::cout << static_cast<int>(camera_.raycast_result_->type_) << '\n';
-        std::cout << glm::to_string(DirToNormal(camera_.raycast_result_->face_)) << '\n';
-        std::cout << camera_.raycast_result_->distance_ << '\n';
-        std::cout << glm::to_string(camera_.raycast_result_->intersection_) << '\n';
-    }
-    else
-    {
-        std::cout << "NONE\n";
-    }
+    CastRay(max_distance);
 }
 
 void CameraController::ApplyChanges(double frame_dt)
@@ -158,4 +137,30 @@ void CameraController::ApplyZoom()
 
     camera_.zoom_ = std::clamp(camera_.zoom_ - (mouse_wheel_ * zoom_sensitivity_), constants::camera::zoom_min, constants::camera::zoom_max);
     camera_.stale_ = true;
+}
+
+void CameraController::CastRay(double distance)
+{
+    const auto world_block_query = [this, &chunk_manager](glm::ivec3 coords) {
+        const glm::ivec3 camera_block_pos = chunk_manager.RelativeBlockPos(camera_.Pos());
+        const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(camera_block_pos);
+        
+        return chunk_manager.WorldBlockQuery(chunk_coords, coords);
+    };
+
+    camera_.raycast_result_ = DigitalDifferentialAnalyzer::CastRay(camera_.Pos(), camera_.Front(), max_distance, world_block_query);
+
+    if (camera_.raycast_result_)
+    {
+        std::cout << "--------------------------------------------" << '\n';
+        std::cout << glm::to_string(camera_.raycast_result_->block_coords_) << '\n';
+        std::cout << static_cast<int>(camera_.raycast_result_->type_) << '\n';
+        std::cout << glm::to_string(DirToNormal(camera_.raycast_result_->face_)) << '\n';
+        std::cout << camera_.raycast_result_->distance_ << '\n';
+        std::cout << glm::to_string(camera_.raycast_result_->intersection_) << '\n';
+    }
+    else
+    {
+        std::cout << "NONE\n";
+    }
 }

@@ -58,7 +58,7 @@ void Engine::Tick(float aspect_ratio)
 	camera_.Tick(aspect_ratio);
 
 	world_.Tick(chunk_event_queue_, camera_);
-	world_renderer_.Tick(chunk_event_queue_);
+	world_renderer_.Tick(chunk_event_queue_, camera_.RaycastResult());
 }
 
 void Engine::Render(float alpha)
@@ -69,7 +69,7 @@ void Engine::Render(float alpha)
 	const glm::mat4 interpolated_view = camera_.InterpolatedViewMatrix(alpha);
 	const glm::mat4 proj = camera_.ProjectionMatrix();
 
-	world_renderer_.RenderWorld(interpolated_view, proj, resource_manager_, camera_.RaycastResult());
+	world_renderer_.RenderWorld(interpolated_view, proj, resource_manager_);
 }
 
 glm::dvec3 Engine::CalculateObserverPosition() const

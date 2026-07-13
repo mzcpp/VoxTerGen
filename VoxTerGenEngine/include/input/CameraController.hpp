@@ -42,6 +42,8 @@ public:
     void ApplyMouseRotation();
 
     void ApplyZoom();
+
+    void CastRay(double distance);
 };
 
 #endif // CAMERA_CONTROLLER_HPP

@@ -13,15 +13,16 @@
 #include <array>
 #include <cassert>
 
-void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_coords, Direction dir, Mesh& chunk_mesh)
+void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& chunk_mesh)
 {
+	const glm::vec3 block_abs_pos = { 
+		static_cast<float>(chunk_world_coords.x * constants::chunk::width + block_rel_coords.x), 
+		static_cast<float>(block_rel_coords.y), 
+		static_cast<float>(chunk_world_coords.y * constants::chunk::depth + block_rel_coords.z) 
+	};
+
 	glm::vec3 vertex = { 0.0f, 0.0f, 0.0f };
 	glm::vec3 normal = { 0.0f, 0.0f, 0.0f };
-	glm::vec3 world_pos = { 
-		static_cast<float>(chunk_world_coords.x * constants::chunk::width + block_coords.x), 
-		static_cast<float>(block_coords.y), 
-		static_cast<float>(chunk_world_coords.y * constants::chunk::depth + block_coords.z) 
-	};
 
 	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
 	{
@@ -97,7 +98,7 @@ void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, gl
 			normal.z = -1.0f;
 		}
 
-		const glm::vec3 pos = vertex + world_pos;
+		const glm::vec3 pos = vertex + block_abs_pos;
 		const glm::vec2 uv = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
 		std::uint8_t material = GetQuadMaterial(type, dir);
 
