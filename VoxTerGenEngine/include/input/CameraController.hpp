@@ -43,7 +43,7 @@ public:
 
     void ApplyZoom();
 
-    void CastRay(double distance);
+    void CastRay(double max_distance, const ChunkManager& chunk_manager);
 };
 
 #endif // CAMERA_CONTROLLER_HPP

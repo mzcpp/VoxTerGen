@@ -73,7 +73,7 @@ void CameraController::Tick(const ChunkManager& chunk_manager)
 {
     const double max_distance = 40.0;
 
-    CastRay(max_distance);
+    CastRay(max_distance, chunk_manager);
 }
 
 void CameraController::ApplyChanges(double frame_dt)
@@ -139,7 +139,7 @@ void CameraController::ApplyZoom()
     camera_.stale_ = true;
 }
 
-void CameraController::CastRay(double distance)
+void CameraController::CastRay(double max_distance, const ChunkManager& chunk_manager)
 {
     const auto world_block_query = [this, &chunk_manager](glm::ivec3 coords) {
         const glm::ivec3 camera_block_pos = chunk_manager.RelativeBlockPos(camera_.Pos());

@@ -30,10 +30,10 @@ void WorldRenderer::Tick(std::queue<ChunkEvent>& chunk_event_queue, const std::o
 	// block_highlight_render_pass_.PrepareBlockRenderData();
 }
 
-void WorldRenderer::RenderWorld(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager, const std::optional<RaycastResult>& raycast_result)
+void WorldRenderer::RenderWorld(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
 {
 	chunk_mesh_render_pass_.RenderChunks(view, projection, resource_manager);
-	block_highlight_render_pass_.RenderBlockHighlight();
+	//block_highlight_render_pass_.RenderBlockHighlight();
 }
 
 void WorldRenderer::RenderHighlightedBlock()
