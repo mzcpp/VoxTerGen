@@ -202,11 +202,7 @@ glm::dvec3 ObserverController::GetHorizontalVelocityVector(glm::dvec3 dir_vec) c
 {
     const double velocity_multiplier = constants::observer::movement_speed;
 
-    return { 
-        dir_vec.x * velocity_multiplier, 
-        0.0, 
-        dir_vec.z * velocity_multiplier 
-    };
+    return { dir_vec.x * velocity_multiplier, 0.0, dir_vec.z * velocity_multiplier };
 }
 
 glm::dvec3 ObserverController::GetDisplacementVector(glm::dvec3 dir_vec) const noexcept

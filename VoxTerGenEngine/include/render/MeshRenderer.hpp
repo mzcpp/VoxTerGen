@@ -12,8 +12,6 @@ class MeshRenderer
 private:
 
 public:
-	MeshRenderer();
-
 	void RenderGpuMesh(const GpuMesh& gpu_mesh) const;
 };
 

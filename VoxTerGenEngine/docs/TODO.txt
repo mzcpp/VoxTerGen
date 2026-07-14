@@ -10,7 +10,7 @@ PACK vertex into uint32
 rethink the world block query implicit passing of chunk! at the call site it's not clear at all which chunk is the current!
 rethink error handling. For example in Chunk.cpp. There's BOTH throw AND LOG, or throw AND assert.
 rework MathUtils
-make class MeshBuilder a namespace
+make classes MeshBuilder & CollisionSystem a namespace
 move world_up into better nested namespace
 use & fix GetChunkCoords - math_utils
 rename math_utils & all namespaces using snake_case?

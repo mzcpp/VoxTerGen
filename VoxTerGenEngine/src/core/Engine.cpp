@@ -11,7 +11,9 @@
 
 #include <iostream>
 
-Engine::Engine() : camera_controller_(camera_), observer_controller_(observer_)
+Engine::Engine() : 
+	camera_controller_(camera_), 
+	observer_controller_(observer_)
 {
 }
 

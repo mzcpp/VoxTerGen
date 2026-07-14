@@ -1,6 +1,9 @@
 #include "world/Block.hpp"
 
-Block::Block(BlockType type) : type_(type), sun_light_(0), block_light_(0)
+Block::Block(BlockType type) : 
+    type_(type), 
+    sun_light_(0), 
+    block_light_(0)
 {
 }
 

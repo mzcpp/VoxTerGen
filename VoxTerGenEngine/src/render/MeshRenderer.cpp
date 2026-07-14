@@ -8,10 +8,6 @@
 
 #include <glad/glad.h>
 
-MeshRenderer::MeshRenderer()
-{
-}
-
 void MeshRenderer::RenderGpuMesh(const GpuMesh& gpu_mesh) const
 {
     glBindVertexArray(gpu_mesh.VAO());

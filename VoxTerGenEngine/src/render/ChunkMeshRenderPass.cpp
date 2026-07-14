@@ -13,7 +13,8 @@
 #include <ranges>
 #include <variant>
 
-ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) : mesh_renderer_(mesh_renderer)
+ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) : 
+	mesh_renderer_(mesh_renderer)
 {
 }
 
@@ -32,7 +33,7 @@ void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event
 				{
 					e.render_data_.gpu_mesh_.InitializeBuffers();
 					e.render_data_.gpu_mesh_.UploadMeshData(*e.cpu_mesh_);
-					e.render_data_.chunk_model_ = glm::translate(glm::mat4(1.0f), { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth });
+					e.render_data_.model_matrix_ = glm::translate(glm::mat4(1.0f), { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth });
 					chunks_render_data_.emplace(e.chunk_id_, std::move(e.render_data_));
 				},
 
@@ -63,7 +64,7 @@ void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& p
 
 	for (const RenderData& chunk_render_data : chunks_render_data_ | std::views::values)
 	{
-		shader_program->Set<glm::mat4>("model", chunk_render_data.chunk_model_);
+		shader_program->Set<glm::mat4>("model", chunk_render_data.model_matrix_);
 		mesh_renderer_.RenderGpuMesh(chunk_render_data.gpu_mesh_);
 	}
 

@@ -10,10 +10,6 @@
 #include <ranges>
 #include <memory>
 
-ChunkManager::ChunkManager()
-{
-}
-
 void ChunkManager::FillChunkTmp(Chunk& chunk)
 {
 	static int i = 1;

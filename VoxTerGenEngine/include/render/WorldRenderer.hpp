@@ -13,6 +13,7 @@
 #include <optional>
 
 class ResourceManager;
+
 struct RaycastResult;
 
 class WorldRenderer
@@ -25,14 +26,9 @@ private:
 public:
 	WorldRenderer();
 
-	~WorldRenderer();
-
 	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const std::optional<RaycastResult>& raycast_result);
 
 	void RenderWorld(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
-
-private:
-	void RenderHighlightedBlock();
 };
 
 #endif // WORLD_RENDERER_HPP

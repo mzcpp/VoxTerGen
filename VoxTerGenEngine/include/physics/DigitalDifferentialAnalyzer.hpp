@@ -24,12 +24,9 @@ struct RaycastResult
 	glm::dvec3 intersection_;
 };
 
-class DigitalDifferentialAnalyzer
+namespace digital_differential_analyzer
 {
-private:
-
-public:
-	static std::optional<RaycastResult> CastRay(glm::dvec3 start_pos, glm::dvec3 ray_dir, double max_distance, BlockQuery auto&& world_block_query)
+	std::optional<RaycastResult> CastRay(glm::dvec3 start_pos, glm::dvec3 ray_dir, double max_distance, BlockQuery auto&& world_block_query)
 	{
 		if (glm::length2(ray_dir) <= std::numeric_limits<double>::epsilon())
 		{

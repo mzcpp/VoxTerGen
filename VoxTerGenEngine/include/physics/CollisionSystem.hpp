@@ -19,11 +19,7 @@ class Observer;
 
 class CollisionSystem
 {   
-private:
-
 public:
-    CollisionSystem();
-
     bool AABBIntersectsX(AABB first, AABB second) const noexcept;
 
     bool AABBIntersectsY(AABB first, AABB second) const noexcept;

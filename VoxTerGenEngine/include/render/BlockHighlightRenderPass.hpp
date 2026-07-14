@@ -13,15 +13,15 @@ class BlockHighlightRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
-	// CPU MESH ONCE GENERATED
+	Mesh block_highlight_mesh_;
 	RenderData render_data_;
 
 public:
 	BlockHighlightRenderPass(const MeshRenderer& mesh_renderer);
 
-	void PrepareBlockRenderData(const Mesh& mesh);
+	void PrepareBlockRenderData();
 
-	void RenderBlockHighlight();
+	void RenderBlockHighlight(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
 };
 
 #endif

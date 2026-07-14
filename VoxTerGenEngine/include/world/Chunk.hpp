@@ -25,7 +25,7 @@ using ChunkID = std::uint64_t;
 struct RenderData
 {
     GpuMesh gpu_mesh_;
-    glm::mat4 chunk_model_ = glm::mat4(1.0f);
+    glm::mat4 model_matrix_ = glm::mat4(1.0f);
 };
 
 namespace chunk_event

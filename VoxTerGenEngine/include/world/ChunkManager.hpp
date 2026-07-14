@@ -21,8 +21,6 @@ private:
 	ChunkID next_chunk_id_ = 1;
 
 public:
-	ChunkManager();
-
     void InitChunks(int chunk_radius);
     
 	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);

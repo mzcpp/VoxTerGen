@@ -8,10 +8,6 @@
  * Source: https://medium.com/@andrebluntindie/3d-aabb-collision-detection-and-resolution-for-voxel-games-5fcbfdb8cdb4
  */
 
-CollisionSystem::CollisionSystem()
-{
-}
-
 bool CollisionSystem::AABBIntersectsX(AABB first, AABB second) const noexcept
 {
     return first.min_.x < second.max_.x && first.max_.x > second.min_.x; 

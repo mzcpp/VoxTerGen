@@ -5,7 +5,9 @@
 #include <fstream>
 
 Shader::Shader(const std::filesystem::path& shader_path, GLenum shader_type) : 
-    id_(0), source_path_(shader_path), type_(shader_type)
+    id_(0), 
+    source_path_(shader_path), 
+    type_(shader_type)
 {
     std::ifstream file(source_path_);
 

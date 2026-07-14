@@ -21,8 +21,6 @@ private:
     std::unordered_map<std::string, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>> sounds_;
 
 public:
-    ResourceManager() = default;
-
     void InitializeResources();
 
     TextureUtils::Texture2D* GetTexture(const std::string& texture_name) const;

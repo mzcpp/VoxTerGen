@@ -9,8 +9,8 @@
 #include <string>
 #include <optional>
 
-ShaderProgram::ShaderProgram(const std::filesystem::path& vertex_path, const std::filesystem::path& fragment_path, const std::filesystem::path& geometry_path) 
-    : id_(0)
+ShaderProgram::ShaderProgram(const std::filesystem::path& vertex_path, const std::filesystem::path& fragment_path, const std::filesystem::path& geometry_path) : 
+    id_(0)
 {
     Shader vertex_shader(vertex_path, GL_VERTEX_SHADER);
     Shader fragment_shader(fragment_path, GL_FRAGMENT_SHADER);

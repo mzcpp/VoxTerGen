@@ -20,6 +20,8 @@
 #include <algorithm>
 #include <cassert>
 
+namespace dda = digital_differential_analyzer;
+
 CameraController::CameraController(Camera& camera) :
     camera_(camera),
     movement_speed_(constants::camera::movement_speed), 
@@ -73,7 +75,7 @@ void CameraController::Tick(const ChunkManager& chunk_manager)
 {
     const double max_distance = 40.0;
 
-    CastRay(max_distance, chunk_manager);
+    dda::CastRay(max_distance, chunk_manager);
 }
 
 void CameraController::ApplyChanges(double frame_dt)
@@ -148,7 +150,7 @@ void CameraController::CastRay(double max_distance, const ChunkManager& chunk_ma
         return chunk_manager.WorldBlockQuery(chunk_coords, coords);
     };
 
-    camera_.raycast_result_ = DigitalDifferentialAnalyzer::CastRay(camera_.Pos(), camera_.Front(), max_distance, world_block_query);
+    camera_.raycast_result_ = dda::CastRay(camera_.Pos(), camera_.Front(), max_distance, world_block_query);
 
     if (camera_.raycast_result_)
     {
