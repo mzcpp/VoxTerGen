@@ -5,9 +5,12 @@
 
 #include "world/Chunk.hpp"
 
+#include <glm/vec3.hpp>
+
 #include <memory>
 
 class Mesh;
+class ResourceManager;
 
 class BlockHighlightRenderPass
 {
@@ -20,6 +23,8 @@ public:
 	BlockHighlightRenderPass(const MeshRenderer& mesh_renderer);
 
 	void PrepareBlockRenderData();
+
+	void UpdateBlockHighlightModelMatrix(glm::ivec3 block_world_pos);
 
 	void RenderBlockHighlight(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
 };

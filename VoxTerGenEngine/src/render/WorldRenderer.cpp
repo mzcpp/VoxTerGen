@@ -25,12 +25,12 @@ void WorldRenderer::Tick(std::queue<ChunkEvent>& chunk_event_queue, const std::o
 
 	if (raycast_result)
 	{
-		block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(block_coords_);	
+		block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(raycast_result->block_coords_);
 	}
 }
 
 void WorldRenderer::RenderWorld(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
 {
 	chunk_mesh_render_pass_.RenderChunks(view, projection, resource_manager);
-	block_highlight_render_pass_.RenderBlockHighlight();
+	block_highlight_render_pass_.RenderBlockHighlight(view, projection, resource_manager);
 }

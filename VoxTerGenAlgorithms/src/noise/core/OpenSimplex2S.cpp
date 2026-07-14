@@ -632,6 +632,8 @@ namespace
 		std::int64_t zsvp_;
 		std::int64_t wsvp_;
 
+		LatticeVertex4D() = default;
+
 		LatticeVertex4D(int64_t xsv, int64_t ysv, int64_t zsv, int64_t wsv)
 		{
 			xsvp_ = xsv * prime_x;

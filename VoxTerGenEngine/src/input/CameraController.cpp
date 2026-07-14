@@ -75,7 +75,7 @@ void CameraController::Tick(const ChunkManager& chunk_manager)
 {
     const double max_distance = 40.0;
 
-    dda::CastRay(max_distance, chunk_manager);
+    CastRay(max_distance, chunk_manager);
 }
 
 void CameraController::ApplyChanges(double frame_dt)

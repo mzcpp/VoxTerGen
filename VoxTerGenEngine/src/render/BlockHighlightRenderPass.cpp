@@ -1,8 +1,10 @@
 #include "render/BlockHighlightRenderPass.hpp"
 
-#include <glm/vec3.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "core/Direction.hpp"
+#include "core/ResourceManager.hpp"
 
 #include "mesh/Mesh.hpp"
 #include "mesh/MeshBuilder.hpp"
@@ -26,8 +28,10 @@ void BlockHighlightRenderPass::PrepareBlockRenderData()
 
 void BlockHighlightRenderPass::UpdateBlockHighlightModelMatrix(glm::ivec3 block_world_pos)
 {
-    render_data_.model_matrix_ = glm::scale(render_data_.model_matrix_, glm::vec3(1.001));
-    render_data_.model_matrix_ = glm::translate(render_data_.model_matrix_, block_world_pos);
+    constexpr float scale_factor = 1.001f;
+
+    render_data_.model_matrix_ = glm::scale(render_data_.model_matrix_, glm::vec3(scale_factor));
+    render_data_.model_matrix_ = glm::translate(render_data_.model_matrix_, glm::vec3(block_world_pos));
 }
 
 void BlockHighlightRenderPass::RenderBlockHighlight(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
@@ -37,8 +41,8 @@ void BlockHighlightRenderPass::RenderBlockHighlight(const glm::mat4& view, const
     shader_program->Use();
 	shader_program->Set<glm::mat4>("view", view);
 	shader_program->Set<glm::mat4>("projection", projection);
-    shader_program->Set<glm::mat4>("model", chunk_render_data.model_matrix_);
+    shader_program->Set<glm::mat4>("model", render_data_.model_matrix_);
     
-    mesh_renderer_.RenderGpuMesh(chunk_render_data.gpu_mesh_);
+    //mesh_renderer_.RenderGpuMesh(render_data_.gpu_mesh_);
 }
 
