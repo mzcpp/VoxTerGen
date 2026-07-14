@@ -14,7 +14,7 @@ private:
     GLsizei index_count_ = 0;
 
 public:
-    GpuMesh();
+    GpuMesh() = default;
 
     GpuMesh(const GpuMesh& other) = delete;
     GpuMesh& operator=(const GpuMesh& other) = delete;
@@ -23,6 +23,8 @@ public:
     GpuMesh& operator=(GpuMesh&& other) noexcept;
 
     ~GpuMesh();
+
+    void InitializeBuffers();
 
     void UploadMeshData(const Mesh& mesh);
 

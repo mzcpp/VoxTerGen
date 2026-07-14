@@ -5,16 +5,16 @@
 
 #include "world/Chunk.hpp"
 
-#include "mesh/Mesh.hpp"
-
 #include <memory>
+
+class Mesh;
 
 class BlockHighlightRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
 	// CPU MESH ONCE GENERATED
-    ChunkRenderData render_data_;
+	RenderData render_data_;
 
 public:
 	BlockHighlightRenderPass(const MeshRenderer& mesh_renderer);

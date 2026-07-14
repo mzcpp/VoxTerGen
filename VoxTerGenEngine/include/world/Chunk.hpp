@@ -22,7 +22,7 @@ class Mesh;
 
 using ChunkID = std::uint64_t;
 
-struct ChunkRenderData
+struct RenderData
 {
     GpuMesh gpu_mesh_;
     glm::mat4 chunk_model_ = glm::mat4(1.0f);
@@ -35,7 +35,7 @@ namespace chunk_event
         ChunkID chunk_id_;
         glm::ivec2 world_coords_;
         std::unique_ptr<Mesh> cpu_mesh_;
-        ChunkRenderData render_data_;
+        RenderData render_data_;
     };
 
     struct ChunkDestroyed

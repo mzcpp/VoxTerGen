@@ -71,9 +71,3 @@ void Engine::Render(float alpha)
 
 	world_renderer_.RenderWorld(interpolated_view, proj, resource_manager_);
 }
-
-glm::dvec3 Engine::CalculateObserverPosition() const
-{
-	// TODO, move this from engine! To chunk manager?
-	return glm::dvec3(0.0);
-}

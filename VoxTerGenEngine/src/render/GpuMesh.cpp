@@ -3,36 +3,6 @@
 
 #include <glad/glad.h>
 
-GpuMesh::GpuMesh()
-{
-    glCreateVertexArrays(1, &vao_);
-    glCreateBuffers(1, &vbo_);
-    glCreateBuffers(1, &ebo_);
-
-    glVertexArrayVertexBuffer(vao_, 0, vbo_, 0, sizeof(Vertex));
-    glVertexArrayElementBuffer(vao_, ebo_);
-    
-    // Position
-    glEnableVertexArrayAttrib(vao_, 0);
-    glVertexArrayAttribFormat(vao_, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position_));
-    glVertexArrayAttribBinding(vao_, 0, 0);
-
-    // Normal
-    glEnableVertexArrayAttrib(vao_, 1);
-    glVertexArrayAttribFormat(vao_, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal_));
-    glVertexArrayAttribBinding(vao_, 1, 0);
-
-    // UV
-    glEnableVertexArrayAttrib(vao_, 2);
-    glVertexArrayAttribFormat(vao_, 2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, uv_));
-    glVertexArrayAttribBinding(vao_, 2, 0);
-
-    // Material
-    glEnableVertexArrayAttrib(vao_, 3);
-    glVertexArrayAttribIFormat(vao_, 3, 1, GL_UNSIGNED_BYTE, offsetof(Vertex, material_));
-    glVertexArrayAttribBinding(vao_, 3, 0);
-}
-
 GpuMesh::GpuMesh(GpuMesh&& other) noexcept
 {
     vao_ = std::exchange(other.vao_, 0);
@@ -79,6 +49,36 @@ GpuMesh::~GpuMesh()
         glDeleteBuffers(1, &ebo_);
         ebo_ = 0;
     }
+}
+
+void GpuMesh::InitializeBuffers()
+{
+    glCreateVertexArrays(1, &vao_);
+    glCreateBuffers(1, &vbo_);
+    glCreateBuffers(1, &ebo_);
+
+    glVertexArrayVertexBuffer(vao_, 0, vbo_, 0, sizeof(Vertex));
+    glVertexArrayElementBuffer(vao_, ebo_);
+
+    // Position
+    glEnableVertexArrayAttrib(vao_, 0);
+    glVertexArrayAttribFormat(vao_, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position_));
+    glVertexArrayAttribBinding(vao_, 0, 0);
+
+    // Normal
+    glEnableVertexArrayAttrib(vao_, 1);
+    glVertexArrayAttribFormat(vao_, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal_));
+    glVertexArrayAttribBinding(vao_, 1, 0);
+
+    // UV
+    glEnableVertexArrayAttrib(vao_, 2);
+    glVertexArrayAttribFormat(vao_, 2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, uv_));
+    glVertexArrayAttribBinding(vao_, 2, 0);
+
+    // Material
+    glEnableVertexArrayAttrib(vao_, 3);
+    glVertexArrayAttribIFormat(vao_, 3, 1, GL_UNSIGNED_BYTE, offsetof(Vertex, material_));
+    glVertexArrayAttribBinding(vao_, 3, 0);
 }
 
 void GpuMesh::UploadMeshData(const Mesh& mesh)

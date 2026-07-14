@@ -24,7 +24,7 @@ class ChunkMeshRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
-	std::unordered_map<ChunkID, ChunkRenderData> chunks_render_data_;
+	std::unordered_map<ChunkID, RenderData> chunks_render_data_;
 
 public:
 	ChunkMeshRenderPass(const MeshRenderer& mesh_renderer);
