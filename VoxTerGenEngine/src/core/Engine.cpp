@@ -25,6 +25,7 @@ void Engine::Initialize()
 	//observer_.SetPosition(CalculateObserverPosition());
 	
 	world_.InitChunks(constants::chunk::default_radius);
+	world_renderer_.Initialize();
 }
 
 void Engine::BeginFrame()

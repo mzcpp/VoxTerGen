@@ -1,6 +1,5 @@
 #version 450 core
 
-
 in vec3 normal;
 
 out vec4 fragment_color;

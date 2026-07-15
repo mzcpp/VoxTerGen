@@ -26,6 +26,8 @@ private:
 public:
 	WorldRenderer();
 
+	void Initialize();
+
 	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const std::optional<RaycastResult>& raycast_result);
 
 	void RenderWorld(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);

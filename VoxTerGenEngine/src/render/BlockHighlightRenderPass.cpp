@@ -30,7 +30,7 @@ void BlockHighlightRenderPass::UpdateBlockHighlightModelMatrix(glm::ivec3 block_
 {
     constexpr float scale_factor = 1.001f;
 
-    render_data_.model_matrix_ = glm::scale(render_data_.model_matrix_, glm::vec3(scale_factor));
+    render_data_.model_matrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(scale_factor));
     render_data_.model_matrix_ = glm::translate(render_data_.model_matrix_, glm::vec3(block_world_pos));
 }
 
@@ -43,6 +43,6 @@ void BlockHighlightRenderPass::RenderBlockHighlight(const glm::mat4& view, const
 	shader_program->Set<glm::mat4>("projection", projection);
     shader_program->Set<glm::mat4>("model", render_data_.model_matrix_);
     
-    //mesh_renderer_.RenderGpuMesh(render_data_.gpu_mesh_);
+    mesh_renderer_.RenderGpuMesh(render_data_.gpu_mesh_);
 }
 

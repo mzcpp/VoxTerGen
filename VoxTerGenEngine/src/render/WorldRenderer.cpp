@@ -19,6 +19,11 @@ WorldRenderer::WorldRenderer() :
 {
 }
 
+void WorldRenderer::Initialize()
+{
+	block_highlight_render_pass_.PrepareBlockRenderData();
+}
+
 void WorldRenderer::Tick(std::queue<ChunkEvent>& chunk_event_queue, const std::optional<RaycastResult>& raycast_result)
 {
 	chunk_mesh_render_pass_.ProcessChunkEvents(chunk_event_queue);
