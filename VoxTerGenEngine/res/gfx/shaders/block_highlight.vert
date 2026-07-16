@@ -9,11 +9,18 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-out vec3 normal;
+out VS_OUT
+{
+    vec3 normal;
+    vec2 uv;
+    flat uint material;
+} vs_out;
 
 void main()
 {
-    normal = normal_;
+    vs_out.normal = normal_;
+    vs_out.uv = uv_;
+    vs_out.material = material_;
     
     gl_Position = projection * view * model * vec4(pos_, 1.0f);
 }
