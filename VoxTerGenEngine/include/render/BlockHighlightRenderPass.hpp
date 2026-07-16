@@ -12,19 +12,22 @@
 class Mesh;
 class ResourceManager;
 
+struct RaycastResult;
+
 class BlockHighlightRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
 	Mesh block_highlight_mesh_;
 	RenderData render_data_;
+	bool render_highlight_;
 
 public:
 	BlockHighlightRenderPass(const MeshRenderer& mesh_renderer);
 
 	void PrepareBlockRenderData();
 
-	void UpdateBlockHighlightModelMatrix(glm::ivec3 block_world_pos);
+	void UpdateBlockHighlightModelMatrix(const std::optional<RaycastResult>& raycast_result);
 
 	void RenderBlockHighlight(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
 };

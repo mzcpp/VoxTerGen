@@ -17,11 +17,11 @@ Mesh MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offse
 {
 	Mesh unit_cube_mesh;
 
-	CreateMeshIndices(unit_cube_mesh);
 
 	for (Direction dir : AllDirections())
     {
-        MeshBuilder::CreateMeshVertices(block_type, dir, origin_offset, unit_cube_mesh);
+		CreateMeshIndices(unit_cube_mesh);
+        CreateMeshVertices(block_type, dir, origin_offset, unit_cube_mesh);
     }
 
 	return unit_cube_mesh;

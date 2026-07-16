@@ -27,11 +27,7 @@ void WorldRenderer::Initialize()
 void WorldRenderer::Tick(std::queue<ChunkEvent>& chunk_event_queue, const std::optional<RaycastResult>& raycast_result)
 {
 	chunk_mesh_render_pass_.ProcessChunkEvents(chunk_event_queue);
-
-	if (raycast_result)
-	{
-		block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(raycast_result->block_coords_);
-	}
+	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(raycast_result);
 }
 
 void WorldRenderer::RenderWorld(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)

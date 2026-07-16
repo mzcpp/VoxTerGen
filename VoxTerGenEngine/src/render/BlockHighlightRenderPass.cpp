@@ -9,12 +9,17 @@
 #include "mesh/Mesh.hpp"
 #include "mesh/MeshBuilder.hpp"
 
+#include "physics/DigitalDifferentialAnalyzer.hpp"
+
 #include "render/MeshRenderer.hpp"
 
+#include <optional>
+
 BlockHighlightRenderPass::BlockHighlightRenderPass(const MeshRenderer& mesh_renderer) : 
-    mesh_renderer_(mesh_renderer)
+    mesh_renderer_(mesh_renderer), 
+    render_highlight_(false)
 {
-    block_highlight_mesh_ = MeshBuilder::BuildUnitCubeMesh(BlockType::Air, glm::vec3(0.0f));
+    block_highlight_mesh_ = MeshBuilder::BuildUnitCubeMesh(BlockType::Air, glm::vec3(-constants::geometry::block_center_offset));
 }
 
 void BlockHighlightRenderPass::PrepareBlockRenderData()
@@ -23,16 +28,28 @@ void BlockHighlightRenderPass::PrepareBlockRenderData()
     render_data_.gpu_mesh_.UploadMeshData(block_highlight_mesh_);
 }
 
-void BlockHighlightRenderPass::UpdateBlockHighlightModelMatrix(glm::ivec3 block_world_pos)
+void BlockHighlightRenderPass::UpdateBlockHighlightModelMatrix(const std::optional<RaycastResult>& raycast_result)
 {
-    constexpr float scale_factor = 1.001f;
+    if (!raycast_result)
+    {
+        render_highlight_ = false;
+        return;
+    }
 
-    render_data_.model_matrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(scale_factor));
-    render_data_.model_matrix_ = glm::translate(render_data_.model_matrix_, glm::vec3(block_world_pos));
+    constexpr float scale_factor = 1.001f;
+    
+    render_data_.model_matrix_ = glm::translate(glm::mat4(1.0f), glm::vec3(raycast_result->block_coords_) + constants::geometry::block_center_offset);
+    render_data_.model_matrix_ = glm::scale(render_data_.model_matrix_, glm::vec3(scale_factor));
+    render_highlight_ = true;
 }
 
 void BlockHighlightRenderPass::RenderBlockHighlight(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
 {
+    if (!render_highlight_)
+    {
+        return;
+    }
+
     const ShaderProgram* shader_program = resource_manager.GetShaderProgram("block_highlight_shader");
 
     shader_program->Use();

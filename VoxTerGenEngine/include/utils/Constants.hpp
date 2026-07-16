@@ -78,6 +78,7 @@ namespace constants
     {
         inline constexpr glm::vec3 world_up = { 0.0f, 1.0f, 0.0f };
         inline constexpr glm::dvec3 spawn_point = { 0.0, 5.0, 0.0 };
+        inline constexpr float block_center_offset = 0.5f;
     } // namespace geometry
 
     /**

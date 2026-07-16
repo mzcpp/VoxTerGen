@@ -75,7 +75,7 @@ namespace digital_differential_analyzer
 
 			const Block& block = world_block_query(current_block_coords).block_;
 
-			if (block.IsSolid())
+			if (!block.IsAir())
 			{
 				raycast_result.block_coords_ = current_block_coords;
 				raycast_result.type_ = block.Type();
