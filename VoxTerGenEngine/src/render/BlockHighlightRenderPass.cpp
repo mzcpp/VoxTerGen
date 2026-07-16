@@ -14,7 +14,7 @@
 BlockHighlightRenderPass::BlockHighlightRenderPass(const MeshRenderer& mesh_renderer) : 
     mesh_renderer_(mesh_renderer)
 {
-    block_highlight_mesh_ = MeshBuilder::BuildUnitCubeMesh(BlockType::Air, glm::vec3(-0.5f));
+    block_highlight_mesh_ = MeshBuilder::BuildUnitCubeMesh(BlockType::Air, glm::vec3(0.0f));
 }
 
 void BlockHighlightRenderPass::PrepareBlockRenderData()

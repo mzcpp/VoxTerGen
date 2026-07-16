@@ -13,15 +13,15 @@
 #include <array>
 #include <cassert>
 
-Mesh MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::ivec3 origin_offset)
+Mesh MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offset)
 {
 	Mesh unit_cube_mesh;
 
-	CreateMeshIndices(chunk_mesh);
+	CreateMeshIndices(unit_cube_mesh);
 
 	for (Direction dir : AllDirections())
     {
-        MeshBuilder::CreateMeshVertices(block_type, dir, origin_offset, chunk_mesh);
+        MeshBuilder::CreateMeshVertices(block_type, dir, origin_offset, unit_cube_mesh);
     }
 
 	return unit_cube_mesh;
@@ -125,7 +125,7 @@ void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, gl
 	};
 
 	CreateMeshIndices(chunk_mesh);
-	CreateMeshVertices(type, dir, block_abs_pos, chunk_mesh)
+	CreateMeshVertices(type, dir, block_abs_pos, chunk_mesh);
 	
 	assert(chunk_mesh.Vertices().size() % 4 == 0);
 }

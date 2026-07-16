@@ -10,9 +10,9 @@
 
 struct Vertex
 {
-    glm::vec3 position_(0.0f);
-    glm::vec3 normal_(0.0f);
-    glm::vec2 uv_(0.0f);
+    glm::vec3 position_ = glm::vec3(0.0f);
+    glm::vec3 normal_ = glm::vec3(0.0f);
+    glm::vec2 uv_ = glm::vec3(0.0f);
     std::uint8_t material_ = 0;
 };
 
