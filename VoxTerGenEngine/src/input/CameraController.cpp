@@ -73,7 +73,7 @@ void CameraController::GatherInput(const InputManager& input_manager)
 
 void CameraController::Tick(const ChunkManager& chunk_manager)
 {
-    const double max_distance = 40.0;
+    const double max_distance = 6.0;
 
     CastRay(max_distance, chunk_manager);
 }
@@ -151,18 +151,4 @@ void CameraController::CastRay(double max_distance, const ChunkManager& chunk_ma
     };
 
     camera_.raycast_result_ = dda::CastRay(camera_.Pos(), camera_.Front(), max_distance, world_block_query);
-
-    if (camera_.raycast_result_)
-    {
-        std::cout << "--------------------------------------------" << '\n';
-        std::cout << glm::to_string(camera_.raycast_result_->block_coords_) << '\n';
-        std::cout << static_cast<int>(camera_.raycast_result_->type_) << '\n';
-        std::cout << glm::to_string(DirToNormal(camera_.raycast_result_->face_)) << '\n';
-        std::cout << camera_.raycast_result_->distance_ << '\n';
-        std::cout << glm::to_string(camera_.raycast_result_->intersection_) << '\n';
-    }
-    else
-    {
-        std::cout << "NONE\n";
-    }
 }
