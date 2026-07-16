@@ -15,6 +15,8 @@ private:
 public:
 	void AddVertex(glm::vec3 position, glm::vec3 normal, glm::vec2 uv, std::uint8_t material);
 
+	void AddVertex(Vertex vertex);
+
 	void AddIndex(std::uint32_t index);
 	
 	// Getters

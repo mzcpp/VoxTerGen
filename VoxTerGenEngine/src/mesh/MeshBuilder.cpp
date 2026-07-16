@@ -13,6 +13,109 @@
 #include <array>
 #include <cassert>
 
+Mesh MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::ivec3 origin_offset)
+{
+	Mesh unit_cube_mesh;
+
+	CreateMeshIndices(chunk_mesh);
+
+	for (Direction dir : AllDirections())
+    {
+        MeshBuilder::CreateMeshVertices(block_type, dir, origin_offset, chunk_mesh);
+    }
+
+	return unit_cube_mesh;
+}
+
+void MeshBuilder::CreateMeshIndices(Mesh& chunk_mesh)
+{
+	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
+	{
+		chunk_mesh.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
+	}
+}
+
+void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, glm::vec3 origin_offset, Mesh& chunk_mesh)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		Vertex vertex;
+
+		if (dir == Direction::PosX)
+		{
+			// 1, 0, 1
+			// 1, 0, 0
+			// 1, 1, 1
+			// 1, 1, 0
+			vertex.position_.x = 1.0f;
+			vertex.position_.y = static_cast<float>((i / 2) % 2 != 0);
+			vertex.position_.z = static_cast<float>(i % 2 == 0);
+			vertex.normal_.x = 1.0f;
+		}
+		else if (dir == Direction::NegX)
+		{
+			// 0, 0, 0
+			// 0, 0, 1
+			// 0, 1, 0
+			// 0, 1, 1
+			vertex.position_.x = 0.0f;
+			vertex.position_.y = static_cast<float>((i / 2) % 2 != 0);
+			vertex.position_.z = static_cast<float>(i % 2 != 0);
+			vertex.normal_.x = -1.0f;
+		}
+		else if (dir == Direction::PosY)
+		{
+			// 0, 1, 1
+			// 1, 1, 1
+			// 0, 1, 0
+			// 1, 1, 0
+			vertex.position_.x = static_cast<float>(i % 2 != 0);
+			vertex.position_.y = 1.0f;
+			vertex.position_.z = static_cast<float>((i / 2) % 2 == 0);
+			vertex.normal_.y = 1.0f;
+		}
+		else if (dir == Direction::NegY)
+		{
+			// 1, 0, 1
+			// 0, 0, 1
+			// 1, 0, 0
+			// 0, 0, 0
+			vertex.position_.x = static_cast<float>(i % 2 == 0);
+			vertex.position_.y = 0.0f;
+			vertex.position_.z = static_cast<float>((i / 2) % 2 == 0);
+			vertex.normal_.y = -1.0f;
+		}
+		else if (dir == Direction::PosZ)
+		{
+			// 0, 0, 1
+			// 1, 0, 1
+			// 0, 1, 1
+			// 1, 1, 1
+			vertex.position_.x = static_cast<float>(i % 2 != 0);
+			vertex.position_.y = static_cast<float>((i / 2) % 2 != 0);
+			vertex.position_.z = 1.0f;
+			vertex.normal_.z = 1.0f;
+		}
+		else if (dir == Direction::NegZ)
+		{
+			// 1, 0, 0
+			// 0, 0, 0
+			// 1, 1, 0
+			// 0, 1, 0
+			vertex.position_.x = static_cast<float>(i % 2 == 0);
+			vertex.position_.y = static_cast<float>((i / 2) % 2 != 0);
+			vertex.position_.z = 0.0f;
+			vertex.normal_.z = -1.0f;
+		}
+
+		vertex.position_ += origin_offset;
+		vertex.uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
+		vertex.material_ = GetQuadMaterial(type, dir);
+
+		chunk_mesh.AddVertex(vertex);
+	}
+}
+
 void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& chunk_mesh)
 {
 	const glm::vec3 block_abs_pos = { 
@@ -21,90 +124,9 @@ void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, gl
 		static_cast<float>(chunk_world_coords.y * constants::chunk::depth + block_rel_coords.z) 
 	};
 
-	glm::vec3 vertex = { 0.0f, 0.0f, 0.0f };
-	glm::vec3 normal = { 0.0f, 0.0f, 0.0f };
-
-	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
-	{
-		chunk_mesh.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
-	}
-
-	for (int i = 0; i < 4; ++i)
-	{
-		if (dir == Direction::PosX)
-		{
-			// 1, 0, 1
-			// 1, 0, 0
-			// 1, 1, 1
-			// 1, 1, 0
-			vertex.x = 1.0f;
-			vertex.y = static_cast<float>((i / 2) % 2 != 0);
-			vertex.z = static_cast<float>(i % 2 == 0);
-			normal.x = 1.0f;
-		}
-		else if (dir == Direction::NegX)
-		{
-			// 0, 0, 0
-			// 0, 0, 1
-			// 0, 1, 0
-			// 0, 1, 1
-			vertex.x = 0.0f;
-			vertex.y = static_cast<float>((i / 2) % 2 != 0);
-			vertex.z = static_cast<float>(i % 2 != 0);
-			normal.x = -1.0f;
-		}
-		else if (dir == Direction::PosY)
-		{
-			// 0, 1, 1
-			// 1, 1, 1
-			// 0, 1, 0
-			// 1, 1, 0
-			vertex.x = static_cast<float>(i % 2 != 0);
-			vertex.y = 1.0f;
-			vertex.z = static_cast<float>((i / 2) % 2 == 0);
-			normal.y = 1.0f;
-		}
-		else if (dir == Direction::NegY)
-		{
-			// 1, 0, 1
-			// 0, 0, 1
-			// 1, 0, 0
-			// 0, 0, 0
-			vertex.x = static_cast<float>(i % 2 == 0);
-			vertex.y = 0.0f;
-			vertex.z = static_cast<float>((i / 2) % 2 == 0);
-			normal.y = -1.0f;
-		}
-		else if (dir == Direction::PosZ)
-		{
-			// 0, 0, 1
-			// 1, 0, 1
-			// 0, 1, 1
-			// 1, 1, 1
-			vertex.x = static_cast<float>(i % 2 != 0);
-			vertex.y = static_cast<float>((i / 2) % 2 != 0);
-			vertex.z = 1.0f;
-			normal.z = 1.0f;
-		}
-		else if (dir == Direction::NegZ)
-		{
-			// 1, 0, 0
-			// 0, 0, 0
-			// 1, 1, 0
-			// 0, 1, 0
-			vertex.x = static_cast<float>(i % 2 == 0);
-			vertex.y = static_cast<float>((i / 2) % 2 != 0);
-			vertex.z = 0.0f;
-			normal.z = -1.0f;
-		}
-
-		const glm::vec3 pos = vertex + block_abs_pos;
-		const glm::vec2 uv = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
-		std::uint8_t material = GetQuadMaterial(type, dir);
-
-		chunk_mesh.AddVertex(pos, normal, uv, material);
-	}
-
+	CreateMeshIndices(chunk_mesh);
+	CreateMeshVertices(type, dir, block_abs_pos, chunk_mesh)
+	
 	assert(chunk_mesh.Vertices().size() % 4 == 0);
 }
 

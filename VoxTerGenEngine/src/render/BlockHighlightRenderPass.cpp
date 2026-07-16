@@ -14,10 +14,7 @@
 BlockHighlightRenderPass::BlockHighlightRenderPass(const MeshRenderer& mesh_renderer) : 
     mesh_renderer_(mesh_renderer)
 {
-    for (Direction dir : AllDirections())
-    {
-        MeshBuilder::SaveQuadMesh({ 0, 0 }, BlockType::Air, { 0.0, 0.0, 0.0 }, dir, block_highlight_mesh_);
-    }
+    block_highlight_mesh_ = MeshBuilder::BuildUnitCubeMesh(BlockType::Air, glm::vec3(-0.5f));
 }
 
 void BlockHighlightRenderPass::PrepareBlockRenderData()

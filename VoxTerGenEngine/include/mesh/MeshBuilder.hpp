@@ -38,8 +38,15 @@ class MeshBuilder final
 {
 public:
 	MeshBuilder() = delete;
+
 	MeshBuilder(const MeshBuilder& other) = delete;
 	MeshBuilder& operator=(const MeshBuilder& other) = delete;
+
+	static Mesh BuildUnitCubeMesh(BlockType block_type, glm::ivec3 origin_offset);
+
+	static void CreateMeshIndices(Mesh& chunk_mesh);
+
+	static void CreateMeshVertices(BlockType type, Direction dir, glm::vec3 origin_offset, Mesh& chunk_mesh);
 
 	static Mesh BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query);
 	
