@@ -19,10 +19,9 @@ void main()
     const float y_dist_left = fs_in.uv.y;
     const float y_dist_right = 1.0f - fs_in.uv.y;
 
-    const float threshold = 0.0025f;
     const float min_distance = min(min(min(x_dist_left, x_dist_right), y_dist_left), y_dist_right);
     
-    if (min_distance >= threshold)
+    if (min_distance >= distance_threshold)
     {
         discard;
     }
