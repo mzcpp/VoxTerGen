@@ -66,7 +66,6 @@ public:
 	const WorldRenderer& WorldRenderer() const noexcept { return world_renderer_; }
 
 private:
-	glm::dvec3 CalculateObserverPosition() const;
 };
 
 #endif // ENGINE_HPP

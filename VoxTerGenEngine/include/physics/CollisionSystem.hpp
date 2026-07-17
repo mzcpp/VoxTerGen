@@ -4,6 +4,7 @@
 #include "physics/AABB.hpp"
 #include "world/Observer.hpp"
 #include "world/Block.hpp"
+#include "world/ChunkManager.hpp"
 
 #include <glm/vec3.hpp>
 #include <glm/glm.hpp>
@@ -16,16 +17,9 @@
 class Block;
 class Observer;
 
-template <typename Fnc>
-concept BlockQuery = std::invocable<Fnc, glm::ivec3> && std::convertible_to<std::invoke_result_t<Fnc, glm::ivec3>, BlockInfo>;
-
 class CollisionSystem
 {   
-private:
-
 public:
-    CollisionSystem();
-
     bool AABBIntersectsX(AABB first, AABB second) const noexcept;
 
     bool AABBIntersectsY(AABB first, AABB second) const noexcept;
@@ -40,14 +34,14 @@ public:
 
     double GetClipZ(AABB first, AABB second, double delta_z) const noexcept;
 
-    glm::dvec3 GetClippedDisplacementVector(BlockQuery auto&& world_block_query, const Observer& observer, glm::dvec3 displacement_vector) const noexcept
+    glm::dvec3 GetClippedDisplacementVector(BlockQuery auto&& world_block_query, const Observer& observer, const ChunkManager& chunk_manager, glm::dvec3 displacement_vector) const noexcept
     {
         if (glm::length2(displacement_vector) <= 0.0)
         {
             return displacement_vector;
         }
         
-        const glm::ivec3 start_coords = observer.RelativeBlockPos(constants::observer::pos_offset) - glm::ivec3(1);
+        const glm::ivec3 start_coords = chunk_manager.RelativeBlockPos(observer.Pos(), constants::observer::pos_offset) - glm::ivec3(1);
         constexpr int neighbor_radius = 5;
         std::vector<AABB> neighbor_blocks;
 

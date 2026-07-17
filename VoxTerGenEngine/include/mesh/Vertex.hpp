@@ -10,10 +10,10 @@
 
 struct Vertex
 {
-    glm::vec3 position_;
-    glm::vec3 normal_;
-    glm::vec2 uv_;
-    std::uint8_t material_;
+    glm::vec3 position_ = glm::vec3(0.0f);
+    glm::vec3 normal_ = glm::vec3(0.0f);
+    glm::vec2 uv_ = glm::vec3(0.0f);
+    std::uint8_t material_ = 0;
 };
 
 #endif // VERTEX_HPP

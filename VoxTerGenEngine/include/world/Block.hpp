@@ -72,4 +72,7 @@ struct BlockInfo
     glm::ivec3 absolute_pos_;
 };
 
+template <typename Fnc>
+concept BlockQuery = std::invocable<Fnc, glm::ivec3>&& std::convertible_to<std::invoke_result_t<Fnc, glm::ivec3>, BlockInfo>;
+
 #endif // BLOCK_HPP

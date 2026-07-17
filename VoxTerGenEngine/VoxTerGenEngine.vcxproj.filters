@@ -102,6 +102,9 @@
     <ClCompile Include="src\physics\DigitalDifferentialAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\BlockHighlightRenderPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Constants.hpp">
@@ -1233,6 +1236,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\physics\AABB.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\BlockHighlightRenderPass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

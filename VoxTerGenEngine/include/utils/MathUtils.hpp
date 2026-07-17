@@ -82,8 +82,9 @@ namespace math_utils
      *
      * @return -1 if val < 0, 0 if val == 0, 1 if val > 0
      */
-    template <std::integral T>
-    inline constexpr int Sgn(T val)
+    template <typename T> 
+    requires std::is_arithmetic_v<T>
+    inline constexpr int Sgn(T val) noexcept
     {
         return (T(0) < val) - (val < T(0));
     }

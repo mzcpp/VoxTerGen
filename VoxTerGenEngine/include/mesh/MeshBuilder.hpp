@@ -34,22 +34,25 @@ struct MergedQuad
 	int height_;
 };
 
-template <typename Fnc> 
-concept BlockQuery = std::invocable<Fnc, glm::ivec3> && std::convertible_to<std::invoke_result_t<Fnc, glm::ivec3>, BlockInfo>;
-
 class MeshBuilder final
 {
 public:
 	MeshBuilder() = delete;
+
 	MeshBuilder(const MeshBuilder& other) = delete;
 	MeshBuilder& operator=(const MeshBuilder& other) = delete;
+
+	static Mesh BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offset);
+
+	static void CreateMeshIndices(Mesh& chunk_mesh);
+
+	static void CreateMeshVertices(BlockType type, Direction dir, glm::vec3 origin_offset, Mesh& chunk_mesh);
 
 	static Mesh BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query);
 	
 	static Mesh BuildMeshGreedy(BlockQuery auto&& world_block_query);
 
-private:
-	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_coords, Direction dir, Mesh& chunk_mesh);
+	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& chunk_mesh);
 
 	static std::uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 

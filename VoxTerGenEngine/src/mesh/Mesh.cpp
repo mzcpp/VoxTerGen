@@ -5,6 +5,11 @@ void Mesh::AddVertex(glm::vec3 position, glm::vec3 normal, glm::vec2 uv, std::ui
 	vertices_.emplace_back(position, normal, uv, material);
 }
 
+void Mesh::AddVertex(Vertex vertex)
+{
+	vertices_.push_back(std::move(vertex));
+}
+
 void Mesh::AddIndex(std::uint32_t index)
 {
 	indices_.emplace_back(index);

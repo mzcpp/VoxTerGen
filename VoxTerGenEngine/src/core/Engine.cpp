@@ -11,7 +11,9 @@
 
 #include <iostream>
 
-Engine::Engine() : camera_controller_(camera_), observer_controller_(observer_)
+Engine::Engine() : 
+	camera_controller_(camera_), 
+	observer_controller_(observer_)
 {
 }
 
@@ -23,6 +25,7 @@ void Engine::Initialize()
 	//observer_.SetPosition(CalculateObserverPosition());
 	
 	world_.InitChunks(constants::chunk::default_radius);
+	world_renderer_.Initialize();
 }
 
 void Engine::BeginFrame()
@@ -49,14 +52,16 @@ void Engine::HandleEvents(SDL_Event e)
 
 void Engine::Tick(float aspect_ratio)
 {
-	observer_controller_.Tick(collision_system_, world_.ChunkManagerRef(), camera_);
-	camera_controller_.Tick();
+	const ChunkManager& chunk_manager = world_.ChunkManagerRef();
+	
+	observer_controller_.Tick(collision_system_, chunk_manager, camera_);
+	camera_controller_.Tick(chunk_manager);
 	
 	observer_.Tick();
 	camera_.Tick(aspect_ratio);
 
 	world_.Tick(chunk_event_queue_, camera_);
-	world_renderer_.Tick(chunk_event_queue_);
+	world_renderer_.Tick(chunk_event_queue_, camera_.RaycastResult());
 }
 
 void Engine::Render(float alpha)
@@ -68,10 +73,4 @@ void Engine::Render(float alpha)
 	const glm::mat4 proj = camera_.ProjectionMatrix();
 
 	world_renderer_.RenderWorld(interpolated_view, proj, resource_manager_);
-}
-
-glm::dvec3 Engine::CalculateObserverPosition() const
-{
-	// TODO, move this from engine! To chunk manager?
-	return glm::dvec3(0.0);
 }

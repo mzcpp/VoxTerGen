@@ -12,9 +12,7 @@ class MeshRenderer
 private:
 
 public:
-	MeshRenderer();
-
-	void RenderChunkMesh(const GpuMesh& gpu_mesh);
+	void RenderGpuMesh(const GpuMesh& gpu_mesh) const;
 };
 
 #endif // MESH_RENDERER_HPP

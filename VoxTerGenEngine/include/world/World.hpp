@@ -10,8 +10,6 @@ private:
 	ChunkManager chunk_manager_;
 
 public:
-	World();
-
 	void InitChunks(int chunk_radius);
 
 	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);

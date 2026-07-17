@@ -1,4 +1,5 @@
 #include "render/ChunkMeshRenderPass.hpp"
+#include "render/MeshRenderer.hpp"
 
 #include "core/ResourceManager.hpp"
 
@@ -12,6 +13,12 @@
 #include <ranges>
 #include <variant>
 
+ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) : 
+	mesh_renderer_(mesh_renderer)
+{
+}
+
+
 void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue)
 {
 	while (!chunk_event_queue.empty())
@@ -24,8 +31,9 @@ void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event
 			{
 				[this](chunk_event::ChunkMeshReady& e)
 				{
+					e.render_data_.gpu_mesh_.InitializeBuffers();
 					e.render_data_.gpu_mesh_.UploadMeshData(*e.cpu_mesh_);
-					e.render_data_.chunk_model_ = glm::translate(glm::mat4(1.0f), { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth });
+					e.render_data_.model_matrix_ = glm::translate(glm::mat4(1.0f), { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth });
 					chunks_render_data_.emplace(e.chunk_id_, std::move(e.render_data_));
 				},
 
@@ -54,10 +62,10 @@ void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& p
 	resource_manager.GetTexture("atlas")->Bind();
 	shader_program->Set<int>("atlas_texture", 0);
 
-	for (const ChunkRenderData& chunk_render_data : chunks_render_data_ | std::views::values)
+	for (const RenderData& chunk_render_data : chunks_render_data_ | std::views::values)
 	{
-		shader_program->Set<glm::mat4>("model", chunk_render_data.chunk_model_);
-		mesh_renderer_.RenderChunkMesh(chunk_render_data.gpu_mesh_);
+		shader_program->Set<glm::mat4>("model", chunk_render_data.model_matrix_);
+		mesh_renderer_.RenderGpuMesh(chunk_render_data.gpu_mesh_);
 	}
 
 	glUseProgram(0);

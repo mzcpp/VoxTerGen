@@ -84,16 +84,11 @@ constexpr glm::vec3 DirToNormal(Direction dir)
     return { 0.0f, 0.0f, 0.0f };
 }
 
-constexpr Direction direction_table[3][2] =
+constexpr Direction ToDirection(MajorAxis axis, bool positive) noexcept
 {
-    { Direction::NegX, Direction::PosX },
-    { Direction::NegY, Direction::PosY },
-    { Direction::NegZ, Direction::PosZ }
-};
-
-constexpr Direction ToDirection(MajorAxis axis, bool positive)
-{
-    return direction_table[static_cast<std::uint8_t>(axis)][positive];
+    const std::uint8_t axis_index = static_cast<std::uint8_t>(axis) * 2;
+    
+    return static_cast<Direction>(axis_index + (positive ? 0 : 1));
 }
 
 #endif // DIRECTION_HPP

@@ -178,6 +178,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\render\BlockHighlightRenderPass.cpp" />
     <ClCompile Include="src\physics\DigitalDifferentialAnalyzer.cpp" />
     <ClCompile Include="src\physics\CollisionSystem.cpp" />
     <ClCompile Include="include\external\glm\detail\glm.cpp" />
@@ -209,6 +210,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\world\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\render\BlockHighlightRenderPass.hpp" />
     <ClInclude Include="include\physics\AABB.hpp" />
     <ClInclude Include="include\physics\DigitalDifferentialAnalyzer.hpp" />
     <ClInclude Include="include\physics\CollisionSystem.hpp" />

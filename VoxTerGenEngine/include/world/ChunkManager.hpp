@@ -21,8 +21,6 @@ private:
 	ChunkID next_chunk_id_ = 1;
 
 public:
-	ChunkManager();
-
     void InitChunks(int chunk_radius);
     
 	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
@@ -36,6 +34,10 @@ public:
 	BlockInfo WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const;
 
 	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
+
+	glm::ivec3 AbsoluteBlockPos(glm::dvec3 position, glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;
+
+	glm::ivec3 RelativeBlockPos(glm::dvec3 position, glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;
 
 	void PushChunkIntoQueue(Chunk* chunk);
 

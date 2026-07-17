@@ -8,6 +8,7 @@
 
 class Camera;
 class InputManager;
+class ChunkManager;
 
 class CameraController
 {
@@ -32,7 +33,7 @@ public:
 
     void GatherInput(const InputManager& input_manager);
 
-    void Tick();
+    void Tick(const ChunkManager& chunk_manager);
 
     void ApplyChanges(double frame_dt);
 
@@ -41,6 +42,8 @@ public:
     void ApplyMouseRotation();
 
     void ApplyZoom();
+
+    void CastRay(double max_distance, const ChunkManager& chunk_manager);
 };
 
 #endif // CAMERA_CONTROLLER_HPP

@@ -1,15 +1,26 @@
+#include "core/Direction.hpp"
+
 #include "input/CameraController.hpp"
 #include "input/InputManager.hpp"
+
 #include "utils/MathUtils.hpp"
+
 #include "graphics/Camera.hpp"
+
+#include "physics/DigitalDifferentialAnalyzer.hpp"
+
+#include "world/ChunkManager.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include <SDL2/SDL.h>
 
 #include <algorithm>
 #include <cassert>
+
+namespace dda = digital_differential_analyzer;
 
 CameraController::CameraController(Camera& camera) :
     camera_(camera),
@@ -60,8 +71,11 @@ void CameraController::GatherInput(const InputManager& input_manager)
     mouse_wheel_ = input_manager.MouseWheel();
 }
 
-void CameraController::Tick()
+void CameraController::Tick(const ChunkManager& chunk_manager)
 {
+    const double max_distance = 6.0;
+
+    CastRay(max_distance, chunk_manager);
 }
 
 void CameraController::ApplyChanges(double frame_dt)
@@ -125,4 +139,16 @@ void CameraController::ApplyZoom()
 
     camera_.zoom_ = std::clamp(camera_.zoom_ - (mouse_wheel_ * zoom_sensitivity_), constants::camera::zoom_min, constants::camera::zoom_max);
     camera_.stale_ = true;
+}
+
+void CameraController::CastRay(double max_distance, const ChunkManager& chunk_manager)
+{
+    const auto world_block_query = [this, &chunk_manager](glm::ivec3 coords) {
+        const glm::ivec3 camera_block_pos = chunk_manager.RelativeBlockPos(camera_.Pos());
+        const glm::ivec2 chunk_coords = chunk_manager.GetChunkCoords(camera_block_pos);
+        
+        return chunk_manager.WorldBlockQuery(chunk_coords, coords);
+    };
+
+    camera_.raycast_result_ = dda::CastRay(camera_.Pos(), camera_.Front(), max_distance, world_block_query);
 }

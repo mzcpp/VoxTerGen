@@ -3,10 +3,13 @@
 
 #include "utils/Constants.hpp"
 
+#include "physics/DigitalDifferentialAnalyzer.hpp"
+
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
 #include <array>
+#include <optional>
 
 /**
  * @brief Represents a plane in 3D space.
@@ -62,6 +65,8 @@ private:
     bool enabled_rotation_;
     bool enabled_zoom_;
 	bool stale_;
+
+    std::optional<RaycastResult> raycast_result_;
 
 public:
     /**
@@ -155,6 +160,7 @@ public:
     float PrevYaw() const noexcept { return prev_yaw_; }
 	float PrevPitch() const noexcept { return prev_pitch_; }
 	glm::dvec3 FPSOffset() const noexcept { return fps_offset_; }
+    const std::optional<RaycastResult>& RaycastResult() const noexcept { return raycast_result_; }
 
 	// Setters
 	void SetEnableMovement(bool value) noexcept { enabled_movement_ = value; }
