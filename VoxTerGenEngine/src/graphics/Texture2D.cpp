@@ -98,7 +98,7 @@ namespace TextureUtils
     }
 
     Texture2D::Texture2D(
-        std::string_view cubemap_path, 
+        std::string_view path,
         bool sRGB, 
         bool generate_mipmaps, 
         GLenum wrap_s, 
@@ -138,22 +138,22 @@ namespace TextureUtils
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
         constexpr int face_image_dimension = 512;
-        std::unique_ptr<stbi_uc> buffer = std::make_unique<stbi_uc[]>(face_image_dimension * face_image_dimension * n_components);
+        std::unique_ptr<stbi_uc[]> buffer = std::make_unique<stbi_uc[]>(face_image_dimension * face_image_dimension * n_components);
 
         glTextureStorage2D(texture_id_, levels, internal_format_, face_image_dimension, face_image_dimension);
 
-        for (int col = 0; int face_n = 0, int data_offset = 0; col < 6; ++col, ++face_n)
-        {
-            // copy 512 rows
-            for (int row = 0; row < face_image_dimension; ++row)
-            {
-                std::memcpy(buffer.get(), data.get() + data_offset, face_image_dimension);
-            }
+        //for (int col = 0, int face_n = 0, int data_offset = 0; col < 6; ++col, ++face_n)
+        //{
+        //    // copy 512 rows
+        //    for (int row = 0; row < face_image_dimension; ++row)
+        //    {
+        //        std::memcpy(buffer.get(), data.get() + data_offset, face_image_dimension);
+        //    }
 
-            glTextureSubImage3D(texture_id_, 0, 0, 0, face_n, face_image_dimension, face_image_dimension, data_format_, GL_UNSIGNED_BYTE, buffer.get());
+        //    //glTextureSubImage3D(texture_id_, 0, 0, 0, face_n, face_image_dimension, face_image_dimension, data_format_, GL_UNSIGNED_BYTE, buffer.get());
 
-            data_offset += face_image_dimension;
-        }
+        //    data_offset += face_image_dimension;
+        //}
 
         if (generate_mipmaps)
         {
