@@ -13,6 +13,7 @@
 #include <cmath>
 #include <string_view>
 #include <cstring>
+#include <array>
 
 namespace TextureUtils
 {
@@ -137,10 +138,19 @@ namespace TextureUtils
         glGetIntegerv(GL_UNPACK_ALIGNMENT, &previous_unpack_alignment);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        constexpr int face_image_dimension = 512;
-        std::unique_ptr<stbi_uc[]> buffer = std::make_unique<stbi_uc[]>(face_image_dimension * face_image_dimension * n_components);
+        constexpr std::array<int, 6> z_offsets = { 3, 2, 0, 1, 4, 5 };
+        constexpr std::size_t face_image_dimension = 512;
+        constexpr std::size_t atlas_face_width = 3;
+        constexpr std::size_t atlas_face_height = 2;
+        const std::size_t atlas_width_bytes = face_image_dimension * static_cast<std::size_t>(n_components) * atlas_face_width;
+        std::unique_ptr<stbi_uc[]> buffer = std::make_unique<stbi_uc[]>(face_image_dimension * face_image_dimension * static_cast<std::size_t>(n_components));
 
         glTextureStorage2D(texture_id_, levels, internal_format_, face_image_dimension, face_image_dimension);
+
+        for (int i = 0; i < 6; ++i)
+        {
+
+        }
 
         //for (int col = 0, int face_n = 0, int data_offset = 0; col < 6; ++col, ++face_n)
         //{

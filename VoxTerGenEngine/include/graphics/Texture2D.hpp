@@ -26,11 +26,24 @@ namespace TextureUtils
         GLenum target_;
 
     public:
-        Texture2D(std::string_view path, bool sRGB, bool generate_mipmaps,
-            GLenum wrap_s, GLenum wrap_t, GLenum min_filter, GLenum mag_filter);
+        Texture2D(
+            std::string_view path, 
+            bool sRGB, 
+            bool generate_mipmaps,
+            GLenum wrap_s, 
+            GLenum wrap_t, 
+            GLenum min_filter, 
+            GLenum mag_filter);
 
-        Texture2D(std::string_view path, bool sRGB, bool generate_mipmaps,
-           GLenum wrap_s, GLenum wrap_t, GLenum wrap_r, GLenum min_filter, GLenum mag_filter);
+        Texture2D(
+            std::string_view path, 
+            bool sRGB, 
+            bool generate_mipmaps,
+            GLenum wrap_s, 
+            GLenum wrap_t, 
+            GLenum wrap_r, 
+            GLenum min_filter, 
+            GLenum mag_filter);
 
         Texture2D(const Texture2D& other) = delete;
         Texture2D& operator=(const Texture2D& other) = delete;
