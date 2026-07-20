@@ -178,6 +178,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\render\SkyboxRenderPass.cpp" />
     <ClCompile Include="src\render\BlockHighlightRenderPass.cpp" />
     <ClCompile Include="src\physics\DigitalDifferentialAnalyzer.cpp" />
     <ClCompile Include="src\physics\CollisionSystem.cpp" />
@@ -588,6 +589,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\world\Observer.hpp" />
     <ClInclude Include="include\world\World.hpp" />
     <ClInclude Include="include\input\ObserverController.hpp" />
+    <ClInclude Include="include\render\SkyboxRenderPass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\external\glm\detail\func_common.inl" />

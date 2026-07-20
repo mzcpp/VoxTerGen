@@ -183,9 +183,9 @@ namespace TextureUtils
 
         for (std::size_t i = 0; i < 6; ++i)
         {
-            const std::size_t start_offset = (i / columns_n * face_size * atlas_width_bytes) + ((i % columns_n) * face_width_bytes);
+            const std::size_t start_offset = (i / columns_n * static_cast<std::size_t>(face_size) * atlas_width_bytes) + ((i % columns_n) * face_width_bytes);
 
-            for (std::size_t row_n = 0; row_n < face_size; ++row_n)
+            for (std::size_t row_n = 0; row_n < static_cast<std::size_t>(face_size); ++row_n)
             {
                 std::memcpy(buffer.get() + (row_n * face_width_bytes), data.get() + start_offset + (row_n * atlas_width_bytes), face_width_bytes);
             }
