@@ -37,8 +37,8 @@ namespace TextureUtils
 
         Texture2D(
             std::string_view path, 
-            std::size_t columns_n, 
-            std::size_t rows_n, 
+            GLsizei columns_n, 
+            GLsizei rows_n, 
             const std::array<int, 6>& z_offsets, 
             bool sRGB, 
             bool generate_mipmaps,
