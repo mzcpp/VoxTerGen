@@ -15,7 +15,7 @@
 void ResourceManager::InitializeResources()
 {
     AddTexture("atlas", std::make_unique<TextureUtils::Texture2D>(constants::paths::texture_atlas, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
-    //AddTexture("cubemap", std::make_unique<TextureUtils::Texture2D>(constants::paths::sky_cubemap, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR ));
+    //AddTexture("cubemap", std::make_unique<TextureUtils::Texture2D>(constants::paths::sky_cubemap, 3, 2, { 3, 2, 0, 1, 4, 5 }, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR ));
     AddShaderProgram("chunk_mesh_shader", std::make_unique<ShaderProgram>(constants::paths::chunk_mesh_vertex_shader, constants::paths::chunk_mesh_fragment_shader));
     AddShaderProgram("block_highlight_shader", std::make_unique<ShaderProgram>(constants::paths::block_highlight_vertex_shader, constants::paths::block_highlight_fragment_shader));
     

@@ -100,6 +100,9 @@ namespace TextureUtils
 
     Texture2D::Texture2D(
         std::string_view path,
+        std::size_t columns_n, 
+        std::size_t rows_n, 
+        const std::array<int, 6>& z_offsets, 
         bool sRGB, 
         bool generate_mipmaps, 
         GLenum wrap_s, 
@@ -131,39 +134,40 @@ namespace TextureUtils
         }
         
         GetTextureFormats(n_components, sRGB, &internal_format_, &data_format_);
+
+        const std::size_t face_width = width_ / columns_n;
+        const std::size_t face_height = height_ / rows_n;
+
+        assert(face_width == face_height);
+        assert(width_ % columns_n == 0);
+        assert(height_ % rows_n == 0);
+        assert(columns_n * rows_n == 6);
+        // TODO: RUNTIME CHECKS, LOG, ...
         
-        const int levels = generate_mipmaps ? 1 + static_cast<int>(std::floor(std::log2(std::max(width_, height_)))) : 1;
+        const std::size_t face_image_dimension = face_width;
+        const int levels = generate_mipmaps ? 1 + static_cast<int>(std::floor(std::log2(face_image_dimension))) : 1;
         
         GLint previous_unpack_alignment = 0;
         glGetIntegerv(GL_UNPACK_ALIGNMENT, &previous_unpack_alignment);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        constexpr std::array<int, 6> z_offsets = { 3, 2, 0, 1, 4, 5 };
-        constexpr std::size_t face_image_dimension = 512;
-        constexpr std::size_t atlas_face_width = 3;
-        constexpr std::size_t atlas_face_height = 2;
-        const std::size_t atlas_width_bytes = face_image_dimension * static_cast<std::size_t>(n_components) * atlas_face_width;
+        const std::size_t face_width_bytes = face_image_dimension * static_cast<std::size_t>(n_components);
+        const std::size_t atlas_width_bytes = face_width_bytes * columns_n;
         std::unique_ptr<stbi_uc[]> buffer = std::make_unique<stbi_uc[]>(face_image_dimension * face_image_dimension * static_cast<std::size_t>(n_components));
 
         glTextureStorage2D(texture_id_, levels, internal_format_, face_image_dimension, face_image_dimension);
 
-        for (int i = 0; i < 6; ++i)
+        for (std::size_t i = 0; i < 6; ++i)
         {
+            const std::size_t start_offset = (i / columns_n * face_image_dimension * atlas_width_bytes) + ((i % columns_n) * face_width_bytes);
 
+            for (std::size_t row_n = 0; row_n < face_image_dimension; ++row_n)
+            {
+                std::memcpy(buffer.get() + (row_n * face_width_bytes), data.get() + start_offset + (row_n * atlas_width_bytes), face_width_bytes);
+            }
+
+            glTextureSubImage3D(texture_id_, 0, 0, 0, z_offsets[i], face_image_dimension, face_image_dimension, data_format_, GL_UNSIGNED_BYTE, buffer.get());
         }
-
-        //for (int col = 0, int face_n = 0, int data_offset = 0; col < 6; ++col, ++face_n)
-        //{
-        //    // copy 512 rows
-        //    for (int row = 0; row < face_image_dimension; ++row)
-        //    {
-        //        std::memcpy(buffer.get(), data.get() + data_offset, face_image_dimension);
-        //    }
-
-        //    //glTextureSubImage3D(texture_id_, 0, 0, 0, face_n, face_image_dimension, face_image_dimension, data_format_, GL_UNSIGNED_BYTE, buffer.get());
-
-        //    data_offset += face_image_dimension;
-        //}
 
         if (generate_mipmaps)
         {
