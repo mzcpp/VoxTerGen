@@ -40,6 +40,7 @@ void SkyboxRenderPass::RenderSkybox(const glm::mat4& projection, const ResourceM
         return;
     }
 
+    glDepthFunc(GL_LEQUAL);
     shader_program->Use();
 	shader_program->Set<glm::mat4>("view", view_);
 	shader_program->Set<glm::mat4>("projection", projection);
@@ -49,4 +50,5 @@ void SkyboxRenderPass::RenderSkybox(const glm::mat4& projection, const ResourceM
 	shader_program->Set<int>("skybox", 0);
 
     mesh_renderer_.RenderGpuMesh(render_data_.gpu_mesh_);
+    glDepthFunc(GL_LESS);
 }
