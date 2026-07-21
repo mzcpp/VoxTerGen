@@ -42,7 +42,7 @@ public:
 	MeshBuilder(const MeshBuilder& other) = delete;
 	MeshBuilder& operator=(const MeshBuilder& other) = delete;
 
-	static Mesh BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offset);
+	static Mesh BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offset = { 0.0f, 0.0f, 0.0f });
 
 	static void CreateMeshIndices(Mesh& chunk_mesh);
 

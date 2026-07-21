@@ -15,15 +15,16 @@
 
 void ResourceManager::InitializeResources()
 {
-    AddTexture("atlas", std::make_unique<TextureUtils::Texture2D>(constants::paths::texture_atlas, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
+    AddTexture("texture_atlas", std::make_unique<TextureUtils::Texture2D>(constants::paths::texture_atlas, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
 
     constexpr std::array<GLint, 6> skybox_z_offsets = { 3, 2, 0, 1, 4, 5 };
     constexpr GLuint columns_n = 3;
     constexpr GLuint rows_n = 2;
-
     AddTexture("sky_cubemap", std::make_unique<TextureUtils::Texture2D>(constants::paths::sky_cubemap, columns_n, rows_n, skybox_z_offsets, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR));
+
     AddShaderProgram("chunk_mesh_shader", std::make_unique<ShaderProgram>(constants::paths::chunk_mesh_vertex_shader, constants::paths::chunk_mesh_fragment_shader));
     AddShaderProgram("block_highlight_shader", std::make_unique<ShaderProgram>(constants::paths::block_highlight_vertex_shader, constants::paths::block_highlight_fragment_shader));
+    AddShaderProgram("skybox_shader", std::make_unique<ShaderProgram>(constants::paths::skybox_vertex_shader, constants::paths::skybox_fragment_shader));
     
     constexpr int font_size = 28;
     LoadFont("default_font", constants::paths::default_font, font_size);
@@ -42,6 +43,7 @@ TextureUtils::Texture2D* ResourceManager::GetTexture(const std::string& texture_
 
     return texture_it->second.get();
 }
+
 ShaderProgram* ResourceManager::GetShaderProgram(const std::string& shader_program_name) const
 {
     const auto shader_it = shader_programs_.find(shader_program_name);

@@ -2,6 +2,7 @@
 #define BLOCK_HIGHLIGHT_RENDER_PASS_HPP
 
 #include "render/MeshRenderer.hpp"
+#include "render/MeshRenderData.hpp"
 
 #include "world/Chunk.hpp"
 
@@ -19,7 +20,7 @@ class BlockHighlightRenderPass
 private:
 	const MeshRenderer& mesh_renderer_;
 	Mesh block_highlight_mesh_;
-	RenderData render_data_;
+	MeshRenderData render_data_;
 	bool render_highlight_;
 
 public:

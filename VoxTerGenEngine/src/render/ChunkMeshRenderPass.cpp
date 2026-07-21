@@ -1,5 +1,6 @@
 #include "render/ChunkMeshRenderPass.hpp"
 #include "render/MeshRenderer.hpp"
+#include "render/MeshRenderData.hpp"
 
 #include "core/ResourceManager.hpp"
 
@@ -52,6 +53,11 @@ void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& p
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");
 
+	if (shader_program == nullptr)
+    {
+        return;
+    }
+	
 	shader_program->Use();
 	shader_program->Set<glm::mat4>("view", view);
 	shader_program->Set<glm::mat4>("projection", projection);
@@ -59,10 +65,10 @@ void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& p
 	shader_program->Set<unsigned int>("atlas_rows", constants::texture::atlas_rows);
 
 	glActiveTexture(GL_TEXTURE0);
-	resource_manager.GetTexture("atlas")->Bind();
+	resource_manager.GetTexture("texture_atlas")->Bind();
 	shader_program->Set<int>("atlas_texture", 0);
 
-	for (const RenderData& chunk_render_data : chunks_render_data_ | std::views::values)
+	for (const MeshRenderData& chunk_render_data : chunks_render_data_ | std::views::values)
 	{
 		shader_program->Set<glm::mat4>("model", chunk_render_data.model_matrix_);
 		mesh_renderer_.RenderGpuMesh(chunk_render_data.gpu_mesh_);
