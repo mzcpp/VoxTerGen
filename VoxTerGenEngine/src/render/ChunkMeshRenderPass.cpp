@@ -5,6 +5,7 @@
 #include "core/ResourceManager.hpp"
 
 #include "world/Chunk.hpp"
+#include "world/ChunkEvents.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
@@ -13,6 +14,7 @@
 #include <memory>
 #include <ranges>
 #include <variant>
+#include <queue>
 
 ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) : 
 	mesh_renderer_(mesh_renderer)

@@ -6,6 +6,7 @@
 #include "graphics/Camera.hpp"
 
 #include "world/Chunk.hpp"
+#include "world/ChunkEvents.hpp"
 #include "world/Block.hpp"
 
 #include <glm/vec2.hpp>

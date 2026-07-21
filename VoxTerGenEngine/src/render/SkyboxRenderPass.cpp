@@ -1,4 +1,4 @@
-#include "render/SkyboxRenderPass.h"
+#include "render/SkyboxRenderPass.hpp"
 
 #include "core/ResourceManager.hpp"
 

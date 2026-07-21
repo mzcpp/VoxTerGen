@@ -4,8 +4,10 @@
 #include "core/ResourceManager.hpp"
 
 #include "render/MeshRenderer.hpp"
+#include "render/MeshRenderData.hpp"
 
 #include "world/Chunk.hpp"
+#include "world/ChunkEvents.hpp"
 
 #include <glm/mat4x4.hpp>
 
@@ -24,7 +26,7 @@ class ChunkMeshRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
-	std::unordered_map<ChunkID, RenderData> chunks_render_data_;
+	std::unordered_map<ChunkID, MeshRenderData> chunks_render_data_;
 
 public:
 	ChunkMeshRenderPass(const MeshRenderer& mesh_renderer);

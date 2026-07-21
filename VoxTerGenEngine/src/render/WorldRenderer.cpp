@@ -35,7 +35,7 @@ void WorldRenderer::Tick(std::queue<ChunkEvent>& chunk_event_queue, const std::o
 {
 	chunk_mesh_render_pass_.ProcessChunkEvents(chunk_event_queue);
 	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(raycast_result);
-	skybox_render_pass_.UpdateViewMatrix(camera);
+	skybox_render_pass_.UpdateViewMatrix(camera.ViewMatrix());
 }
 
 void WorldRenderer::RenderWorld(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)

@@ -4,6 +4,7 @@
 #include "utils/MathUtils.hpp"
 
 #include "world/Chunk.hpp"
+#include "world/ChunkEvents.hpp"
 
 #include <queue>
 #include <cmath>
