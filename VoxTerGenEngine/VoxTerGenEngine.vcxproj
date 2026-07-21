@@ -576,6 +576,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\mesh\Vertex.hpp" />
     <ClInclude Include="include\render\ChunkMeshRenderPass.hpp" />
     <ClInclude Include="include\render\Material.hpp" />
+    <ClInclude Include="include\render\MeshRenderData.hpp" />
     <ClInclude Include="include\render\MeshRenderer.hpp" />
     <ClInclude Include="include\render\GpuMesh.hpp" />
     <ClInclude Include="include\render\WorldRenderer.hpp" />
@@ -585,6 +586,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\utils\MathUtils.hpp" />
     <ClInclude Include="include\world\Block.hpp" />
     <ClInclude Include="include\world\Chunk.hpp" />
+    <ClInclude Include="include\world\ChunkEvents.hpp" />
     <ClInclude Include="include\world\ChunkManager.hpp" />
     <ClInclude Include="include\world\Observer.hpp" />
     <ClInclude Include="include\world\World.hpp" />

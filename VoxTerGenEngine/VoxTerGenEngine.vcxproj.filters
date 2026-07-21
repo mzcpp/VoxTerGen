@@ -1247,6 +1247,12 @@
     <ClInclude Include="include\render\SkyboxRenderPass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\MeshRenderData.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\world\ChunkEvents.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\external\glm\detail\func_common.inl">
