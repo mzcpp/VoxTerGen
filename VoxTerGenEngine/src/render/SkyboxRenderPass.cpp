@@ -36,6 +36,7 @@ void SkyboxRenderPass::RenderSkybox(const glm::mat4& view, const glm::mat4& proj
 
     glCullFace(GL_FRONT);
     glDepthFunc(GL_LEQUAL);
+
     shader_program->Use();
 	shader_program->Set<glm::mat4>("view", glm::mat4(glm::mat3(view)));
 	shader_program->Set<glm::mat4>("projection", projection);
@@ -45,6 +46,7 @@ void SkyboxRenderPass::RenderSkybox(const glm::mat4& view, const glm::mat4& proj
 	shader_program->Set<int>("skybox", 0);
 
     mesh_renderer_.RenderGpuMesh(render_data_.gpu_mesh_);
+
     glDepthFunc(GL_LESS);
     glCullFace(GL_BACK);
 }
