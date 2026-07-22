@@ -40,8 +40,6 @@ public:
 
 	glm::ivec3 RelativeBlockPos(glm::dvec3 position, glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;
 
-	void PushChunkIntoQueue(Chunk* chunk);
-
 	glm::ivec2 GetChunkCoords(glm::dvec3 pos) const noexcept;
 
 	// TODO: TEMPORARY CHUNK FILL - REMOVE LATER!

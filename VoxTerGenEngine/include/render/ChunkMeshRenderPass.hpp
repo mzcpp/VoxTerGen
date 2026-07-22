@@ -3,6 +3,8 @@
 
 #include "core/ResourceManager.hpp"
 
+#include "physics/AABB.hpp"
+
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
 
@@ -22,11 +24,17 @@
 template<class... Ts>
 struct overloaded : Ts... { using Ts::operator()...; };
 
+struct ChunkData
+{
+	MeshRenderData mesh_render_data_;
+	AABB aabb_;
+};
+
 class ChunkMeshRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
-	std::unordered_map<ChunkID, MeshRenderData> chunks_render_data_;
+	std::unordered_map<ChunkID, MeshRenderData> chunks_data_;
 
 public:
 	ChunkMeshRenderPass(const MeshRenderer& mesh_renderer);
