@@ -1,8 +1,5 @@
 #include "render/BlockHighlightRenderPass.hpp"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 #include "core/Direction.hpp"
 #include "core/ResourceManager.hpp"
 
@@ -15,6 +12,11 @@
 
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
+
+#include <glm/glm.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <optional>
 
