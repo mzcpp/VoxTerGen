@@ -1,5 +1,6 @@
 ********* REFACTOR *********
 
+polish cubemap texture
 put stuff into UBO
 PACK vertex into uint32
 	Fix grass texture issues
