@@ -105,6 +105,9 @@
     <ClCompile Include="src\render\BlockHighlightRenderPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\SkyboxRenderPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Constants.hpp">
@@ -1239,6 +1242,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\render\BlockHighlightRenderPass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\SkyboxRenderPass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\MeshRenderData.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\world\ChunkEvents.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

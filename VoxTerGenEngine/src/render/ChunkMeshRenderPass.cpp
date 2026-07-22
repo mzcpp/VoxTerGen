@@ -1,15 +1,18 @@
 #include "render/ChunkMeshRenderPass.hpp"
 #include "render/MeshRenderer.hpp"
+#include "render/MeshRenderData.hpp"
 
 #include "core/ResourceManager.hpp"
 
 #include "world/Chunk.hpp"
+#include "world/ChunkEvents.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 
 #include <memory>
+#include <queue>
 #include <ranges>
 #include <variant>
 
@@ -34,12 +37,12 @@ void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event
 					e.render_data_.gpu_mesh_.InitializeBuffers();
 					e.render_data_.gpu_mesh_.UploadMeshData(*e.cpu_mesh_);
 					e.render_data_.model_matrix_ = glm::translate(glm::mat4(1.0f), { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth });
-					chunks_render_data_.emplace(e.chunk_id_, std::move(e.render_data_));
+					chunks_data_.emplace(e.chunk_id_, std::move(e.render_data_));
 				},
 
 				[this](chunk_event::ChunkDestroyed& e)
 				{
-					chunks_render_data_.erase(e.chunk_id_);
+					chunks_data_.erase(e.chunk_id_);
 				}
 
 			}, 
@@ -52,6 +55,11 @@ void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& p
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");
 
+	if (shader_program == nullptr)
+    {
+        return;
+    }
+	
 	shader_program->Use();
 	shader_program->Set<glm::mat4>("view", view);
 	shader_program->Set<glm::mat4>("projection", projection);
@@ -59,13 +67,15 @@ void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& p
 	shader_program->Set<unsigned int>("atlas_rows", constants::texture::atlas_rows);
 
 	glActiveTexture(GL_TEXTURE0);
-	resource_manager.GetTexture("atlas")->Bind();
+	resource_manager.GetTexture("texture_atlas")->Bind();
 	shader_program->Set<int>("atlas_texture", 0);
 
-	for (const RenderData& chunk_render_data : chunks_render_data_ | std::views::values)
+	auto inside_frustum = [](const MeshRenderData& mesh_render_data) { return true; }; 
+
+	for (const MeshRenderData& chunk_data : chunks_data_ | std::views::values | std::views::filter(inside_frustum))
 	{
-		shader_program->Set<glm::mat4>("model", chunk_render_data.model_matrix_);
-		mesh_renderer_.RenderGpuMesh(chunk_render_data.gpu_mesh_);
+		shader_program->Set<glm::mat4>("model", chunk_data.model_matrix_);
+		mesh_renderer_.RenderGpuMesh(chunk_data.gpu_mesh_);
 	}
 
 	glUseProgram(0);

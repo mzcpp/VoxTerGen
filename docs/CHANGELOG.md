@@ -18,6 +18,22 @@ The format follows Keep a Changelog and Semantic Versioning.
 
 ---
 
+## [0.5.2] - 22 July 2026
+
+### Added
+- Added support for loading cubemap textures from a texture atlas
+- Added skybox rendering
+
+---
+
+## [0.5.1] - 17 July 2026
+
+### Added
+- Implemented Digital Differential Analyzer (DDA) raycasting for voxel traversal
+- Added block selection highlight rendered with a dedicated render pass
+
+---
+
 ## [0.5.0] - 30 June 2026
 
 ### Added

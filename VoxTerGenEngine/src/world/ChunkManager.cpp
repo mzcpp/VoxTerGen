@@ -4,6 +4,7 @@
 #include "utils/MathUtils.hpp"
 
 #include "world/Chunk.hpp"
+#include "world/ChunkEvents.hpp"
 
 #include <queue>
 #include <cmath>
@@ -238,11 +239,6 @@ BlockInfo ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ive
 	}
 
 	return { Block(), glm::ivec3(0) };
-}
-
-void ChunkManager::PushChunkIntoQueue(Chunk* chunk)
-{
-	chunk_build_queue_.push(chunk);
 }
 
 glm::ivec2 ChunkManager::GetChunkCoords(glm::dvec3 pos) const noexcept

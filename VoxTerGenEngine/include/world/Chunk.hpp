@@ -22,30 +22,6 @@ class Mesh;
 
 using ChunkID = std::uint64_t;
 
-struct RenderData
-{
-    GpuMesh gpu_mesh_;
-    glm::mat4 model_matrix_ = glm::mat4(1.0f);
-};
-
-namespace chunk_event
-{
-    struct ChunkMeshReady
-    {
-        ChunkID chunk_id_;
-        glm::ivec2 world_coords_;
-        std::unique_ptr<Mesh> cpu_mesh_;
-        RenderData render_data_;
-    };
-
-    struct ChunkDestroyed
-    {
-        ChunkID chunk_id_;
-    };
-}
-
-using ChunkEvent = std::variant<chunk_event::ChunkMeshReady, chunk_event::ChunkDestroyed>;
-
 class Chunk
 {
 private:

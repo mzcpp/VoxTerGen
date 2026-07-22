@@ -1,10 +1,9 @@
 #include "render/BlockHighlightRenderPass.hpp"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 #include "core/Direction.hpp"
 #include "core/ResourceManager.hpp"
+
+#include "graphics/ShaderProgram.hpp"
 
 #include "mesh/Mesh.hpp"
 #include "mesh/MeshBuilder.hpp"
@@ -12,6 +11,12 @@
 #include "physics/DigitalDifferentialAnalyzer.hpp"
 
 #include "render/MeshRenderer.hpp"
+#include "render/MeshRenderData.hpp"
+
+#include <glm/glm.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <optional>
 
@@ -51,6 +56,11 @@ void BlockHighlightRenderPass::RenderBlockHighlight(const glm::mat4& view, const
     }
 
     const ShaderProgram* shader_program = resource_manager.GetShaderProgram("block_highlight_shader");
+
+    if (shader_program == nullptr)
+    {
+        return;
+    }
 
     shader_program->Use();
 	shader_program->Set<glm::mat4>("view", view);
