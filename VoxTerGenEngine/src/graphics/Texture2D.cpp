@@ -47,6 +47,7 @@ namespace TextureUtils
         std::string_view path, 
         bool sRGB, 
         bool generate_mipmaps, 
+        bool flip_vertically, 
         GLenum wrap_s, 
         GLenum wrap_t, 
         GLenum min_filter, 
@@ -58,6 +59,7 @@ namespace TextureUtils
         glCreateTextures(GL_TEXTURE_2D, 1, &texture_id_);
         int n_components = 0;
         
+        stbi_set_flip_vertically_on_load(flip_vertically);
         std::unique_ptr<stbi_uc, decltype(&stbi_image_free)> data = { stbi_load(path.data(), &width_, &height_, &n_components, 0), stbi_image_free };
 
         if (!data.get())
@@ -105,6 +107,7 @@ namespace TextureUtils
         const std::array<int, 6>& z_offsets, 
         bool sRGB, 
         bool generate_mipmaps, 
+        bool flip_vertically, 
         GLenum wrap_s, 
         GLenum wrap_t, 
         GLenum wrap_r, 
@@ -125,6 +128,7 @@ namespace TextureUtils
         glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &texture_id_);
         int n_components = 0;
         
+        stbi_set_flip_vertically_on_load(flip_vertically);
         std::unique_ptr<stbi_uc, decltype(&stbi_image_free)> data = { stbi_load(path.data(), &width_, &height_, &n_components, 0), stbi_image_free };
 
         if (!data.get())

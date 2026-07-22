@@ -15,12 +15,13 @@
 
 void ResourceManager::InitializeResources()
 {
-    AddTexture("texture_atlas", std::make_unique<TextureUtils::Texture2D>(constants::paths::texture_atlas, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
-
-    constexpr std::array<GLint, 6> skybox_z_offsets = { 3, 2, 0, 1, 4, 5 };
-    constexpr GLuint columns_n = 3;
+    AddTexture("texture_atlas", std::make_unique<TextureUtils::Texture2D>(constants::paths::texture_atlas, true, false, true, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
+    
+    // -Y +Y -X -Z +X +Z
+    constexpr std::array<GLint, 6> skybox_z_offsets = { 3, 2, 0, 5, 1, 4 };
+    constexpr GLuint columns_n = 3; 
     constexpr GLuint rows_n = 2;
-    AddTexture("sky_cubemap", std::make_unique<TextureUtils::Texture2D>(constants::paths::sky_cubemap, columns_n, rows_n, skybox_z_offsets, true, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR));
+    AddTexture("sky_cubemap", std::make_unique<TextureUtils::Texture2D>(constants::paths::sky_cubemap, columns_n, rows_n, skybox_z_offsets, true, false, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_LINEAR));
 
     AddShaderProgram("chunk_mesh_shader", std::make_unique<ShaderProgram>(constants::paths::chunk_mesh_vertex_shader, constants::paths::chunk_mesh_fragment_shader));
     AddShaderProgram("block_highlight_shader", std::make_unique<ShaderProgram>(constants::paths::block_highlight_vertex_shader, constants::paths::block_highlight_fragment_shader));

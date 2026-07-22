@@ -342,7 +342,6 @@ bool Application::InitOpenGL()
 #endif
 
 	glViewport(0, 0, constants::window::screen_width, constants::window::screen_height);
-	stbi_set_flip_vertically_on_load(true);
 	glEnable(GL_FRAMEBUFFER_SRGB);
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_DEPTH_BUFFER_BIT);

@@ -17,16 +17,13 @@ private:
 	const MeshRenderer& mesh_renderer_;
 	Mesh skybox_mesh_;
 	MeshRenderData render_data_;
-	glm::mat4 view_;
 
 public:
 	SkyboxRenderPass(const MeshRenderer& mesh_renderer);
 
 	void PrepareSkyboxRenderData();
 
-	void UpdateViewMatrix(const glm::mat4& camera_view);
-
-	void RenderSkybox(const glm::mat4& projection, const ResourceManager& resource_manager);
+	void RenderSkybox(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
 };
 
 #endif
