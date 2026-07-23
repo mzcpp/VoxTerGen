@@ -4,6 +4,8 @@
 
 #include "core/ResourceManager.hpp"
 
+#include "graphics/Camera.hpp"
+
 #include "physics/AABB.hpp"
 
 #include "world/Chunk.hpp"
@@ -56,7 +58,7 @@ void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event
 	}
 }
 
-void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
+void ChunkMeshRenderPass::RenderChunks(const Camera& camera, float alpha, const ResourceManager& resource_manager)
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");
 
@@ -66,8 +68,8 @@ void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& p
     }
 	
 	shader_program->Use();
-	shader_program->Set<glm::mat4>("view", view);
-	shader_program->Set<glm::mat4>("projection", projection);
+	shader_program->Set<glm::mat4>("view", camera.InterpolatedViewMatrix(alpha));
+	shader_program->Set<glm::mat4>("projection", camera.ProjectionMatrix());
 	shader_program->Set<unsigned int>("atlas_columns", constants::texture::atlas_columns);
 	shader_program->Set<unsigned int>("atlas_rows", constants::texture::atlas_rows);
 

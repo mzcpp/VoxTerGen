@@ -8,6 +8,7 @@
 
 #include <glm/mat4x4.hpp>
 
+class Camera;
 class Mesh;
 class ResourceManager;
 
@@ -23,7 +24,7 @@ public:
 
 	void PrepareSkyboxRenderData();
 
-	void RenderSkybox(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
+	void RenderSkybox(const Camera& camera, float alpha, const ResourceManager& resource_manager);
 };
 
 #endif

@@ -3,6 +3,7 @@
 #include "core/Direction.hpp"
 #include "core/ResourceManager.hpp"
 
+#include "graphics/Camera.hpp"
 #include "graphics/ShaderProgram.hpp"
 
 #include "mesh/Mesh.hpp"
@@ -48,7 +49,7 @@ void BlockHighlightRenderPass::UpdateBlockHighlightModelMatrix(const std::option
     render_highlight_ = true;
 }
 
-void BlockHighlightRenderPass::RenderBlockHighlight(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
+void BlockHighlightRenderPass::RenderBlockHighlight(const Camera& camera, float alpha, const ResourceManager& resource_manager)
 {
     if (!render_highlight_)
     {
@@ -63,8 +64,8 @@ void BlockHighlightRenderPass::RenderBlockHighlight(const glm::mat4& view, const
     }
 
     shader_program->Use();
-	shader_program->Set<glm::mat4>("view", view);
-	shader_program->Set<glm::mat4>("projection", projection);
+	shader_program->Set<glm::mat4>("view", camera.InterpolatedViewMatrix(alpha));
+	shader_program->Set<glm::mat4>("projection", camera.ProjectionMatrix());
     shader_program->Set<glm::mat4>("model", render_data_.model_matrix_);
 
     constexpr float distance_threshold = 0.0025f;

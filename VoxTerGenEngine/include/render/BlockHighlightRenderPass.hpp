@@ -10,6 +10,7 @@
 
 #include <memory>
 
+class Camera;
 class Mesh;
 class ResourceManager;
 
@@ -30,7 +31,7 @@ public:
 
 	void UpdateBlockHighlightModelMatrix(const std::optional<RaycastResult>& raycast_result);
 
-	void RenderBlockHighlight(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
+	void RenderBlockHighlight(const Camera& camera, float alpha, const ResourceManager& resource_manager);
 };
 
 #endif

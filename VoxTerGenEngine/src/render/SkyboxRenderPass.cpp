@@ -2,6 +2,7 @@
 
 #include "core/ResourceManager.hpp"
 
+#include "graphics/Camera.hpp"
 #include "graphics/ShaderProgram.hpp"
 
 #include "mesh/Mesh.hpp"
@@ -25,7 +26,7 @@ void SkyboxRenderPass::PrepareSkyboxRenderData()
     render_data_.gpu_mesh_.UploadMeshData(skybox_mesh_);
 }
 
-void SkyboxRenderPass::RenderSkybox(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
+void SkyboxRenderPass::RenderSkybox(const Camera& camera, float alpha, const ResourceManager& resource_manager)
 {
     const ShaderProgram* shader_program = resource_manager.GetShaderProgram("skybox_shader");
 
@@ -38,8 +39,8 @@ void SkyboxRenderPass::RenderSkybox(const glm::mat4& view, const glm::mat4& proj
     glDepthFunc(GL_LEQUAL);
 
     shader_program->Use();
-	shader_program->Set<glm::mat4>("view", glm::mat4(glm::mat3(view)));
-	shader_program->Set<glm::mat4>("projection", projection);
+	shader_program->Set<glm::mat4>("view", glm::mat4(glm::mat3(camera.InterpolatedViewMatrix(alpha))));
+	shader_program->Set<glm::mat4>("projection", projection.ProjectionMatrix());
 
     glActiveTexture(GL_TEXTURE0);
 	resource_manager.GetTexture("sky_cubemap")->Bind();

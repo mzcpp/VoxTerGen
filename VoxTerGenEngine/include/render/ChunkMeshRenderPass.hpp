@@ -30,6 +30,8 @@ struct ChunkData
 	AABB aabb_;
 };
 
+class Camera;
+
 class ChunkMeshRenderPass
 {
 private:
@@ -41,7 +43,7 @@ public:
 
 	void ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue);
 
-	void RenderChunks(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager);
+	void RenderChunks(const Camera& camera, float alpha, const ResourceManager& resource_manager);
 };
 
 #endif // CHUNK_MESH_RENDER_PASS_HPP
