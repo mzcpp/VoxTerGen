@@ -3,6 +3,8 @@
 
 #include "utils/Constants.hpp"
 
+#include "math/Plane.hpp"
+
 #include "physics/DigitalDifferentialAnalyzer.hpp"
 
 #include <glm/mat4x4.hpp>
@@ -10,18 +12,6 @@
 
 #include <array>
 #include <optional>
-
-/**
- * @brief Represents a plane in 3D space.
- *
- * A Plane is defined by a normal vector and a distance from the origin.
- * It is primarily used for view-frustum representation and culling.
- */
-struct Plane
-{
-    glm::vec3 normal_ = { 0.0f, 0.0f, 0.0f };
-	float dist_ = 0.0f;
-};
 
 class CameraController;
 
@@ -114,22 +104,6 @@ public:
      * @brief Updates the six frustum planes from the current view-projection matrix.
      */
     void UpdateFrustumPlanes();
-
-    /**
-     * @brief Checks whether a point is inside the camera's view frustum.
-     *
-     * @param point Point in world space
-	 * 
-     * @return True if the point is inside the frustum, false otherwise
-     */
-    bool PointInsideFrustum(glm::vec3 point) const;
-
-    /**
-     * @brief Performs a sanity check on the frustum.
-     *
-     * @return True if the frustum is valid, false otherwise
-     */
-    bool SanityCheckFrustum() const;
 
     /**
      * @brief Prints the camera's position, orientation, and vectors to the logger.

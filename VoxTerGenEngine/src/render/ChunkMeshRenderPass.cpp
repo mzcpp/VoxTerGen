@@ -6,6 +6,8 @@
 
 #include "graphics/Camera.hpp"
 
+#include "math/Geometry.hpp"
+
 #include "physics/AABB.hpp"
 
 #include "world/Chunk.hpp"
@@ -24,7 +26,6 @@ ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) :
 	mesh_renderer_(mesh_renderer)
 {
 }
-
 
 void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue)
 {
@@ -77,7 +78,7 @@ void ChunkMeshRenderPass::RenderChunks(const Camera& camera, float alpha, const 
 	resource_manager.GetTexture("texture_atlas")->Bind();
 	shader_program->Set<int>("atlas_texture", 0);
 
-	auto inside_frustum = [](const ChunkData& mesh_render_data) { return true; };
+	const auto inside_frustum = [&camera](const ChunkData& mesh_render_data) { return geometry::Intersects(camera.GetFrustumPlanes(), mesh_render_data.aabb_); };
 
 	for (const ChunkData& chunk_data : chunks_data_ | std::views::values | std::views::filter(inside_frustum))
 	{
