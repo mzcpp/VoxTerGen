@@ -4,6 +4,8 @@
 
 #include "core/ResourceManager.hpp"
 
+#include "physics/AABB.hpp"
+
 #include "world/Chunk.hpp"
 #include "world/ChunkEvents.hpp"
 
@@ -37,7 +39,10 @@ void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event
 					e.render_data_.gpu_mesh_.InitializeBuffers();
 					e.render_data_.gpu_mesh_.UploadMeshData(*e.cpu_mesh_);
 					e.render_data_.model_matrix_ = glm::translate(glm::mat4(1.0f), { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth });
-					chunks_data_.emplace(e.chunk_id_, std::move(e.render_data_));
+					
+					AABB aabb;
+
+					chunks_data_.emplace(e.chunk_id_, ChunkData{ std::move(e.render_data_), aabb });
 				},
 
 				[this](chunk_event::ChunkDestroyed& e)
@@ -70,12 +75,12 @@ void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& p
 	resource_manager.GetTexture("texture_atlas")->Bind();
 	shader_program->Set<int>("atlas_texture", 0);
 
-	auto inside_frustum = [](const MeshRenderData& mesh_render_data) { return true; }; 
+	auto inside_frustum = [](const ChunkData& mesh_render_data) { return true; };
 
-	for (const MeshRenderData& chunk_data : chunks_data_ | std::views::values | std::views::filter(inside_frustum))
+	for (const ChunkData& chunk_data : chunks_data_ | std::views::values | std::views::filter(inside_frustum))
 	{
-		shader_program->Set<glm::mat4>("model", chunk_data.model_matrix_);
-		mesh_renderer_.RenderGpuMesh(chunk_data.gpu_mesh_);
+		shader_program->Set<glm::mat4>("model", chunk_data.mesh_render_data_.model_matrix_);
+		mesh_renderer_.RenderGpuMesh(chunk_data.mesh_render_data_.gpu_mesh_);
 	}
 
 	glUseProgram(0);
