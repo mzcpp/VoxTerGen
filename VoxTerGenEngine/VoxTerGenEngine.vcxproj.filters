@@ -108,6 +108,9 @@
     <ClCompile Include="src\render\SkyboxRenderPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\math\Geometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Constants.hpp">
@@ -1251,6 +1254,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\world\ChunkEvents.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Plane.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Geometry.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

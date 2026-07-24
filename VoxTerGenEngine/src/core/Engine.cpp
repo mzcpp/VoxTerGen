@@ -69,5 +69,5 @@ void Engine::Render(float alpha)
 	glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	world_renderer_.RenderWorld(camera, alpha, resource_manager_);
+	world_renderer_.RenderWorld(camera_, alpha, resource_manager_);
 }

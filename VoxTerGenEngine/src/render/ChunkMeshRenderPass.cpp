@@ -42,8 +42,11 @@ void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event
 					e.render_data_.gpu_mesh_.InitializeBuffers();
 					e.render_data_.gpu_mesh_.UploadMeshData(*e.cpu_mesh_);
 					e.render_data_.model_matrix_ = glm::translate(glm::mat4(1.0f), { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth });
-					
+
 					AABB aabb;
+
+					aabb.min_ = { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth };
+					aabb.max_ = { (e.world_coords_.x + 1) * constants::chunk::width, constants::chunk::height, (e.world_coords_.y + 1) * constants::chunk::depth };
 
 					chunks_data_.emplace(e.chunk_id_, ChunkData{ std::move(e.render_data_), aabb });
 				},
@@ -78,7 +81,11 @@ void ChunkMeshRenderPass::RenderChunks(const Camera& camera, float alpha, const 
 	resource_manager.GetTexture("texture_atlas")->Bind();
 	shader_program->Set<int>("atlas_texture", 0);
 
-	const auto inside_frustum = [&camera](const ChunkData& mesh_render_data) { return geometry::Intersects(camera.GetFrustumPlanes(), mesh_render_data.aabb_); };
+	const auto& frustum = camera.GetFrustumPlanes();
+
+	const auto inside_frustum = [&frustum](const ChunkData& chunk_data) {
+		return geometry::Intersects(frustum, chunk_data.aabb_);
+	};
 
 	for (const ChunkData& chunk_data : chunks_data_ | std::views::values | std::views::filter(inside_frustum))
 	{

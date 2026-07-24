@@ -178,6 +178,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\math\Geometry.cpp" />
     <ClCompile Include="src\render\SkyboxRenderPass.cpp" />
     <ClCompile Include="src\render\BlockHighlightRenderPass.cpp" />
     <ClCompile Include="src\physics\DigitalDifferentialAnalyzer.cpp" />
@@ -211,6 +212,8 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\world\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\math\Geometry.hpp" />
+    <ClInclude Include="include\math\Plane.hpp" />
     <ClInclude Include="include\render\BlockHighlightRenderPass.hpp" />
     <ClInclude Include="include\physics\AABB.hpp" />
     <ClInclude Include="include\physics\DigitalDifferentialAnalyzer.hpp" />

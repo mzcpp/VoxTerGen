@@ -40,7 +40,7 @@ void SkyboxRenderPass::RenderSkybox(const Camera& camera, float alpha, const Res
 
     shader_program->Use();
 	shader_program->Set<glm::mat4>("view", glm::mat4(glm::mat3(camera.InterpolatedViewMatrix(alpha))));
-	shader_program->Set<glm::mat4>("projection", projection.ProjectionMatrix());
+	shader_program->Set<glm::mat4>("projection", camera.ProjectionMatrix());
 
     glActiveTexture(GL_TEXTURE0);
 	resource_manager.GetTexture("sky_cubemap")->Bind();

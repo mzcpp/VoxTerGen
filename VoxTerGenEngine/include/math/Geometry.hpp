@@ -14,7 +14,10 @@ namespace geometry
 
     bool Intersects(const Plane& plane, const AABB& aabb);
 
-    bool PlaneContainsPoint(const Plane& plane, glm::vec3 point);
+    bool IsPointInside(const Plane& plane, glm::dvec3 point);
+
+    double GetSignedDistance(const Plane& plane, glm::dvec3 point);
+
 } // namespace geometry
 
 #endif

@@ -40,6 +40,6 @@ void WorldRenderer::Tick(std::queue<ChunkEvent>& chunk_event_queue, const std::o
 void WorldRenderer::RenderWorld(const Camera& camera, float alpha, const ResourceManager& resource_manager)
 {
 	chunk_mesh_render_pass_.RenderChunks(camera, alpha, resource_manager);
-	block_highlight_render_pass_.RenderBlockHighlight(camera, alpha, resource_manager);
+	//block_highlight_render_pass_.RenderBlockHighlight(camera, alpha, resource_manager);
 	skybox_render_pass_.RenderSkybox(camera, alpha, resource_manager);
 }

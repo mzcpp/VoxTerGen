@@ -11,8 +11,8 @@
  */
 struct Plane
 {
-    glm::vec3 normal_ = { 0.0f, 0.0f, 0.0f };
-	float dist_ = 0.0f;
+    glm::dvec3 normal_ = { 0.0, 0.0, 0.0 };
+	double dist_ = 0.0;
 };
 
 #endif

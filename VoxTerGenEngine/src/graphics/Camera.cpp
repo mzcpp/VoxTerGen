@@ -42,8 +42,8 @@ Camera::Camera(glm::dvec3 position, float yaw, float pitch) :
 
 void Camera::Tick(float aspect_ratio)
 {
-	UpdateSimulationMatrices(aspect_ratio);
 	UpdateCameraVectors();
+	UpdateSimulationMatrices(aspect_ratio);
 	UpdateFrustumPlanes();
 
 #if _DEBUG

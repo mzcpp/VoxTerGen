@@ -33,13 +33,19 @@ struct AABB
         return max_ - min_;
     }
 
-    std::array<glm::dvec3, 6> Corners() const
+    std::array<glm::dvec3, 8> Corners() const
     {
-        const dvec3 size = Size();
+        const glm::dvec3 size = Size();
 
         return {
-            min_, min_ + size.x, min_ + size.x + size.z, min_ + size.z, 
-            max_, max_ + size.x, max_ + size.x + size.z, max_ + size.z
+            min_, 
+            min_ + glm::dvec3{ size.x, 0.0, 0.0 }, 
+            min_ + glm::dvec3{ size.x, 0.0, 0.0 } + glm::dvec3{ 0.0, 0.0, size.z },
+            min_ + glm::dvec3{ 0.0, 0.0, size.z },
+            max_, 
+            max_ - glm::dvec3{ size.x, 0.0, 0.0 },
+            max_ - glm::dvec3{ size.x, 0.0, 0.0 } - glm::dvec3{ 0.0, 0.0, size.z },
+            max_ - glm::dvec3{ 0.0, 0.0, size.z },
         };
     }
 
