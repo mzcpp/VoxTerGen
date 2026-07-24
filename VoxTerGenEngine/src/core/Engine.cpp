@@ -69,8 +69,5 @@ void Engine::Render(float alpha)
 	glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	const glm::mat4 interpolated_view = camera_.InterpolatedViewMatrix(alpha);
-	const glm::mat4 proj = camera_.ProjectionMatrix();
-
-	world_renderer_.RenderWorld(interpolated_view, proj, resource_manager_);
+	world_renderer_.RenderWorld(camera_, alpha, resource_manager_);
 }

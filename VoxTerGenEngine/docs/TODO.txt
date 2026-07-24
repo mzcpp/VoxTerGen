@@ -1,5 +1,6 @@
 ********* REFACTOR *********
 
+in headers, use forwarding declarations whenever possible instead of include
 polish cubemap texture
 put stuff into UBO
 PACK vertex into uint32

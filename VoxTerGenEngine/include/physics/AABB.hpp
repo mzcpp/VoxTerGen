@@ -3,6 +3,8 @@
 
 #include <glm/vec3.hpp>
 
+#include <array>
+
 struct AABB
 {
     glm::dvec3 min_;
@@ -24,6 +26,27 @@ struct AABB
     {
         min_ = min;
         max_ = max;
+    }
+
+    glm::dvec3 Size() const
+    {
+        return max_ - min_;
+    }
+
+    std::array<glm::dvec3, 8> Corners() const
+    {
+        const glm::dvec3 size = Size();
+
+        return {
+            min_, 
+            min_ + glm::dvec3{ size.x, 0.0, 0.0 }, 
+            min_ + glm::dvec3{ size.x, 0.0, 0.0 } + glm::dvec3{ 0.0, 0.0, size.z },
+            min_ + glm::dvec3{ 0.0, 0.0, size.z },
+            max_, 
+            max_ - glm::dvec3{ size.x, 0.0, 0.0 },
+            max_ - glm::dvec3{ size.x, 0.0, 0.0 } - glm::dvec3{ 0.0, 0.0, size.z },
+            max_ - glm::dvec3{ 0.0, 0.0, size.z },
+        };
     }
 
     AABB Expand(glm::dvec3 value)

@@ -4,6 +4,12 @@
 
 #include "core/ResourceManager.hpp"
 
+#include "graphics/Camera.hpp"
+
+#include "math/Geometry.hpp"
+
+#include "physics/AABB.hpp"
+
 #include "world/Chunk.hpp"
 #include "world/ChunkEvents.hpp"
 
@@ -21,7 +27,6 @@ ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) :
 {
 }
 
-
 void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue)
 {
 	while (!chunk_event_queue.empty())
@@ -37,7 +42,13 @@ void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event
 					e.render_data_.gpu_mesh_.InitializeBuffers();
 					e.render_data_.gpu_mesh_.UploadMeshData(*e.cpu_mesh_);
 					e.render_data_.model_matrix_ = glm::translate(glm::mat4(1.0f), { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth });
-					chunks_data_.emplace(e.chunk_id_, std::move(e.render_data_));
+
+					AABB aabb;
+
+					aabb.min_ = { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth };
+					aabb.max_ = { (e.world_coords_.x + 1) * constants::chunk::width, constants::chunk::height, (e.world_coords_.y + 1) * constants::chunk::depth };
+
+					chunks_data_.emplace(e.chunk_id_, ChunkData{ std::move(e.render_data_), aabb });
 				},
 
 				[this](chunk_event::ChunkDestroyed& e)
@@ -51,7 +62,7 @@ void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event
 	}
 }
 
-void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& projection, const ResourceManager& resource_manager)
+void ChunkMeshRenderPass::RenderChunks(const Camera& camera, float alpha, const ResourceManager& resource_manager)
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");
 
@@ -61,8 +72,8 @@ void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& p
     }
 	
 	shader_program->Use();
-	shader_program->Set<glm::mat4>("view", view);
-	shader_program->Set<glm::mat4>("projection", projection);
+	shader_program->Set<glm::mat4>("view", camera.InterpolatedViewMatrix(alpha));
+	shader_program->Set<glm::mat4>("projection", camera.ProjectionMatrix());
 	shader_program->Set<unsigned int>("atlas_columns", constants::texture::atlas_columns);
 	shader_program->Set<unsigned int>("atlas_rows", constants::texture::atlas_rows);
 
@@ -70,12 +81,16 @@ void ChunkMeshRenderPass::RenderChunks(const glm::mat4& view, const glm::mat4& p
 	resource_manager.GetTexture("texture_atlas")->Bind();
 	shader_program->Set<int>("atlas_texture", 0);
 
-	auto inside_frustum = [](const MeshRenderData& mesh_render_data) { return true; }; 
+	const auto& frustum = camera.GetFrustumPlanes();
 
-	for (const MeshRenderData& chunk_data : chunks_data_ | std::views::values | std::views::filter(inside_frustum))
+	const auto inside_frustum = [&frustum](const ChunkData& chunk_data) {
+		return geometry::Intersects(frustum, chunk_data.aabb_);
+	};
+
+	for (const ChunkData& chunk_data : chunks_data_ | std::views::values | std::views::filter(inside_frustum))
 	{
-		shader_program->Set<glm::mat4>("model", chunk_data.model_matrix_);
-		mesh_renderer_.RenderGpuMesh(chunk_data.gpu_mesh_);
+		shader_program->Set<glm::mat4>("model", chunk_data.mesh_render_data_.model_matrix_);
+		mesh_renderer_.RenderGpuMesh(chunk_data.mesh_render_data_.gpu_mesh_);
 	}
 
 	glUseProgram(0);

@@ -42,14 +42,13 @@ Camera::Camera(glm::dvec3 position, float yaw, float pitch) :
 
 void Camera::Tick(float aspect_ratio)
 {
-	UpdateSimulationMatrices(aspect_ratio);
 	UpdateCameraVectors();
+	UpdateSimulationMatrices(aspect_ratio);
 	UpdateFrustumPlanes();
 
 #if _DEBUG
 	//LogCameraData();
 	//PrintFrustumPlanes();
-	SanityCheckFrustum();
 #endif
 
 	stale_ = false;
@@ -178,34 +177,6 @@ void Camera::UpdateFrustumPlanes()
 		plane.normal_ /= length;
 		plane.dist_ /= length;
 	}
-}
-
-bool Camera::PointInsideFrustum(glm::vec3 point) const
-{
-	for (int i = 0; i < 6; ++i)
-	{
-		if (glm::dot(frustum_planes_[i].normal_, point) + frustum_planes_[i].dist_ < constants::math::float_rel_epsilon)
-		{
-			//Logger::Log(LogLevel::ERROR, "Sanity fail: Point {} {} {} is outside frustum!", point.x, point.y, point.z);
-			return false;
-		}
-	}
-
-	return true;
-}
-
-bool Camera::SanityCheckFrustum() const
-{
-	const glm::vec3 point = glm::vec3(0.0f) + (front_ * ((constants::camera::far_plane - constants::camera::near_plane) / 2.0f));
-		
-	if (!PointInsideFrustum(point))
-	{
-		return false;
-	}
-	
-	// TODO: Check more points to make this a stronger sanity check.
-
-	return true;
 }
 
 void Camera::LogCameraData() const
