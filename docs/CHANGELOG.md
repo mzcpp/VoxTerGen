@@ -18,6 +18,13 @@ The format follows Keep a Changelog and Semantic Versioning.
 
 ---
 
+## [0.5.3] - 24 July 2026
+
+### Added
+- Implemented frustum culling to avoid rendering chunks outside the camera's view.
+
+---
+
 ## [0.5.2] - 22 July 2026
 
 ### Added
