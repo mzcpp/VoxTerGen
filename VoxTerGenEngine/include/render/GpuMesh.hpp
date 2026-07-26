@@ -1,9 +1,9 @@
 #ifndef GPU_MESH_HPP
 #define GPU_MESH_HPP
 
-#include "mesh/Mesh.hpp"
+#include <glad/glad.h>
 
-#include <glad/glad/glad.h>
+class Mesh;
 
 class GpuMesh
 {
@@ -25,6 +25,8 @@ public:
     ~GpuMesh();
 
     void InitializeBuffers();
+
+    void ReleaseBuffers();
 
     void UploadMeshData(const Mesh& mesh);
 

@@ -1,7 +1,11 @@
-#include "render/GpuMesh.hpp"
 #include "mesh/Vertex.hpp"
+#include "mesh/Mesh.hpp"
+
+#include "render/GpuMesh.hpp"
 
 #include <glad/glad.h>
+
+#include <utility>
 
 GpuMesh::GpuMesh(GpuMesh&& other) noexcept
 {
@@ -18,9 +22,7 @@ GpuMesh& GpuMesh::operator=(GpuMesh&& other) noexcept
         return *this;
     }
 
-    glDeleteVertexArrays(1, &vao_);
-    glDeleteBuffers(1, &vbo_);
-    glDeleteBuffers(1, &ebo_);
+    ReleaseBuffers();
 
     vao_ = std::exchange(other.vao_, 0);
     vbo_ = std::exchange(other.vbo_, 0);
@@ -32,23 +34,7 @@ GpuMesh& GpuMesh::operator=(GpuMesh&& other) noexcept
 
 GpuMesh::~GpuMesh()
 {
-    if (vao_ != 0)
-    {
-        glDeleteVertexArrays(1, &vao_);
-        vao_ = 0;
-    }
-
-    if (vbo_ != 0)
-    {
-        glDeleteBuffers(1, &vbo_);
-        vbo_ = 0;
-    }
-
-    if (ebo_ != 0)
-    {
-        glDeleteBuffers(1, &ebo_);
-        ebo_ = 0;
-    }
+    ReleaseBuffers();
 }
 
 void GpuMesh::InitializeBuffers()
@@ -79,6 +65,27 @@ void GpuMesh::InitializeBuffers()
     glEnableVertexArrayAttrib(vao_, 3);
     glVertexArrayAttribIFormat(vao_, 3, 1, GL_UNSIGNED_BYTE, offsetof(Vertex, material_));
     glVertexArrayAttribBinding(vao_, 3, 0);
+}
+
+void GpuMesh::ReleaseBuffers()
+{
+    if (vao_ != 0)
+    {
+        glDeleteVertexArrays(1, &vao_);
+        vao_ = 0;
+    }
+
+    if (vbo_ != 0)
+    {
+        glDeleteBuffers(1, &vbo_);
+        vbo_ = 0;
+    }
+
+    if (ebo_ != 0)
+    {
+        glDeleteBuffers(1, &ebo_);
+        ebo_ = 0;
+    }
 }
 
 void GpuMesh::UploadMeshData(const Mesh& mesh)

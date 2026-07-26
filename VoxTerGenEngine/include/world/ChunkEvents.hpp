@@ -1,8 +1,11 @@
 #ifndef CHUNK_EVENTS_HPP
 #define CHUNK_EVENTS_HPP
 
-#include "world/Chunk.hpp"
+//#include "mesh/Mesh.hpp"
+
 #include "render/MeshRenderData.hpp"
+
+#include "world/Chunk.hpp"
 
 #include <glm/vec2.hpp>
 
@@ -28,4 +31,4 @@ namespace chunk_event
 
 using ChunkEvent = std::variant<chunk_event::ChunkMeshReady, chunk_event::ChunkDestroyed>;
 
-#endif
+#endif // CHUNK_EVENTS_HPP

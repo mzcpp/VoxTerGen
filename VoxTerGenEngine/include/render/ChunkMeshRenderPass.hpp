@@ -8,7 +8,6 @@
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
 
-#include "world/Chunk.hpp"
 #include "world/ChunkEvents.hpp"
 
 #include <glm/mat4x4.hpp>

@@ -4,6 +4,8 @@
 
 #include "core/ResourceManager.hpp"
 
+#include "mesh/Mesh.hpp"
+
 #include "graphics/Camera.hpp"
 
 #include "math/Geometry.hpp"

@@ -1,6 +1,8 @@
 #ifndef BLOCK_HIGHLIGHT_RENDER_PASS_HPP
 #define BLOCK_HIGHLIGHT_RENDER_PASS_HPP
 
+#include "mesh/Mesh.hpp"
+
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
 
@@ -11,7 +13,6 @@
 #include <memory>
 
 class Camera;
-class Mesh;
 class ResourceManager;
 
 struct RaycastResult;

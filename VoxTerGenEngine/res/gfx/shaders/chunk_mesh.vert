@@ -5,9 +5,13 @@ layout (location = 1) in vec3 normal_;
 layout (location = 2) in vec2 uv_;
 layout (location = 3) in uint material_;
 
+layout (std140, binding = 0) uniform Matrices
+{
+    uniform mat4 view;
+    uniform mat4 projection;
+};
+
 uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
 
 out VS_OUT
 {

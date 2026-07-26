@@ -2,8 +2,11 @@
 
 layout (location = 0) in vec3 pos_;
 
-uniform mat4 view;
-uniform mat4 projection;
+layout (std140, binding = 0) uniform Matrices
+{
+    uniform mat4 view;
+    uniform mat4 projection;
+};
 
 out vec3 tex_coords;
 
