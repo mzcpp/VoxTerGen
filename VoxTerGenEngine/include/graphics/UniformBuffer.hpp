@@ -3,14 +3,16 @@
 
 #include <glad/glad.h>
 
+#include <type_traits>
+
 class UniformBuffer
 {
 private:
-	GLuint id_;
-	GLsizeiptr size_;
+	GLuint id_ = 0;
+	GLsizeiptr size_ = 0;
 
 public:
-	UniformBuffer();
+	UniformBuffer() = default;
 
 	UniformBuffer(const UniformBuffer& other) = delete;
 	UniformBuffer& operator=(const UniformBuffer& other) = delete;
@@ -20,11 +22,23 @@ public:
 
 	~UniformBuffer();
 
-	void InitializeBuffer(GLsizeiptr size, GLuint binding_point);
+	void Initialize(GLsizeiptr size, GLuint binding_point);
 
-	void UploadData(GLintptr offset, void* data);
+	void UploadData(GLintptr offset, GLsizeiptr size, const void* data);
 
-	void ReleaseBuffer();
+	template <typename T>
+	void UploadData(const T& object)
+	{
+		static_assert(std::is_trivially_copyable_v<T>);
+		static_assert(!std::is_pointer_v<T>);
+    	
+		assert(sizeof(T) <= size_);
+
+		UploadData(0, sizeof(T), &object);
+	}
+
+private:
+	void Release();
 };
 
 #endif // UNIFORM_BUFFER_HPP

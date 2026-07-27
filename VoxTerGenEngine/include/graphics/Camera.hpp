@@ -13,6 +13,12 @@
 #include <array>
 #include <optional>
 
+struct CameraMatrices
+{
+    glm::mat4 view_ = glm::mat4(0.0f);
+	glm::mat4 projection_ = glm::mat4(0.0f);
+};
+
 class CameraController;
 
 /**
@@ -39,8 +45,7 @@ private:
 	float near_plane_;
 	float far_plane_;
 
-	glm::mat4 view_;
-	glm::mat4 projection_;
+	CameraMatrices matrices_;
 	glm::mat4 view_proj_;
 	
 	std::array<Plane, 6> frustum_planes_;
@@ -116,8 +121,9 @@ public:
     void PrintFrustumPlanes() const;
 	
 	// Getters
-	glm::mat4 ViewMatrix() const noexcept { return view_; }
-	glm::mat4 ProjectionMatrix() const noexcept { return projection_; }
+	glm::mat4 ViewMatrix() const noexcept { return matrices_.view_; }
+	glm::mat4 ProjectionMatrix() const noexcept { return matrices_.projection_; }
+    const CameraMatrices& Matrices() const noexcept { return matrices_; }
 	glm::dvec3 Pos() const noexcept { return position_; }
 	glm::vec3 Front() const noexcept { return front_; }
 	glm::vec3 Up() const noexcept { return up_; }

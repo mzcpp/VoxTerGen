@@ -27,14 +27,19 @@ WorldRenderer::WorldRenderer() :
 
 void WorldRenderer::Initialize()
 {
+	const GLuint camera_matrices_binding_point = 0;
+	camera_uniform_buffer_.Initialize(sizeof(CameraMatrices), camera_matrices_binding_point);
+
 	block_highlight_render_pass_.PrepareBlockRenderData();
 	skybox_render_pass_.PrepareSkyboxRenderData();
 }
 
-void WorldRenderer::Tick(std::queue<ChunkEvent>& chunk_event_queue, const std::optional<RaycastResult>& raycast_result)
+void WorldRenderer::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
+	camera_uniform_buffer_.Tick(camera);
+
 	chunk_mesh_render_pass_.ProcessChunkEvents(chunk_event_queue);
-	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(raycast_result);
+	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(camera.RaycastResult());
 }
 
 void WorldRenderer::RenderWorld(const Camera& camera, float alpha, const ResourceManager& resource_manager)

@@ -61,7 +61,7 @@ void Engine::Tick(float aspect_ratio)
 	camera_.Tick(aspect_ratio);
 
 	world_.Tick(chunk_event_queue_, camera_);
-	world_renderer_.Tick(chunk_event_queue_, camera_.RaycastResult());
+	world_renderer_.Tick(chunk_event_queue_, camera_);
 }
 
 void Engine::Render(float alpha)

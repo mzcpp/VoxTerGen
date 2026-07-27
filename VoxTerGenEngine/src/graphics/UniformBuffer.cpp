@@ -3,12 +3,7 @@
 #include <glad/glad.h>
 
 #include <utility>
-
-UniformBuffer::UniformBuffer() :
-	id_(0),
-	size_(0)
-{
-}
+#include <cassert>
 
 UniformBuffer::UniformBuffer(UniformBuffer&& other) noexcept
 {
@@ -23,7 +18,7 @@ UniformBuffer& UniformBuffer::operator=(UniformBuffer&& other) noexcept
 		return *this;
 	}
 
-	ReleaseBuffer();
+	Release();
 
 	id_ = std::exchange(other.id_, 0);
 	size_ = std::exchange(other.size_, 0);
@@ -33,11 +28,12 @@ UniformBuffer& UniformBuffer::operator=(UniformBuffer&& other) noexcept
 
 UniformBuffer::~UniformBuffer()
 {
-	ReleaseBuffer();
+	Release();
 }
 
-void UniformBuffer::InitializeBuffer(GLsizeiptr size, GLuint binding_point)
+void UniformBuffer::Initialize(GLsizeiptr size, GLuint binding_point)
 {
+	Release();
 	glCreateBuffers(1, &id_);
 	size_ = size;
 
@@ -45,15 +41,18 @@ void UniformBuffer::InitializeBuffer(GLsizeiptr size, GLuint binding_point)
 	glBindBufferBase(GL_UNIFORM_BUFFER, binding_point, id_);
 }
 
-void UniformBuffer::UploadData(GLintptr offset, void* data)
+void UniformBuffer::UploadData(GLintptr offset, GLsizeiptr size, const void* data)
 {
-	glNamedBufferSubData(id_, offset, size_, data);
+	assert(offset + size <= size_);
+	glNamedBufferSubData(id_, offset, size, data);
 }
 
-void UniformBuffer::ReleaseBuffer()
+void UniformBuffer::Release()
 {
 	if (id_ != 0)
 	{
 		glDeleteBuffers(1, &id_);
+		id_ = 0;
+		size_ = 0;
 	}
 }

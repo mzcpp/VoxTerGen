@@ -5,6 +5,26 @@
 
 class Buffer
 {
+private:
+
+public:
+    Buffer() = default;
+
+    Buffer(const Buffer& other) = delete;
+    Buffer& operator=(const Buffer& other) = delete;
+
+    Buffer(Buffer&& other) noexcept;
+    Buffer& operator=(Buffer&& other) noexcept;
+
+    ~Buffer();
+
+    void Initialize();
+
+    void Release();
+
+    void Bind();
+
+    void Unbind();
 };
 
 #endif // BUFFER_HPP

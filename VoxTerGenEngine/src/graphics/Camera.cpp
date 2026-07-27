@@ -19,8 +19,6 @@ Camera::Camera(glm::dvec3 position, float yaw, float pitch) :
 	zoom_(constants::camera::zoom), 
 	near_plane_(constants::camera::near_plane), 
 	far_plane_(constants::camera::far_plane), 
-	view_(0.0f), 
-	projection_(0.0f), 
 	view_proj_(0.0f), 
 	frustum_planes_(), 
 	prev_position_(position), 
@@ -79,9 +77,9 @@ void Camera::UpdateSimulationMatrices(float aspect_ratio)
 	}
 
 	const glm::vec3 pos = glm::vec3(position_);
-	view_ = glm::lookAt(pos, pos + front_, up_);
-	projection_ = glm::perspective(glm::radians(zoom_), aspect_ratio, near_plane_, far_plane_);
-	view_proj_ = projection_ * view_;
+	matrices_.view_ = glm::lookAt(pos, pos + front_, up_);
+	matrices_.projection_ = glm::perspective(glm::radians(zoom_), aspect_ratio, near_plane_, far_plane_);
+	view_proj_ = matrices_.projection_ * matrices_.view_;
 }
 
 void Camera::UpdateCameraVectors()
