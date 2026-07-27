@@ -22,6 +22,8 @@ public:
 
 	void InitializeBuffer(GLsizeiptr size, GLuint binding_point);
 
+	void UploadData(GLintptr offset, void* data);
+
 	void ReleaseBuffer();
 };
 

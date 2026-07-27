@@ -40,6 +40,14 @@ void UniformBuffer::InitializeBuffer(GLsizeiptr size, GLuint binding_point)
 {
 	glCreateBuffers(1, &id_);
 	size_ = size;
+
+	glNamedBufferData(id_, size_, nullptr, GL_DYNAMIC_DRAW);
+	glBindBufferBase(GL_UNIFORM_BUFFER, binding_point, id_);
+}
+
+void UniformBuffer::UploadData(GLintptr offset, void* data)
+{
+	glNamedBufferSubData(id_, offset, size_, data);
 }
 
 void UniformBuffer::ReleaseBuffer()
