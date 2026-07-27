@@ -1,6 +1,7 @@
 #ifndef WORLD_RENDERER_HPP
 #define WORLD_RENDERER_HPP
 
+#include "render/CameraUniformBuffer.hpp"
 #include "render/ChunkMeshRenderPass.hpp"
 #include "render/BlockHighlightRenderPass.hpp"
 #include "render/SkyboxRenderPass.hpp"

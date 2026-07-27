@@ -36,15 +36,15 @@ void WorldRenderer::Initialize()
 
 void WorldRenderer::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
-	camera_uniform_buffer_.Tick(camera);
-
 	chunk_mesh_render_pass_.ProcessChunkEvents(chunk_event_queue);
 	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(camera.RaycastResult());
 }
 
 void WorldRenderer::RenderWorld(const Camera& camera, float alpha, const ResourceManager& resource_manager)
 {
-	chunk_mesh_render_pass_.RenderChunks(camera, alpha, resource_manager);
-	//block_highlight_render_pass_.RenderBlockHighlight(camera, alpha, resource_manager);
-	skybox_render_pass_.RenderSkybox(camera, alpha, resource_manager);
+	camera_uniform_buffer_.UpdateMatrices(camera, alpha);
+
+	chunk_mesh_render_pass_.RenderChunks(camera, resource_manager);
+	block_highlight_render_pass_.RenderBlockHighlight(resource_manager);
+	skybox_render_pass_.RenderSkybox(resource_manager);
 }

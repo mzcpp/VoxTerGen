@@ -178,9 +178,9 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CameraUniformBuffer.cpp" />
     <ClCompile Include="src\graphics\Buffer.cpp" />
     <ClCompile Include="src\math\Geometry.cpp" />
+    <ClCompile Include="src\render\CameraUniformBuffer.cpp" />
     <ClCompile Include="src\render\SkyboxRenderPass.cpp" />
     <ClCompile Include="src\render\BlockHighlightRenderPass.cpp" />
     <ClCompile Include="src\physics\DigitalDifferentialAnalyzer.cpp" />
@@ -216,7 +216,6 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\graphics\VertexArray.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CameraUniformBuffer.hpp" />
     <ClInclude Include="include\graphics\Buffer.hpp" />
     <ClInclude Include="include\math\Geometry.hpp" />
     <ClInclude Include="include\math\Plane.hpp" />
@@ -583,6 +582,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\Logger.hpp" />
     <ClInclude Include="include\mesh\MeshBuilder.hpp" />
     <ClInclude Include="include\mesh\Vertex.hpp" />
+    <ClInclude Include="include\render\CameraUniformBuffer.hpp" />
     <ClInclude Include="include\render\ChunkMeshRenderPass.hpp" />
     <ClInclude Include="include\render\Material.hpp" />
     <ClInclude Include="include\render\MeshRenderData.hpp" />

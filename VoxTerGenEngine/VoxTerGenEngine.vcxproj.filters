@@ -120,7 +120,7 @@
     <ClCompile Include="src\graphics\Buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CameraUniformBuffer.cpp">
+    <ClCompile Include="src\render\CameraUniformBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1283,7 +1283,7 @@
     <ClInclude Include="include\graphics\Buffer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CameraUniformBuffer.hpp">
+    <ClInclude Include="include\render\CameraUniformBuffer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,7 +14,9 @@ void main()
 {
     tex_coords = pos_;
 
-    vec4 position = projection * view * vec4(pos_, 1.0f);
+    mat4 viewNoTranslation = mat4(mat3(view));
+
+    vec4 position = projection * viewNoTranslation * vec4(pos_, 1.0f);
     
     gl_Position = position.xyww;
 }

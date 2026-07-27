@@ -32,7 +32,7 @@ public:
 
 	void UpdateBlockHighlightModelMatrix(const std::optional<RaycastResult>& raycast_result);
 
-	void RenderBlockHighlight(const Camera& camera, float alpha, const ResourceManager& resource_manager);
+	void RenderBlockHighlight(const ResourceManager& resource_manager);
 };
 
 #endif

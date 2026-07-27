@@ -49,7 +49,7 @@ void BlockHighlightRenderPass::UpdateBlockHighlightModelMatrix(const std::option
     render_highlight_ = true;
 }
 
-void BlockHighlightRenderPass::RenderBlockHighlight(const Camera& camera, float alpha, const ResourceManager& resource_manager)
+void BlockHighlightRenderPass::RenderBlockHighlight(const ResourceManager& resource_manager)
 {
     if (!render_highlight_)
     {
@@ -64,13 +64,13 @@ void BlockHighlightRenderPass::RenderBlockHighlight(const Camera& camera, float 
     }
 
     shader_program->Use();
-	shader_program->Set<glm::mat4>("view", camera.InterpolatedViewMatrix(alpha));
-	shader_program->Set<glm::mat4>("projection", camera.ProjectionMatrix());
     shader_program->Set<glm::mat4>("model", render_data_.model_matrix_);
 
     constexpr float distance_threshold = 0.0025f;
     shader_program->Set<float>("distance_threshold", distance_threshold);
     
     mesh_renderer_.RenderGpuMesh(render_data_.gpu_mesh_);
+    
+    glUseProgram(0);
 }
 

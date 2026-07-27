@@ -1,14 +1,26 @@
 #include "graphics/Buffer.hpp"
 
+#include <glad/glad.h>
+
+#include <utility>
 
 Buffer::Buffer(Buffer&& other) noexcept
 {
-
+    id_ = std::exchange(other.id_, 0);
 }
 
 Buffer& Buffer::operator=(Buffer&& other) noexcept
 {
+	if (&other == this)
+	{
+		return *this;
+	}
 
+	Release();
+
+	id_ = std::exchange(other.id_, 0);
+
+	return *this;
 }
 
 Buffer::~Buffer()

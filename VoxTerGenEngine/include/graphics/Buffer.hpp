@@ -6,6 +6,7 @@
 class Buffer
 {
 private:
+    GLuint id_;
 
 public:
     Buffer() = default;

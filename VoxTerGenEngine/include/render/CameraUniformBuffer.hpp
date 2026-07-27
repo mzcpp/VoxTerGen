@@ -13,7 +13,9 @@ private:
     UniformBuffer buffer_;
 
 public:
-    void Tick(const Camera& camera);
+    void Initialize(GLsizeiptr size, GLuint binding_point);
+
+    void UpdateMatrices(const Camera& camera, float alpha);
 };
 
 #endif // CAMERA_UNIFORM_BUFFER_HPP

@@ -4,7 +4,7 @@
 
 #include <utility>
 
-VertexArray(VertexArray&& other) noexcept
+VertexArray::VertexArray(VertexArray&& other) noexcept
 {
 	id_ = std::exchange(other.id_, 0);
 }
@@ -80,5 +80,5 @@ void VertexArray::SetIntAttribute(GLuint attrib_index, GLint size, GLenum type, 
 
 void VertexArray::BindAttribute(GLuint attrib_index, GLuint binding_index)
 {
-    glVertexArrayAttribBinding(vao_, attrib_index, binding_index);
+    glVertexArrayAttribBinding(id_, attrib_index, binding_index);
 }

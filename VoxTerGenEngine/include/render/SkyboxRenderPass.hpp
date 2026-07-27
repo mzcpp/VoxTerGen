@@ -25,7 +25,7 @@ public:
 
 	void PrepareSkyboxRenderData();
 
-	void RenderSkybox(const Camera& camera, float alpha, const ResourceManager& resource_manager);
+	void RenderSkybox(const ResourceManager& resource_manager);
 };
 
 #endif
