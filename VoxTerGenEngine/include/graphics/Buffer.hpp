@@ -23,9 +23,11 @@ public:
 
     void Release();
 
-    void Bind();
+    void Bind(GLuint buffer);
 
     void Unbind();
+
+    void UploadData(GLsizeiptr size, const void* data, GLenum usage);
 };
 
 #endif // BUFFER_HPP
