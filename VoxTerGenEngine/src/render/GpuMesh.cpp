@@ -22,19 +22,12 @@ GpuMesh& GpuMesh::operator=(GpuMesh&& other) noexcept
         return *this;
     }
 
-    ReleaseBuffers();
-
     vao_ = std::move(other.vao_);
     vbo_ = std::move(other.vbo_);
     ebo_ = std::move(other.ebo_);
     index_count_ = std::exchange(other.index_count_, 0);
 
     return *this;
-}
-
-GpuMesh::~GpuMesh()
-{
-    ReleaseBuffers();
 }
 
 void GpuMesh::InitializeBuffers() noexcept
@@ -53,7 +46,7 @@ void GpuMesh::InitializeBuffers() noexcept
 
     // Normal
     vao_.EnableAttribute(1);
-    vao_.SetAttribute(1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal_));
+    vao_.SetIntAttribute(1, 1, GL_UNSIGNED_BYTE, offsetof(Vertex, normal_));
     vao_.BindAttribute(1, 0);
 
     // UV
@@ -63,15 +56,8 @@ void GpuMesh::InitializeBuffers() noexcept
 
     // Material
     vao_.EnableAttribute(3);
-    vao_.SetAttribute(3, 1, GL_UNSIGNED_BYTE, offsetof(Vertex, material_));
+    vao_.SetIntAttribute(3, 1, GL_UNSIGNED_BYTE, offsetof(Vertex, material_));
     vao_.BindAttribute(3, 0);
-}
-
-void GpuMesh::ReleaseBuffers() noexcept
-{
-    vao_.Release();
-    vbo_.Release();
-    ebo_.Release();
 }
 
 void GpuMesh::UploadMeshData(const Mesh& mesh) noexcept

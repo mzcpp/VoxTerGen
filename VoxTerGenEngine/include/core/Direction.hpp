@@ -67,21 +67,21 @@ constexpr glm::ivec3 NeighborCoords(const glm::ivec3& block_coords, Direction di
     return block_coords;
 }
 
-constexpr glm::vec3 DirToNormal(Direction dir)
+constexpr std::uint8_t DirToNormal(Direction dir)
 {
     switch (dir)
     {
-    case Direction::PosX: return { 1.0f, 0.0f, 0.0f };
-    case Direction::NegX: return { -1.0f, 0.0f, 0.0f };
-    case Direction::PosY: return { 0.0f, 1.0f, 0.0f };
-    case Direction::NegY: return { 0.0f, -1.0f, 0.0f };
-    case Direction::PosZ: return { 0.0f, 0.0f, 1.0f };
-    case Direction::NegZ: return { 0.0f, 0.0f, -1.0f };
+    case Direction::PosX: return 0;
+    case Direction::NegX: return 1;
+    case Direction::PosY: return 2;
+    case Direction::NegY: return 3;
+    case Direction::PosZ: return 4;
+    case Direction::NegZ: return 5;
     }
 
     Logger::Log(LogLevel::ERROR, "DirToNormal received an unknown type of Direction!: dir = {}", static_cast<std::uint8_t>(dir));
     assert(false);
-    return { 0.0f, 0.0f, 0.0f };
+    return 0;
 }
 
 constexpr Direction ToDirection(MajorAxis axis, bool positive) noexcept

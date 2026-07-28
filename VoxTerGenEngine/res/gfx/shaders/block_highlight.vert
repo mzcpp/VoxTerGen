@@ -1,7 +1,7 @@
 #version 450 core
 
 layout (location = 0) in vec3 pos_;
-layout (location = 1) in vec3 normal_;
+layout (location = 1) in uint normal_;
 layout (location = 2) in vec2 uv_;
 layout (location = 3) in uint material_;
 
@@ -15,7 +15,7 @@ uniform mat4 model;
 
 out VS_OUT
 {
-    vec3 normal;
+    flat uint normal;
     vec2 uv;
     flat uint material;
 } vs_out;
