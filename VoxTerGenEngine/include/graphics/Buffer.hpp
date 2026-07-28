@@ -19,20 +19,21 @@ public:
 
     ~Buffer();
 
-    void Initialize();
+    void Initialize() noexcept;
 
-    void Release();
+    void Bind(GLenum target) const noexcept;
 
-    void Bind(GLenum target);
+    void Unbind(GLenum target) const noexcept;
 
-    void Unbind(GLenum target);
+    void UploadData(GLsizeiptr size, const void* data, GLenum usage) const noexcept;
 
-    void UploadData(GLsizeiptr size, const void* data, GLenum usage);
-
-    void UploadSubData(GLintptr offset, GLsizeiptr size, const void* data);
+    void UploadSubData(GLintptr offset, GLsizeiptr size, const void* data) const noexcept;
 
     // Getters
     GLuint Id() const noexcept { return id_; }
+
+private:
+    void Release() noexcept;
 };
 
 #endif // BUFFER_HPP

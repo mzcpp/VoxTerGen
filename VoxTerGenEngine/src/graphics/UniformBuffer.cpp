@@ -31,7 +31,7 @@ UniformBuffer::~UniformBuffer()
 	Release();
 }
 
-void UniformBuffer::Initialize(GLsizeiptr size, GLuint binding_point)
+void UniformBuffer::Initialize(GLsizeiptr size, GLuint binding_point) noexcept
 {
 	Release();
 	glCreateBuffers(1, &id_);
@@ -41,7 +41,7 @@ void UniformBuffer::Initialize(GLsizeiptr size, GLuint binding_point)
 	glBindBufferBase(GL_UNIFORM_BUFFER, binding_point, id_);
 }
 
-void UniformBuffer::UploadSubData(GLintptr offset, GLsizeiptr size, const void* data)
+void UniformBuffer::UploadSubData(GLintptr offset, GLsizeiptr size, const void* data) const noexcept
 {
 	assert(offset >= 0);
 	assert(size >= 0);
@@ -49,7 +49,7 @@ void UniformBuffer::UploadSubData(GLintptr offset, GLsizeiptr size, const void* 
 	glNamedBufferSubData(id_, offset, size, data);
 }
 
-void UniformBuffer::Release()
+void UniformBuffer::Release() noexcept
 {
 	if (id_ != 0)
 	{

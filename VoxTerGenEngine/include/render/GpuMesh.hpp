@@ -1,6 +1,9 @@
 #ifndef GPU_MESH_HPP
 #define GPU_MESH_HPP
 
+#include "graphics/Buffer.hpp"
+#include "graphics/VertexArray.hpp"
+
 #include <glad/glad.h>
 
 class Mesh;
@@ -8,9 +11,9 @@ class Mesh;
 class GpuMesh
 {
 private:
-    GLuint vao_ = 0;
-    GLuint vbo_ = 0;
-    GLuint ebo_ = 0;
+    VertexArray vao_ = 0;
+    Buffer vbo_ = 0;
+    Buffer ebo_ = 0;
     GLsizei index_count_ = 0;
 
 public:
@@ -26,15 +29,16 @@ public:
 
     void InitializeBuffers();
 
-    void ReleaseBuffers();
-
     void UploadMeshData(const Mesh& mesh);
 
     // Getters
-    GLuint VAO() const noexcept { return vao_; }
-    GLuint VBO() const noexcept { return vbo_; }
-    GLuint EBO() const noexcept { return ebo_; }
+    const VertexArray& VAO() const noexcept { return vao_; }
+    const Buffer& VBO() const noexcept { return vbo_; }
+    const Buffer& EBO() const noexcept { return ebo_; }
     GLsizei IndexCount() const noexcept { return index_count_; }
+
+private:
+    void ReleaseBuffers() noexcept;
 };
 
 #endif // GPU_MESH_HPP

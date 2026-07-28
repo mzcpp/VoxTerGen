@@ -23,12 +23,12 @@ public:
 
 	~UniformBuffer();
 
-	void Initialize(GLsizeiptr size, GLuint binding_point);
+	void Initialize(GLsizeiptr size, GLuint binding_point) noexcept;
 
-	void UploadSubData(GLintptr offset, GLsizeiptr size, const void* data);
+	void UploadSubData(GLintptr offset, GLsizeiptr size, const void* data) const noexcept;
 
 	template <typename T>
-	void UploadData(const T& object)
+	void UploadData(const T& object) const noexcept
 	{
 		static_assert(std::is_trivially_copyable_v<T>);
 		static_assert(!std::is_pointer_v<T>);
@@ -39,7 +39,7 @@ public:
 	}
 
 private:
-	void Release();
+	void Release() noexcept;
 };
 
 #endif // UNIFORM_BUFFER_HPP

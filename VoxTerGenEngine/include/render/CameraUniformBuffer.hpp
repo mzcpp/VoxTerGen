@@ -13,9 +13,9 @@ private:
     UniformBuffer buffer_;
 
 public:
-    void Initialize();
+    void Initialize() noexcept;
 
-    void UpdateMatrices(const Camera& camera, float alpha);
+    void UpdateMatrices(const Camera& camera, float alpha) const noexcept;
 };
 
 #endif // CAMERA_UNIFORM_BUFFER_HPP

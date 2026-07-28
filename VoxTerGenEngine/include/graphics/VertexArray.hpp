@@ -21,28 +21,29 @@ public:
 
     ~VertexArray();
 
-    void Initialize();
+    void Initialize() noexcept;
 
-    void Release();
+    void Bind() const noexcept;
 
-    void Bind();
+    void Unbind() const noexcept;
 
-    void Unbind();
-
-    void BindVertexBuffer(GLuint binding_index, const Buffer& vertex_buffer, GLintptr offset, GLsizei stride);
+    void BindVertexBuffer(GLuint binding_index, const Buffer& vertex_buffer, GLintptr offset, GLsizei stride) const noexcept;
     
-    void BindElementBuffer(const Buffer& element_buffer);
+    void BindElementBuffer(const Buffer& element_buffer) const noexcept;
 
-    void EnableAttribute(GLuint attrib_index);
+    void EnableAttribute(GLuint attrib_index) const noexcept;
 
-    void SetAttribute(GLuint attrib_index, GLint size, GLenum type, GLboolean normalized, GLuint relative_offset);
+    void SetAttribute(GLuint attrib_index, GLint size, GLenum type, GLboolean normalized, GLuint relative_offset) const noexcept;
 
-    void SetIntAttribute(GLuint attrib_index, GLint size, GLenum type, GLuint relative_offset);
+    void SetIntAttribute(GLuint attrib_index, GLint size, GLenum type, GLuint relative_offset) const noexcept;
 
-    void BindAttribute(GLuint attrib_index, GLuint binding_index);
+    void BindAttribute(GLuint attrib_index, GLuint binding_index) const noexcept;
 
     // Getters
     GLuint Id() const noexcept { return id_; }
+
+private:
+    void Release() noexcept;
 };
 
 #endif // VERTEX_ARRAY_HPP
