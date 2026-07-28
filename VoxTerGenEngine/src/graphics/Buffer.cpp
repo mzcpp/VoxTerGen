@@ -43,17 +43,22 @@ void Buffer::Release()
 	}
 }
 
-void Buffer::Bind(GLuint buffer)
+void Buffer::Bind(GLenum target)
 {
-	glBindBuffer(id_, buffer);
+	glBindBuffer(target, id_);
 }
 
-void Buffer::Unbind()
+void Buffer::Unbind(GLenum target)
 {
-	glBindBuffer(id_, 0);
+	glBindBuffer(target, 0);
 }
 
 void Buffer::UploadData(GLsizeiptr size, const void* data, GLenum usage)
 {
 	glNamedBufferData(id_, size, data, usage);
+}
+
+void Buffer::UploadSubData(GLintptr offset, GLsizeiptr size, const void* data)
+{
+    glNamedBufferSubData(id_, offset, size, data);
 }

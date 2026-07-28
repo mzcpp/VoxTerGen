@@ -25,7 +25,7 @@ public:
 
 	void Initialize(GLsizeiptr size, GLuint binding_point);
 
-	void UploadData(GLintptr offset, GLsizeiptr size, const void* data);
+	void UploadSubData(GLintptr offset, GLsizeiptr size, const void* data);
 
 	template <typename T>
 	void UploadData(const T& object)
@@ -35,7 +35,7 @@ public:
     	
 		assert(sizeof(T) <= size_);
 
-		UploadData(0, sizeof(T), &object);
+		UploadSubData(0, sizeof(T), &object);
 	}
 
 private:

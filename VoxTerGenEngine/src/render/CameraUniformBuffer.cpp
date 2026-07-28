@@ -2,9 +2,11 @@
 
 #include "graphics/Camera.hpp"
 
-void CameraUniformBuffer::Initialize(GLsizeiptr size, GLuint binding_point)
+void CameraUniformBuffer::Initialize()
 {
-    buffer_.Initialize(size, binding_point);
+    constexpr GLuint binding_point = 0;
+
+    buffer_.Initialize(sizeof(CameraMatrices), binding_point);
 }
 
 void CameraUniformBuffer::UpdateMatrices(const Camera& camera, float alpha)

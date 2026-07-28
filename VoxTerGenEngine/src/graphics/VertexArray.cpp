@@ -53,14 +53,14 @@ void VertexArray::Unbind()
     glBindVertexArray(0);
 }
 
-void VertexArray::BindVertexBuffer(GLuint binding_index, GLuint vbo_id, GLintptr offset, GLsizei stride)
+void VertexArray::BindVertexBuffer(GLuint binding_index, const Buffer& vertex_buffer, GLintptr offset, GLsizei stride)
 {
-    glVertexArrayVertexBuffer(id_, binding_index, vbo_id, offset, stride);
+    glVertexArrayVertexBuffer(id_, binding_index, vertex_buffer.Id(), offset, stride);
 }
     
-void VertexArray::BindElementBuffer(GLuint ebo_id)
+void VertexArray::BindElementBuffer(const Buffer& element_buffer)
 {
-    glVertexArrayElementBuffer(id_, ebo_id);
+    glVertexArrayElementBuffer(id_, element_buffer.Id());
 }
 
 void VertexArray::EnableAttribute(GLuint attrib_index)

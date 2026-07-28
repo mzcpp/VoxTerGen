@@ -13,7 +13,7 @@ private:
     UniformBuffer buffer_;
 
 public:
-    void Initialize(GLsizeiptr size, GLuint binding_point);
+    void Initialize();
 
     void UpdateMatrices(const Camera& camera, float alpha);
 };

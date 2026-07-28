@@ -41,8 +41,10 @@ void UniformBuffer::Initialize(GLsizeiptr size, GLuint binding_point)
 	glBindBufferBase(GL_UNIFORM_BUFFER, binding_point, id_);
 }
 
-void UniformBuffer::UploadData(GLintptr offset, GLsizeiptr size, const void* data)
+void UniformBuffer::UploadSubData(GLintptr offset, GLsizeiptr size, const void* data)
 {
+	assert(offset >= 0);
+	assert(size >= 0);
 	assert(offset + size <= size_);
 	glNamedBufferSubData(id_, offset, size, data);
 }

@@ -1,12 +1,14 @@
 #ifndef VERTEX_ARRAY_HPP
 #define VERTEX_ARRAY_HPP
 
+#include "graphics/Buffer.hpp"
+
 #include <glad/glad.h>
 
 class VertexArray
 {
 private:
-    GLuint id_;
+    GLuint id_ = 0;
 
 public:
     VertexArray() = default;
@@ -27,9 +29,9 @@ public:
 
     void Unbind();
 
-    void BindVertexBuffer(GLuint binding_index, GLuint vbo_id, GLintptr offset, GLsizei stride);
+    void BindVertexBuffer(GLuint binding_index, const Buffer& vertex_buffer, GLintptr offset, GLsizei stride);
     
-    void BindElementBuffer(GLuint ebo_id);
+    void BindElementBuffer(const Buffer& element_buffer);
 
     void EnableAttribute(GLuint attrib_index);
 

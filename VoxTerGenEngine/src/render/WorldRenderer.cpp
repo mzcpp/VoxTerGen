@@ -27,8 +27,7 @@ WorldRenderer::WorldRenderer() :
 
 void WorldRenderer::Initialize()
 {
-	const GLuint camera_matrices_binding_point = 0;
-	camera_uniform_buffer_.Initialize(sizeof(CameraMatrices), camera_matrices_binding_point);
+	camera_uniform_buffer_.Initialize();
 
 	block_highlight_render_pass_.PrepareBlockRenderData();
 	skybox_render_pass_.PrepareSkyboxRenderData();

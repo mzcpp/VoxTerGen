@@ -6,7 +6,7 @@
 class Buffer
 {
 private:
-    GLuint id_;
+    GLuint id_ = 0;
 
 public:
     Buffer() = default;
@@ -23,11 +23,16 @@ public:
 
     void Release();
 
-    void Bind(GLuint buffer);
+    void Bind(GLenum target);
 
-    void Unbind();
+    void Unbind(GLenum target);
 
     void UploadData(GLsizeiptr size, const void* data, GLenum usage);
+
+    void UploadSubData(GLintptr offset, GLsizeiptr size, const void* data);
+
+    // Getters
+    GLuint Id() const noexcept { return id_; }
 };
 
 #endif // BUFFER_HPP
