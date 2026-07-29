@@ -234,9 +234,9 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 				vertex_position = { x_pos, y_pos, major_axis_index + 1 };
 			}
 
-			const std::uint8_t normal = DirToNormal(first_merged_cell.dir_);
+			const std::uint8_t normal = static_cast<std::uint8_t>(first_merged_cell.dir_);
 			const glm::vec2 uv = { static_cast<float>(j * merged_quad.width_), static_cast<float>(i * merged_quad.height_) };
-			std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
+			const std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
 
 			chunk_mesh.AddVertex(vertex_position, normal, uv, material);
 		}
@@ -259,8 +259,7 @@ void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_ind
 
 			int merged_quad_width = 1;
 
-			while (x + merged_quad_width < mask_width && 
-				MaskCellsMergable(cell, slice_mask[y * mask_width + (x + merged_quad_width)]))
+			while (x + merged_quad_width < mask_width && MaskCellsMergable(cell, slice_mask[y * mask_width + (x + merged_quad_width)]))
 			{
 				++merged_quad_width;
 			}
