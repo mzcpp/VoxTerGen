@@ -146,6 +146,24 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 
 std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk)
 {
+	for (int y = 0; y < constants::chunk::height; ++y)
+	{
+		for (int z = 0; z < constants::chunk::depth; ++z)
+		{
+			for (int x = 0; x < constants::chunk::width; ++x)
+			{
+				const glm::ivec3 coords = { x, y, z };
+				Block& current_block = chunk.BlockAt(coords);
+				const Block& block_above = chunk.NeighborRefAt(coords, Direction::PosY);
+
+				if (current_block.Type() == BlockType::Grass && block_above.IsSolid())
+				{
+					current_block.SetType(BlockType::Dirt);
+				}			
+			}
+		}
+	}
+
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 		
 	*chunk_mesh = MeshBuilder::BuildMeshGreedy(

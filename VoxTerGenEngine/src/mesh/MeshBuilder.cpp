@@ -17,7 +17,6 @@ Mesh MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offse
 {
 	Mesh unit_cube_mesh;
 
-
 	for (Direction dir : AllDirections())
     {
 		CreateMeshIndices(unit_cube_mesh);

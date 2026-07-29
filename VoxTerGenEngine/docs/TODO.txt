@@ -1,14 +1,7 @@
-********* REFACTOR *********
+********* REFACTOR & OPTIMIZATIONS *********
 
 in headers, use forwarding declarations whenever possible instead of include
-polish cubemap texture
-put stuff into UBO
 PACK vertex into uint32
-	Fix grass texture issues
-		grass on sides when its covered by solid top neighbor -> should be dirt on sides
-		popping textures when removing solid block above grass block -> before the grass was all dirt, now after rebuilding grass popped in!
-		add a bit information into the packed uint32 top_covered = 1/0;
-
 rethink the world block query implicit passing of chunk! at the call site it's not clear at all which chunk is the current!
 rethink error handling. For example in Chunk.cpp. There's BOTH throw AND LOG, or throw AND assert.
 rework MathUtils
@@ -51,7 +44,7 @@ add Graphics Device Interface - move all graphics apis inits into it - App will 
 
 ********* BUGS *********
 
-occlusion culling on the chunk borders!
+face culling on the chunk borders!
 fix bug when running very fast, I fall through the floor
 fix bug when falling very fast, I fall through the floor
 

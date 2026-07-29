@@ -6,8 +6,6 @@
 
 #include <cstdint>
 
-// TODO: pack into a single integer
-
 struct Vertex
 {
     glm::vec3 position_ = glm::vec3(0.0f);
