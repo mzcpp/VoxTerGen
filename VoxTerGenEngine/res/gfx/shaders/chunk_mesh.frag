@@ -6,7 +6,7 @@ uniform uint atlas_rows;
 
 in VS_OUT
 {
-    vec3 normal;
+    flat uint normal;
     vec2 uv;
     flat uint material;
 } fs_in;

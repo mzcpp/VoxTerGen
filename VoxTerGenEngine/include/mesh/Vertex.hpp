@@ -6,13 +6,11 @@
 
 #include <cstdint>
 
-// TODO: pack into a single integer
-
 struct Vertex
 {
     glm::vec3 position_ = glm::vec3(0.0f);
-    glm::vec3 normal_ = glm::vec3(0.0f);
-    glm::vec2 uv_ = glm::vec3(0.0f);
+    std::uint8_t normal_ = 0;
+    glm::vec2 uv_ = glm::vec2(0.0f);
     std::uint8_t material_ = 0;
 };
 

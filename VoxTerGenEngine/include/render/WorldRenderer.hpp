@@ -1,6 +1,7 @@
 #ifndef WORLD_RENDERER_HPP
 #define WORLD_RENDERER_HPP
 
+#include "render/CameraUniformBuffer.hpp"
 #include "render/ChunkMeshRenderPass.hpp"
 #include "render/BlockHighlightRenderPass.hpp"
 #include "render/SkyboxRenderPass.hpp"
@@ -23,6 +24,7 @@ struct RaycastResult;
 class WorldRenderer
 {
 private:
+	CameraUniformBuffer camera_uniform_buffer_;
 	MeshRenderer mesh_renderer_;
 	ChunkMeshRenderPass chunk_mesh_render_pass_;
 	BlockHighlightRenderPass block_highlight_render_pass_;
@@ -33,7 +35,7 @@ public:
 
 	void Initialize();
 
-	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const std::optional<RaycastResult>& raycast_result);
+	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
 
 	void RenderWorld(const Camera& camera, float alpha, const ResourceManager& resource_manager);
 };

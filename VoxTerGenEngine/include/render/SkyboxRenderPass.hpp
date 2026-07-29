@@ -1,6 +1,8 @@
 #ifndef SKYBOX_RENDER_PASS_HPP
 #define SKYBOX_RENDER_PASS_HPP
 
+#include "mesh/Mesh.hpp"
+
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
 
@@ -9,7 +11,6 @@
 #include <glm/mat4x4.hpp>
 
 class Camera;
-class Mesh;
 class ResourceManager;
 
 class SkyboxRenderPass
@@ -24,7 +25,7 @@ public:
 
 	void PrepareSkyboxRenderData();
 
-	void RenderSkybox(const Camera& camera, float alpha, const ResourceManager& resource_manager);
+	void RenderSkybox(const ResourceManager& resource_manager);
 };
 
 #endif

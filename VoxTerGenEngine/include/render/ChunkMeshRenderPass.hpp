@@ -8,7 +8,6 @@
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
 
-#include "world/Chunk.hpp"
 #include "world/ChunkEvents.hpp"
 
 #include <glm/mat4x4.hpp>
@@ -43,7 +42,7 @@ public:
 
 	void ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue);
 
-	void RenderChunks(const Camera& camera, float alpha, const ResourceManager& resource_manager);
+	void RenderChunks(const Camera& camera, const ResourceManager& resource_manager);
 };
 
 #endif // CHUNK_MESH_RENDER_PASS_HPP

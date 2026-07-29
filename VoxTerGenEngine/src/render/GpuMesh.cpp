@@ -1,13 +1,17 @@
-#include "render/GpuMesh.hpp"
 #include "mesh/Vertex.hpp"
+#include "mesh/Mesh.hpp"
+
+#include "render/GpuMesh.hpp"
 
 #include <glad/glad.h>
 
+#include <utility>
+
 GpuMesh::GpuMesh(GpuMesh&& other) noexcept
 {
-    vao_ = std::exchange(other.vao_, 0);
-    vbo_ = std::exchange(other.vbo_, 0);
-    ebo_ = std::exchange(other.ebo_, 0);
+    vao_ = std::move(other.vao_);
+    vbo_ = std::move(other.vbo_);
+    ebo_ = std::move(other.ebo_);
     index_count_ = std::exchange(other.index_count_, 0);
 }
 
@@ -18,76 +22,50 @@ GpuMesh& GpuMesh::operator=(GpuMesh&& other) noexcept
         return *this;
     }
 
-    glDeleteVertexArrays(1, &vao_);
-    glDeleteBuffers(1, &vbo_);
-    glDeleteBuffers(1, &ebo_);
-
-    vao_ = std::exchange(other.vao_, 0);
-    vbo_ = std::exchange(other.vbo_, 0);
-    ebo_ = std::exchange(other.ebo_, 0);
+    vao_ = std::move(other.vao_);
+    vbo_ = std::move(other.vbo_);
+    ebo_ = std::move(other.ebo_);
     index_count_ = std::exchange(other.index_count_, 0);
 
     return *this;
 }
 
-GpuMesh::~GpuMesh()
+void GpuMesh::InitializeBuffers() noexcept
 {
-    if (vao_ != 0)
-    {
-        glDeleteVertexArrays(1, &vao_);
-        vao_ = 0;
-    }
+    vao_.Initialize();
+    vbo_.Initialize();
+    ebo_.Initialize();
 
-    if (vbo_ != 0)
-    {
-        glDeleteBuffers(1, &vbo_);
-        vbo_ = 0;
-    }
-
-    if (ebo_ != 0)
-    {
-        glDeleteBuffers(1, &ebo_);
-        ebo_ = 0;
-    }
-}
-
-void GpuMesh::InitializeBuffers()
-{
-    glCreateVertexArrays(1, &vao_);
-    glCreateBuffers(1, &vbo_);
-    glCreateBuffers(1, &ebo_);
-
-    glVertexArrayVertexBuffer(vao_, 0, vbo_, 0, sizeof(Vertex));
-    glVertexArrayElementBuffer(vao_, ebo_);
+    vao_.BindVertexBuffer(0, vbo_, 0, sizeof(Vertex));
+    vao_.BindElementBuffer(ebo_);
 
     // Position
-    glEnableVertexArrayAttrib(vao_, 0);
-    glVertexArrayAttribFormat(vao_, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position_));
-    glVertexArrayAttribBinding(vao_, 0, 0);
+    vao_.EnableAttribute(0);
+    vao_.SetAttribute(0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position_));
+    vao_.BindAttribute(0, 0);
 
     // Normal
-    glEnableVertexArrayAttrib(vao_, 1);
-    glVertexArrayAttribFormat(vao_, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal_));
-    glVertexArrayAttribBinding(vao_, 1, 0);
+    vao_.EnableAttribute(1);
+    vao_.SetIntAttribute(1, 1, GL_UNSIGNED_BYTE, offsetof(Vertex, normal_));
+    vao_.BindAttribute(1, 0);
 
     // UV
-    glEnableVertexArrayAttrib(vao_, 2);
-    glVertexArrayAttribFormat(vao_, 2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, uv_));
-    glVertexArrayAttribBinding(vao_, 2, 0);
+    vao_.EnableAttribute(2);
+    vao_.SetAttribute(2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, uv_));
+    vao_.BindAttribute(2, 0);
 
     // Material
-    glEnableVertexArrayAttrib(vao_, 3);
-    glVertexArrayAttribIFormat(vao_, 3, 1, GL_UNSIGNED_BYTE, offsetof(Vertex, material_));
-    glVertexArrayAttribBinding(vao_, 3, 0);
+    vao_.EnableAttribute(3);
+    vao_.SetIntAttribute(3, 1, GL_UNSIGNED_BYTE, offsetof(Vertex, material_));
+    vao_.BindAttribute(3, 0);
 }
 
-void GpuMesh::UploadMeshData(const Mesh& mesh)
+void GpuMesh::UploadMeshData(const Mesh& mesh) noexcept
 {
     const std::vector<Vertex>& vertices = mesh.Vertices();
     const std::vector<std::uint32_t>& indices = mesh.Indices();
 
-    glNamedBufferData(vbo_, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
-    glNamedBufferData(ebo_, indices.size() * sizeof(std::uint32_t), indices.data(), GL_STATIC_DRAW);
-
+    vbo_.UploadData(vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+    ebo_.UploadData(indices.size() * sizeof(std::uint32_t), indices.data(), GL_STATIC_DRAW);
     index_count_ = static_cast<GLsizei>(indices.size());
 }
