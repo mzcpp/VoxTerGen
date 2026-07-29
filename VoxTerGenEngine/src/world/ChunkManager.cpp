@@ -146,7 +146,7 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 
 std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk)
 {
-	for (int y = 0; y < constants::chunk::height; ++y)
+	for (int y = 0; y < constants::chunk::height - 1; ++y)
 	{
 		for (int z = 0; z < constants::chunk::depth; ++z)
 		{
