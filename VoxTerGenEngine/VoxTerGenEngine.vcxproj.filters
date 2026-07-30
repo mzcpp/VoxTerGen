@@ -123,6 +123,9 @@
     <ClCompile Include="src\render\CameraUniformBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\threading\ThreadPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Constants.hpp">
@@ -1284,6 +1287,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\render\CameraUniformBuffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\threading\ThreadPool.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
