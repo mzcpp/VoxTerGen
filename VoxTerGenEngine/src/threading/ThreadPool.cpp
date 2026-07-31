@@ -18,28 +18,26 @@ ThreadPool::ThreadPool(std::size_t thread_count)
 
     for (std::size_t i = 0; i < thread_count; ++i)
     {
-        workers_.emplace_back([this]() 
+        workers_.emplace_back([this]() {
+            for (;;)
             {
-                for (;;)
+                std::function<void()> task;
                 {
-                    std::function<void()> task;
+                    std::unique_lock<std::mutex> lock(queue_mutex_);
+                    condition_.wait(lock, [this]() { return stop_ || !tasks_.empty(); });
 
+                    if (stop_ && tasks_.empty())
                     {
-                        std::unique_lock<std::mutex> lock(queue_mutex_);
-                        condition_.wait(lock, [this]() { return stop_ || !tasks_.empty(); });
-
-                        if (stop_ && tasks_.empty())
-                        {
-                            return;
-                        }
-
-                        task = std::move(tasks_.front());
-                        tasks_.pop();
+                        return;
                     }
 
-                    task();
+                    task = std::move(tasks_.front());
+                    tasks_.pop();
                 }
-            });
+
+                task();
+            }
+        });
     }
 }
 
