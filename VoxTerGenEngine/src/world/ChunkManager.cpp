@@ -11,6 +11,7 @@
 #include <queue>
 #include <cmath>
 #include <ranges>
+#include <mutex>
 #include <memory>
 
 ChunkManager::ChunkManager(const ThreadPool& thread_pool) : 
@@ -137,17 +138,36 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 	constexpr int meshes_build_limit = 1;
 	int meshes_built = 0;
 
-	while (!chunk_build_queue_.empty() && meshes_built < meshes_build_limit)
+	while (meshes_built < meshes_build_limit)
 	{
-		Chunk* chunk = chunk_build_queue_.front();
-		chunk_build_queue_.pop();
+		Chunk* chunk = nullptr;
 
-		if (!chunk->MeshValid())
 		{
-			chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), BuildChunkMesh(*chunk) });
+			std::lock_guard<std::mutex> lock(chunk_build_queue_mutex_);
+
+			if (chunk_build_queue_.empty())
+			{
+				return;
+			}
+
+			chunk = chunk_build_queue_.front();
+			chunk_build_queue_.pop();
+
+			if (chunk->MeshValid())
+			{
+				continue;
+			}
+		}
+
+		std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk);
+		
+		{
+			std::lock_guard<std::mutex> lock(chunk_event_queue_mutex_);
+			chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), std::move(chunk_mesh) });
 			++meshes_built;
 			chunk->SetMeshValid(true);
 		}
+		
 	}
 }
 

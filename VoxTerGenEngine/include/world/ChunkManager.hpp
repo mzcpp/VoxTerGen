@@ -11,6 +11,7 @@
 
 #include <glm/vec2.hpp>
 
+#include <mutex>
 #include <unordered_map>
 #include <queue>
 
@@ -23,6 +24,8 @@ private:
 	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash> chunks_;
 	std::queue<Chunk*> chunk_build_queue_;
 	ChunkID next_chunk_id_ = 1;
+	std::mutex chunk_build_queue_mutex_;
+	std::mutex chunk_event_queue_mutex_;;
 
 public:
 	ChunkManager(const ThreadPool& thread_pool);
