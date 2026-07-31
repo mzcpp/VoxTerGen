@@ -26,6 +26,7 @@ union SDL_Event;
 class Engine
 {
 private:
+	ThreadPool thread_pool_;
 	InputManager input_manager_;
 	Camera camera_;
 	Observer observer_;
@@ -36,7 +37,6 @@ private:
 	World world_;
 	WorldRenderer world_renderer_;
 	CollisionSystem collision_system_;
-	ThreadPool thread_pool_;
 
 	std::queue<ChunkEvent> chunk_event_queue_;
 

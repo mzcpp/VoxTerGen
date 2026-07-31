@@ -15,9 +15,10 @@
 #include <thread>
 
 Engine::Engine() :
-	camera_controller_(camera_),
-	observer_controller_(observer_),
-	thread_pool_(std::max(1u, std::thread::hardware_concurrency() - 1))
+	thread_pool_(std::max(1u, std::thread::hardware_concurrency() - 1)), 
+	camera_controller_(camera_), 
+	observer_controller_(observer_), 
+	world_(thread_pool_)
 {
 }
 

@@ -4,12 +4,16 @@
 #include "world/Chunk.hpp"
 #include "world/ChunkManager.hpp"
 
+class ThreadPool;
+
 class World
 {
 private:
 	ChunkManager chunk_manager_;
 
 public:
+	World(const ThreadPool& thread_pool);
+
 	void InitChunks(int chunk_radius);
 
 	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);

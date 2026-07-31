@@ -1,15 +1,22 @@
-#include "world/ChunkManager.hpp"
 #include "mesh/MeshBuilder.hpp"
+
+#include "threading/ThreadPool.hpp"
 
 #include "utils/MathUtils.hpp"
 
 #include "world/Chunk.hpp"
 #include "world/ChunkEvents.hpp"
+#include "world/ChunkManager.hpp"
 
 #include <queue>
 #include <cmath>
 #include <ranges>
 #include <memory>
+
+ChunkManager::ChunkManager(const ThreadPool& thread_pool) : 
+	thread_pool_(thread_pool)
+{	
+}
 
 void ChunkManager::FillChunkTmp(Chunk& chunk)
 {
