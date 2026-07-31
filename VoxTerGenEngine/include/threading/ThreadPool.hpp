@@ -11,6 +11,7 @@
 #include <queue>
 #include <concepts>
 #include <memory>
+#include <stop_token>
 
 class ThreadPool
 {
@@ -22,7 +23,7 @@ private:
     bool stop_ = false;
 
 public:
-    ThreadPool(std::size_t threads_n);
+    ThreadPool(std::size_t thread_count);
 
     ~ThreadPool();
 

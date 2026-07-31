@@ -10,32 +10,36 @@
 #include <queue>
 #include <concepts>
 #include <memory>
+#include <stop_token>
 
-ThreadPool::ThreadPool(std::size_t threads_n)
+ThreadPool::ThreadPool(std::size_t thread_count)
 {
-    for (std::size_t i = 0; i < threads_n; ++i)
+    workers_.reserve(thread_count);
+
+    for (std::size_t i = 0; i < thread_count; ++i)
     {
-        workers_.emplace_back([this]() {
-            for (;;)
+        workers_.emplace_back([this]() 
             {
-                std::function<void()> task;
-
+                for (;;)
                 {
-                    std::unique_lock<std::mutex> lock(queue_mutex_);
-                    condition_.wait(lock, [this]() { return stop_ || !tasks_.empty(); });
+                    std::function<void()> task;
 
-                    if (stop_ && tasks_.empty())
                     {
-                        return;
+                        std::unique_lock<std::mutex> lock(queue_mutex_);
+                        condition_.wait(lock, [this]() { return stop_ || !tasks_.empty(); });
+
+                        if (stop_ && tasks_.empty())
+                        {
+                            return;
+                        }
+
+                        task = std::move(tasks_.front());
+                        tasks_.pop();
                     }
 
-                    task = std::move(tasks_.front());
-                    tasks_.pop();
+                    task();
                 }
-
-                task();
-            }
-        });
+            });
     }
 }
 

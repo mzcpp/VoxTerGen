@@ -1,5 +1,7 @@
 #include "core/Engine.hpp"
 
+#include "threading/ThreadPool.hpp"
+
 #include <glad/glad/glad.h>
 
 #include <glm/vec2.hpp>
@@ -10,10 +12,12 @@
 #include <SDL2/SDL.h>
 
 #include <iostream>
+#include <thread>
 
-Engine::Engine() : 
-	camera_controller_(camera_), 
-	observer_controller_(observer_)
+Engine::Engine() :
+	camera_controller_(camera_),
+	observer_controller_(observer_),
+	thread_pool_(std::max(1u, std::thread::hardware_concurrency() - 1))
 {
 }
 
