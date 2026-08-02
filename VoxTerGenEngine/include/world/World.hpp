@@ -12,7 +12,7 @@ private:
 	ChunkManager chunk_manager_;
 
 public:
-	World(const ThreadPool& thread_pool);
+	World(ThreadPool& thread_pool);
 
 	void InitChunks(int chunk_radius);
 

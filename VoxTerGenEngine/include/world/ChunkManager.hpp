@@ -20,7 +20,7 @@ class ThreadPool;
 class ChunkManager
 {
 private:
-	const ThreadPool& thread_pool_;
+	ThreadPool& thread_pool_;
 	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash> chunks_;
 	std::queue<Chunk*> chunk_build_queue_;
 	ChunkID next_chunk_id_ = 1;
@@ -28,7 +28,7 @@ private:
 	std::mutex chunk_event_queue_mutex_;;
 
 public:
-	ChunkManager(const ThreadPool& thread_pool);
+	ChunkManager(ThreadPool& thread_pool);
 	
     void InitChunks(int chunk_radius);
     

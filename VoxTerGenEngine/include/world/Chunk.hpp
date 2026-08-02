@@ -22,13 +22,21 @@ class Mesh;
 
 using ChunkID = std::uint64_t;
 
+enum MeshState
+{
+    Invalid,
+    Building,
+    Ready,
+    Uploaded
+};
+
 class Chunk
 {
 private:
     ChunkID id_;
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
-    bool mesh_valid_;
+    MeshState mesh_state_;
     
 public:
 	explicit Chunk(ChunkID id, glm::ivec2 world_coords);
@@ -49,10 +57,10 @@ public:
     ChunkID Id() const noexcept { return id_; }
     glm::ivec2 WorldCoords() const noexcept { return world_coords_; }
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
-    bool MeshValid() const noexcept { return mesh_valid_; }
+    bool GetMeshState() const noexcept { return mesh_state_; }
 
     // Setters
-    void SetMeshValid(bool mesh_valid) { mesh_valid_ = mesh_valid; }
+    void SetMeshState(MeshState mesh_state) { mesh_state_ = mesh_state; }
 
 private:
     int Index(glm::ivec3 coords) const;

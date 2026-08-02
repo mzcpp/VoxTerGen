@@ -22,7 +22,7 @@ namespace
 Chunk::Chunk(ChunkID id, glm::ivec2 world_coords) : 
 	id_(id), 
 	world_coords_(world_coords), 
-	mesh_valid_(false)
+	mesh_state_(MeshState::Invalid)
 {
 }
 

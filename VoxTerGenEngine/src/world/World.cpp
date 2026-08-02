@@ -7,7 +7,7 @@
 
 #include <queue>
 
-World::World(const ThreadPool& thread_pool) : 
+World::World(ThreadPool& thread_pool) : 
 	chunk_manager_(thread_pool)
 {
 }
