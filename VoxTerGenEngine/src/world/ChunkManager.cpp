@@ -163,20 +163,17 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 			}
 		}
 
-
 		thread_pool_.Enqueue([this, chunk, &chunk_event_queue, &meshes_built]()
-			{
-				std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk);
+		{
+			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk);
 
-				{
-					std::lock_guard<std::mutex> lock(chunk_event_queue_mutex_);
-					chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), std::move(chunk_mesh) });
-					++meshes_built;
-					chunk->SetMeshState(MeshState::Ready);
-				}
-			});
-		
-		
+			{
+				std::lock_guard<std::mutex> lock(chunk_event_queue_mutex_);
+				chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), std::move(chunk_mesh) });
+				++meshes_built;
+				chunk->SetMeshState(MeshState::Ready);
+			}
+		});
 	}
 }
 
