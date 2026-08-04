@@ -12,6 +12,7 @@
 #include <cmath>
 #include <ranges>
 #include <mutex>
+#include <shared_mutex>
 #include <memory>
 
 ChunkManager::ChunkManager(ThreadPool& thread_pool) : 
@@ -57,6 +58,8 @@ void ChunkManager::FillChunkTmp(Chunk& chunk)
 
 void ChunkManager::InitChunks(int chunk_radius)
 {
+	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
+
 	assert(chunk_radius >= 0);
 	const int chunk_square_size = 2 * chunk_radius + 1;
 	// TODO: observer will not always start at 0, 0!
@@ -95,6 +98,8 @@ void ChunkManager::LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const C
 	{
 		return;
 	}
+
+	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
 
 	auto it = chunks_.begin();
 
@@ -179,24 +184,6 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 
 std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk)
 {
-	for (int y = 0; y < constants::chunk::height - 1; ++y)
-	{
-		for (int z = 0; z < constants::chunk::depth; ++z)
-		{
-			for (int x = 0; x < constants::chunk::width; ++x)
-			{
-				const glm::ivec3 coords = { x, y, z };
-				Block& current_block = chunk.BlockAt(coords);
-				const Block& block_above = chunk.NeighborRefAt(coords, Direction::PosY);
-
-				if (current_block.Type() == BlockType::Grass && block_above.IsSolid())
-				{
-					current_block.SetType(BlockType::Dirt);
-				}			
-			}
-		}
-	}
-
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 		
 	*chunk_mesh = MeshBuilder::BuildMeshGreedy(
@@ -211,6 +198,8 @@ std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk)
 
 const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 {
+	std::shared_lock<std::shared_mutex> lock(chunks_shared_mutex_);
+
 	const auto& chunk_it = chunks_.find(chunk_coord);
 
 	if (chunk_it == chunks_.end())
