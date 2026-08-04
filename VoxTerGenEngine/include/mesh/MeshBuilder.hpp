@@ -221,14 +221,16 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 
 			if (render_left)
 			{
-				mask_cell.block_type_ = (left_block.Type() == BlockType::Grass && above_left_block.IsSolid()) ? BlockType::Dirt : left_block.Type();
+				//mask_cell.block_type_ = (left_block.Type() == BlockType::Grass && above_left_block.IsSolid()) ? BlockType::Dirt : left_block.Type();
+				mask_cell.block_type_ = left_block.Type();
 				mask_cell.dir_ = ToDirection(major_axis, true);
 				mask_cell.sun_light_ = left_block.SunLight();
 				mask_cell.block_light_ = left_block.BlockLight();
 			}
 			else if (render_right)
 			{
-				mask_cell.block_type_ = (right_block.Type() == BlockType::Grass && above_right_block.IsSolid()) ? BlockType::Dirt : right_block.Type();
+				//mask_cell.block_type_ = (right_block.Type() == BlockType::Grass && above_right_block.IsSolid()) ? BlockType::Dirt : right_block.Type();
+				mask_cell.block_type_ = right_block.Type();
 				mask_cell.dir_ = ToDirection(major_axis, false);
 				mask_cell.sun_light_ = right_block.SunLight();
 				mask_cell.block_light_ = right_block.BlockLight();

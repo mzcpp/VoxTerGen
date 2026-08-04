@@ -27,7 +27,7 @@ private:
 	ChunkID next_chunk_id_ = 1;
 	std::mutex chunk_build_queue_mutex_;
 	std::mutex chunk_event_queue_mutex_;
-	std::shared_mutex chunks_shared_mutex_;
+	mutable std::shared_mutex chunks_shared_mutex_;
 
 public:
 	ChunkManager(ThreadPool& thread_pool);
