@@ -211,6 +211,9 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 			const Block& right_block = world_block_query(right_query_coords).block_;
 			const Block& above_right_block = world_block_query(above_right_query_coords).block_;
 
+			(void)above_left_block;
+			(void)above_right_block;
+
 			const bool left_block_inside = major_axis_index != -1;
 			const bool right_block_inside = (major_axis_index + 1) != major_axis_size;
 
