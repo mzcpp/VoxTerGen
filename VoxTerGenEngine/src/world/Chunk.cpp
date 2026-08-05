@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <memory>
 #include <cstdint>
+#include <stop_token>
 
 namespace
 {
@@ -100,4 +101,9 @@ Block& Chunk::NeighborRefAt(glm::ivec3 coords, Direction dir)
 int Chunk::Index(glm::ivec3 coords) const
 {
 	return coords.x + constants::chunk::width * (coords.z + constants::chunk::depth * coords.y);
+}
+
+void Chunk::RequestStopBuildingMesh()
+{
+	mesh_building_stop_source_.request_stop();
 }

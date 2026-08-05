@@ -13,7 +13,9 @@
 #include <ranges>
 #include <mutex>
 #include <shared_mutex>
+#include <stop_token>
 #include <memory>
+#include <cassert>
 
 ChunkManager::ChunkManager(ThreadPool& thread_pool) : 
 	thread_pool_(thread_pool)
@@ -106,13 +108,14 @@ void ChunkManager::LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const C
 	while (it != chunks_.end())
 	{
 		const glm::ivec2& chunk_world_coords = it->first;
+		const Chunk& chunk = *(it->second);
 
 		if (chunk_world_coords.x < current_chunk_coords.x - constants::chunk::default_radius || 
 			chunk_world_coords.x > current_chunk_coords.x + constants::chunk::default_radius ||
 			chunk_world_coords.y < current_chunk_coords.y - constants::chunk::default_radius || 
 			chunk_world_coords.y > current_chunk_coords.y + constants::chunk::default_radius)
 		{
-			chunk_event_queue.emplace(chunk_event::ChunkDestroyed{ it->second->Id() });
+			chunk_event_queue.emplace(chunk_event::ChunkDestroyed{ chunk.Id() });
 			it = chunks_.erase(it);
 		}
 		else
@@ -140,12 +143,12 @@ void ChunkManager::LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const C
 
 void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 {
-	constexpr int meshes_build_limit = 1;
-	int meshes_built = 0;
+	constexpr int jobs_submitted_limit = 1;
+	int jobs_submitted = 0;
 
-	while (meshes_built < meshes_build_limit)
+	while (jobs_submitted < jobs_submitted_limit)
 	{
-		Chunk* chunk = nullptr;
+		Chunk* chunk_ptr = nullptr;
 
 		{
 			std::lock_guard<std::mutex> lock(chunk_build_queue_mutex_);
@@ -155,12 +158,15 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 				return;
 			}
 
-			chunk = chunk_build_queue_.front();
+			chunk_ptr = chunk_build_queue_.front();
 			chunk_build_queue_.pop();
 
-			if (chunk->GetMeshState() == MeshState::Invalid)
+			assert(chunk_ptr != nullptr);
+			Chunk& chunk = *chunk_ptr;
+
+			if (chunk.GetMeshState() == MeshState::Invalid)
 			{
-				chunk->SetMeshState(MeshState::Building);
+				chunk.SetMeshState(MeshState::Building);
 			}
 			else
 			{
@@ -168,30 +174,31 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 			}
 		}
 
-		thread_pool_.Enqueue([this, chunk, &chunk_event_queue, &meshes_built]()
+		thread_pool_.Enqueue([this, &chunk, &chunk_event_queue]()
 		{
-			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk);
+			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(chunk, chunk.StopSource().get_token());
 
 			{
 				std::lock_guard<std::mutex> lock(chunk_event_queue_mutex_);
-				chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), std::move(chunk_mesh) });
-				++meshes_built;
-				chunk->SetMeshState(MeshState::Ready);
+				chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk.Id(), chunk.WorldCoords(), std::move(chunk_mesh) });
+				chunk.SetMeshState(MeshState::Ready);
 			}
 		});
+
+		++jobs_submitted;
 	}
 }
 
-std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk)
+std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token stop_token)
 {
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
+
+	const auto world_block_query = [this, &chunk](glm::ivec3 block_coords)
+	{
+		return WorldBlockQuery(chunk.WorldCoords(), block_coords);
+	}
 		
-	*chunk_mesh = MeshBuilder::BuildMeshGreedy(
-		[this, &chunk](glm::ivec3 block_coords)
-		{
-			return WorldBlockQuery(chunk.WorldCoords(), block_coords);
-		}
-	);
+	*chunk_mesh = MeshBuilder::BuildMeshGreedy(world_block_query, stop_token);
 
 	return chunk_mesh;
 }

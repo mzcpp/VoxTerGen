@@ -18,6 +18,7 @@
 #include <concepts>
 #include <cstdint>
 #include <vector>
+#include <stop_token>
 
 struct MaskCell
 {
@@ -102,7 +103,7 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&
 	return chunk_mesh;
 }
 
-Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query)
+Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token)
 {
 	Mesh chunk_mesh;
 
