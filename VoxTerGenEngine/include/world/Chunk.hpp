@@ -31,6 +31,14 @@ enum MeshState
     Uploaded
 };
 
+enum ChunkState
+{
+    Unloaded, 
+    PendingUnload, 
+    PendingLoad, 
+    Loaded
+};
+
 class Chunk
 {
 private:
@@ -38,6 +46,7 @@ private:
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
     MeshState mesh_state_;
+    ChunkState chunk_state_;
     std::stop_source mesh_building_stop_source_;
     
 public:
@@ -55,17 +64,17 @@ public:
 
     Block& NeighborRefAt(glm::ivec3 coords, Direction dir);
 
-    void RequestStopBuildingMesh();
-
     // Getters
     ChunkID Id() const noexcept { return id_; }
     glm::ivec2 WorldCoords() const noexcept { return world_coords_; }
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
     bool GetMeshState() const noexcept { return mesh_state_; }
+    bool GetChunkState() const noexcept { return chunk_state_; }
     std::stop_source StopSource() const noexcept { return mesh_building_stop_source_; }
 
     // Setters
     void SetMeshState(MeshState mesh_state) { mesh_state_ = mesh_state; }
+    void SetChunkState(ChunkState chunk_state) { chunk_state_ = chunk_state; }
 
 private:
     int Index(glm::ivec3 coords) const;

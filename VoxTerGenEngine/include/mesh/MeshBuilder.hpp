@@ -19,6 +19,7 @@
 #include <cstdint>
 #include <vector>
 #include <stop_token>
+#include <mutex>
 
 struct MaskCell
 {
@@ -37,6 +38,9 @@ struct MergedQuad
 
 class MeshBuilder final
 {
+private:
+	std::mutex chunk_event_queue_mutex_;
+
 public:
 	MeshBuilder() = delete;
 
@@ -103,19 +107,30 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&
 	return chunk_mesh;
 }
 
-Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token)
+Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token, std::queue<ChunkEvent>& chunk_event_queue)
 {
 	Mesh chunk_mesh;
 
 	 for (MajorAxis axis : AllAxes())
 	 {
-	 	BuildAxisMesh(axis, world_block_query, chunk_mesh);
+		if (stop_token.stop_requested())
+		{
+			{
+				std::lock_guard<std::mutex> lock(chunk_event_queue_mutex_);
+				chunk_event_queue.emplace(chunk_event::ChunkMeshCancelled{ chunk.Id() });
+			}
+			
+			return Mesh();
+			
+		}
+
+		BuildAxisMesh(axis, world_block_query, stop_token, chunk_mesh);
 	 }
 
 	return chunk_mesh;
 }
 
-void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, BlockQuery auto&& world_block_query, Mesh& chunk_mesh)
+void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, BlockQuery auto&& world_block_query, std::stop_token stop_token, Mesh& chunk_mesh)
 {
 	int major_axis_size = 0;
 	int cross_axis_1_size = 0;
@@ -145,6 +160,11 @@ void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, BlockQuery auto&& world_bl
 
 	for (int major_axis_index = -1; major_axis_index < major_axis_size; ++major_axis_index)
 	{
+		if (stop_token.stop_requested())
+		{
+			return;
+		}
+
 		BuildSliceMask(major_axis, major_axis_index, major_axis_size, cross_axis_1_size, cross_axis_2_size, world_block_query, slice_mask);
 		MergeFacesAndEmitData(major_axis, major_axis_index, cross_axis_2_size, cross_axis_1_size, slice_mask, chunk_mesh);
 	}

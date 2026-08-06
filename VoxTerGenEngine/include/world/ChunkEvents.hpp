@@ -27,8 +27,13 @@ namespace chunk_event
     {
         ChunkID chunk_id_;
     };
+
+    struct ChunkMeshCancelled
+    {
+        ChunkID chunk_id_;
+    };
 }
 
-using ChunkEvent = std::variant<chunk_event::ChunkMeshReady, chunk_event::ChunkDestroyed>;
+using ChunkEvent = std::variant<chunk_event::ChunkMeshReady, chunk_event::ChunkDestroyed, chunk_event::ChunkMeshCancelled>;
 
 #endif // CHUNK_EVENTS_HPP

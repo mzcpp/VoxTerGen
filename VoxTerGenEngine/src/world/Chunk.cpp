@@ -23,7 +23,8 @@ namespace
 Chunk::Chunk(ChunkID id, glm::ivec2 world_coords) : 
 	id_(id), 
 	world_coords_(world_coords), 
-	mesh_state_(MeshState::Invalid)
+	mesh_state_(MeshState::Invalid), 
+	chunk_state_(ChunkState::Unloaded)
 {
 }
 
@@ -101,9 +102,4 @@ Block& Chunk::NeighborRefAt(glm::ivec3 coords, Direction dir)
 int Chunk::Index(glm::ivec3 coords) const
 {
 	return coords.x + constants::chunk::width * (coords.z + constants::chunk::depth * coords.y);
-}
-
-void Chunk::RequestStopBuildingMesh()
-{
-	mesh_building_stop_source_.request_stop();
 }

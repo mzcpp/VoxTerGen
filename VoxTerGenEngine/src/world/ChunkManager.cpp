@@ -115,8 +115,11 @@ void ChunkManager::LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const C
 			chunk_world_coords.y < current_chunk_coords.y - constants::chunk::default_radius || 
 			chunk_world_coords.y > current_chunk_coords.y + constants::chunk::default_radius)
 		{
-			chunk_event_queue.emplace(chunk_event::ChunkDestroyed{ chunk.Id() });
-			it = chunks_.erase(it);
+			chunk.StopSource().request_stop();
+			chunk.SetChunkState(ChunkState::PendingUnload);
+
+			// chunk_event_queue.emplace(chunk_event::ChunkDestroyed{ chunk.Id() });
+			// it = chunks_.erase(it);
 		}
 		else
 		{
@@ -176,7 +179,7 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 
 		thread_pool_.Enqueue([this, chunk_ptr, &chunk_event_queue]()
 		{
-			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk_ptr, chunk_ptr->StopSource().get_token());
+			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk_ptr, chunk_ptr->StopSource().get_token(), chunk_event_queue);
 
 			{
 				std::lock_guard<std::mutex> lock(chunk_event_queue_mutex_);
@@ -189,7 +192,7 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 	}
 }
 
-std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token stop_token)
+std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token stop_token, std::queue<ChunkEvent>& chunk_event_queue)
 {
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 
@@ -198,7 +201,7 @@ std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token
 			return WorldBlockQuery(chunk.WorldCoords(), block_coords);
 		};
 		
-	*chunk_mesh = MeshBuilder::BuildMeshGreedy(world_block_query, stop_token);
+	*chunk_mesh = MeshBuilder::BuildMeshGreedy(world_block_query, stop_token, chunk_event_queue);
 
 	return chunk_mesh;
 }
