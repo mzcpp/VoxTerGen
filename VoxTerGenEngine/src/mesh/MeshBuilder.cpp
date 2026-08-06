@@ -13,6 +13,8 @@
 #include <array>
 #include <cassert>
 
+std::mutex MeshBuilder::chunk_event_queue_mutex_;
+
 Mesh MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offset)
 {
 	Mesh unit_cube_mesh;

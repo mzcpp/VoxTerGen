@@ -108,7 +108,7 @@ void ChunkManager::LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const C
 	while (it != chunks_.end())
 	{
 		const glm::ivec2& chunk_world_coords = it->first;
-		const Chunk& chunk = *(it->second);
+		Chunk& chunk = *(it->second);
 
 		if (chunk_world_coords.x < current_chunk_coords.x - constants::chunk::default_radius || 
 			chunk_world_coords.x > current_chunk_coords.x + constants::chunk::default_radius ||

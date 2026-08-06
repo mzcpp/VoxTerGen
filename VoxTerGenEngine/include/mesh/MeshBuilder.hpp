@@ -10,6 +10,7 @@
 #include "utils/constants.hpp"
 
 #include "world/Chunk.hpp"
+#include "world/ChunkEvents.hpp"
 #include "world/Block.hpp"
 
 #include <glm/vec2.hpp>
@@ -20,6 +21,7 @@
 #include <vector>
 #include <stop_token>
 #include <mutex>
+#include <queue>
 
 struct MaskCell
 {
@@ -39,7 +41,7 @@ struct MergedQuad
 class MeshBuilder final
 {
 private:
-	std::mutex chunk_event_queue_mutex_;
+	static std::mutex chunk_event_queue_mutex_;
 
 public:
 	MeshBuilder() = delete;
@@ -55,13 +57,13 @@ public:
 
 	static Mesh BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query);
 	
-	static Mesh BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token);
+	static Mesh BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token, std::queue<ChunkEvent>& chunk_event_queue);
 
 	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& chunk_mesh);
 
 	static std::uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 
-	static void BuildAxisMesh(MajorAxis major_axis, BlockQuery auto&& world_block_query, Mesh& chunk_mesh);
+	static void BuildAxisMesh(MajorAxis major_axis, BlockQuery auto&& world_block_query, std::stop_token stop_token, Mesh& chunk_mesh);
 
 	static bool MaskCellsMergable(const MaskCell& first, const MaskCell& second);
 
@@ -117,7 +119,7 @@ Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop
 		{
 			{
 				std::lock_guard<std::mutex> lock(chunk_event_queue_mutex_);
-				chunk_event_queue.emplace(chunk_event::ChunkMeshCancelled{ chunk.Id() });
+				//chunk_event_queue.emplace(chunk_event::ChunkMeshCancelled{ chunk.Id() });
 			}
 			
 			return Mesh();

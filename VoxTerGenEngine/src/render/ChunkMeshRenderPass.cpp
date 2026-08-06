@@ -56,6 +56,11 @@ void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event
 				[this](chunk_event::ChunkDestroyed& e)
 				{
 					chunks_data_.erase(e.chunk_id_);
+				}, 
+			
+				[this](chunk_event::ChunkMeshCancelled& e)
+				{
+					//chunks_data_.erase(e.chunk_id_);
 				}
 
 			}, 
