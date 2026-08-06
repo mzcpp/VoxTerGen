@@ -51,7 +51,7 @@ public:
 
 	static Mesh BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query);
 	
-	static Mesh BuildMeshGreedy(BlockQuery auto&& world_block_query);
+	static Mesh BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token);
 
 	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& chunk_mesh);
 

@@ -174,14 +174,14 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 			}
 		}
 
-		thread_pool_.Enqueue([this, &chunk, &chunk_event_queue]()
+		thread_pool_.Enqueue([this, chunk_ptr, &chunk_event_queue]()
 		{
-			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(chunk, chunk.StopSource().get_token());
+			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk_ptr, chunk_ptr->StopSource().get_token());
 
 			{
 				std::lock_guard<std::mutex> lock(chunk_event_queue_mutex_);
-				chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk.Id(), chunk.WorldCoords(), std::move(chunk_mesh) });
-				chunk.SetMeshState(MeshState::Ready);
+				chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk_ptr->Id(), chunk_ptr->WorldCoords(), std::move(chunk_mesh) });
+				chunk_ptr->SetMeshState(MeshState::Ready);
 			}
 		});
 
@@ -194,9 +194,9 @@ std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 
 	const auto world_block_query = [this, &chunk](glm::ivec3 block_coords)
-	{
-		return WorldBlockQuery(chunk.WorldCoords(), block_coords);
-	}
+		{
+			return WorldBlockQuery(chunk.WorldCoords(), block_coords);
+		};
 		
 	*chunk_mesh = MeshBuilder::BuildMeshGreedy(world_block_query, stop_token);
 
