@@ -20,8 +20,6 @@
 #include <cstdint>
 #include <vector>
 #include <stop_token>
-#include <mutex>
-#include <queue>
 
 struct MaskCell
 {
@@ -40,9 +38,6 @@ struct MergedQuad
 
 class MeshBuilder final
 {
-private:
-	static std::mutex chunk_event_queue_mutex_;
-
 public:
 	MeshBuilder() = delete;
 
@@ -57,7 +52,7 @@ public:
 
 	static Mesh BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query);
 	
-	static Mesh BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token, std::queue<ChunkEvent>& chunk_event_queue);
+	static Mesh BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token);
 
 	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& chunk_mesh);
 
@@ -109,7 +104,7 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&
 	return chunk_mesh;
 }
 
-Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token, std::queue<ChunkEvent>& chunk_event_queue)
+Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token)
 {
 	Mesh chunk_mesh;
 
@@ -117,13 +112,7 @@ Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop
 	 {
 		if (stop_token.stop_requested())
 		{
-			{
-				std::lock_guard<std::mutex> lock(chunk_event_queue_mutex_);
-				//chunk_event_queue.emplace(chunk_event::ChunkMeshCancelled{ chunk.Id() });
-			}
-			
 			return Mesh();
-			
 		}
 
 		BuildAxisMesh(axis, world_block_query, stop_token, chunk_mesh);

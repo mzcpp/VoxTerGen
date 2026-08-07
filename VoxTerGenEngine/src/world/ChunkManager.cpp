@@ -201,7 +201,7 @@ std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token
 			return WorldBlockQuery(chunk.WorldCoords(), block_coords);
 		};
 		
-	*chunk_mesh = MeshBuilder::BuildMeshGreedy(world_block_query, stop_token, chunk_event_queue);
+	*chunk_mesh = MeshBuilder::BuildMeshGreedy(world_block_query, stop_token);
 
 	return chunk_mesh;
 }
