@@ -1292,6 +1292,9 @@
     <ClInclude Include="include\threading\ThreadPool.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\threading\ThreadSafeQueue.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\external\glm\detail\func_common.inl">

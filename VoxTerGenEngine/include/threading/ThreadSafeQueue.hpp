@@ -18,20 +18,20 @@ public:
     void Push(T value)
     {
         std::lock_guard<std::mutex> lock(queue_mutex_);
-        queue.push(value);
+        queue_.push(value);
     }
 
     std::optional<T> TryPop()
     {
         std::lock_guard<std::mutex> lock(queue_mutex_);
 
-        if (queue.empty())
+        if (queue_.empty())
         {
             return std::nullopt;
         }
 
-        std::optional<T> ret = { std::move(queue.front()) } ;
-        queue.pop();
+        std::optional<T> ret = { std::move(queue_.front()) } ;
+        queue_.pop();
 
         return ret;
     }
