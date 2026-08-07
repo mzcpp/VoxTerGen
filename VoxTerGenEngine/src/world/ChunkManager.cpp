@@ -165,11 +165,10 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 			chunk_build_queue_.pop();
 
 			assert(chunk_ptr != nullptr);
-			Chunk& chunk = *chunk_ptr;
 
-			if (chunk.GetMeshState() == MeshState::Invalid)
+			if (chunk_ptr->GetMeshState() == MeshState::Invalid)
 			{
-				chunk.SetMeshState(MeshState::Building);
+				chunk_ptr->SetMeshState(MeshState::Building);
 			}
 			else
 			{
@@ -181,6 +180,11 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 		{
 			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk_ptr, chunk_ptr->StopSource().get_token(), chunk_event_queue);
 
+			if (chunk_mesh == nullptr)
+			{
+				chunk_event_queue.emplace(chunk_event::ChunkMeshCancelled{ chunk_ptr->Id() });
+			}
+			else
 			{
 				std::lock_guard<std::mutex> lock(chunk_event_queue_mutex_);
 				chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk_ptr->Id(), chunk_ptr->WorldCoords(), std::move(chunk_mesh) });
@@ -202,6 +206,11 @@ std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token
 		};
 		
 	*chunk_mesh = MeshBuilder::BuildMeshGreedy(world_block_query, stop_token);
+
+	if (stop_token.stop_requested())
+	{
+		return nullptr;
+	}
 
 	return chunk_mesh;
 }

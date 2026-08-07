@@ -15,6 +15,7 @@
 #include "render/WorldRenderer.hpp"
 
 #include "threading/ThreadPool.hpp"
+#include "threading/ThreadSafeQueue.hpp"
 
 #include "world/Observer.hpp"
 #include "world/World.hpp"
@@ -38,6 +39,7 @@ private:
 	WorldRenderer world_renderer_;
 	CollisionSystem collision_system_;
 
+	// ThreadSafeQueue<ChunkEvent> chunk_event_queue_;
 	std::queue<ChunkEvent> chunk_event_queue_;
 
 public:
