@@ -5,6 +5,8 @@
 
 #include "graphics/Camera.hpp"
 
+#include "threading/ThreadSafeQueue.hpp"
+
 #include "world/Chunk.hpp"
 #include "world/ChunkEvents.hpp"
 #include "world/Block.hpp"
@@ -35,13 +37,17 @@ public:
 	
     void InitChunks(int chunk_radius);
     
-	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
+	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera);
 
-	void LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
+	void MarkChunksForUnload(const Camera& camera);
 
-	void BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue);
+	void LoadChunks(const Camera& camera);
+	
+	void UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
-	std::unique_ptr<Mesh> BuildChunkMesh(Chunk& chunk, std::stop_token stop_token, std::queue<ChunkEvent>& chunk_event_queue);
+	void BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
+
+	std::unique_ptr<Mesh> BuildChunkMesh(Chunk& chunk, std::stop_token stop_token);
 
 	BlockInfo WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const;
 

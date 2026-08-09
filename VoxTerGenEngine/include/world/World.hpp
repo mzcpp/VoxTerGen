@@ -4,6 +4,8 @@
 #include "world/Chunk.hpp"
 #include "world/ChunkManager.hpp"
 
+#include "threading/ThreadSafeQueue.hpp"
+
 class ThreadPool;
 
 class World
@@ -16,7 +18,7 @@ public:
 
 	void InitChunks(int chunk_radius);
 
-	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
+	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera);
 
 	// Getters
 	const ChunkManager& ChunkManagerRef() const { return chunk_manager_; }

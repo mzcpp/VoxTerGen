@@ -39,8 +39,7 @@ private:
 	WorldRenderer world_renderer_;
 	CollisionSystem collision_system_;
 
-	// ThreadSafeQueue<ChunkEvent> chunk_event_queue_;
-	std::queue<ChunkEvent> chunk_event_queue_;
+	ThreadSafeQueue<ChunkEvent> chunk_event_queue_;
 
 public:
 	Engine();
@@ -69,8 +68,7 @@ public:
 	const Settings& Settings() const noexcept { return settings_; }
 	const World& World() const noexcept { return world_; }
 	const WorldRenderer& WorldRenderer() const noexcept { return world_renderer_; }
-
-private:
+	const ThreadSafeQueue<ChunkEvent>& ChunkEventQueue() const noexcept { return chunk_event_queue_; }
 };
 
 #endif // ENGINE_HPP

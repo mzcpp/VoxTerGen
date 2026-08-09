@@ -6,6 +6,8 @@
 #include "render/BlockHighlightRenderPass.hpp"
 #include "render/SkyboxRenderPass.hpp"
 
+#include "threading/ThreadSafeQueue.hpp"
+
 #include "world/ChunkEvents.hpp"
 
 #include <glm/vec2.hpp>
@@ -35,7 +37,7 @@ public:
 
 	void Initialize();
 
-	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
+	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera);
 
 	void RenderWorld(const Camera& camera, float alpha, const ResourceManager& resource_manager);
 };

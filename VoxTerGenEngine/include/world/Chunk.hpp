@@ -18,6 +18,7 @@
 #include <variant>
 #include <cstdint>
 #include <stop_token>
+#include <atomic>
 
 class Mesh;
 
@@ -45,8 +46,8 @@ private:
     ChunkID id_;
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
-    MeshState mesh_state_;
-    ChunkState chunk_state_;
+    std::atomic<MeshState> mesh_state_;
+    std::atomic<ChunkState> chunk_state_;
     std::stop_source mesh_building_stop_source_;
     
 public:
@@ -70,7 +71,8 @@ public:
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
     bool GetMeshState() const noexcept { return mesh_state_; }
     bool GetChunkState() const noexcept { return chunk_state_; }
-    std::stop_source StopSource() const noexcept { return mesh_building_stop_source_; }
+    std::stop_source& StopSource() noexcept { return mesh_building_stop_source_; }
+    const std::stop_source& StopSource() const noexcept { return mesh_building_stop_source_; }
 
     // Setters
     void SetMeshState(MeshState mesh_state) { mesh_state_ = mesh_state; }

@@ -12,6 +12,8 @@
 
 #include "physics/AABB.hpp"
 
+#include "threading/ThreadSafeQueue.hpp"
+
 #include "world/Chunk.hpp"
 #include "world/ChunkEvents.hpp"
 
@@ -23,18 +25,23 @@
 #include <queue>
 #include <ranges>
 #include <variant>
+#include <optional>
 
 ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) : 
 	mesh_renderer_(mesh_renderer)
 {
 }
 
-void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue)
+void ChunkMeshRenderPass::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
-	while (!chunk_event_queue.empty())
+	while (!chunk_event_queue.Empty())
 	{
-		ChunkEvent chunk_event = std::move(chunk_event_queue.front());
-		chunk_event_queue.pop();
+		std::optional<ChunkEvent> chunk_event = chunk_event_queue.TryPop();
+
+		if (!chunk_event.has_value())
+		{
+			continue;
+		}
 		
 		// TODO: Reuse the GPU buffers, not erase and allocate anew.
 		std::visit(overloaded
@@ -56,15 +63,9 @@ void ChunkMeshRenderPass::ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event
 				[this](chunk_event::ChunkDestroyed& e)
 				{
 					chunks_data_.erase(e.chunk_id_);
-				}, 
-			
-				[this](chunk_event::ChunkMeshCancelled& e)
-				{
-					//chunks_data_.erase(e.chunk_id_);
 				}
-
 			}, 
-			chunk_event
+			*chunk_event
 		);
 	}
 }

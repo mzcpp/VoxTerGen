@@ -13,6 +13,14 @@
 
 class Mesh;
 
+/**
+ * @brief Helper struct to combine multiple lambdas for std::visit.
+ * @note Taken from cppreference.com:
+ *       https://en.cppreference.com/w/cpp/utility/variant/visit2.html
+ */
+template<class... Ts>
+struct overloaded : Ts... { using Ts::operator()...; };
+
 namespace chunk_event
 {
     struct ChunkMeshReady
@@ -27,13 +35,8 @@ namespace chunk_event
     {
         ChunkID chunk_id_;
     };
-
-    struct ChunkMeshCancelled
-    {
-        ChunkID chunk_id_;
-    };
 }
 
-using ChunkEvent = std::variant<chunk_event::ChunkMeshReady, chunk_event::ChunkDestroyed, chunk_event::ChunkMeshCancelled>;
+using ChunkEvent = std::variant<chunk_event::ChunkMeshReady, chunk_event::ChunkDestroyed>;
 
 #endif // CHUNK_EVENTS_HPP

@@ -18,7 +18,7 @@ public:
     void Push(T value)
     {
         std::lock_guard<std::mutex> lock(queue_mutex_);
-        queue_.push(value);
+        queue_.push(std::move(value));
     }
 
     std::optional<T> TryPop()
@@ -34,6 +34,11 @@ public:
         queue_.pop();
 
         return ret;
+    }
+
+    bool Empty() const noexcept 
+    {
+        return queue_.empty(); 
     }
     
 };

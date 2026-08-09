@@ -1,6 +1,7 @@
 #include "mesh/MeshBuilder.hpp"
 
 #include "threading/ThreadPool.hpp"
+#include "threading/ThreadSafeQueue.hpp"
 
 #include "utils/MathUtils.hpp"
 
@@ -85,13 +86,15 @@ void ChunkManager::InitChunks(int chunk_radius)
 	}
 }
 
-void ChunkManager::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
+void ChunkManager::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
-	LoadChunks(chunk_event_queue, camera);
+	MarkChunksForUnload(camera);
+	LoadChunks(camera);
 	BuildChunkMeshes(chunk_event_queue);
+	UnloadChunks(chunk_event_queue);
 }
 
-void ChunkManager::LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
+void ChunkManager::MarkChunksForUnload(const Camera& camera)
 {
 	const glm::ivec2 current_chunk_coords = GetChunkCoords(camera.Pos());
 	const glm::ivec2 prev_chunk_coords = GetChunkCoords(camera.PrevPos());
@@ -110,22 +113,23 @@ void ChunkManager::LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const C
 		const glm::ivec2& chunk_world_coords = it->first;
 		Chunk& chunk = *(it->second);
 
-		if (chunk_world_coords.x < current_chunk_coords.x - constants::chunk::default_radius || 
+		if (chunk_world_coords.x < current_chunk_coords.x - constants::chunk::default_radius ||
 			chunk_world_coords.x > current_chunk_coords.x + constants::chunk::default_radius ||
-			chunk_world_coords.y < current_chunk_coords.y - constants::chunk::default_radius || 
+			chunk_world_coords.y < current_chunk_coords.y - constants::chunk::default_radius ||
 			chunk_world_coords.y > current_chunk_coords.y + constants::chunk::default_radius)
 		{
 			chunk.StopSource().request_stop();
-			chunk.SetChunkState(ChunkState::PendingUnload);
-
-			// chunk_event_queue.emplace(chunk_event::ChunkDestroyed{ chunk.Id() });
-			// it = chunks_.erase(it);
 		}
 		else
 		{
 			++it;
 		}
 	}
+}
+
+void ChunkManager::LoadChunks(const Camera& camera)
+{
+	const glm::ivec2 current_chunk_coords = GetChunkCoords(camera.Pos());
 
 	for (int y = current_chunk_coords.y - constants::chunk::default_radius; y < current_chunk_coords.y + constants::chunk::default_radius + 1; ++y)
 	{
@@ -144,12 +148,29 @@ void ChunkManager::LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const C
 	}
 }
 
-void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
+void ChunkManager::UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
-	constexpr int jobs_submitted_limit = 1;
-	int jobs_submitted = 0;
+	auto it = chunks_.begin();
 
-	while (jobs_submitted < jobs_submitted_limit)
+	while (it != chunks_.end())
+	{
+		Chunk& chunk = *(it->second);
+
+		if (chunk.GetChunkState() == ChunkState::PendingUnload)
+		{
+			 chunk_event_queue.Push(chunk_event::ChunkDestroyed{ chunk.Id() });
+			 it = chunks_.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+}
+
+void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
+{
+	while (!chunk_build_queue_.empty())
 	{
 		Chunk* chunk_ptr = nullptr;
 
@@ -166,6 +187,12 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 
 			assert(chunk_ptr != nullptr);
 
+			if (chunk_ptr->StopSource().stop_requested())
+			{
+				chunk_ptr->SetChunkState(ChunkState::PendingUnload);
+				continue;
+			}
+
 			if (chunk_ptr->GetMeshState() == MeshState::Invalid)
 			{
 				chunk_ptr->SetMeshState(MeshState::Building);
@@ -178,25 +205,22 @@ void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
 
 		thread_pool_.Enqueue([this, chunk_ptr, &chunk_event_queue]()
 		{
-			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk_ptr, chunk_ptr->StopSource().get_token(), chunk_event_queue);
+			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk_ptr, chunk_ptr->StopSource().get_token());
 
 			if (chunk_mesh == nullptr)
 			{
-				chunk_event_queue.emplace(chunk_event::ChunkMeshCancelled{ chunk_ptr->Id() });
+				chunk_ptr->SetChunkState(ChunkState::PendingUnload);
 			}
 			else
 			{
-				std::lock_guard<std::mutex> lock(chunk_event_queue_mutex_);
-				chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk_ptr->Id(), chunk_ptr->WorldCoords(), std::move(chunk_mesh) });
+				chunk_event_queue.Push(chunk_event::ChunkMeshReady{ chunk_ptr->Id(), chunk_ptr->WorldCoords(), std::move(chunk_mesh) });
 				chunk_ptr->SetMeshState(MeshState::Ready);
 			}
 		});
-
-		++jobs_submitted;
 	}
 }
 
-std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token stop_token, std::queue<ChunkEvent>& chunk_event_queue)
+std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token stop_token)
 {
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 
