@@ -120,10 +120,8 @@ void ChunkManager::MarkChunksForUnload(const Camera& camera)
 		{
 			chunk.StopSource().request_stop();
 		}
-		else
-		{
-			++it;
-		}
+		
+		++it;
 	}
 }
 
@@ -174,7 +172,11 @@ void ChunkManager::UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 
 void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
-	while (!chunk_build_queue_.empty())
+	constexpr int jobs_submitted_limit = 8;
+	int jobs_submitted = 0;
+
+	// REPLACE chunk_build_queue_ with ThreadSafeQueue<Chunk*>
+	while (jobs_submitted < jobs_submitted_limit)
 	{
 		Chunk* chunk_ptr = nullptr;
 
@@ -207,6 +209,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 			}
 		}
 
+		// CAPTURING THIS
 		thread_pool_.Enqueue([this, chunk_ptr, &chunk_event_queue]()
 		{
 			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk_ptr, chunk_ptr->StopSource().get_token());
@@ -221,6 +224,8 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 				chunk_ptr->SetMeshState(MeshState::Ready);
 			}
 		});
+
+		++jobs_submitted;
 	}
 }
 

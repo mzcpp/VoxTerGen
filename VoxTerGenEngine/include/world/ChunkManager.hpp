@@ -29,7 +29,6 @@ private:
 	std::queue<Chunk*> chunk_build_queue_;
 	ChunkID next_chunk_id_ = 1;
 	std::mutex chunk_build_queue_mutex_;
-	std::mutex chunk_event_queue_mutex_;
 	mutable std::shared_mutex chunks_shared_mutex_;
 
 public:
