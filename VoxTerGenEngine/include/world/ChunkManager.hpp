@@ -26,7 +26,7 @@ class ChunkManager
 private:
 	ThreadPool& thread_pool_;
 	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash> chunks_;
-	std::queue<Chunk*> chunk_build_queue_;
+	ThreadSafeQueue<Chunk*> chunk_build_queue_;
 	ChunkID next_chunk_id_ = 1;
 	std::mutex chunk_build_queue_mutex_;
 	mutable std::shared_mutex chunks_shared_mutex_;

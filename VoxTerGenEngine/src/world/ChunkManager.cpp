@@ -74,7 +74,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 		{
 			const glm::ivec2 world_coords = { start_coords.x + x, start_coords.z + z };
 			std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, world_coords);
-			chunk_build_queue_.push(chunk.get());
+			chunk_build_queue_.Push(chunk.get());
 
 			chunks_.try_emplace(world_coords, std::move(chunk));
 		}
@@ -141,7 +141,7 @@ void ChunkManager::LoadChunks(const Camera& camera)
 			{
 				std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
 				FillChunkTmp(*chunk);
-				chunk_build_queue_.emplace(chunk.get());
+				chunk_build_queue_.Push(chunk.get());
 				chunks_.try_emplace(chunk_world_coords, std::move(chunk));
 			}
 		}
@@ -175,23 +175,21 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 	constexpr int jobs_submitted_limit = 8;
 	int jobs_submitted = 0;
 
-	// REPLACE chunk_build_queue_ with ThreadSafeQueue<Chunk*>
 	while (jobs_submitted < jobs_submitted_limit)
 	{
+		std::optional<Chunk*> chunk_opt = std::nullopt;
 		Chunk* chunk_ptr = nullptr;
 
 		{
-			std::lock_guard<std::mutex> lock(chunk_build_queue_mutex_);
-
-			if (chunk_build_queue_.empty())
+			if (chunk_build_queue_.Empty())
 			{
 				return;
 			}
 
-			chunk_ptr = chunk_build_queue_.front();
-			chunk_build_queue_.pop();
+			chunk_opt = chunk_build_queue_.TryPop();
 
-			assert(chunk_ptr != nullptr);
+			assert(chunk_opt.has_value() && *chunk_opt != nullptr);
+			chunk_ptr = *chunk_opt;
 
 			if (chunk_ptr->StopSource().stop_requested())
 			{
@@ -209,7 +207,6 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 			}
 		}
 
-		// CAPTURING THIS
 		thread_pool_.Enqueue([this, chunk_ptr, &chunk_event_queue]()
 		{
 			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk_ptr, chunk_ptr->StopSource().get_token());
