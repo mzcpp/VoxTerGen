@@ -129,6 +129,8 @@ void ChunkManager::MarkChunksForUnload(const Camera& camera)
 
 void ChunkManager::LoadChunks(const Camera& camera)
 {
+	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
+
 	const glm::ivec2 current_chunk_coords = GetChunkCoords(camera.Pos());
 
 	for (int y = current_chunk_coords.y - constants::chunk::default_radius; y < current_chunk_coords.y + constants::chunk::default_radius + 1; ++y)
@@ -150,6 +152,8 @@ void ChunkManager::LoadChunks(const Camera& camera)
 
 void ChunkManager::UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
+	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
+
 	auto it = chunks_.begin();
 
 	while (it != chunks_.end())
@@ -241,8 +245,6 @@ std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token
 
 const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 {
-	std::shared_lock<std::shared_mutex> lock(chunks_shared_mutex_);
-
 	const auto& chunk_it = chunks_.find(chunk_coord);
 
 	if (chunk_it == chunks_.end())
@@ -315,6 +317,8 @@ BlockInfo ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ive
 		target_block_coords.x + chunk_coords.x * constants::chunk::width, 
 		target_block_coords.y, 
 		target_block_coords.z + chunk_coords.y * constants::chunk::depth };
+
+	std::shared_lock <std::shared_mutex> lock(chunks_shared_mutex_);
 	
 	if (const Chunk* target_chunk = GetChunkAt(chunk_coords))
 	{
