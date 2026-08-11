@@ -38,6 +38,7 @@ public:
 
     bool Empty() const noexcept 
     {
+        std::lock_guard<std::mutex> lock(queue_mutex_);
         return queue_.empty(); 
     }
     

@@ -106,22 +106,17 @@ void ChunkManager::MarkChunksForUnload(const Camera& camera)
 
 	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
 
-	auto it = chunks_.begin();
-
-	while (it != chunks_.end())
+	for (auto& [chunk_world_coords, chunk] : chunks_)
 	{
-		const glm::ivec2& chunk_world_coords = it->first;
-		Chunk& chunk = *(it->second);
-
 		if (chunk_world_coords.x < current_chunk_coords.x - constants::chunk::default_radius ||
 			chunk_world_coords.x > current_chunk_coords.x + constants::chunk::default_radius ||
 			chunk_world_coords.y < current_chunk_coords.y - constants::chunk::default_radius ||
 			chunk_world_coords.y > current_chunk_coords.y + constants::chunk::default_radius)
 		{
-			chunk.StopSource().request_stop();
+			chunk->StopSource().request_stop();
+			chunk->SetChunkState(ChunkState::PendingUnload);
+			chunk->SetMeshState(MeshState::Cancelled);
 		}
-		
-		++it;
 	}
 }
 
@@ -142,6 +137,7 @@ void ChunkManager::LoadChunks(const Camera& camera)
 				std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
 				FillChunkTmp(*chunk);
 				chunk_build_queue_.Push(chunk.get());
+				chunk->SetChunkState(ChunkState::Loaded);
 				chunks_.try_emplace(chunk_world_coords, std::move(chunk));
 			}
 		}
@@ -177,48 +173,42 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 
 	while (jobs_submitted < jobs_submitted_limit)
 	{
-		std::optional<Chunk*> chunk_opt = std::nullopt;
-		Chunk* chunk_ptr = nullptr;
+		const std::optional<Chunk*> chunk_opt = chunk_build_queue_.TryPop();
 
+		if (!chunk_opt.has_value())
 		{
-			if (chunk_build_queue_.Empty())
-			{
-				return;
-			}
-
-			chunk_opt = chunk_build_queue_.TryPop();
-
-			assert(chunk_opt.has_value() && *chunk_opt != nullptr);
-			chunk_ptr = *chunk_opt;
-
-			if (chunk_ptr->StopSource().stop_requested())
-			{
-				chunk_ptr->SetChunkState(ChunkState::PendingUnload);
-				continue;
-			}
-
-			if (chunk_ptr->GetMeshState() == MeshState::Invalid)
-			{
-				chunk_ptr->SetMeshState(MeshState::Building);
-			}
-			else
-			{
-				continue;
-			}
+			return;
 		}
 
-		thread_pool_.Enqueue([this, chunk_ptr, &chunk_event_queue]()
+		assert(chunk_opt.value() != nullptr);
+		Chunk& chunk = *chunk_opt.value();
+
+		if (chunk.StopSource().stop_requested())
 		{
-			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(*chunk_ptr, chunk_ptr->StopSource().get_token());
+			continue;
+		}
+
+		if (chunk.GetMeshState() == MeshState::Invalid)
+		{
+			chunk.SetMeshState(MeshState::Building);
+		}
+		else
+		{
+			continue;
+		}
+
+		thread_pool_.Enqueue([this, &chunk, &chunk_event_queue]()
+		{
+			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(chunk, chunk.StopSource().get_token());
 
 			if (chunk_mesh == nullptr)
 			{
-				chunk_ptr->SetChunkState(ChunkState::PendingUnload);
+				chunk.SetChunkState(ChunkState::PendingUnload);
 			}
 			else
 			{
-				chunk_event_queue.Push(chunk_event::ChunkMeshReady{ chunk_ptr->Id(), chunk_ptr->WorldCoords(), std::move(chunk_mesh) });
-				chunk_ptr->SetMeshState(MeshState::Ready);
+				chunk_event_queue.Push(chunk_event::ChunkMeshReady{ chunk.Id(), chunk.WorldCoords(), std::move(chunk_mesh) });
+				chunk.SetMeshState(MeshState::Ready);
 			}
 		});
 

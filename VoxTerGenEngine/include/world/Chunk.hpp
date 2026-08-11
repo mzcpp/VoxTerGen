@@ -20,25 +20,22 @@
 #include <stop_token>
 #include <atomic>
 
-class Mesh;
-
-using ChunkID = std::uint64_t;
-
-enum MeshState
+enum class MeshState
 {
-    Invalid,
-    Building,
-    Ready,
-    Uploaded
+    Invalid, 
+    Building, 
+    Cancelled, 
+    Ready
 };
 
-enum ChunkState
+enum class ChunkState
 {
     Unloaded, 
     PendingUnload, 
-    PendingLoad, 
     Loaded
 };
+
+using ChunkID = std::uint64_t;
 
 class Chunk
 {

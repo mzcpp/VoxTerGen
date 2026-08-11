@@ -19,8 +19,6 @@
 #include <unordered_map>
 #include <queue>
 
-class ThreadPool;
-
 class ChunkManager
 {
 private:
