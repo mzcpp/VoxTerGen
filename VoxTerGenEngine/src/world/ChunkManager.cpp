@@ -320,8 +320,6 @@ BlockInfo ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ive
 		target_block_coords.y, 
 		target_block_coords.z + chunk_coords.y * constants::chunk::depth };
 
-	std::shared_lock <std::shared_mutex> lock(chunks_shared_mutex_);
-	
 	if (const Chunk* target_chunk = GetChunkAt(chunk_coords))
 	{
 		return { target_chunk->BlockAt(target_block_coords), absolute_block_coords };
