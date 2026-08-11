@@ -26,7 +26,7 @@ Chunk::Chunk(ChunkID id, glm::ivec2 world_coords) :
 	world_coords_(world_coords), 
 	mesh_state_(MeshState::Invalid), 
 	chunk_state_(ChunkState::Unloaded), 
-	reference_count_(0)
+	dependency_count_(0)
 {
 }
 

@@ -241,7 +241,7 @@ std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token
 	return chunk_mesh;
 }
 
-const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
+Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 {
 	const auto& chunk_it = chunks_.find(chunk_coord);
 
@@ -350,7 +350,7 @@ void ChunkManager::UpdateNeighborDependencies(glm::ivec2 chunk_coords, bool incr
 			offset.y += offsets[i % 2];
 		}
 		
-		if (...)
+		if (increment)
 		{
 			GetChunkAt(chunk_coords + offset)->AddDependency();
 		}
