@@ -45,6 +45,7 @@ private:
 	std::array<Block, constants::chunk::size> blocks_;
     std::atomic<MeshState> mesh_state_;
     std::atomic<ChunkState> chunk_state_;
+    std::atomic<std::uint8_t> reference_count_;
     std::stop_source mesh_building_stop_source_;
     
 public:
@@ -61,6 +62,12 @@ public:
     Block NeighborAt(glm::ivec3 coords, Direction dir) const;
 
     Block& NeighborRefAt(glm::ivec3 coords, Direction dir);
+
+    void AddDependency() noexcept;
+
+    void RemoveDependency() noexcept;
+
+    bool HasDependencies() const noexcept;
 
     // Getters
     ChunkID Id() const noexcept { return id_; }

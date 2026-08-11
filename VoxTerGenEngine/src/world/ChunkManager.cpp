@@ -17,6 +17,7 @@
 #include <stop_token>
 #include <memory>
 #include <cassert>
+#include <array>
 
 ChunkManager::ChunkManager(ThreadPool& thread_pool) : 
 	thread_pool_(thread_pool)
@@ -191,6 +192,8 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		if (chunk.GetMeshState() == MeshState::Invalid)
 		{
 			chunk.SetMeshState(MeshState::Building);
+			chunk.AddDependency();
+			UpdateNeighborDependencies(chunk.WorldCoords(), true);
 		}
 		else
 		{
@@ -210,6 +213,9 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 				chunk_event_queue.Push(chunk_event::ChunkMeshReady{ chunk.Id(), chunk.WorldCoords(), std::move(chunk_mesh) });
 				chunk.SetMeshState(MeshState::Ready);
 			}
+
+			chunk.RemoveDependency();
+			UpdateNeighborDependencies(chunk.WorldCoords(), false);
 		});
 
 		++jobs_submitted;
@@ -324,4 +330,33 @@ glm::ivec2 ChunkManager::GetChunkCoords(glm::dvec3 pos) const noexcept
 		static_cast<int>(std::floor(pos.x / constants::chunk::width)), 
 		static_cast<int>(std::floor(pos.z / constants::chunk::depth)) 
 	};
+}
+
+void ChunkManager::UpdateNeighborDependencies(glm::ivec2 chunk_coords, bool increment)
+{
+	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
+	std::array<int, 2> offsets = { 1, -1 };
+	
+	for (int i = 0; i < 4; ++i)
+	{
+		glm::ivec2 offset = { 0, 0 };
+
+		if (i < 2)
+		{
+			offset.x += offsets[i % 2];
+		}
+		else
+		{
+			offset.y += offsets[i % 2];
+		}
+		
+		if (...)
+		{
+			GetChunkAt(chunk_coords + offset)->AddDependency();
+		}
+		else
+		{
+			GetChunkAt(chunk_coords + offset)->RemoveDependency();
+		}
+	}
 }

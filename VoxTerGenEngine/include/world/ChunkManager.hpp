@@ -56,6 +56,8 @@ public:
 
 	glm::ivec2 GetChunkCoords(glm::dvec3 pos) const noexcept;
 
+	void UpdateNeighborDependencies(glm::ivec2 chunk_coords, bool increment);
+
 	// TODO: TEMPORARY CHUNK FILL - REMOVE LATER!
 	void FillChunkTmp(Chunk& chunk);
 

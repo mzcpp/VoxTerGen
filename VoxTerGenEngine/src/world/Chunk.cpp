@@ -10,6 +10,7 @@
 #include <memory>
 #include <cstdint>
 #include <stop_token>
+#include <cassert>
 
 namespace
 {
@@ -24,7 +25,8 @@ Chunk::Chunk(ChunkID id, glm::ivec2 world_coords) :
 	id_(id), 
 	world_coords_(world_coords), 
 	mesh_state_(MeshState::Invalid), 
-	chunk_state_(ChunkState::Unloaded)
+	chunk_state_(ChunkState::Unloaded), 
+	reference_count_(0)
 {
 }
 
@@ -97,6 +99,22 @@ Block& Chunk::NeighborRefAt(glm::ivec3 coords, Direction dir)
 
 	const auto& offset = neighbor_offsets_[dir_index];
 	return BlockAt({ coords.x + offset.x, coords.y + offset.y, coords.z + offset.z });
+}
+
+void Chunk::AddDependency() noexcept
+{
+    ++dependency_count_;
+}
+
+void Chunk::RemoveDependency() noexcept
+{
+	assert(HasDependencies());
+    --dependency_count_;
+}
+
+bool Chunk::HasDependencies() const noexcept
+{
+    return dependency_count_ > 0;
 }
 
 int Chunk::Index(glm::ivec3 coords) const
