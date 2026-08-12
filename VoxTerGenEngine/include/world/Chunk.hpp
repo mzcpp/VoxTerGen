@@ -6,6 +6,7 @@
 #include "render/GpuMesh.hpp"
 
 #include "utils/Constants.hpp"
+#include "utils/Hash.hpp"
 
 #include "world/Block.hpp"
 
@@ -17,6 +18,7 @@
 #include <memory>
 #include <variant>
 #include <cstdint>
+#include <unordered_map>
 #include <stop_token>
 #include <atomic>
 
@@ -35,6 +37,23 @@ enum class ChunkState
     Loaded
 };
 
+struct ChunkMeshDependencies
+{
+    std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash> chunk_mesh_dependencies_;
+
+    std::shared_ptr<Chunk> GetChunkAt(glm::ivec2 chunk_coords)
+    {
+        const auto& chunk_it = chunk_mesh_dependencies_.find(chunk_coord);
+
+        if (chunk_it == chunk_mesh_dependencies_.end())
+        {
+            return nullptr;
+        }
+
+        return chunk_it->second;
+    }
+};
+
 using ChunkID = std::uint64_t;
 
 class Chunk
@@ -45,7 +64,6 @@ private:
 	std::array<Block, constants::chunk::size> blocks_;
     std::atomic<MeshState> mesh_state_;
     std::atomic<ChunkState> chunk_state_;
-    std::atomic<std::uint8_t> dependency_count_;
     std::stop_source mesh_building_stop_source_;
     
 public:
@@ -62,12 +80,6 @@ public:
     Block NeighborAt(glm::ivec3 coords, Direction dir) const;
 
     Block& NeighborRefAt(glm::ivec3 coords, Direction dir);
-
-    void AddDependency() noexcept;
-
-    void RemoveDependency() noexcept;
-
-    bool HasDependencies() const noexcept;
 
     // Getters
     ChunkID Id() const noexcept { return id_; }

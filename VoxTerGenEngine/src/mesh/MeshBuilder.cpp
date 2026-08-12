@@ -115,6 +115,16 @@ void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, glm::vec3 or
 	}
 }
 
+// Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query)
+// {
+
+// }
+
+// Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token)
+// {
+
+// }
+
 void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& chunk_mesh)
 {
 	const glm::vec3 block_abs_pos = { 

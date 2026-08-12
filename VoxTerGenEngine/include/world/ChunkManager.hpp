@@ -18,6 +18,7 @@
 #include <stop_token>
 #include <unordered_map>
 #include <queue>
+#include <memory>
 
 class ThreadPool;
 
@@ -25,7 +26,7 @@ class ChunkManager
 {
 private:
 	ThreadPool& thread_pool_;
-	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash> chunks_;
+	std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash> chunks_;
 	ThreadSafeQueue<Chunk*> chunk_build_queue_;
 	ChunkID next_chunk_id_ = 1;
 	std::mutex chunk_build_queue_mutex_;
@@ -46,11 +47,11 @@ public:
 
 	void BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
-	std::unique_ptr<Mesh> BuildChunkMesh(Chunk& chunk, std::stop_token stop_token);
+	std::unique_ptr<Mesh> BuildChunkMesh(Chunk& chunk, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token);
 
 	BlockInfo WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const;
 
-	Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
+	std::shared_ptr<Chunk> GetChunkAt(glm::ivec2 chunk_coord) const;
 
 	glm::ivec3 AbsoluteBlockPos(glm::dvec3 position, glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;
 
@@ -58,13 +59,13 @@ public:
 
 	glm::ivec2 GetChunkCoords(glm::dvec3 pos) const noexcept;
 
-	void UpdateNeighborDependencies(glm::ivec2 chunk_coords, bool increment);
+	ChunkMeshDependencies GetMeshDependencies(glm::ivec2 coords) const;
 
 	// TODO: TEMPORARY CHUNK FILL - REMOVE LATER!
 	void FillChunkTmp(Chunk& chunk);
 
 	// Getters
-	const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash>& Chunks() const { return chunks_; }
+	const std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash>& Chunks() const { return chunks_; }
 
 };
 

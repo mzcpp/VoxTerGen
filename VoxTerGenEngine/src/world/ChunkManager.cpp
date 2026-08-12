@@ -155,7 +155,7 @@ void ChunkManager::UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 	{
 		Chunk& chunk = *(it->second);
 
-		if (chunk.GetChunkState() == ChunkState::PendingUnload && !chunk.HasDependencies())
+		if (chunk.GetChunkState() == ChunkState::PendingUnload)
 		{
 			chunk.SetChunkState(ChunkState::Unloaded);
 			chunk_event_queue.Push(chunk_event::ChunkDestroyed{ chunk.Id() });
@@ -193,17 +193,17 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		if (chunk.GetMeshState() == MeshState::Invalid)
 		{
 			chunk.SetMeshState(MeshState::Building);
-			chunk.AddDependency();
-			UpdateNeighborDependencies(chunk.WorldCoords(), true);
 		}
 		else
 		{
 			continue;
 		}
 
-		thread_pool_.Enqueue([this, &chunk, &chunk_event_queue]()
+		const ChunkMeshDependencies chunk_mesh_dependencies = GetMeshDependencies(chunk.WorldCoords());
+
+		thread_pool_.Enqueue([this, &chunk, &chunk_mesh_dependencies, &chunk_event_queue]()
 		{
-			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(chunk, chunk.StopSource().get_token());
+			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(chunk, chunk_mesh_dependencies, chunk.StopSource().get_token());
 
 			if (chunk_mesh == nullptr)
 			{
@@ -214,16 +214,13 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 				chunk_event_queue.Push(chunk_event::ChunkMeshReady{ chunk.Id(), chunk.WorldCoords(), std::move(chunk_mesh) });
 				chunk.SetMeshState(MeshState::Ready);
 			}
-
-			UpdateNeighborDependencies(chunk.WorldCoords(), false);
-			chunk.RemoveDependency();
 		});
 
 		++jobs_submitted;
 	}
 }
 
-std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token stop_token)
+std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
 {
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
 
@@ -242,7 +239,7 @@ std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, std::stop_token
 	return chunk_mesh;
 }
 
-Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
+std::shared_ptr<Chunk> ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 {
 	const auto& chunk_it = chunks_.find(chunk_coord);
 
@@ -251,7 +248,7 @@ Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 		return nullptr;
 	}
 
-	return chunk_it->second.get();
+	return chunk_it->second;
 }
 
 glm::ivec3 ChunkManager::AbsoluteBlockPos(glm::dvec3 position, glm::dvec3 pos_offset) const noexcept
@@ -310,12 +307,14 @@ BlockInfo ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ive
 
 	const glm::ivec2 chunk_coords = { 
 		current_chunk_coord.x + x_chunk_offset, 
-		current_chunk_coord.y + z_chunk_offset };
+		current_chunk_coord.y + z_chunk_offset 
+	};
 
 	const glm::ivec3 absolute_block_coords = { 
 		target_block_coords.x + chunk_coords.x * constants::chunk::width, 
 		target_block_coords.y, 
-		target_block_coords.z + chunk_coords.y * constants::chunk::depth };
+		target_block_coords.z + chunk_coords.y * constants::chunk::depth 
+	};
 
 	if (const Chunk* target_chunk = GetChunkAt(chunk_coords))
 	{
@@ -333,37 +332,25 @@ glm::ivec2 ChunkManager::GetChunkCoords(glm::dvec3 pos) const noexcept
 	};
 }
 
-void ChunkManager::UpdateNeighborDependencies(glm::ivec2 chunk_coords, bool increment)
+ChunkMeshDependencies ChunkManager::GetMeshDependencies(glm::ivec2 chunk_coords) const
 {
-	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
-	const std::array<int, 2> offsets = { 1, -1 };
-	
-	for (int i = 0; i < 4; ++i)
-	{
-		glm::ivec2 offset = { 0, 0 };
+	ChunkMeshDependencies chunk_mesh_dependencies;
 
-		if (i < 2)
-		{
-			offset.x += offsets[i % 2];
-		}
-		else
-		{
-			offset.y += offsets[i % 2];
-		}
-		
-		if (increment)
-		{
-			if (Chunk* neighbor = GetChunkAt(chunk_coords + offset))
-			{
-				neighbor->AddDependency();
-			}
-		}
-		else
-		{
-			if (Chunk* neighbor = GetChunkAt(chunk_coords + offset))
-			{
-				neighbor->RemoveDependency();
-			}
-		}
-	}
+    std::shared_lock lock(chunks_shared_mutex_);
+
+	// add center
+	
+	// for 4
+		// find neighbor
+		// if exists, add it to chunk_mesh_dependencies
+
+    // return {
+    //     GetChunkAt(chunk_coords),
+    //     GetChunkAt(chunk_coords + glm::ivec2{ 1, 0 }),
+    //     GetChunkAt(chunk_coords - glm::ivec2{ 1, 0 }),
+    //     GetChunkAt(chunk_coords + glm::ivec2{ 0, 1 }),
+    //     GetChunkAt(chunk_coords - glm::ivec2{ 0, 1 })
+    // };
+
+	return chunk_mesh_dependencies;
 }
