@@ -155,10 +155,11 @@ void ChunkManager::UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 	{
 		Chunk& chunk = *(it->second);
 
-		if (chunk.GetChunkState() == ChunkState::PendingUnload)
+		if (chunk.GetChunkState() == ChunkState::PendingUnload && !chunk.HasDependencies())
 		{
-			 chunk_event_queue.Push(chunk_event::ChunkDestroyed{ chunk.Id() });
-			 it = chunks_.erase(it);
+			chunk.SetChunkState(ChunkState::Unloaded);
+			chunk_event_queue.Push(chunk_event::ChunkDestroyed{ chunk.Id() });
+			it = chunks_.erase(it);
 		}
 		else
 		{
@@ -184,7 +185,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		assert(chunk_opt.value() != nullptr);
 		Chunk& chunk = *chunk_opt.value();
 
-		if (chunk.StopSource().stop_requested())
+		if (chunk.StopSource().stop_requested() || chunk.GetChunkState() == ChunkState::Unloaded)
 		{
 			continue;
 		}
@@ -214,8 +215,8 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 				chunk.SetMeshState(MeshState::Ready);
 			}
 
-			chunk.RemoveDependency();
 			UpdateNeighborDependencies(chunk.WorldCoords(), false);
+			chunk.RemoveDependency();
 		});
 
 		++jobs_submitted;
@@ -335,7 +336,7 @@ glm::ivec2 ChunkManager::GetChunkCoords(glm::dvec3 pos) const noexcept
 void ChunkManager::UpdateNeighborDependencies(glm::ivec2 chunk_coords, bool increment)
 {
 	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
-	std::array<int, 2> offsets = { 1, -1 };
+	const std::array<int, 2> offsets = { 1, -1 };
 	
 	for (int i = 0; i < 4; ++i)
 	{
@@ -352,11 +353,17 @@ void ChunkManager::UpdateNeighborDependencies(glm::ivec2 chunk_coords, bool incr
 		
 		if (increment)
 		{
-			GetChunkAt(chunk_coords + offset)->AddDependency();
+			if (Chunk* neighbor = GetChunkAt(chunk_coords + offset))
+			{
+				neighbor->AddDependency();
+			}
 		}
 		else
 		{
-			GetChunkAt(chunk_coords + offset)->RemoveDependency();
+			if (Chunk* neighbor = GetChunkAt(chunk_coords + offset))
+			{
+				neighbor->RemoveDependency();
+			}
 		}
 	}
 }
