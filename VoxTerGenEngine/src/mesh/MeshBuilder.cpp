@@ -132,36 +132,41 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
 				const glm::ivec3 block_coords = { x, y, z };
+				const Block& current_block = center->BlockAt(block_coords);
 
-				if (center->BlockAt(block_coords).IsSolid())
+				if (!current_block.IsSolid())
 				{
 					continue;
 				}
 
 				for (Direction dir : AllDirections())
 				{
-					const glm::ivec3 neighbor_coords = NeighborCoords(block_coords, dir);
+					glm::ivec3 neighbor_coords = NeighborCoords(block_coords, dir);
 					Chunk* neighbor_chunk = nullptr;
 
 					if (neighbor_coords.x < 0)
 					{
 						neighbor_chunk = west;
+						neighbor_coords.x += constants::chunk::width;
 					}
 					else if (neighbor_coords.x >= constants::chunk::width)
 					{
 						neighbor_chunk = east;
+						neighbor_coords.x -= constants::chunk::width;
 					}
 					else if (neighbor_coords.y < 0 || neighbor_coords.y >= constants::chunk::height)
 					{
-						neighbor_chunk = nullptr
+						neighbor_chunk = nullptr;
 					}
 					else if (neighbor_coords.z < 0)
 					{
 						neighbor_chunk = north;
+						neighbor_coords.z += constants::chunk::depth;
 					}
 					else if (neighbor_coords.z >= constants::chunk::depth)
 					{
 						neighbor_chunk = south;
+						neighbor_coords.z -= constants::chunk::depth;
 					}
 
 					if (neighbor_chunk != nullptr && neighbor_chunk->BlockAt(neighbor_coords).IsSolid())
@@ -169,7 +174,7 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 						continue;
 					}
 
-					SaveQuadMesh(chunk_world_coords, center->BlockAt(block_coords).Type(), block_coords, dir, chunk_mesh);
+					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, dir, chunk_mesh);
 				}
 			}
 		}
