@@ -37,15 +37,17 @@ enum class ChunkState
     Loaded
 };
 
+class Chunk;
+
 struct ChunkMeshDependencies
 {
-    std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash> chunk_mesh_dependencies_;
+    std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash> chunks_;
 
     std::shared_ptr<Chunk> GetChunkAt(glm::ivec2 chunk_coords)
     {
-        const auto& chunk_it = chunk_mesh_dependencies_.find(chunk_coord);
+        const auto& chunk_it = chunks_.find(chunk_coords);
 
-        if (chunk_it == chunk_mesh_dependencies_.end())
+        if (chunk_it == chunks_.end())
         {
             return nullptr;
         }

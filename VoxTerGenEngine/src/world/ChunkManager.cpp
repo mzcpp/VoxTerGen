@@ -316,7 +316,7 @@ BlockInfo ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ive
 		target_block_coords.z + chunk_coords.y * constants::chunk::depth 
 	};
 
-	if (const Chunk* target_chunk = GetChunkAt(chunk_coords))
+	if (const std::shared_ptr<Chunk> target_chunk = GetChunkAt(chunk_coords))
 	{
 		return { target_chunk->BlockAt(target_block_coords), absolute_block_coords };
 	}
@@ -337,6 +337,8 @@ ChunkMeshDependencies ChunkManager::GetMeshDependencies(glm::ivec2 chunk_coords)
 	ChunkMeshDependencies chunk_mesh_dependencies;
 
     std::shared_lock lock(chunks_shared_mutex_);
+
+	chunk_mesh_dependencies.chunks_.emplace(chunk_coords, GetChunkAt(chunk_coords));
 
 	// add center
 	
