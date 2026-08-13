@@ -169,7 +169,7 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 						continue;
 					}
 
-					SaveQuadMesh(chunk_world_coords, world_block_query(block_coords).Type(), block_coords, dir, chunk_mesh);
+					SaveQuadMesh(chunk_world_coords, center->BlockAt(block_coords).Type(), block_coords, dir, chunk_mesh);
 				}
 			}
 		}
