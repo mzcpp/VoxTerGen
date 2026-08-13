@@ -331,11 +331,13 @@ ChunkMeshDependencies ChunkManager::GetMeshDependencies(glm::ivec2 chunk_coords)
 
     std::shared_lock lock(chunks_shared_mutex_);
 
+	int index = 0;
+
 	for (int y_offset = -1; y_offset < 2; ++y_offset)
 	{
 		for (int x_offset = -1; x_offset < 2; ++x_offset)
 		{
-			chunk_mesh_dependencies.chunks_.push_back(GetChunkAt(chunk_coords + glm::ivec2{ x_offset, y_offset }));
+			chunk_mesh_dependencies.chunks_.at(index++) = GetChunkAt(chunk_coords + glm::ivec2{ x_offset, y_offset });
 		}	
 	}
 

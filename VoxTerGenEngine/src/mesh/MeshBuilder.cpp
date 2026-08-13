@@ -142,7 +142,7 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 				for (Direction dir : AllDirections())
 				{
 					glm::ivec3 neighbor_coords = NeighborCoords(block_coords, dir);
-					Chunk* neighbor_chunk = nullptr;
+					const Chunk* neighbor_chunk = nullptr;
 
 					if (neighbor_coords.x < 0)
 					{

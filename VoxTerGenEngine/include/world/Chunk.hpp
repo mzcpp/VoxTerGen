@@ -45,11 +45,11 @@ struct ChunkMeshDependencies
     // [0] [1] [2]
     // [3] [4] [5]
     // [6] [7] [8]
-    std::array<std::shared_ptr<Chunk>, 9> chunks;
+    std::array<std::shared_ptr<Chunk>, 9> chunks_;
 
     Chunk* GetChunk(glm::ivec2 offset) const noexcept
     {
-        return chunks[(offset.y + 1) * 3 + (offset.x + 1)].get();
+        return chunks_[(offset.y + 1) * 3 + (offset.x + 1)].get();
     }
 };
 
