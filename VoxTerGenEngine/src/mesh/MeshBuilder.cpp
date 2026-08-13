@@ -115,10 +115,68 @@ void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, glm::vec3 or
 	}
 }
 
-// Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query)
-// {
+Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshDependencies& chunk_mesh_dependencies)
+{
+	Mesh chunk_mesh;
 
-// }
+	const Chunk* center = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 0 });
+	const Chunk* west = chunk_mesh_dependencies.GetChunk(glm::ivec2{ -1, 0 });
+	const Chunk* east = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 1, 0 });
+	const Chunk* north = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 1 });
+	const Chunk* south = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, -1 });
+
+	for (int z = 0; z < constants::chunk::depth; ++z)
+	{
+		for (int y = 0; y < constants::chunk::height; ++y)
+		{
+			for (int x = 0; x < constants::chunk::width; ++x)
+			{
+				const glm::ivec3 block_coords = { x, y, z };
+
+				if (center->BlockAt(block_coords).IsSolid())
+				{
+					continue;
+				}
+
+				for (Direction dir : AllDirections())
+				{
+					const glm::ivec3 neighbor_coords = NeighborCoords(block_coords, dir);
+					Chunk* neighbor_chunk = nullptr;
+
+					if (neighbor_coords.x < 0)
+					{
+						neighbor_chunk = west;
+					}
+					else if (neighbor_coords.x >= constants::chunk::width)
+					{
+						neighbor_chunk = east;
+					}
+					else if (neighbor_coords.y < 0 || neighbor_coords.y >= constants::chunk::height)
+					{
+						neighbor_chunk = nullptr
+					}
+					else if (neighbor_coords.z < 0)
+					{
+						neighbor_chunk = north;
+					}
+					else if (neighbor_coords.z >= constants::chunk::depth)
+					{
+						neighbor_chunk = south;
+					}
+
+					if (neighbor_chunk != nullptr && neighbor_chunk->BlockAt(neighbor_coords).IsSolid())
+					{
+						continue;
+					}
+
+					SaveQuadMesh(chunk_world_coords, world_block_query(block_coords).Type(), block_coords, dir, chunk_mesh);
+				}
+			}
+		}
+	}
+
+	return chunk_mesh;
+}
 
 // Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token)
 // {
@@ -177,6 +235,10 @@ std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 	return static_cast<std::uint8_t>(Material::Air);
 }
 
+// void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, BlockQuery auto&& world_block_query, std::stop_token stop_token, Mesh& chunk_mesh)
+// {
+// }
+
 bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& second)
 {
 	if (first.block_type_ == BlockType::Air || second.block_type_ == BlockType::Air)
@@ -206,6 +268,10 @@ bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& secon
 
 	return true;
 }
+
+// void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int major_axis_size, int cross_axis_1_size, int cross_axis_2_size, BlockQuery auto&& world_block_query, std::vector<MaskCell>& slice_mask)
+// {
+// }
 
 void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, Mesh& chunk_mesh)
 {

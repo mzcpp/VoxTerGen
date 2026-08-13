@@ -50,21 +50,21 @@ constexpr auto AllDirections()
             });
 }
 
-constexpr glm::ivec3 NeighborCoords(const glm::ivec3& block_coords, Direction dir)
+constexpr glm::ivec3 NeighborCoords(const glm::ivec3& coords, Direction dir)
 {
     switch (dir)
     {
-    case Direction::PosX: return { block_coords.x + 1, block_coords.y, block_coords.z };
-    case Direction::NegX: return { block_coords.x - 1, block_coords.y, block_coords.z };
-    case Direction::PosY: return { block_coords.x, block_coords.y + 1, block_coords.z };
-    case Direction::NegY: return { block_coords.x, block_coords.y - 1, block_coords.z };
-    case Direction::PosZ: return { block_coords.x, block_coords.y, block_coords.z + 1 };
-    case Direction::NegZ: return { block_coords.x, block_coords.y, block_coords.z - 1 };
+    case Direction::PosX: return { coords.x + 1, coords.y, coords.z };
+    case Direction::NegX: return { coords.x - 1, coords.y, coords.z };
+    case Direction::PosY: return { coords.x, coords.y + 1, coords.z };
+    case Direction::NegY: return { coords.x, coords.y - 1, coords.z };
+    case Direction::PosZ: return { coords.x, coords.y, coords.z + 1 };
+    case Direction::NegZ: return { coords.x, coords.y, coords.z - 1 };
     }
 
     Logger::Log(LogLevel::ERROR, "NeighborCoords received an unknown type of Direction!: dir = {}", static_cast<std::uint8_t>(dir));
     assert(false);
-    return block_coords;
+    return coords;
 }
 
 constexpr glm::vec3 DirToNormal(Direction dir)

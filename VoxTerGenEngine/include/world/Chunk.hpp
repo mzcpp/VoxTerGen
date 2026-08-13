@@ -41,18 +41,15 @@ class Chunk;
 
 struct ChunkMeshDependencies
 {
-    std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash> chunks_;
+    // 3x3 neighborhood:
+    // [0] [1] [2]
+    // [3] [4] [5]
+    // [6] [7] [8]
+    std::array<std::shared_ptr<Chunk>, 9> chunks;
 
-    std::shared_ptr<Chunk> GetChunkAt(glm::ivec2 chunk_coords)
+    Chunk* GetChunk(glm::ivec2 offset) const noexcept
     {
-        const auto& chunk_it = chunks_.find(chunk_coords);
-
-        if (chunk_it == chunks_.end())
-        {
-            return nullptr;
-        }
-
-        return chunk_it->second;
+        return chunks[(offset.y + 1) * 3 + (offset.x + 1)].get();
     }
 };
 

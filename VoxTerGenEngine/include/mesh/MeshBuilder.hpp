@@ -50,7 +50,7 @@ public:
 
 	static void CreateMeshVertices(BlockType type, Direction dir, glm::vec3 origin_offset, Mesh& chunk_mesh);
 
-	static Mesh BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query);
+	static Mesh BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshDependencies& chunk_mesh_dependencies);
 	
 	static Mesh BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token);
 
@@ -68,41 +68,6 @@ public:
 
 	static void MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh);
 };
-
-Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, BlockQuery auto&& world_block_query)
-{
-	Mesh chunk_mesh;
-
-	for (int z = 0; z < constants::chunk::depth; ++z)
-	{
-		for (int y = 0; y < constants::chunk::height; ++y)
-		{
-			for (int x = 0; x < constants::chunk::width; ++x)
-			{
-				const glm::ivec3 block_coords = { x, y, z };
-
-				if (!world_block_query(block_coords).block_.IsSolid())
-				{
-					continue;
-				}
-
-				for (Direction dir : AllDirections())
-				{
-					const glm::ivec3 neighbor_coords = NeighborCoords(block_coords, dir);
-
-					if (world_block_query(neighbor_coords).block_.IsSolid())
-					{
-						continue;
-					}
-
-					SaveQuadMesh(chunk_world_coords, world_block_query(block_coords).Type(), block_coords, dir, chunk_mesh);
-				}
-			}
-		}
-	}
-
-	return chunk_mesh;
-}
 
 Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token)
 {
