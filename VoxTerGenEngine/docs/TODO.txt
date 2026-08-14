@@ -2,6 +2,7 @@
 
 !!! DOCUMENT ALL FUNCTIONS !!!
 
+generate chunks from the player outwards, not row by row
 Chunk::Pos() ??
 in headers, use forwarding declarations whenever possible instead of include
 PACK vertex into uint32

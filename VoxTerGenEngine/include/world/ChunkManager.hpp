@@ -27,7 +27,7 @@ class ChunkManager
 private:
 	ThreadPool& thread_pool_;
 	std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash> chunks_;
-	ThreadSafeQueue<Chunk*> chunk_build_queue_;
+	ThreadSafeQueue<std::shared_ptr<Chunk>> chunk_build_queue_;
 	ChunkID next_chunk_id_ = 1;
 	std::mutex chunk_build_queue_mutex_;
 	mutable std::shared_mutex chunks_shared_mutex_;
@@ -47,7 +47,7 @@ public:
 
 	void BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
-	std::unique_ptr<Mesh> BuildChunkMesh(Chunk& chunk, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token);
+	std::unique_ptr<Mesh> BuildChunkMesh(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token);
 
 	BlockInfo WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const;
 

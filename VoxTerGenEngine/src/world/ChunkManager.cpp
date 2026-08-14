@@ -74,8 +74,8 @@ void ChunkManager::InitChunks(int chunk_radius)
 		for (int x = 0; x < chunk_square_size; ++x)
 		{
 			const glm::ivec2 world_coords = { start_coords.x + x, start_coords.z + z };
-			std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, world_coords);
-			chunk_build_queue_.Push(chunk.get());
+			std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, world_coords);
+			chunk_build_queue_.Push(chunk);
 
 			chunks_.try_emplace(world_coords, std::move(chunk));
 		}
@@ -135,9 +135,9 @@ void ChunkManager::LoadChunks(const Camera& camera)
 
 			if (chunks_.find(chunk_world_coords) == chunks_.end())
 			{
-				std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
+				std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
 				FillChunkTmp(*chunk);
-				chunk_build_queue_.Push(chunk.get());
+				chunk_build_queue_.Push(chunk);
 				chunk->SetChunkState(ChunkState::Loaded);
 				chunk->SetMeshState(MeshState::Invalid);
 				chunks_.try_emplace(chunk_world_coords, std::move(chunk));
@@ -176,7 +176,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 
 	while (jobs_submitted < jobs_submitted_limit)
 	{
-		const std::optional<Chunk*> chunk_opt = chunk_build_queue_.TryPop();
+		const std::optional<std::shared_ptr<Chunk>> chunk_opt = chunk_build_queue_.TryPop();
 
 		if (!chunk_opt.has_value())
 		{
@@ -184,29 +184,29 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		}
 
 		assert(chunk_opt.value() != nullptr);
-		Chunk& chunk = *chunk_opt.value();
+		std::shared_ptr<Chunk> chunk = chunk_opt.value();
 
-		if (chunk.StopSource().stop_requested() || chunk.GetMeshState() != MeshState::Invalid)
+		if (chunk->StopSource().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
 		{
 			continue;
 		}
 
-		chunk.SetMeshState(MeshState::Building);
+		chunk->SetMeshState(MeshState::Building);
 		
-		const ChunkMeshDependencies chunk_mesh_dependencies = GetMeshDependencies(chunk.WorldCoords());
+		const ChunkMeshDependencies chunk_mesh_dependencies = GetMeshDependencies(chunk->WorldCoords());
 
-		thread_pool_.Enqueue([this, &chunk, chunk_mesh_dependencies, &chunk_event_queue]()
+		thread_pool_.Enqueue([this, chunk, chunk_mesh_dependencies, &chunk_event_queue]()
 		{
-			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(chunk, chunk_mesh_dependencies, chunk.StopSource().get_token());
+			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(chunk_mesh_dependencies, chunk->StopSource().get_token());
 
 			if (chunk_mesh == nullptr)
 			{
-				chunk.SetChunkState(ChunkState::PendingUnload);
+				chunk->SetChunkState(ChunkState::PendingUnload);
 			}
 			else
 			{
-				chunk_event_queue.Push(chunk_event::ChunkMeshReady{ chunk.Id(), chunk.WorldCoords(), std::move(chunk_mesh) });
-				chunk.SetMeshState(MeshState::Ready);
+				chunk_event_queue.Push(chunk_event::ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), std::move(chunk_mesh) });
+				chunk->SetMeshState(MeshState::Ready);
 			}
 		});
 
@@ -214,7 +214,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 	}
 }
 
-std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
+std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
 {
 	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>(MeshBuilder::BuildMeshGreedy(chunk_mesh_dependencies, stop_token));
 		
