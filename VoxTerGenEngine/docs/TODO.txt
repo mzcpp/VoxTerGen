@@ -2,6 +2,7 @@
 
 !!! DOCUMENT ALL FUNCTIONS !!!
 
+make chunk frustum aabb bigger to avoid popping in/out
 generate chunks from the player outwards, not row by row
 Chunk::Pos() ??
 in headers, use forwarding declarations whenever possible instead of include
