@@ -183,10 +183,22 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 	return chunk_mesh;
 }
 
-// Mesh MeshBuilder::BuildMeshGreedy(BlockQuery auto&& world_block_query, std::stop_token stop_token)
-// {
+Mesh MeshBuilder::BuildMeshGreedy(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
+{
+	Mesh chunk_mesh;
 
-// }
+	for (MajorAxis axis : AllAxes())
+	{
+		if (stop_token.stop_requested())
+		{
+			return Mesh();
+		}
+
+		BuildAxisMesh(axis, chunk_mesh_dependencies, stop_token, chunk_mesh);
+	}
+
+	return chunk_mesh;
+}
 
 void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& chunk_mesh)
 {
@@ -240,9 +252,45 @@ std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 	return static_cast<std::uint8_t>(Material::Air);
 }
 
-// void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, BlockQuery auto&& world_block_query, std::stop_token stop_token, Mesh& chunk_mesh)
-// {
-// }
+void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token, Mesh& chunk_mesh)
+{
+	int major_axis_size = 0;
+	int cross_axis_1_size = 0;
+	int cross_axis_2_size = 0;
+
+	if (major_axis == MajorAxis::X)
+	{
+		major_axis_size = constants::chunk::width;
+		cross_axis_1_size = constants::chunk::height;
+		cross_axis_2_size = constants::chunk::depth;
+	}
+	else if (major_axis == MajorAxis::Y)
+	{
+		major_axis_size = constants::chunk::height;
+		cross_axis_1_size = constants::chunk::depth;
+		cross_axis_2_size = constants::chunk::width;
+	}
+	else
+	{
+		major_axis_size = constants::chunk::depth;
+		cross_axis_1_size = constants::chunk::height;
+		cross_axis_2_size = constants::chunk::width;
+	}
+
+	std::vector<MaskCell> slice_mask;
+	slice_mask.resize(cross_axis_1_size * cross_axis_2_size);
+
+	for (int major_axis_index = -1; major_axis_index < major_axis_size; ++major_axis_index)
+	{
+		if (stop_token.stop_requested())
+		{
+			return;
+		}
+
+		BuildSliceMask(major_axis, major_axis_index, major_axis_size, cross_axis_1_size, cross_axis_2_size, chunk_mesh_dependencies, slice_mask);
+		MergeFacesAndEmitData(major_axis, major_axis_index, cross_axis_2_size, cross_axis_1_size, slice_mask, chunk_mesh);
+	}
+}
 
 bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& second)
 {
@@ -274,9 +322,115 @@ bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& secon
 	return true;
 }
 
-// void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int major_axis_size, int cross_axis_1_size, int cross_axis_2_size, BlockQuery auto&& world_block_query, std::vector<MaskCell>& slice_mask)
-// {
-// }
+void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int major_axis_size, int cross_axis_1_size, int cross_axis_2_size, const ChunkMeshDependencies& chunk_mesh_dependencies, std::vector<MaskCell>& slice_mask)
+{
+	for (int cross_axis_1_index = 0; cross_axis_1_index < cross_axis_1_size; ++cross_axis_1_index)
+	{
+		for (int cross_axis_2_index = 0; cross_axis_2_index < cross_axis_2_size; ++cross_axis_2_index)
+		{
+			glm::ivec3 left_query_coords = { 0, 0, 0 };
+			glm::ivec3 above_left_query_coords = { 0, 0, 0 };
+			glm::ivec3 right_query_coords = { 0, 0, 0 };
+			glm::ivec3 above_right_query_coords = { 0, 0, 0 };
+
+			switch (major_axis)
+			{
+			case MajorAxis::X:
+			{
+				// left - west
+				// right - east
+				// up - NULL
+				// down - NULL
+
+				left_query_coords = { major_axis_index, cross_axis_1_index, cross_axis_2_index };
+
+				above_left_query_coords = left_query_coords;
+				++above_left_query_coords.y;
+
+				right_query_coords = { major_axis_index + 1, cross_axis_1_index, cross_axis_2_index };
+
+				above_right_query_coords = right_query_coords;
+				++above_right_query_coords.y;
+				break;
+			}
+			case MajorAxis::Y:
+			{
+				// left - NULL
+				// right - NULL
+				// up - north
+				// down - south
+
+				left_query_coords = { cross_axis_2_index, major_axis_index, cross_axis_1_index };
+
+				above_left_query_coords = left_query_coords;
+				++above_left_query_coords.z;
+
+				right_query_coords = { cross_axis_2_index, major_axis_index + 1, cross_axis_1_index };
+
+				above_right_query_coords = right_query_coords;
+				++above_right_query_coords.z;
+				break;
+			}
+			case MajorAxis::Z:
+			{
+				// left - north
+				// right - south
+				// up - NULL
+				// down - NULL
+
+				left_query_coords = { cross_axis_2_index, cross_axis_1_index, major_axis_index };
+
+				above_left_query_coords = left_query_coords;
+				++above_left_query_coords.y;
+
+				right_query_coords = { cross_axis_2_index, cross_axis_1_index, major_axis_index + 1 };
+
+				above_right_query_coords = right_query_coords;
+				++above_right_query_coords.y;
+				break;
+			}
+			default:
+				assert(false && "Invalid major axis!");
+				break;
+			}
+
+			const Block& left_block = world_block_query(left_query_coords).block_;
+			const Block& above_left_block = world_block_query(above_left_query_coords).block_;
+			const Block& right_block = world_block_query(right_query_coords).block_;
+			const Block& above_right_block = world_block_query(above_right_query_coords).block_;
+
+			(void)above_left_block;
+			(void)above_right_block;
+
+			const bool left_block_inside = major_axis_index != -1;
+			const bool right_block_inside = (major_axis_index + 1) != major_axis_size;
+
+			const bool render_left = left_block_inside && left_block.ShouldRenderFace(right_block);
+			const bool render_right = right_block_inside && right_block.ShouldRenderFace(left_block);
+
+			MaskCell mask_cell = { BlockType::Air, Direction::PosX, 0, 0 };
+
+			if (render_left)
+			{
+				//mask_cell.block_type_ = (left_block.Type() == BlockType::Grass && above_left_block.IsSolid()) ? BlockType::Dirt : left_block.Type();
+				mask_cell.block_type_ = left_block.Type();
+				mask_cell.dir_ = ToDirection(major_axis, true);
+				mask_cell.sun_light_ = left_block.SunLight();
+				mask_cell.block_light_ = left_block.BlockLight();
+			}
+			else if (render_right)
+			{
+				//mask_cell.block_type_ = (right_block.Type() == BlockType::Grass && above_right_block.IsSolid()) ? BlockType::Dirt : right_block.Type();
+				mask_cell.block_type_ = right_block.Type();
+				mask_cell.dir_ = ToDirection(major_axis, false);
+				mask_cell.sun_light_ = right_block.SunLight();
+				mask_cell.block_light_ = right_block.BlockLight();
+			}
+
+			slice_mask[cross_axis_1_index * cross_axis_2_size + cross_axis_2_index] = mask_cell;
+		}
+	}
+}
 
 void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, Mesh& chunk_mesh)
 {

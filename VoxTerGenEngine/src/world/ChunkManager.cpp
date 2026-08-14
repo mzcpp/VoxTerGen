@@ -215,15 +215,8 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 
 std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
 {
-	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
-
-	const auto world_block_query = [this, &chunk](glm::ivec3 block_coords)
-		{
-			return WorldBlockQuery(chunk.WorldCoords(), block_coords);
-		};
+	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>(MeshBuilder::BuildMeshGreedy(chunk_mesh_dependencies, stop_token));
 		
-	*chunk_mesh = MeshBuilder::BuildMeshGreedy(world_block_query, stop_token);
-
 	if (stop_token.stop_requested())
 	{
 		return nullptr;
