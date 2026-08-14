@@ -119,11 +119,11 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 {
 	Mesh chunk_mesh;
 
-	const Chunk* center = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 0 });
-	const Chunk* west = chunk_mesh_dependencies.GetChunk(glm::ivec2{ -1, 0 });
-	const Chunk* east = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 1, 0 });
-	const Chunk* north = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 1 });
-	const Chunk* south = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, -1 });
+	const Chunk* current_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 0 });
+	const Chunk* west_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ -1, 0 });
+	const Chunk* east_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 1, 0 });
+	const Chunk* north_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 1 });
+	const Chunk* south_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, -1 });
 
 	for (int z = 0; z < constants::chunk::depth; ++z)
 	{
@@ -132,7 +132,7 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
 				const glm::ivec3 block_coords = { x, y, z };
-				const Block& current_block = center->BlockAt(block_coords);
+				const Block& current_block = current_chunk->BlockAt(block_coords);
 
 				if (!current_block.IsSolid())
 				{
@@ -146,12 +146,12 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 
 					if (neighbor_coords.x < 0)
 					{
-						neighbor_chunk = west;
+						neighbor_chunk = west_chunk;
 						neighbor_coords.x += constants::chunk::width;
 					}
 					else if (neighbor_coords.x >= constants::chunk::width)
 					{
-						neighbor_chunk = east;
+						neighbor_chunk = east_chunk;
 						neighbor_coords.x -= constants::chunk::width;
 					}
 					else if (neighbor_coords.y < 0 || neighbor_coords.y >= constants::chunk::height)
@@ -160,12 +160,12 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 					}
 					else if (neighbor_coords.z < 0)
 					{
-						neighbor_chunk = north;
+						neighbor_chunk = north_chunk;
 						neighbor_coords.z += constants::chunk::depth;
 					}
 					else if (neighbor_coords.z >= constants::chunk::depth)
 					{
-						neighbor_chunk = south;
+						neighbor_chunk = south_chunk;
 						neighbor_coords.z -= constants::chunk::depth;
 					}
 
@@ -324,69 +324,88 @@ bool MeshBuilder::MaskCellsMergable(const MaskCell& first, const MaskCell& secon
 
 void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int major_axis_size, int cross_axis_1_size, int cross_axis_2_size, const ChunkMeshDependencies& chunk_mesh_dependencies, std::vector<MaskCell>& slice_mask)
 {
+	const Chunk* current_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 0 });
+	const Chunk* west_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ -1, 0 });
+	const Chunk* east_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 1, 0 });
+	const Chunk* north_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 1 });
+	const Chunk* south_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, -1 });
+
+	const Chunk* left_chunk = nullptr;
+	const Chunk* right_chunk = nullptr;
+
+	const bool left_block_inside = major_axis_index != -1;
+	const bool right_block_inside = (major_axis_index + 1) != major_axis_size;
+	
 	for (int cross_axis_1_index = 0; cross_axis_1_index < cross_axis_1_size; ++cross_axis_1_index)
 	{
 		for (int cross_axis_2_index = 0; cross_axis_2_index < cross_axis_2_size; ++cross_axis_2_index)
 		{
 			glm::ivec3 left_query_coords = { 0, 0, 0 };
-			glm::ivec3 above_left_query_coords = { 0, 0, 0 };
 			glm::ivec3 right_query_coords = { 0, 0, 0 };
-			glm::ivec3 above_right_query_coords = { 0, 0, 0 };
+
+			// glm::ivec3 above_left_query_coords = { 0, 0, 0 };
+			// glm::ivec3 above_right_query_coords = { 0, 0, 0 };
 
 			switch (major_axis)
 			{
 			case MajorAxis::X:
 			{
-				// left - west
-				// right - east
-				// up - NULL
-				// down - NULL
-
+				left_chunk = left_block_inside ? current_chunk : west_chunk;
+				right_chunk = right_block_inside ? current_chunk : east_chunk;
+				
 				left_query_coords = { major_axis_index, cross_axis_1_index, cross_axis_2_index };
-
-				above_left_query_coords = left_query_coords;
-				++above_left_query_coords.y;
-
 				right_query_coords = { major_axis_index + 1, cross_axis_1_index, cross_axis_2_index };
 
-				above_right_query_coords = right_query_coords;
-				++above_right_query_coords.y;
+				if (!left_block_inside)
+				{
+					left_query_coords.x += constants::chunk::width;
+				}
+				else if (!right_block_inside)
+				{
+					right_query_coords.x -= constants::chunk::width;
+				}
+				
+				// above_left_query_coords = left_query_coords;
+				// ++above_left_query_coords.y;
+				// above_right_query_coords = right_query_coords;
+				// ++above_right_query_coords.y;
 				break;
 			}
 			case MajorAxis::Y:
 			{
-				// left - NULL
-				// right - NULL
-				// up - north
-				// down - south
+				left_chunk = left_block_inside ? current_chunk : nullptr;
+				right_chunk = right_block_inside ? current_chunk : nullptr;
 
-				left_query_coords = { cross_axis_2_index, major_axis_index, cross_axis_1_index };
-
-				above_left_query_coords = left_query_coords;
-				++above_left_query_coords.z;
-
+				left_query_coords = { cross_axis_2_index, major_axis_index, cross_axis_1_index };				
 				right_query_coords = { cross_axis_2_index, major_axis_index + 1, cross_axis_1_index };
-
-				above_right_query_coords = right_query_coords;
-				++above_right_query_coords.z;
+				
+				// above_left_query_coords = left_query_coords;
+				// ++above_left_query_coords.z;
+				// above_right_query_coords = right_query_coords;
+				// ++above_right_query_coords.z;
 				break;
 			}
 			case MajorAxis::Z:
 			{
-				// left - north
-				// right - south
-				// up - NULL
-				// down - NULL
+				left_chunk = left_block_inside ? current_chunk : north_chunk;
+				right_chunk = right_block_inside ? current_chunk : south_chunk;
 
 				left_query_coords = { cross_axis_2_index, cross_axis_1_index, major_axis_index };
-
-				above_left_query_coords = left_query_coords;
-				++above_left_query_coords.y;
-
 				right_query_coords = { cross_axis_2_index, cross_axis_1_index, major_axis_index + 1 };
 
-				above_right_query_coords = right_query_coords;
-				++above_right_query_coords.y;
+				if (!left_block_inside)
+				{
+					left_query_coords.z += constants::chunk::depth;
+				}
+				else if (!right_block_inside)
+				{
+					right_query_coords.z -= constants::chunk::depth;
+				}
+
+				// above_left_query_coords = left_query_coords;
+				// ++above_left_query_coords.y;
+				// above_right_query_coords = right_query_coords;
+				// ++above_right_query_coords.y;
 				break;
 			}
 			default:
@@ -394,16 +413,11 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 				break;
 			}
 
-			const Block& left_block = world_block_query(left_query_coords).block_;
-			const Block& above_left_block = world_block_query(above_left_query_coords).block_;
-			const Block& right_block = world_block_query(right_query_coords).block_;
-			const Block& above_right_block = world_block_query(above_right_query_coords).block_;
+			const Block left_block = left_chunk != nullptr ? left_chunk->BlockAt(left_query_coords) : Block();
+			const Block right_block = right_chunk != nullptr ? right_chunk->BlockAt(right_query_coords) : Block();
 
-			(void)above_left_block;
-			(void)above_right_block;
-
-			const bool left_block_inside = major_axis_index != -1;
-			const bool right_block_inside = (major_axis_index + 1) != major_axis_size;
+			// const Block& above_left_block = world_block_query(above_left_query_coords).block_;
+			// const Block& above_right_block = world_block_query(above_right_query_coords).block_;
 
 			const bool render_left = left_block_inside && left_block.ShouldRenderFace(right_block);
 			const bool render_right = right_block_inside && right_block.ShouldRenderFace(left_block);
