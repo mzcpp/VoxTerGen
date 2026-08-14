@@ -139,7 +139,7 @@ void ChunkManager::LoadChunks(const Camera& camera)
 				FillChunkTmp(*chunk);
 				chunk_build_queue_.Push(chunk.get());
 				chunk->SetChunkState(ChunkState::Loaded);
-				chunk->SetMeshState(ChunkState::Invalid);
+				chunk->SetMeshState(MeshState::Invalid);
 				chunks_.try_emplace(chunk_world_coords, std::move(chunk));
 			}
 		}
@@ -186,7 +186,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		assert(chunk_opt.value() != nullptr);
 		Chunk& chunk = *chunk_opt.value();
 
-		if (chunk.StopSource().stop_requested() || chunk.GetChunkState() == ChunkState::Unloaded || chunk.GetMeshState() != MeshState::Invalid)
+		if (chunk.StopSource().stop_requested() || chunk.GetMeshState() != MeshState::Invalid)
 		{
 			continue;
 		}
@@ -195,7 +195,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		
 		const ChunkMeshDependencies chunk_mesh_dependencies = GetMeshDependencies(chunk.WorldCoords());
 
-		thread_pool_.Enqueue([this, &chunk, &chunk_mesh_dependencies, &chunk_event_queue]()
+		thread_pool_.Enqueue([this, &chunk, chunk_mesh_dependencies, &chunk_event_queue]()
 		{
 			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(chunk, chunk_mesh_dependencies, chunk.StopSource().get_token());
 
@@ -216,7 +216,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 
 std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
 {
-	const std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>(MeshBuilder::BuildMeshGreedy(chunk_mesh_dependencies, stop_token));
+	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>(MeshBuilder::BuildMeshGreedy(chunk_mesh_dependencies, stop_token));
 		
 	if (stop_token.stop_requested())
 	{
