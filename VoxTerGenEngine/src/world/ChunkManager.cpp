@@ -123,9 +123,9 @@ void ChunkManager::MarkChunksForUnload(const Camera& camera)
 
 void ChunkManager::LoadChunks(const Camera& camera)
 {
-	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
-
 	const glm::ivec2 current_chunk_coords = GetChunkCoords(camera.Pos());
+	
+	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
 
 	for (int y = current_chunk_coords.y - constants::chunk::default_radius; y < current_chunk_coords.y + constants::chunk::default_radius + 1; ++y)
 	{
@@ -139,6 +139,7 @@ void ChunkManager::LoadChunks(const Camera& camera)
 				FillChunkTmp(*chunk);
 				chunk_build_queue_.Push(chunk.get());
 				chunk->SetChunkState(ChunkState::Loaded);
+				chunk->SetMeshState(ChunkState::Invalid);
 				chunks_.try_emplace(chunk_world_coords, std::move(chunk));
 			}
 		}
@@ -215,7 +216,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 
 std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
 {
-	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>(MeshBuilder::BuildMeshGreedy(chunk_mesh_dependencies, stop_token));
+	const std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>(MeshBuilder::BuildMeshGreedy(chunk_mesh_dependencies, stop_token));
 		
 	if (stop_token.stop_requested())
 	{

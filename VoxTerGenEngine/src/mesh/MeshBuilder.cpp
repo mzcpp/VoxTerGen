@@ -122,8 +122,8 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 	const Chunk* current_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 0 });
 	const Chunk* west_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ -1, 0 });
 	const Chunk* east_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 1, 0 });
-	const Chunk* north_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 1 });
-	const Chunk* south_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, -1 });
+	const Chunk* north_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, -1 });
+	const Chunk* south_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 1 });
 
 	for (int z = 0; z < constants::chunk::depth; ++z)
 	{
@@ -327,8 +327,8 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 	const Chunk* current_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 0 });
 	const Chunk* west_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ -1, 0 });
 	const Chunk* east_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 1, 0 });
-	const Chunk* north_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 1 });
-	const Chunk* south_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, -1 });
+	const Chunk* north_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, -1 });
+	const Chunk* south_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 1 });
 
 	const Chunk* left_chunk = nullptr;
 	const Chunk* right_chunk = nullptr;
