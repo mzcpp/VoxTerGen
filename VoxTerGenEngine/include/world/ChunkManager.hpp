@@ -6,10 +6,12 @@
 #include "graphics/Camera.hpp"
 
 #include "threading/ThreadSafeQueue.hpp"
+#include "threading/ThreadSafePriorityQueue.hpp"
 
+#include "world/Block.hpp"
 #include "world/Chunk.hpp"
 #include "world/ChunkEvents.hpp"
-#include "world/Block.hpp"
+#include "world/Observer.hpp"
 
 #include <glm/vec2.hpp>
 
@@ -22,26 +24,40 @@
 
 class ThreadPool;
 
+struct ChunkJob
+{
+	std::shared_ptr<Chunk> chunk_;
+	double distance_squared_;
+};
+
+struct ChunkJobCompare
+{
+	bool operator()(const ChunkJob& a, const ChunkJob& b) const
+	{
+		return a.distance_squared_ > b.distance_squared_;
+	}
+};
+
 class ChunkManager
 {
 private:
+	Observer& observer_;
 	ThreadPool& thread_pool_;
 	std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash> chunks_;
-	ThreadSafeQueue<std::shared_ptr<Chunk>> chunk_build_queue_;
+	ThreadSafePriorityQueue<ChunkJob, ChunkJobCompare> chunk_build_queue_;
 	ChunkID next_chunk_id_ = 1;
-	std::mutex chunk_build_queue_mutex_;
 	mutable std::shared_mutex chunks_shared_mutex_;
 
 public:
-	ChunkManager(ThreadPool& thread_pool);
+	ChunkManager(Observer& observer, ThreadPool& thread_pool);
 	
     void InitChunks(int chunk_radius);
     
-	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera);
+	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
-	void MarkChunksForUnload(const Camera& camera);
+	void MarkChunksForUnload();
 
-	void LoadChunks(const Camera& camera);
+	void LoadChunks();
 	
 	void UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 

@@ -14,11 +14,11 @@ private:
 	ChunkManager chunk_manager_;
 
 public:
-	World(ThreadPool& thread_pool);
+	World(Observer& observer, ThreadPool& thread_pool);
 
 	void InitChunks(int chunk_radius);
 
-	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera);
+	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
 	// Getters
 	const ChunkManager& ChunkManagerRef() const { return chunk_manager_; }

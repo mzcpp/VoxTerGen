@@ -590,6 +590,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\render\MeshRenderer.hpp" />
     <ClInclude Include="include\render\GpuMesh.hpp" />
     <ClInclude Include="include\render\WorldRenderer.hpp" />
+    <ClInclude Include="include\threading\ThreadSafePriorityQueue.hpp" />
     <ClInclude Include="include\threading\ThreadSafeQueue.hpp" />
     <ClInclude Include="include\utils\Constants.hpp" />
     <ClInclude Include="include\utils\Hash.hpp" />

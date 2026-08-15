@@ -8,8 +8,8 @@
 
 #include <queue>
 
-World::World(ThreadPool& thread_pool) : 
-	chunk_manager_(thread_pool)
+World::World(Observer& observer, ThreadPool& thread_pool) :
+	chunk_manager_(observer, thread_pool)
 {
 }
 
@@ -18,7 +18,7 @@ void World::InitChunks(int chunk_radius)
 	chunk_manager_.InitChunks(chunk_radius);
 }
 
-void World::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera)
+void World::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
-	chunk_manager_.Tick(chunk_event_queue, camera);
+	chunk_manager_.Tick(chunk_event_queue);
 }

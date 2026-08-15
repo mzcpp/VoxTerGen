@@ -78,7 +78,7 @@ public:
         };
 
         glm::dvec3 clipped_movement_vector = displacement_vector;
-        AABB observer_aabb = { observer.Pos(), observer.Pos(observer_coords_offset) };
+        AABB observer_aabb = { observer.Pos(), observer.Pos() + observer_coords_offset };
 
         for (const AABB& neighbor_block : neighbor_blocks)
         {

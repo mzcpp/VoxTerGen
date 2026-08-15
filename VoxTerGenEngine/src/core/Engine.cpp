@@ -18,7 +18,7 @@ Engine::Engine() :
 	thread_pool_(std::max(1u, std::thread::hardware_concurrency() - 1)), 
 	camera_controller_(camera_), 
 	observer_controller_(observer_), 
-	world_(thread_pool_)
+	world_(observer_, thread_pool_)
 {
 }
 
@@ -65,7 +65,7 @@ void Engine::Tick(float aspect_ratio)
 	observer_.Tick();
 	camera_.Tick(aspect_ratio);
 
-	world_.Tick(chunk_event_queue_, camera_);
+	world_.Tick(chunk_event_queue_);
 	world_renderer_.Tick(chunk_event_queue_, camera_);
 }
 
