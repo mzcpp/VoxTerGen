@@ -2,6 +2,7 @@
 
 !!! DOCUMENT ALL FUNCTIONS !!!
 
+prioritize chunks based on camera direction
 make chunk frustum aabb bigger to avoid popping in/out
 generate chunks from the player outwards, not row by row
 Chunk::Pos() ??

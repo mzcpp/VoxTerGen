@@ -80,7 +80,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 		for (int x = 0; x < chunk_square_size; ++x)
 		{
 			const glm::ivec2 chunk_world_coords = { start_coords.x + x, start_coords.y + z };
-			const double distance_squared = ((observer_chunk_coords.x - chunk_world_coords.x) * (observer_chunk_coords.x - chunk_world_coords.x)) + ((observer_chunk_coords.y - chunk_world_coords.y) * (observer_chunk_coords.y - chunk_world_coords.y));
+			const double distance_squared = ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords);
 			std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
 			chunk_build_queue_.Push(ChunkJob{ chunk, distance_squared });
 
@@ -143,7 +143,7 @@ void ChunkManager::LoadChunks()
 			if (chunks_.find(chunk_world_coords) == chunks_.end())
 			{
 				std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
-				const double distance_squared = ((observer_chunk_coords.x - chunk_world_coords.x) * (observer_chunk_coords.x - chunk_world_coords.x)) + ((observer_chunk_coords.y - chunk_world_coords.y) * (observer_chunk_coords.y - chunk_world_coords.y));
+				const double distance_squared = ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords);
 				FillChunkTmp(*chunk);
 				chunk_build_queue_.Push(ChunkJob{ chunk, distance_squared });
 				chunk->SetChunkState(ChunkState::Loaded);
@@ -191,7 +191,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 			return;
 		}
 
-		assert(chunk_job_opt.value().chunk_ != nullptr);
+		assert(chunk_job_opt->chunk_ != nullptr);
 		std::shared_ptr<Chunk> chunk = chunk_job_opt.value().chunk_;
 
 		if (chunk->StopSource().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
@@ -327,6 +327,14 @@ glm::ivec2 ChunkManager::GetChunkCoords(glm::dvec3 pos) const noexcept
 	};
 }
 
+double ChunkManager::ChunkDistanceSquared(glm::ivec2 first_chunk, glm::ivec2 second_chunk) const noexcept
+{
+	const double dx = first_chunk.x - second_chunk.x;
+	const double dy = first_chunk.y - second_chunk.y;
+
+	return dx * dx + dy * dy;
+}
+
 ChunkMeshDependencies ChunkManager::GetMeshDependencies(glm::ivec2 chunk_coords) const
 {
 	ChunkMeshDependencies chunk_mesh_dependencies;
@@ -339,7 +347,7 @@ ChunkMeshDependencies ChunkManager::GetMeshDependencies(glm::ivec2 chunk_coords)
 	{
 		for (int x_offset = -1; x_offset < 2; ++x_offset)
 		{
-			chunk_mesh_dependencies.chunks_.at(index++) = GetChunkAt(chunk_coords + glm::ivec2{ x_offset, y_offset });
+			chunk_mesh_dependencies.chunks_[index++] = GetChunkAt(chunk_coords + glm::ivec2{ x_offset, y_offset });
 		}	
 	}
 

@@ -75,6 +75,8 @@ public:
 
 	glm::ivec2 GetChunkCoords(glm::dvec3 pos) const noexcept;
 
+	double ChunkDistanceSquared(glm::ivec2 first, glm::ivec2 second) const noexcept;
+
 	ChunkMeshDependencies GetMeshDependencies(glm::ivec2 coords) const;
 
 	// TODO: TEMPORARY CHUNK FILL - REMOVE LATER!
