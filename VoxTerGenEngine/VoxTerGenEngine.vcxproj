@@ -595,6 +595,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\utils\Hash.hpp" />
     <ClInclude Include="include\utils\Logger.hpp" />
     <ClInclude Include="include\utils\MathUtils.hpp" />
+    <ClInclude Include="include\utils\Timer.hpp" />
     <ClInclude Include="include\world\Block.hpp" />
     <ClInclude Include="include\world\Chunk.hpp" />
     <ClInclude Include="include\world\ChunkEvents.hpp" />

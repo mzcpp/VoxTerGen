@@ -1,7 +1,8 @@
 #include "core/Application.hpp"
 
-#include "utils/constants.hpp"
+#include "utils/Constants.hpp"
 #include "utils/Logger.hpp"
+#include "utils/Timer.hpp"
 
 #include <glad/glad/glad.h>
 
@@ -161,6 +162,17 @@ void Application::HandleEvents()
 		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_e)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_r)
+		{
+			Timer::Reset();
+			Logger::Log("Timer reset.");
+		}
+
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_p)
+		{
+			Timer::PrintStatistics();
 		}
 
 		if (e.type == SDL_WINDOWEVENT)

@@ -7,6 +7,7 @@
 #include "utils/Logger.hpp"
 #include "core/Direction.hpp"
 #include "utils/Constants.hpp"
+#include "utils/Timer.hpp"
 
 #include <glm/vec3.hpp>
 
@@ -277,8 +278,7 @@ void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, const ChunkMeshDependencie
 		cross_axis_2_size = constants::chunk::width;
 	}
 
-	std::vector<MaskCell> slice_mask;
-	slice_mask.resize(cross_axis_1_size * cross_axis_2_size);
+	std::vector<MaskCell> slice_mask(cross_axis_1_size * cross_axis_2_size);
 
 	for (int major_axis_index = -1; major_axis_index < major_axis_size; ++major_axis_index)
 	{

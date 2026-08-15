@@ -4,6 +4,7 @@
 #include "threading/ThreadSafeQueue.hpp"
 
 #include "utils/MathUtils.hpp"
+#include "utils/Timer.hpp"
 
 #include "world/Chunk.hpp"
 #include "world/ChunkEvents.hpp"
@@ -45,7 +46,7 @@ void ChunkManager::FillChunkTmp(Chunk& chunk)
 		{
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				chunk.BlockAt({ x, i, z }).SetType(static_cast<BlockType>(i));
+				chunk.BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(i));
 				//if (i >= 8)
 				//{
 				//	i = 1;
@@ -171,7 +172,7 @@ void ChunkManager::UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 
 void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
-	constexpr int jobs_submitted_limit = 8;
+	constexpr int jobs_submitted_limit = 2048;
 	int jobs_submitted = 0;
 
 	while (jobs_submitted < jobs_submitted_limit)
@@ -193,9 +194,9 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 
 		chunk->SetMeshState(MeshState::Building);
 		
-		const ChunkMeshDependencies chunk_mesh_dependencies = GetMeshDependencies(chunk->WorldCoords());
+		ChunkMeshDependencies chunk_mesh_dependencies = GetMeshDependencies(chunk->WorldCoords());
 
-		thread_pool_.Enqueue([this, chunk, chunk_mesh_dependencies, &chunk_event_queue]()
+		thread_pool_.Enqueue([this, chunk, chunk_mesh_dependencies = std::move(chunk_mesh_dependencies), &chunk_event_queue]()
 		{
 			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(chunk_mesh_dependencies, chunk->StopSource().get_token());
 
