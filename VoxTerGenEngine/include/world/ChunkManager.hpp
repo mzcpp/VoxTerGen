@@ -5,36 +5,69 @@
 
 #include "graphics/Camera.hpp"
 
+#include "threading/ThreadSafeQueue.hpp"
+#include "threading/ThreadSafePriorityQueue.hpp"
+
+#include "world/Block.hpp"
 #include "world/Chunk.hpp"
 #include "world/ChunkEvents.hpp"
-#include "world/Block.hpp"
+#include "world/Observer.hpp"
 
 #include <glm/vec2.hpp>
 
+#include <mutex>
+#include <shared_mutex>
+#include <stop_token>
 #include <unordered_map>
 #include <queue>
+#include <memory>
+
+class ThreadPool;
+
+struct ChunkJob
+{
+	std::shared_ptr<Chunk> chunk_;
+	double distance_squared_;
+};
+
+struct ChunkJobCompare
+{
+	bool operator()(const ChunkJob& a, const ChunkJob& b) const
+	{
+		return a.distance_squared_ > b.distance_squared_;
+	}
+};
 
 class ChunkManager
 {
 private:
-	std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash> chunks_;
-	std::queue<Chunk*> chunk_build_queue_;
+	Observer& observer_;
+	ThreadPool& thread_pool_;
+	std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash> chunks_;
+	ThreadSafePriorityQueue<ChunkJob, ChunkJobCompare> chunk_build_queue_;
 	ChunkID next_chunk_id_ = 1;
+	mutable std::shared_mutex chunks_shared_mutex_;
 
 public:
+	ChunkManager(Observer& observer, ThreadPool& thread_pool);
+	
     void InitChunks(int chunk_radius);
     
-	void Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
+	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
-	void LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera);
+	void MarkChunksForUnload();
 
-	void BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue);
+	void LoadChunks();
+	
+	void UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
-	std::unique_ptr<Mesh> BuildChunkMesh(Chunk& chunk);
+	void BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
+
+	std::unique_ptr<Mesh> BuildChunkMesh(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token);
 
 	BlockInfo WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const;
 
-	const Chunk* GetChunkAt(glm::ivec2 chunk_coord) const;
+	std::shared_ptr<Chunk> GetChunkAt(glm::ivec2 chunk_coord) const;
 
 	glm::ivec3 AbsoluteBlockPos(glm::dvec3 position, glm::dvec3 pos_offset = { 0.0, 0.0, 0.0 }) const noexcept;
 
@@ -42,11 +75,15 @@ public:
 
 	glm::ivec2 GetChunkCoords(glm::dvec3 pos) const noexcept;
 
+	double ChunkDistanceSquared(glm::ivec2 first, glm::ivec2 second) const noexcept;
+
+	ChunkMeshDependencies GetMeshDependencies(glm::ivec2 coords) const;
+
 	// TODO: TEMPORARY CHUNK FILL - REMOVE LATER!
 	void FillChunkTmp(Chunk& chunk);
 
 	// Getters
-	const std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>, utils::ivec2_hash>& Chunks() const { return chunks_; }
+	const std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash>& Chunks() const { return chunks_; }
 
 };
 

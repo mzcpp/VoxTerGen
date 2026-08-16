@@ -33,7 +33,7 @@ void WorldRenderer::Initialize()
 	skybox_render_pass_.PrepareSkyboxRenderData();
 }
 
-void WorldRenderer::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
+void WorldRenderer::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
 	chunk_mesh_render_pass_.ProcessChunkEvents(chunk_event_queue);
 	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(camera.RaycastResult());

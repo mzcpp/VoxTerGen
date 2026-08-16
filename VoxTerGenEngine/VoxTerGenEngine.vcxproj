@@ -214,6 +214,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\world\World.cpp" />
     <ClCompile Include="src\graphics\UniformBuffer.cpp" />
     <ClCompile Include="src\graphics\VertexArray.cpp" />
+    <ClCompile Include="src\threading\ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\graphics\Buffer.hpp" />
@@ -589,10 +590,13 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\render\MeshRenderer.hpp" />
     <ClInclude Include="include\render\GpuMesh.hpp" />
     <ClInclude Include="include\render\WorldRenderer.hpp" />
+    <ClInclude Include="include\threading\ThreadSafePriorityQueue.hpp" />
+    <ClInclude Include="include\threading\ThreadSafeQueue.hpp" />
     <ClInclude Include="include\utils\Constants.hpp" />
     <ClInclude Include="include\utils\Hash.hpp" />
     <ClInclude Include="include\utils\Logger.hpp" />
     <ClInclude Include="include\utils\MathUtils.hpp" />
+    <ClInclude Include="include\utils\Timer.hpp" />
     <ClInclude Include="include\world\Block.hpp" />
     <ClInclude Include="include\world\Chunk.hpp" />
     <ClInclude Include="include\world\ChunkEvents.hpp" />
@@ -603,6 +607,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\render\SkyboxRenderPass.hpp" />
     <ClInclude Include="include\graphics\UniformBuffer.hpp" />
     <ClInclude Include="include\graphics\VertexArray.hpp" />
+    <ClInclude Include="include\threading\ThreadPool.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\external\glm\detail\func_common.inl" />

@@ -1,15 +1,30 @@
-#include "world/ChunkManager.hpp"
 #include "mesh/MeshBuilder.hpp"
 
+#include "threading/ThreadPool.hpp"
+#include "threading/ThreadSafeQueue.hpp"
+
 #include "utils/MathUtils.hpp"
+#include "utils/Timer.hpp"
 
 #include "world/Chunk.hpp"
 #include "world/ChunkEvents.hpp"
+#include "world/ChunkManager.hpp"
 
 #include <queue>
 #include <cmath>
 #include <ranges>
+#include <mutex>
+#include <shared_mutex>
+#include <stop_token>
 #include <memory>
+#include <cassert>
+#include <array>
+
+ChunkManager::ChunkManager(Observer& observer, ThreadPool& thread_pool) :
+	observer_(observer), 
+	thread_pool_(thread_pool)
+{	
+}
 
 void ChunkManager::FillChunkTmp(Chunk& chunk)
 {
@@ -32,7 +47,7 @@ void ChunkManager::FillChunkTmp(Chunk& chunk)
 		{
 			for (int x = 0; x < constants::chunk::width; ++x)
 			{
-				chunk.BlockAt({ x, i, z }).SetType(static_cast<BlockType>(i));
+				chunk.BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(i));
 				//if (i >= 8)
 				//{
 				//	i = 1;
@@ -49,20 +64,27 @@ void ChunkManager::FillChunkTmp(Chunk& chunk)
 
 void ChunkManager::InitChunks(int chunk_radius)
 {
+	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
+
 	assert(chunk_radius >= 0);
 	const int chunk_square_size = 2 * chunk_radius + 1;
-	// TODO: observer will not always start at 0, 0!
-	const glm::ivec3 start_coords = { 0 - chunk_radius, 0, 0 - chunk_radius };
+	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());
+
+	const glm::ivec2 start_coords = {
+		observer_chunk_coords.x - chunk_radius,
+		observer_chunk_coords.y - chunk_radius
+	};
 
 	for (int z = 0; z < chunk_square_size; ++z)
 	{
 		for (int x = 0; x < chunk_square_size; ++x)
 		{
-			const glm::ivec2 world_coords = { start_coords.x + x, start_coords.z + z };
-			std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, world_coords);
-			chunk_build_queue_.push(chunk.get());
+			const glm::ivec2 chunk_world_coords = { start_coords.x + x, start_coords.y + z };
+			const double distance_squared = ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords);
+			std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
+			chunk_build_queue_.Push(ChunkJob{ chunk, distance_squared });
 
-			chunks_.try_emplace(world_coords, std::move(chunk));
+			chunks_.try_emplace(chunk_world_coords, std::move(chunk));
 		}
 	}
 
@@ -72,34 +94,80 @@ void ChunkManager::InitChunks(int chunk_radius)
 	}
 }
 
-void ChunkManager::Tick(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
+void ChunkManager::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
-	LoadChunks(chunk_event_queue, camera);
+	MarkChunksForUnload();
+	LoadChunks();
 	BuildChunkMeshes(chunk_event_queue);
+	UnloadChunks(chunk_event_queue);
 }
 
-void ChunkManager::LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const Camera& camera)
+void ChunkManager::MarkChunksForUnload()
 {
-	const glm::ivec2 current_chunk_coords = GetChunkCoords(camera.Pos());
-	const glm::ivec2 prev_chunk_coords = GetChunkCoords(camera.PrevPos());
+	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());
+	const glm::ivec2 observer_prev_chunk_coords = GetChunkCoords(observer_.PrevPos());
 
-	if (prev_chunk_coords == current_chunk_coords)
+	if (observer_prev_chunk_coords == observer_chunk_coords)
 	{
 		return;
 	}
+
+	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
+
+	for (auto& [chunk_world_coords, chunk] : chunks_)
+	{
+		if (chunk_world_coords.x < observer_chunk_coords.x - constants::chunk::default_radius ||
+			chunk_world_coords.x > observer_chunk_coords.x + constants::chunk::default_radius ||
+			chunk_world_coords.y < observer_chunk_coords.y - constants::chunk::default_radius ||
+			chunk_world_coords.y > observer_chunk_coords.y + constants::chunk::default_radius)
+		{
+			chunk->StopSource().request_stop();
+			chunk->SetChunkState(ChunkState::PendingUnload);
+			chunk->SetMeshState(MeshState::Cancelled);
+		}
+	}
+}
+
+void ChunkManager::LoadChunks()
+{
+	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());
+	
+	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
+
+	for (int y = observer_chunk_coords.y - constants::chunk::default_radius; y < observer_chunk_coords.y + constants::chunk::default_radius + 1; ++y)
+	{
+		for (int x = observer_chunk_coords.x - constants::chunk::default_radius; x < observer_chunk_coords.x + constants::chunk::default_radius + 1; ++x)
+		{
+			const glm::ivec2 chunk_world_coords = { x, y };
+
+			if (chunks_.find(chunk_world_coords) == chunks_.end())
+			{
+				std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
+				const double distance_squared = ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords);
+				FillChunkTmp(*chunk);
+				chunk_build_queue_.Push(ChunkJob{ chunk, distance_squared });
+				chunk->SetChunkState(ChunkState::Loaded);
+				chunk->SetMeshState(MeshState::Invalid);
+				chunks_.try_emplace(chunk_world_coords, std::move(chunk));
+			}
+		}
+	}
+}
+
+void ChunkManager::UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
+{
+	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
 
 	auto it = chunks_.begin();
 
 	while (it != chunks_.end())
 	{
-		const glm::ivec2& chunk_world_coords = it->first;
+		Chunk& chunk = *(it->second);
 
-		if (chunk_world_coords.x < current_chunk_coords.x - constants::chunk::default_radius || 
-			chunk_world_coords.x > current_chunk_coords.x + constants::chunk::default_radius ||
-			chunk_world_coords.y < current_chunk_coords.y - constants::chunk::default_radius || 
-			chunk_world_coords.y > current_chunk_coords.y + constants::chunk::default_radius)
+		if (chunk.GetChunkState() == ChunkState::PendingUnload)
 		{
-			chunk_event_queue.emplace(chunk_event::ChunkDestroyed{ it->second->Id() });
+			chunk.SetChunkState(ChunkState::Unloaded);
+			chunk_event_queue.Push(chunk_event::ChunkDestroyed{ chunk.Id() });
 			it = chunks_.erase(it);
 		}
 		else
@@ -107,76 +175,66 @@ void ChunkManager::LoadChunks(std::queue<ChunkEvent>& chunk_event_queue, const C
 			++it;
 		}
 	}
-
-	for (int y = current_chunk_coords.y - constants::chunk::default_radius; y < current_chunk_coords.y + constants::chunk::default_radius + 1; ++y)
-	{
-		for (int x = current_chunk_coords.x - constants::chunk::default_radius; x < current_chunk_coords.x + constants::chunk::default_radius + 1; ++x)
-		{
-			const glm::ivec2 chunk_world_coords = { x, y };
-
-			if (chunks_.find(chunk_world_coords) == chunks_.end())
-			{
-				std::unique_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
-				FillChunkTmp(*chunk);
-				chunk_build_queue_.emplace(chunk.get());
-				chunks_.try_emplace(chunk_world_coords, std::move(chunk));
-			}
-		}
-	}
 }
 
-void ChunkManager::BuildChunkMeshes(std::queue<ChunkEvent>& chunk_event_queue)
+void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
-	constexpr int meshes_build_limit = 1;
-	int meshes_built = 0;
+	constexpr int jobs_submitted_limit = 2048;
+	int jobs_submitted = 0;
 
-	while (!chunk_build_queue_.empty() && meshes_built < meshes_build_limit)
+	while (jobs_submitted < jobs_submitted_limit)
 	{
-		Chunk* chunk = chunk_build_queue_.front();
-		chunk_build_queue_.pop();
+		const std::optional<ChunkJob> chunk_job_opt = chunk_build_queue_.TryPop();
 
-		if (!chunk->MeshValid())
+		if (!chunk_job_opt.has_value())
 		{
-			chunk_event_queue.emplace(chunk_event::ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), BuildChunkMesh(*chunk) });
-			++meshes_built;
-			chunk->SetMeshValid(true);
+			return;
 		}
-	}
-}
 
-std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(Chunk& chunk)
-{
-	for (int y = 0; y < constants::chunk::height - 1; ++y)
-	{
-		for (int z = 0; z < constants::chunk::depth; ++z)
+		assert(chunk_job_opt->chunk_ != nullptr);
+		std::shared_ptr<Chunk> chunk = chunk_job_opt.value().chunk_;
+
+		if (chunk->StopSource().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
 		{
-			for (int x = 0; x < constants::chunk::width; ++x)
-			{
-				const glm::ivec3 coords = { x, y, z };
-				Block& current_block = chunk.BlockAt(coords);
-				const Block& block_above = chunk.NeighborRefAt(coords, Direction::PosY);
-
-				if (current_block.Type() == BlockType::Grass && block_above.IsSolid())
-				{
-					current_block.SetType(BlockType::Dirt);
-				}			
-			}
+			continue;
 		}
-	}
 
-	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>();
+		chunk->SetMeshState(MeshState::Building);
 		
-	*chunk_mesh = MeshBuilder::BuildMeshGreedy(
-		[this, &chunk](glm::ivec3 block_coords)
+		ChunkMeshDependencies chunk_mesh_dependencies = GetMeshDependencies(chunk->WorldCoords());
+
+		thread_pool_.Enqueue([this, chunk, chunk_mesh_dependencies = std::move(chunk_mesh_dependencies), &chunk_event_queue]()
 		{
-			return WorldBlockQuery(chunk.WorldCoords(), block_coords);
-		}
-	);
+			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(chunk_mesh_dependencies, chunk->StopSource().get_token());
+
+			if (chunk_mesh == nullptr)
+			{
+				chunk->SetChunkState(ChunkState::PendingUnload);
+			}
+			else
+			{
+				chunk_event_queue.Push(chunk_event::ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), std::move(chunk_mesh) });
+				chunk->SetMeshState(MeshState::Ready);
+			}
+		});
+
+		++jobs_submitted;
+	}
+}
+
+std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
+{
+	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>(MeshBuilder::BuildMeshGreedy(chunk_mesh_dependencies, stop_token));
+		
+	if (stop_token.stop_requested())
+	{
+		return nullptr;
+	}
 
 	return chunk_mesh;
 }
 
-const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
+std::shared_ptr<Chunk> ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 {
 	const auto& chunk_it = chunks_.find(chunk_coord);
 
@@ -185,7 +243,7 @@ const Chunk* ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 		return nullptr;
 	}
 
-	return chunk_it->second.get();
+	return chunk_it->second;
 }
 
 glm::ivec3 ChunkManager::AbsoluteBlockPos(glm::dvec3 position, glm::dvec3 pos_offset) const noexcept
@@ -244,14 +302,16 @@ BlockInfo ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ive
 
 	const glm::ivec2 chunk_coords = { 
 		current_chunk_coord.x + x_chunk_offset, 
-		current_chunk_coord.y + z_chunk_offset };
+		current_chunk_coord.y + z_chunk_offset 
+	};
 
 	const glm::ivec3 absolute_block_coords = { 
 		target_block_coords.x + chunk_coords.x * constants::chunk::width, 
 		target_block_coords.y, 
-		target_block_coords.z + chunk_coords.y * constants::chunk::depth };
-	
-	if (const Chunk* target_chunk = GetChunkAt(chunk_coords))
+		target_block_coords.z + chunk_coords.y * constants::chunk::depth 
+	};
+
+	if (const std::shared_ptr<Chunk> target_chunk = GetChunkAt(chunk_coords))
 	{
 		return { target_chunk->BlockAt(target_block_coords), absolute_block_coords };
 	}
@@ -265,4 +325,31 @@ glm::ivec2 ChunkManager::GetChunkCoords(glm::dvec3 pos) const noexcept
 		static_cast<int>(std::floor(pos.x / constants::chunk::width)), 
 		static_cast<int>(std::floor(pos.z / constants::chunk::depth)) 
 	};
+}
+
+double ChunkManager::ChunkDistanceSquared(glm::ivec2 first_chunk, glm::ivec2 second_chunk) const noexcept
+{
+	const double dx = first_chunk.x - second_chunk.x;
+	const double dy = first_chunk.y - second_chunk.y;
+
+	return dx * dx + dy * dy;
+}
+
+ChunkMeshDependencies ChunkManager::GetMeshDependencies(glm::ivec2 chunk_coords) const
+{
+	ChunkMeshDependencies chunk_mesh_dependencies;
+
+    std::shared_lock lock(chunks_shared_mutex_);
+
+	int index = 0;
+
+	for (int y_offset = -1; y_offset < 2; ++y_offset)
+	{
+		for (int x_offset = -1; x_offset < 2; ++x_offset)
+		{
+			chunk_mesh_dependencies.chunks_[index++] = GetChunkAt(chunk_coords + glm::ivec2{ x_offset, y_offset });
+		}	
+	}
+
+	return chunk_mesh_dependencies;
 }

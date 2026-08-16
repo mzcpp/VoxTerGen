@@ -8,20 +8,14 @@
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
 
+#include "threading/ThreadSafeQueue.hpp"
+
 #include "world/ChunkEvents.hpp"
 
 #include <glm/mat4x4.hpp>
 
 #include <unordered_map>
 #include <queue>
-
-/**
- * @brief Helper struct to combine multiple lambdas for std::visit.
- * @note Taken from cppreference.com:
- *       https://en.cppreference.com/w/cpp/utility/variant/visit2.html
- */
-template<class... Ts>
-struct overloaded : Ts... { using Ts::operator()...; };
 
 struct ChunkData
 {
@@ -40,7 +34,7 @@ private:
 public:
 	ChunkMeshRenderPass(const MeshRenderer& mesh_renderer);
 
-	void ProcessChunkEvents(std::queue<ChunkEvent>& chunk_event_queue);
+	void ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
 	void RenderChunks(const Camera& camera, const ResourceManager& resource_manager);
 };

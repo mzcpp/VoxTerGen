@@ -2,6 +2,9 @@
 
 !!! DOCUMENT ALL FUNCTIONS !!!
 
+prioritize chunks based on camera direction
+make chunk frustum aabb bigger to avoid popping in/out
+Chunk::Pos() ??
 in headers, use forwarding declarations whenever possible instead of include
 PACK vertex into uint32
 rethink the world block query implicit passing of chunk! at the call site it's not clear at all which chunk is the current!
