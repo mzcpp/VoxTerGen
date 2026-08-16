@@ -342,10 +342,7 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 		{
 			glm::ivec3 left_query_coords = { 0, 0, 0 };
 			glm::ivec3 right_query_coords = { 0, 0, 0 };
-
-			// glm::ivec3 above_left_query_coords = { 0, 0, 0 };
-			// glm::ivec3 above_right_query_coords = { 0, 0, 0 };
-
+			
 			switch (major_axis)
 			{
 			case MajorAxis::X:
@@ -365,10 +362,6 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 					right_query_coords.x -= constants::chunk::width;
 				}
 				
-				// above_left_query_coords = left_query_coords;
-				// ++above_left_query_coords.y;
-				// above_right_query_coords = right_query_coords;
-				// ++above_right_query_coords.y;
 				break;
 			}
 			case MajorAxis::Y:
@@ -379,10 +372,6 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 				left_query_coords = { cross_axis_2_index, major_axis_index, cross_axis_1_index };				
 				right_query_coords = { cross_axis_2_index, major_axis_index + 1, cross_axis_1_index };
 				
-				// above_left_query_coords = left_query_coords;
-				// ++above_left_query_coords.z;
-				// above_right_query_coords = right_query_coords;
-				// ++above_right_query_coords.z;
 				break;
 			}
 			case MajorAxis::Z:
@@ -402,10 +391,6 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 					right_query_coords.z -= constants::chunk::depth;
 				}
 
-				// above_left_query_coords = left_query_coords;
-				// ++above_left_query_coords.y;
-				// above_right_query_coords = right_query_coords;
-				// ++above_right_query_coords.y;
 				break;
 			}
 			default:
@@ -415,9 +400,12 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 
 			const Block left_block = left_chunk != nullptr ? left_chunk->BlockAt(left_query_coords) : Block();
 			const Block right_block = right_chunk != nullptr ? right_chunk->BlockAt(right_query_coords) : Block();
+			
+			const glm::ivec3 above_left_query_coords = left_query_coords + glm::ivec3{ 0, 1, 0 };
+			const glm::ivec3 above_right_query_coords = right_query_coords + glm::ivec3{ 0, 1, 0 };
 
-			// const Block& above_left_block = world_block_query(above_left_query_coords).block_;
-			// const Block& above_right_block = world_block_query(above_right_query_coords).block_;
+			const Block above_left_block = above_left_query_coords.y >= constants::chunk::height ? Block() : current_chunk->BlockAt(above_left_query_coords);
+			const Block above_right_block = above_right_query_coords.y >= constants::chunk::height ? Block() : current_chunk->BlockAt(above_right_query_coords);
 
 			const bool render_left = left_block_inside && left_block.ShouldRenderFace(right_block);
 			const bool render_right = right_block_inside && right_block.ShouldRenderFace(left_block);
@@ -426,16 +414,14 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 
 			if (render_left)
 			{
-				//mask_cell.block_type_ = (left_block.Type() == BlockType::Grass && above_left_block.IsSolid()) ? BlockType::Dirt : left_block.Type();
-				mask_cell.block_type_ = left_block.Type();
+				mask_cell.block_type_ = (left_block.Type() == BlockType::Grass && above_left_block.IsSolid()) ? BlockType::Dirt : left_block.Type();
 				mask_cell.dir_ = ToDirection(major_axis, true);
 				mask_cell.sun_light_ = left_block.SunLight();
 				mask_cell.block_light_ = left_block.BlockLight();
 			}
 			else if (render_right)
 			{
-				//mask_cell.block_type_ = (right_block.Type() == BlockType::Grass && above_right_block.IsSolid()) ? BlockType::Dirt : right_block.Type();
-				mask_cell.block_type_ = right_block.Type();
+				mask_cell.block_type_ = (right_block.Type() == BlockType::Grass && above_right_block.IsSolid()) ? BlockType::Dirt : right_block.Type();
 				mask_cell.dir_ = ToDirection(major_axis, false);
 				mask_cell.sun_light_ = right_block.SunLight();
 				mask_cell.block_light_ = right_block.BlockLight();
