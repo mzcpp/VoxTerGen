@@ -18,6 +18,21 @@ The format follows Keep a Changelog and Semantic Versioning.
 
 ---
 
+## [0.6.0] - 16 August 2026
+
+### Added
+- Added multithreaded chunk streaming and mesh generation
+- Added custom `ThreadPool`, `ThreadSafeQueue`, and `ThreadSafePriorityQueue` classes
+- Added a custom `Timer` class for profiling
+- Added priority-based chunk streaming based on distance from the observer
+
+### Changed
+- Redesigned chunk meshing to use snapshots of neighboring chunks instead of querying the world during mesh generation
+- Added chunk mesh generation cancellation using `std::stop_token`
+- Improved chunk lifetime management during asynchronous mesh generation using `std::shared_ptr`
+
+---
+
 ## [0.5.3] - 24 July 2026
 
 ### Added

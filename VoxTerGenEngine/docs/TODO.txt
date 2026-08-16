@@ -4,7 +4,6 @@
 
 prioritize chunks based on camera direction
 make chunk frustum aabb bigger to avoid popping in/out
-generate chunks from the player outwards, not row by row
 Chunk::Pos() ??
 in headers, use forwarding declarations whenever possible instead of include
 PACK vertex into uint32
@@ -50,7 +49,6 @@ add Graphics Device Interface - move all graphics apis inits into it - App will 
 
 ********* BUGS *********
 
-(AGAIN) fix grass block with solid block above it - the grass block below should be dirt texture
 face culling on the chunk borders!
 fix bug when running very fast, I fall through the floor
 fix bug when falling very fast, I fall through the floor
