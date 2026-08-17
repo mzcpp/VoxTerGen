@@ -4,8 +4,16 @@ uniform sampler2D atlas_texture;
 uniform uint atlas_columns;
 uniform uint atlas_rows;
 
+layout (std140, binding = 0) uniform Matrices
+{
+    mat4 view;
+    mat4 projection;
+    vec3 camera_pos;
+};
+
 in VS_OUT
 {
+	vec3 pos;
     flat uint normal;
     vec2 uv;
     flat uint material;

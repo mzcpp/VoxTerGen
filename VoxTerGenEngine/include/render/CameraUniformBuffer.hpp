@@ -3,9 +3,19 @@
 
 #include "graphics/UniformBuffer.hpp"
 
+#include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
+
 #include <glad/glad.h>
 
 class Camera;
+
+struct CameraData
+{
+    glm::mat4 view_;
+	glm::mat4 projection_;
+    glm::vec3 pos_;
+};
 
 class CameraUniformBuffer
 {

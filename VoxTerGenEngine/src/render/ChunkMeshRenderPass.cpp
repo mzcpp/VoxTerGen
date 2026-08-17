@@ -80,12 +80,9 @@ void ChunkMeshRenderPass::RenderChunks(const Camera& camera, const ResourceManag
     }
 	
 	shader_program->Use();
-	shader_program->Set<unsigned int>("atlas_columns", constants::texture::atlas_columns);
-	shader_program->Set<unsigned int>("atlas_rows", constants::texture::atlas_rows);
 
 	glActiveTexture(GL_TEXTURE0);
 	resource_manager.GetTexture("texture_atlas")->Bind();
-	shader_program->Set<int>("atlas_texture", 0);
 
 	const auto& frustum = camera.GetFrustumPlanes();
 

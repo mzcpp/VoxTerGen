@@ -4,8 +4,9 @@ layout (location = 0) in vec3 pos_;
 
 layout (std140, binding = 0) uniform Matrices
 {
-    uniform mat4 view;
-    uniform mat4 projection;
+    mat4 view;
+    mat4 projection;
+    vec3 camera_pos;
 };
 
 out vec3 tex_coords;

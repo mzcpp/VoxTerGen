@@ -7,14 +7,16 @@ layout (location = 3) in uint material_;
 
 layout (std140, binding = 0) uniform Matrices
 {
-    uniform mat4 view;
-    uniform mat4 projection;
+    mat4 view;
+    mat4 projection;
+    vec3 camera_pos;
 };
 
 uniform mat4 model;
 
 out VS_OUT
 {
+    vec3 pos;
     flat uint normal;
     vec2 uv;
     flat uint material;
@@ -22,6 +24,7 @@ out VS_OUT
 
 void main()
 {
+    vs_out.pos = pos_;
     vs_out.normal = normal_;
     vs_out.uv = uv_;
     vs_out.material = material_;

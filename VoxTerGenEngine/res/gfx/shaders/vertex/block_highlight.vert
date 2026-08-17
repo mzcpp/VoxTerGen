@@ -7,8 +7,9 @@ layout (location = 3) in uint material_;
 
 layout (std140, binding = 0) uniform Matrices
 {
-    uniform mat4 view;
-    uniform mat4 projection;
+    mat4 view;
+    mat4 projection;
+    vec3 camera_pos;
 };
 
 uniform mat4 model;

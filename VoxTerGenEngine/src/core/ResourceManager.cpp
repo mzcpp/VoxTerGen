@@ -23,7 +23,16 @@ void ResourceManager::InitializeResources()
     constexpr GLuint rows_n = 2;
     AddTexture("sky_cubemap", std::make_unique<TextureUtils::Texture2D>(constants::paths::sky_cubemap, columns_n, rows_n, skybox_z_offsets, true, false, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
 
-    AddShaderProgram("chunk_mesh_shader", std::make_unique<ShaderProgram>(constants::paths::chunk_mesh_vertex_shader, constants::paths::chunk_mesh_fragment_shader));
+    std::unique_ptr<ShaderProgram> chunk_mesh_shader = std::make_unique<ShaderProgram>(constants::paths::chunk_mesh_vertex_shader, constants::paths::chunk_mesh_fragment_shader);
+
+    chunk_mesh_shader->Use();
+    chunk_mesh_shader->Set<unsigned int>("atlas_columns", constants::texture::atlas_columns);
+	chunk_mesh_shader->Set<unsigned int>("atlas_rows", constants::texture::atlas_rows);
+	chunk_mesh_shader->Set<int>("atlas_texture", 0);
+    glUseProgram(0);
+
+    AddShaderProgram("chunk_mesh_shader", std::move(chunk_mesh_shader));
+
     AddShaderProgram("block_highlight_shader", std::make_unique<ShaderProgram>(constants::paths::block_highlight_vertex_shader, constants::paths::block_highlight_fragment_shader));
     AddShaderProgram("skybox_shader", std::make_unique<ShaderProgram>(constants::paths::skybox_vertex_shader, constants::paths::skybox_fragment_shader));
     
