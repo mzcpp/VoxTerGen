@@ -89,7 +89,7 @@ void ChunkMeshRenderPass::RenderChunks(const Camera& camera, const ResourceManag
 
 	const auto& frustum = camera.GetFrustumPlanes();
 
-	const auto inside_frustum = [&frustum](const ChunkData& chunk_data) {
+	const auto inside_frustum = [frustum = std::move(frustum)](const ChunkData& chunk_data) {
 		return geometry::Intersects(frustum, chunk_data.aabb_);
 	};
 

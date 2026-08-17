@@ -66,7 +66,7 @@ void BlockHighlightRenderPass::RenderBlockHighlight(const ResourceManager& resou
     shader_program->Use();
     shader_program->Set<glm::mat4>("model", render_data_.model_matrix_);
 
-    constexpr float distance_threshold = 0.0025f;
+    constexpr float distance_threshold = 0.002f;
     shader_program->Set<float>("distance_threshold", distance_threshold);
     
     mesh_renderer_.RenderGpuMesh(render_data_.gpu_mesh_);
