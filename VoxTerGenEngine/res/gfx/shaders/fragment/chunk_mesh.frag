@@ -4,6 +4,8 @@ uniform sampler2D atlas_texture;
 uniform uint atlas_columns;
 uniform uint atlas_rows;
 
+uniform float fog_half_distance;
+
 layout (std140, binding = 0) uniform Matrices
 {
     mat4 view;
@@ -62,5 +64,18 @@ vec2 GetAtlasUV(uint material)
 
 void main()
 {
-    fragment_color = texture(atlas_texture, GetAtlasUV(fs_in.material));
+	const float dx = (fs_in.pos.x - camera_pos.x);
+	const float dy = (fs_in.pos.y - camera_pos.y);
+	const float dz = (fs_in.pos.z - camera_pos.z);
+
+	const float fragment_distance_squared = dx * dx + dy * dy + dz * dz;
+
+	const float k = sqrt(-log(0.5)) / fog_half_distance;
+	const float exponent = (k * k * fragment_distance_squared);
+	const float decay = exp(-exponent);
+	const float fog_amount = 1 - decay;
+
+	const vec3 fog_color = { 0.878, 0.878, 0.878 };
+
+    fragment_color = mix(texture(atlas_texture, GetAtlasUV(fs_in.material)), fog_color, fog_amount);
 }

@@ -6,6 +6,11 @@ void CameraUniformBuffer::Initialize() noexcept
 {
     constexpr GLuint binding_point = 0;
 
+    static_assert(offsetof(CameraData, view_) == 0);
+    static_assert(offsetof(CameraData, projection_) == 64);
+    static_assert(offsetof(CameraData, pos_) == 128);
+    static_assert(sizeof(CameraData) == 144);
+
     buffer_.Initialize(sizeof(CameraData), binding_point);
 }
 

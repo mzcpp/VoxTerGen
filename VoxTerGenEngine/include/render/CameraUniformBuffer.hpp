@@ -15,6 +15,7 @@ struct CameraData
     glm::mat4 view_;
 	glm::mat4 projection_;
     glm::vec3 pos_;
+    float padding_;
 };
 
 class CameraUniformBuffer
