@@ -126,6 +126,9 @@
     <ClCompile Include="src\threading\ThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\ChunkWireframeRenderPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Constants.hpp">
@@ -1299,6 +1302,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\threading\ThreadSafePriorityQueue.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\ChunkWireframeRenderPass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -181,6 +181,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\graphics\Buffer.cpp" />
     <ClCompile Include="src\math\Geometry.cpp" />
     <ClCompile Include="src\render\CameraUniformBuffer.cpp" />
+    <ClCompile Include="src\render\ChunkWireframeRenderPass.cpp" />
     <ClCompile Include="src\render\SkyboxRenderPass.cpp" />
     <ClCompile Include="src\render\BlockHighlightRenderPass.cpp" />
     <ClCompile Include="src\physics\DigitalDifferentialAnalyzer.cpp" />
@@ -585,6 +586,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\mesh\Vertex.hpp" />
     <ClInclude Include="include\render\CameraUniformBuffer.hpp" />
     <ClInclude Include="include\render\ChunkMeshRenderPass.hpp" />
+    <ClInclude Include="include\render\ChunkWireframeRenderPass.hpp" />
     <ClInclude Include="include\render\Material.hpp" />
     <ClInclude Include="include\render\MeshRenderData.hpp" />
     <ClInclude Include="include\render\MeshRenderer.hpp" />

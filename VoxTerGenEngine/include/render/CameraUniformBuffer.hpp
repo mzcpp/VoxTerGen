@@ -26,7 +26,7 @@ private:
 public:
     void Initialize() noexcept;
 
-    void UpdateMatrices(const Camera& camera, float alpha) const noexcept;
+    void UpdateCameraData(const Camera& camera, float alpha) const noexcept;
 };
 
 #endif // CAMERA_UNIFORM_BUFFER_HPP

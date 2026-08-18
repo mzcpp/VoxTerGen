@@ -14,7 +14,7 @@ void CameraUniformBuffer::Initialize() noexcept
     buffer_.Initialize(sizeof(CameraData), binding_point);
 }
 
-void CameraUniformBuffer::UpdateMatrices(const Camera& camera, float alpha) const noexcept
+void CameraUniformBuffer::UpdateCameraData(const Camera& camera, float alpha) const noexcept
 {
     CameraData camera_data;
  

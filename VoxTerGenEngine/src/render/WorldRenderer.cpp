@@ -44,7 +44,7 @@ void WorldRenderer::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const C
 
 void WorldRenderer::RenderWorld(const Camera& camera, float alpha, const ResourceManager& resource_manager)
 {
-	camera_uniform_buffer_.UpdateMatrices(camera, alpha);
+	camera_uniform_buffer_.UpdateCameraData(camera, alpha);
 
 	chunk_mesh_render_pass_.RenderChunks(camera, resource_manager);
 	block_highlight_render_pass_.RenderBlockHighlight(resource_manager);
