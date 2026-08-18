@@ -176,6 +176,7 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 						continue;
 					}
 
+					// TODO: replace with just BuildUnitCubeMesh call
 					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, dir, chunk_mesh);
 				}
 			}
