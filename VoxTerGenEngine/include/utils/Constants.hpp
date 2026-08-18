@@ -104,6 +104,8 @@ namespace constants
         inline constexpr const char* block_highlight_fragment_shader = "res/gfx/shaders/fragment/block_highlight.frag";
         inline constexpr const char* skybox_vertex_shader = "res/gfx/shaders/vertex/skybox.vert";
         inline constexpr const char* skybox_fragment_shader = "res/gfx/shaders/fragment/skybox.frag";
+        inline constexpr const char* chunk_wireframe_vertex_shader = "res/gfx/shaders/vertex/chunk_wireframe.vert.vert";
+        inline constexpr const char* chunk_wireframe_fragment_shader = "res/gfx/shaders/fragment/chunk_wireframe.vert.frag";
         inline constexpr const char* default_font = "res/font/VT323-Regular.ttf";
         inline constexpr const char* button_click = "res/sfx/click.wav";
     } // namespace paths

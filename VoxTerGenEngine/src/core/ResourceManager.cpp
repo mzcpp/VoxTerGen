@@ -36,6 +36,7 @@ void ResourceManager::InitializeResources()
 
     AddShaderProgram("block_highlight_shader", std::make_unique<ShaderProgram>(constants::paths::block_highlight_vertex_shader, constants::paths::block_highlight_fragment_shader));
     AddShaderProgram("skybox_shader", std::make_unique<ShaderProgram>(constants::paths::skybox_vertex_shader, constants::paths::skybox_fragment_shader));
+    AddShaderProgram("chunk_wireframe_shader", std::make_unique<ShaderProgram>(constants::paths::chunk_wireframe_vertex_shader, constants::paths::chunk_wireframe_fragment_shader));
     
     constexpr int font_size = 28;
     LoadFont("default_font", constants::paths::default_font, font_size);
