@@ -6,13 +6,8 @@
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
 
-#include "world/Chunk.hpp"
+#include <optional>
 
-#include <glm/vec3.hpp>
-
-#include <memory>
-
-class Camera;
 class ResourceManager;
 
 struct RaycastResult;

@@ -1,9 +1,10 @@
 #ifndef WORLD_RENDERER_HPP
 #define WORLD_RENDERER_HPP
 
+#include "render/BlockHighlightRenderPass.hpp"
+#include "render/ChunkWireframeRenderPass.hpp"
 #include "render/CameraUniformBuffer.hpp"
 #include "render/ChunkMeshRenderPass.hpp"
-#include "render/BlockHighlightRenderPass.hpp"
 #include "render/SkyboxRenderPass.hpp"
 
 #include "threading/ThreadSafeQueue.hpp"
@@ -31,6 +32,7 @@ private:
 	ChunkMeshRenderPass chunk_mesh_render_pass_;
 	BlockHighlightRenderPass block_highlight_render_pass_;
 	SkyboxRenderPass skybox_render_pass_;
+	ChunkWireframeRenderPass chunk_wireframe_render_pass_;
 
 public:
 	WorldRenderer();

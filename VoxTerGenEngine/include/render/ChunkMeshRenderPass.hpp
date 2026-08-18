@@ -12,10 +12,7 @@
 
 #include "world/ChunkEvents.hpp"
 
-#include <glm/mat4x4.hpp>
-
 #include <unordered_map>
-#include <queue>
 
 struct ChunkData
 {

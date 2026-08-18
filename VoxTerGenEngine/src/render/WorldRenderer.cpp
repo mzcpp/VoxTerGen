@@ -6,6 +6,7 @@
 
 #include "render/BlockHighlightRenderPass.hpp"
 #include "render/ChunkMeshRenderPass.hpp"
+#include "render/ChunkWireframeRenderPass.hpp"
 #include "render/SkyboxRenderPass.hpp"
 #include "render/WorldRenderer.hpp"
 
@@ -21,7 +22,8 @@
 WorldRenderer::WorldRenderer() : 
 	chunk_mesh_render_pass_(mesh_renderer_), 
 	block_highlight_render_pass_(mesh_renderer_), 
-	skybox_render_pass_(mesh_renderer_)
+	skybox_render_pass_(mesh_renderer_), 
+	chunk_wireframe_render_pass_(mesh_renderer_)
 {
 }
 
@@ -31,6 +33,7 @@ void WorldRenderer::Initialize()
 
 	block_highlight_render_pass_.PrepareBlockRenderData();
 	skybox_render_pass_.PrepareSkyboxRenderData();
+	chunk_wireframe_render_pass_.PrepareChunkWireframeRenderData();
 }
 
 void WorldRenderer::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera)
@@ -46,4 +49,5 @@ void WorldRenderer::RenderWorld(const Camera& camera, float alpha, const Resourc
 	chunk_mesh_render_pass_.RenderChunks(camera, resource_manager);
 	block_highlight_render_pass_.RenderBlockHighlight(resource_manager);
 	skybox_render_pass_.RenderSkybox(resource_manager);
+	chunk_wireframe_render_pass_.RenderChunkWireframe(resource_manager);
 }

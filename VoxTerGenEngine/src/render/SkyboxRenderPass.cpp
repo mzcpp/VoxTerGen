@@ -2,7 +2,6 @@
 
 #include "core/ResourceManager.hpp"
 
-#include "graphics/Camera.hpp"
 #include "graphics/ShaderProgram.hpp"
 
 #include "mesh/Mesh.hpp"
