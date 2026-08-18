@@ -48,7 +48,7 @@ public:
 
 	static void CreateMeshIndices(Mesh& chunk_mesh);
 
-	static void CreateMeshVertices(BlockType type, Direction dir, glm::vec3 origin_offset, Mesh& chunk_mesh);
+	static void CreateMeshVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh& chunk_mesh);
 
 	static Mesh BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshDependencies& chunk_mesh_dependencies);
 	

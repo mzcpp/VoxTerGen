@@ -21,7 +21,7 @@ Mesh MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offse
 	for (Direction dir : AllDirections())
     {
 		CreateMeshIndices(unit_cube_mesh);
-        CreateMeshVertices(block_type, dir, origin_offset, unit_cube_mesh);
+        CreateMeshVertices(block_type, dir, 1.0, origin_offset, unit_cube_mesh);
     }
 
 	return unit_cube_mesh;
@@ -35,7 +35,7 @@ void MeshBuilder::CreateMeshIndices(Mesh& chunk_mesh)
 	}
 }
 
-void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, glm::vec3 origin_offset, Mesh& chunk_mesh)
+void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh& chunk_mesh)
 {
 	for (int i = 0; i < 4; ++i)
 	{
@@ -108,6 +108,7 @@ void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, glm::vec3 or
 			vertex.normal_ = 5;
 		}
 
+		vertex.position_ *= scale;
 		vertex.position_ += origin_offset;
 		vertex.uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
 		vertex.material_ = GetQuadMaterial(type, dir);
@@ -210,7 +211,7 @@ void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, gl
 	};
 
 	CreateMeshIndices(chunk_mesh);
-	CreateMeshVertices(type, dir, block_abs_pos, chunk_mesh);
+	CreateMeshVertices(type, dir, 1.0, block_abs_pos, chunk_mesh);
 	
 	assert(chunk_mesh.Vertices().size() % 4 == 0);
 }
