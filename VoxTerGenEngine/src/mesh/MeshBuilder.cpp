@@ -346,7 +346,7 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 				}
 				else if (!right_block_inside)
 				{
-					left_query_coords -= glm::ivec3{ constants::chunk::width, 0, 0 };
+					right_query_coords -= glm::ivec3{ constants::chunk::width, 0, 0 };
 				}
 				
 				break;
@@ -376,7 +376,7 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 				}
 				else if (!right_block_inside)
 				{
-					left_query_coords -= glm::ivec3{ 0, 0, constants::chunk::depth };
+					right_query_coords -= glm::ivec3{ 0, 0, constants::chunk::depth };
 				}
 
 				break;
