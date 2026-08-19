@@ -24,7 +24,7 @@ out VS_OUT
 
 void main()
 {
-    vs_out.pos = pos_;
+    vs_out.pos = vec3(model * vec4(pos_, 1.0));
     vs_out.normal = normal_;
     vs_out.uv = uv_;
     vs_out.material = material_;

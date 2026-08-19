@@ -62,7 +62,7 @@ vec2 GetAtlasUV(uint material)
 	 return tile_min + fract(fs_in.uv) * xy_delta;
 }
 
-float CalculateFogAmount()
+float CalculateExponentialFogAmount()
 {
 	const float dx = (fs_in.pos.x - camera_pos.x);
 	const float dy = (fs_in.pos.y - camera_pos.y);
@@ -79,8 +79,8 @@ float CalculateFogAmount()
 
 void main()
 {
-	const float fog_amount = CalculateFogAmount();
-	const vec3 fog_color = { 0.878, 0.878, 0.878 };
+	const float fog_amount = CalculateExponentialFogAmount();
+	const vec4 fog_color = { 0.878, 0.878, 0.878, 1.0 };
 
     fragment_color = mix(texture(atlas_texture, GetAtlasUV(fs_in.material)), fog_color, fog_amount);
 }
