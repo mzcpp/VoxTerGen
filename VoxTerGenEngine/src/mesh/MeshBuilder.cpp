@@ -24,6 +24,8 @@ Mesh MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offse
         CreateMeshVertices(block_type, dir, 1.0, origin_offset, unit_cube_mesh);
     }
 
+	assert(unit_cube_mesh.Vertices().size() % 4 == 0);
+
 	return unit_cube_mesh;
 }
 
@@ -41,76 +43,60 @@ void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, float scale,
 	{
 		Vertex vertex;
 
-		if (dir == Direction::PosX)
+		switch (dir) 
 		{
+		case Direction::PosX:
 			// 1, 0, 1
 			// 1, 0, 0
 			// 1, 1, 1
 			// 1, 1, 0
-			vertex.position_.x = 1.0f;
-			vertex.position_.y = static_cast<float>((i / 2) % 2 != 0);
-			vertex.position_.z = static_cast<float>(i % 2 == 0);
-			vertex.normal_ = 0;
-		}
-		else if (dir == Direction::NegX)
-		{
+			vertex.position_ = glm::vec3{ 1.0f, (i / 2) % 2 != 0, i % 2 == 0 };
+			break;
+		case Direction::NegX:
 			// 0, 0, 0
 			// 0, 0, 1
 			// 0, 1, 0
 			// 0, 1, 1
-			vertex.position_.x = 0.0f;
-			vertex.position_.y = static_cast<float>((i / 2) % 2 != 0);
-			vertex.position_.z = static_cast<float>(i % 2 != 0);
-			vertex.normal_ = 1;
-		}
-		else if (dir == Direction::PosY)
-		{
+			vertex.position_ = glm::vec3{ 0.0f, (i / 2) % 2 != 0, i % 2 != 0 };
+			break;
+		case Direction::PosY:
 			// 0, 1, 1
 			// 1, 1, 1
 			// 0, 1, 0
 			// 1, 1, 0
-			vertex.position_.x = static_cast<float>(i % 2 != 0);
-			vertex.position_.y = 1.0f;
-			vertex.position_.z = static_cast<float>((i / 2) % 2 == 0);
-			vertex.normal_ = 2;
-		}
-		else if (dir == Direction::NegY)
-		{
+			vertex.position_ = glm::vec3{ i % 2 != 0, 1.0f, (i / 2) % 2 == 0 };
+			break;
+		case Direction::NegY:
 			// 1, 0, 1
 			// 0, 0, 1
 			// 1, 0, 0
 			// 0, 0, 0
-			vertex.position_.x = static_cast<float>(i % 2 == 0);
-			vertex.position_.y = 0.0f;
-			vertex.position_.z = static_cast<float>((i / 2) % 2 == 0);
-			vertex.normal_ = 3;
-		}
-		else if (dir == Direction::PosZ)
-		{
+			vertex.position_ = glm::vec3{ i % 2 == 0, 0.0f, (i / 2) % 2 == 0 };
+			break;
+		case Direction::PosZ:
 			// 0, 0, 1
 			// 1, 0, 1
 			// 0, 1, 1
 			// 1, 1, 1
-			vertex.position_.x = static_cast<float>(i % 2 != 0);
-			vertex.position_.y = static_cast<float>((i / 2) % 2 != 0);
-			vertex.position_.z = 1.0f;
-			vertex.normal_ = 4;
-		}
-		else if (dir == Direction::NegZ)
-		{
+			vertex.position_ = glm::vec3{ i % 2 != 0, (i / 2) % 2 != 0, 1.0f };
+			break;
+		case Direction::NegZ:
 			// 1, 0, 0
 			// 0, 0, 0
 			// 1, 1, 0
 			// 0, 1, 0
-			vertex.position_.x = static_cast<float>(i % 2 == 0);
-			vertex.position_.y = static_cast<float>((i / 2) % 2 != 0);
-			vertex.position_.z = 0.0f;
-			vertex.normal_ = 5;
+			vertex.position_ = glm::vec3{ i % 2 == 0, (i / 2) % 2 != 0, 0.0f };
+			break;
+		default:
+			assert(false);
+			Logger::Log(LogLevel::ERROR, "CreateMeshVertices received an unknown type of Direction!: dir = {}", static_cast<std::uint8_t>(dir));
+			return;
 		}
 
 		vertex.position_ *= scale;
 		vertex.position_ += origin_offset;
-		vertex.uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
+		vertex.normal_ = static_cast<uint8_t>(dir);
+		vertex.uv_ = glm::vec2{ i % 2 != 0, (i / 2) % 2 != 0 };
 		vertex.material_ = GetQuadMaterial(type, dir);
 
 		chunk_mesh.AddVertex(vertex);
@@ -149,12 +135,12 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 					if (neighbor_coords.x < 0)
 					{
 						neighbor_chunk = west_chunk;
-						neighbor_coords.x += constants::chunk::width;
+						neighbor_coords += glm::ivec3{ constants::chunk::width, 0, 0 };
 					}
 					else if (neighbor_coords.x >= constants::chunk::width)
 					{
 						neighbor_chunk = east_chunk;
-						neighbor_coords.x -= constants::chunk::width;
+						neighbor_coords -= glm::ivec3{ constants::chunk::width, 0, 0 };
 					}
 					else if (neighbor_coords.y < 0 || neighbor_coords.y >= constants::chunk::height)
 					{
@@ -163,12 +149,12 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 					else if (neighbor_coords.z < 0)
 					{
 						neighbor_chunk = north_chunk;
-						neighbor_coords.z += constants::chunk::depth;
+						neighbor_coords += glm::ivec3{ 0, 0, constants::chunk::depth };
 					}
 					else if (neighbor_coords.z >= constants::chunk::depth)
 					{
 						neighbor_chunk = south_chunk;
-						neighbor_coords.z -= constants::chunk::depth;
+						neighbor_coords -= glm::ivec3{ 0, 0, constants::chunk::depth };
 					}
 
 					if (neighbor_chunk != nullptr && neighbor_chunk->BlockAt(neighbor_coords).IsSolid())
@@ -176,7 +162,6 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 						continue;
 					}
 
-					// TODO: replace with just BuildUnitCubeMesh call
 					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, dir, chunk_mesh);
 				}
 			}
@@ -205,10 +190,10 @@ Mesh MeshBuilder::BuildMeshGreedy(const ChunkMeshDependencies& chunk_mesh_depend
 
 void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& chunk_mesh)
 {
-	const glm::vec3 block_abs_pos = { 
-		static_cast<float>(chunk_world_coords.x * constants::chunk::width + block_rel_coords.x), 
-		static_cast<float>(block_rel_coords.y), 
-		static_cast<float>(chunk_world_coords.y * constants::chunk::depth + block_rel_coords.z) 
+	const glm::vec3 block_abs_pos = {
+		chunk_world_coords.x * constants::chunk::width + block_rel_coords.x,
+		block_rel_coords.y,
+		chunk_world_coords.y * constants::chunk::depth + block_rel_coords.z
 	};
 
 	CreateMeshIndices(chunk_mesh);
@@ -342,8 +327,8 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 	{
 		for (int cross_axis_2_index = 0; cross_axis_2_index < cross_axis_2_size; ++cross_axis_2_index)
 		{
-			glm::ivec3 left_query_coords = { 0, 0, 0 };
-			glm::ivec3 right_query_coords = { 0, 0, 0 };
+			glm::ivec3 left_query_coords(0);
+			glm::ivec3 right_query_coords(0);
 			
 			switch (major_axis)
 			{
@@ -357,11 +342,11 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 
 				if (!left_block_inside)
 				{
-					left_query_coords.x += constants::chunk::width;
+					left_query_coords += glm::ivec3{ constants::chunk::width, 0, 0 };
 				}
 				else if (!right_block_inside)
 				{
-					right_query_coords.x -= constants::chunk::width;
+					left_query_coords -= glm::ivec3{ constants::chunk::width, 0, 0 };
 				}
 				
 				break;
@@ -386,11 +371,12 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 
 				if (!left_block_inside)
 				{
-					left_query_coords.z += constants::chunk::depth;
+					left_query_coords += glm::ivec3{ 0, 0, constants::chunk::depth };
+					
 				}
 				else if (!right_block_inside)
 				{
-					right_query_coords.z -= constants::chunk::depth;
+					left_query_coords -= glm::ivec3{ 0, 0, constants::chunk::depth };
 				}
 
 				break;
@@ -441,7 +427,7 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 		chunk_mesh.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
 	}
 
-	glm::vec3 vertex_position = { 0.0f, 0.0f, 0.0f };
+	glm::vec3 vertex_position(0.0f);
 	
 	for (int i : { 0, 1 })
 	{
@@ -459,19 +445,19 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 
 			if (major_axis == MajorAxis::X)
 			{
-				vertex_position = { major_axis_index + 1, y_pos, x_pos };
+				vertex_position = glm::vec3{ major_axis_index + 1, y_pos, x_pos };
 			}
 			else if (major_axis == MajorAxis::Y)
 			{
-				vertex_position = { x_pos, major_axis_index + 1, y_pos };
+				vertex_position = glm::vec3{ x_pos, major_axis_index + 1, y_pos };
 			}
 			else
 			{
-				vertex_position = { x_pos, y_pos, major_axis_index + 1 };
+				vertex_position = glm::vec3{ x_pos, y_pos, major_axis_index + 1 };
 			}
 
 			const std::uint8_t normal = static_cast<std::uint8_t>(first_merged_cell.dir_);
-			const glm::vec2 uv = { static_cast<float>(j * merged_quad.width_), static_cast<float>(i * merged_quad.height_) };
+			const glm::vec2 uv = { j * merged_quad.width_, i * merged_quad.height_ };
 			const std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
 
 			chunk_mesh.AddVertex(vertex_position, normal, uv, material);

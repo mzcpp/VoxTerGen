@@ -248,11 +248,7 @@ std::shared_ptr<Chunk> ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 
 glm::ivec3 ChunkManager::AbsoluteBlockPos(glm::dvec3 position, glm::dvec3 pos_offset) const noexcept
 {
-    return {
-        static_cast<int>(std::floor(position.x + pos_offset.x)),
-        static_cast<int>(std::floor(position.y + pos_offset.y)),
-        static_cast<int>(std::floor(position.z + pos_offset.z))
-    };
+    return glm::ivec3{ std::floor(position.x + pos_offset.x), std::floor(position.y + pos_offset.y), std::floor(position.z + pos_offset.z) };
 }
 
 glm::ivec3 ChunkManager::RelativeBlockPos(glm::dvec3 position, glm::dvec3 pos_offset) const noexcept
@@ -321,10 +317,7 @@ BlockInfo ChunkManager::WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ive
 
 glm::ivec2 ChunkManager::GetChunkCoords(glm::dvec3 pos) const noexcept
 {
-	return { 
-		static_cast<int>(std::floor(pos.x / constants::chunk::width)), 
-		static_cast<int>(std::floor(pos.z / constants::chunk::depth)) 
-	};
+	return glm::ivec2{ std::floor(pos.x / constants::chunk::width), std::floor(pos.z / constants::chunk::depth) };
 }
 
 double ChunkManager::ChunkDistanceSquared(glm::ivec2 first_chunk, glm::ivec2 second_chunk) const noexcept
