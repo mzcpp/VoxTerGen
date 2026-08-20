@@ -4,7 +4,9 @@ uniform sampler2D atlas_texture;
 uniform uint atlas_columns;
 uniform uint atlas_rows;
 
-uniform float fog_half_distance;
+uniform float fog_near;
+uniform float fog_far;
+uniform float fog_influence;
 
 layout (std140, binding = 0) uniform Matrices
 {
@@ -62,7 +64,7 @@ vec2 GetAtlasUV(uint material)
 	 return tile_min + fract(fs_in.uv) * xy_delta;
 }
 
-float CalculateExponentialFogAmount()
+float CalculateFogAmount()
 {
 	const float dx = (fs_in.pos.x - camera_pos.x);
 	const float dy = (fs_in.pos.y - camera_pos.y);
@@ -70,16 +72,14 @@ float CalculateExponentialFogAmount()
 
 	const float fragment_distance_squared = dx * dx + dy * dy + dz * dz;
 
-	const float k = sqrt(-log(0.5)) / fog_half_distance;
-	const float exponent = (k * k * fragment_distance_squared);
-	const float decay = exp(-exponent);
+    float fog_amount = smoothstep(fog_near, fog_far, sqrt(fragment_distance_squared)) * fog_influence;
 
-	return 1 - decay;
+	return fog_amount;
 }
 
 void main()
 {
-	const float fog_amount = CalculateExponentialFogAmount();
+	const float fog_amount = CalculateFogAmount();
 	const vec4 fog_color = { 0.878, 0.878, 0.878, 1.0 };
 
     fragment_color = mix(texture(atlas_texture, GetAtlasUV(fs_in.material)), fog_color, fog_amount);

@@ -29,7 +29,9 @@ void ResourceManager::InitializeResources()
     chunk_mesh_shader->Set<unsigned int>("atlas_columns", constants::texture::atlas_columns);
 	chunk_mesh_shader->Set<unsigned int>("atlas_rows", constants::texture::atlas_rows);
 	chunk_mesh_shader->Set<int>("atlas_texture", 0);
-    chunk_mesh_shader->Set<float>("fog_half_distance", 100.0);
+    chunk_mesh_shader->Set<float>("fog_near", 400.0);
+    chunk_mesh_shader->Set<float>("fog_far", 475.0);
+    chunk_mesh_shader->Set<float>("fog_influence", 1.0);
     glUseProgram(0);
 
     AddShaderProgram("chunk_mesh_shader", std::move(chunk_mesh_shader));
