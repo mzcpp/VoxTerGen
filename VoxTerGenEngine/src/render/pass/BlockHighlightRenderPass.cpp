@@ -1,4 +1,4 @@
-#include "render/BlockHighlightRenderPass.hpp"
+#include "render/pass/BlockHighlightRenderPass.hpp"
 
 #include "core/Direction.hpp"
 #include "core/ResourceManager.hpp"

@@ -4,10 +4,11 @@
 
 #include "physics/DigitalDifferentialAnalyzer.hpp"
 
-#include "render/BlockHighlightRenderPass.hpp"
-#include "render/ChunkMeshRenderPass.hpp"
-#include "render/ChunkWireframeRenderPass.hpp"
-#include "render/SkyboxRenderPass.hpp"
+#include "render/pass/BlockHighlightRenderPass.hpp"
+#include "render/pass/ChunkOpaqueRenderPass.hpp"
+#include "render/pass/ChunkWireframeRenderPass.hpp"
+#include "render/pass/SkyboxRenderPass.hpp"
+
 #include "render/WorldRenderer.hpp"
 
 #include "world/Chunk.hpp"
@@ -20,10 +21,11 @@
 #include <optional>
 
 WorldRenderer::WorldRenderer() : 
-	chunk_mesh_render_pass_(mesh_renderer_), 
+	chunk_opaque_render_pass_(mesh_renderer_), 
 	block_highlight_render_pass_(mesh_renderer_), 
 	skybox_render_pass_(mesh_renderer_), 
-	chunk_wireframe_render_pass_(mesh_renderer_)
+	chunk_wireframe_render_pass_(mesh_renderer_), 
+	chunk_transparent_render_pass_(mesh_renderer_)
 {
 }
 
@@ -38,7 +40,7 @@ void WorldRenderer::Initialize()
 
 void WorldRenderer::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
-	chunk_mesh_render_pass_.ProcessChunkEvents(chunk_event_queue);
+	chunk_opaque_render_pass_.ProcessChunkEvents(chunk_event_queue);
 	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(camera.RaycastResult());
 }
 
@@ -46,8 +48,9 @@ void WorldRenderer::RenderWorld(const Camera& camera, float alpha, const Resourc
 {
 	camera_uniform_buffer_.UpdateCameraData(camera, alpha);
 
-	chunk_mesh_render_pass_.RenderChunks(camera, resource_manager);
+	chunk_opaque_render_pass_.RenderOpaqueChunks(camera, resource_manager);
 	block_highlight_render_pass_.RenderBlockHighlight(resource_manager);
 	skybox_render_pass_.RenderSkybox(resource_manager);
 	chunk_wireframe_render_pass_.RenderChunkWireframe(resource_manager);
+	chunk_transparent_render_pass_.RenderTransparentChunks(resource_manager);
 }

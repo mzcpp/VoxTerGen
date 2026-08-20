@@ -1,4 +1,4 @@
-#include "render/ChunkMeshRenderPass.hpp"
+#include "render/pass/ChunkOpaqueRenderPass.hpp"
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
 
@@ -27,12 +27,12 @@
 #include <variant>
 #include <optional>
 
-ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) : 
+ChunkOpaqueRenderPass::ChunkOpaqueRenderPass(const MeshRenderer& mesh_renderer) : 
 	mesh_renderer_(mesh_renderer)
 {
 }
 
-void ChunkMeshRenderPass::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
+void ChunkOpaqueRenderPass::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
 	while (!chunk_event_queue.Empty())
 	{
@@ -70,7 +70,7 @@ void ChunkMeshRenderPass::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_
 	}
 }
 
-void ChunkMeshRenderPass::RenderChunks(const Camera& camera, const ResourceManager& resource_manager)
+void ChunkOpaqueRenderPass::RenderOpaqueChunks(const Camera& camera, const ResourceManager& resource_manager)
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");
 
@@ -84,7 +84,7 @@ void ChunkMeshRenderPass::RenderChunks(const Camera& camera, const ResourceManag
 	glActiveTexture(GL_TEXTURE0);
 	resource_manager.GetTexture("texture_atlas")->Bind();
 
-	const auto& frustum = camera.GetFrustumPlanes();
+	auto& frustum = camera.GetFrustumPlanes();
 
 	const auto inside_frustum = [frustum = std::move(frustum)](const ChunkData& chunk_data) {
 		return geometry::Intersects(frustum, chunk_data.aabb_);

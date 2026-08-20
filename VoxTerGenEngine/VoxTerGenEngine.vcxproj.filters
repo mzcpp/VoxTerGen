@@ -87,9 +87,6 @@
     <ClCompile Include="src\render\GpuMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\render\ChunkMeshRenderPass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\world\Observer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -100,12 +97,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\physics\DigitalDifferentialAnalyzer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\render\BlockHighlightRenderPass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\render\SkyboxRenderPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\math\Geometry.cpp">
@@ -126,7 +117,19 @@
     <ClCompile Include="src\threading\ThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\render\ChunkWireframeRenderPass.cpp">
+    <ClCompile Include="src\render\pass\BlockHighlightRenderPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\pass\ChunkOpaqueRenderPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\pass\ChunkTransparentRenderPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\pass\ChunkWireframeRenderPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\pass\SkyboxRenderPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1241,9 +1244,6 @@
     <ClInclude Include="include\render\GpuMesh.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\ChunkMeshRenderPass.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\utils\Hash.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1260,12 +1260,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\physics\AABB.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\render\BlockHighlightRenderPass.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\render\SkyboxRenderPass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\render\MeshRenderData.hpp">
@@ -1304,7 +1298,19 @@
     <ClInclude Include="include\threading\ThreadSafePriorityQueue.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\ChunkWireframeRenderPass.hpp">
+    <ClInclude Include="include\render\pass\BlockHighlightRenderPass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\pass\ChunkOpaqueRenderPass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\pass\ChunkTransparentRenderPass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\pass\ChunkWireframeRenderPass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\pass\SkyboxRenderPass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

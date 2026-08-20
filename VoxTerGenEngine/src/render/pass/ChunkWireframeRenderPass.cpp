@@ -1,4 +1,4 @@
-#include "render/ChunkWireframeRenderPass.hpp"
+#include "render/pass/ChunkWireframeRenderPass.hpp"
 
 #include "core/ResourceManager.hpp"
 
