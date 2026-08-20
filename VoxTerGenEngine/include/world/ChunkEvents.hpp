@@ -28,7 +28,6 @@ namespace chunk_event
         ChunkID chunk_id_;
         glm::ivec2 world_coords_;
         std::unique_ptr<Mesh> cpu_mesh_;
-        MeshRenderData render_data_;
     };
 
     struct ChunkDestroyed
