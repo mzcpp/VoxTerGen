@@ -82,5 +82,6 @@ void main()
 	const float fog_amount = CalculateFogAmount();
 	const vec4 fog_color = { 0.878, 0.878, 0.878, 1.0 };
 
-    fragment_color = mix(texture(atlas_texture, GetAtlasUV(fs_in.material)), fog_color, fog_amount);
+    //fragment_color = mix(texture(atlas_texture, GetAtlasUV(fs_in.material)), fog_color, fog_amount);
+    fragment_color = texture(atlas_texture, GetAtlasUV(fs_in.material));
 }

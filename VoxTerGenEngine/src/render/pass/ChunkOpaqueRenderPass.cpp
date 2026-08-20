@@ -37,7 +37,7 @@ void ChunkOpaqueRenderPass::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chun
 {
 	while (!chunk_event_queue.Empty())
 	{
-		const std::optional<ChunkEvent> chunk_event = chunk_event_queue.TryPop();
+		std::optional<ChunkEvent> chunk_event = chunk_event_queue.TryPop();
 
 		if (!chunk_event.has_value())
 		{
