@@ -1,5 +1,5 @@
-#ifndef CHUNK_MESH_RENDER_PASS_HPP
-#define CHUNK_MESH_RENDER_PASS_HPP
+#ifndef CHUNK_OPAQUE_RENDER_PASS_HPP
+#define CHUNK_OPAQUE_RENDER_PASS_HPP
 
 #include "core/ResourceManager.hpp"
 
@@ -22,19 +22,19 @@ struct ChunkData
 
 class Camera;
 
-class ChunkMeshRenderPass
+class ChunkOpaqueRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
 	std::unordered_map<ChunkID, ChunkData> chunks_data_;
 
 public:
-	ChunkMeshRenderPass(const MeshRenderer& mesh_renderer);
+	ChunkOpaqueRenderPass(const MeshRenderer& mesh_renderer);
 
 	void ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
-	void RenderChunks(const Camera& camera, const ResourceManager& resource_manager);
+	void RenderOpaqueChunks(const Camera& camera, const ResourceManager& resource_manager);
 };
 
-#endif // CHUNK_MESH_RENDER_PASS_HPP
+#endif // CHUNK_OPAQUE_RENDER_PASS_HPP
 
