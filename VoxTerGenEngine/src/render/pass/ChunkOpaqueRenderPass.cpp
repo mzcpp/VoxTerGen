@@ -14,8 +14,9 @@
 
 #include "threading/ThreadSafeQueue.hpp"
 
+#include "render/events/ChunkEvents.hpp"
+
 #include "world/Chunk.hpp"
-#include "world/ChunkEvents.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>

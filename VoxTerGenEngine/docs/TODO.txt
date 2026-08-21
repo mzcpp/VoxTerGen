@@ -37,7 +37,6 @@ Vertex pulling?, binary greedy meshing?, chunk object pooling?
 interpolated_view?!
 review the camera class thoroughly
 verify the camera is working correctly for big floats
-how big should the far_plane be??
 SDL_WINDOWEVENT_SIZE_CHANGED update camera projection matrix
 VERY IMPORTANT, MAKE THE WINDOWS CORRECT SIZE BASED ON MONITOR SIZE SO IT DOES NOT CUTOFF LIKE THE MAZE GENERATOR ON MBA 13
 

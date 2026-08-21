@@ -7,10 +7,10 @@
 
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
+#include "render/events/ChunkEvents.hpp"
 
 #include "threading/ThreadSafeQueue.hpp"
 
-#include "world/ChunkEvents.hpp"
 
 #include <unordered_map>
 

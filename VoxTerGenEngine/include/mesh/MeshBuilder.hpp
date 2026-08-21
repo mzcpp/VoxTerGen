@@ -6,11 +6,11 @@
 #include "mesh/Mesh.hpp"
 
 #include "render/Material.hpp"
+#include "render/events/ChunkEvents.hpp"
 
 #include "utils/constants.hpp"
 
 #include "world/Chunk.hpp"
-#include "world/ChunkEvents.hpp"
 #include "world/Block.hpp"
 
 #include <glm/vec2.hpp>

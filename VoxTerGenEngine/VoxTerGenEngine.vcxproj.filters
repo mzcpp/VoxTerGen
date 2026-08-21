@@ -1265,7 +1265,7 @@
     <ClInclude Include="include\render\MeshRenderData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\world\ChunkEvents.hpp">
+    <ClInclude Include="include\render\events\ChunkEvents.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\math\Plane.hpp">
@@ -1311,6 +1311,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\render\pass\SkyboxRenderPass.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\events\ChunkEventDispatcher.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,7 @@
 #include "mesh/MeshBuilder.hpp"
 
+#include "render/events/ChunkEvents.hpp"
+
 #include "threading/ThreadPool.hpp"
 #include "threading/ThreadSafeQueue.hpp"
 
@@ -7,7 +9,6 @@
 #include "utils/Timer.hpp"
 
 #include "world/Chunk.hpp"
-#include "world/ChunkEvents.hpp"
 #include "world/ChunkManager.hpp"
 
 #include <queue>

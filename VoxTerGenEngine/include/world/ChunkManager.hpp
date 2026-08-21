@@ -8,9 +8,10 @@
 #include "threading/ThreadSafeQueue.hpp"
 #include "threading/ThreadSafePriorityQueue.hpp"
 
+#include "render/events/ChunkEvents.hpp"
+
 #include "world/Block.hpp"
 #include "world/Chunk.hpp"
-#include "world/ChunkEvents.hpp"
 #include "world/Observer.hpp"
 
 #include <glm/vec2.hpp>

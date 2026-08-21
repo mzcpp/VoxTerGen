@@ -1,6 +1,8 @@
 #ifndef WORLD_RENDERER_HPP
 #define WORLD_RENDERER_HPP
 
+#include "render/events/ChunkEvents.hpp"
+
 #include "render/pass/BlockHighlightRenderPass.hpp"
 #include "render/pass/ChunkWireframeRenderPass.hpp"
 #include "render/pass/ChunkOpaqueRenderPass.hpp"
@@ -11,7 +13,6 @@
 
 #include "threading/ThreadSafeQueue.hpp"
 
-#include "world/ChunkEvents.hpp"
 
 #include <unordered_map>
 #include <memory>
