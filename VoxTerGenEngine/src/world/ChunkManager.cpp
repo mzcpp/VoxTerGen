@@ -170,7 +170,7 @@ void ChunkManager::UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 		if (chunk.GetChunkState() == ChunkState::PendingUnload)
 		{
 			chunk.SetChunkState(ChunkState::Unloaded);
-			chunk_event_queue.Push(chunk_event::ChunkDestroyed{ chunk.Id() });
+			chunk_event_queue.Push(ChunkDestroyed{ chunk.Id() });
 			it = chunks_.erase(it);
 		}
 		else
@@ -214,7 +214,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 			}
 			else
 			{
-				chunk_event_queue.Push(chunk_event::ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), std::move(chunk_mesh) });
+				chunk_event_queue.Push(ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), std::move(chunk_mesh) });
 				chunk->SetMeshState(MeshState::Ready);
 			}
 		});

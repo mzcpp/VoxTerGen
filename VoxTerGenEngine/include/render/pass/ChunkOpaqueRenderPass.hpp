@@ -31,7 +31,9 @@ private:
 public:
 	ChunkOpaqueRenderPass(const MeshRenderer& mesh_renderer);
 
-	void ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
+	void ProcessChunkMeshReady(const ChunkMeshReady& event);
+	
+	void ProcessChunkDestroyed(const ChunkDestroyed& event);
 
 	void RenderOpaqueChunks(const Camera& camera, const ResourceManager& resource_manager);
 };

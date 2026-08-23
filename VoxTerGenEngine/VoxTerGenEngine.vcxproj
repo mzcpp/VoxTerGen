@@ -585,7 +585,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\mesh\MeshBuilder.hpp" />
     <ClInclude Include="include\mesh\Vertex.hpp" />
     <ClInclude Include="include\render\CameraUniformBuffer.hpp" />
-    <ClInclude Include="include\render\events\ChunkEventDispatcher.hpp" />
+    <ClInclude Include="include\render\events\EventDispatcher.hpp" />
     <ClInclude Include="include\render\Material.hpp" />
     <ClInclude Include="include\render\MeshRenderData.hpp" />
     <ClInclude Include="include\render\MeshRenderer.hpp" />

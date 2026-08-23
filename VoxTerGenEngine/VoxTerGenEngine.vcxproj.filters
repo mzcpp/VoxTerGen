@@ -1313,7 +1313,7 @@
     <ClInclude Include="include\render\pass\SkyboxRenderPass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\events\ChunkEventDispatcher.hpp">
+    <ClInclude Include="include\render\events\EventDispatcher.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

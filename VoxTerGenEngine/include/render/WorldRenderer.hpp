@@ -2,6 +2,7 @@
 #define WORLD_RENDERER_HPP
 
 #include "render/events/ChunkEvents.hpp"
+#include "render/events/EventDispatcher.hpp"
 
 #include "render/pass/BlockHighlightRenderPass.hpp"
 #include "render/pass/ChunkWireframeRenderPass.hpp"
@@ -34,11 +35,14 @@ private:
 	SkyboxRenderPass skybox_render_pass_;
 	ChunkWireframeRenderPass chunk_wireframe_render_pass_;
 	ChunkTransparentRenderPass chunk_transparent_render_pass_;
+	EventDispatcher<ChunkEvent> chunk_event_dispatcher_;
 
 public:
 	WorldRenderer();
 
 	void Initialize();
+
+	void SubscribeEvents();
 
 	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera);
 

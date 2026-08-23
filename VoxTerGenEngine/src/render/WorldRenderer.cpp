@@ -36,11 +36,31 @@ void WorldRenderer::Initialize()
 	block_highlight_render_pass_.PrepareBlockRenderData();
 	skybox_render_pass_.PrepareSkyboxRenderData();
 	chunk_wireframe_render_pass_.PrepareChunkWireframeRenderData();
+
+	SubscribeEvents();
+}
+
+void WorldRenderer::SubscribeEvents()
+{
+	chunk_event_dispatcher_.SubscribeEvent<ChunkMeshReady>(
+		[this](const ChunkMeshReady& event)
+		{
+			chunk_opaque_render_pass_.ProcessChunkMeshReady(event);
+		}
+	);
+
+	chunk_event_dispatcher_.SubscribeEvent<ChunkDestroyed>(
+		[this](const ChunkDestroyed& event)
+		{
+			chunk_opaque_render_pass_.ProcessChunkDestroyed(event);
+		}
+	);
 }
 
 void WorldRenderer::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera)
 {
-	chunk_opaque_render_pass_.ProcessChunkEvents(chunk_event_queue);
+	chunk_event_dispatcher_.DispatchEvents(chunk_event_queue);
+
 	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(camera.RaycastResult());
 }
 

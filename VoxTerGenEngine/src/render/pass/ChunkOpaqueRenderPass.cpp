@@ -34,43 +34,24 @@ ChunkOpaqueRenderPass::ChunkOpaqueRenderPass(const MeshRenderer& mesh_renderer) 
 {
 }
 
-void ChunkOpaqueRenderPass::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
+void ChunkOpaqueRenderPass::ProcessChunkMeshReady(const ChunkMeshReady& event)
 {
-	while (!chunk_event_queue.Empty())
-	{
-		std::optional<ChunkEvent> chunk_event = chunk_event_queue.TryPop();
+	MeshRenderData render_data;
+	render_data.gpu_mesh_.InitializeBuffers();
+	render_data.gpu_mesh_.UploadMeshData(*event.cpu_mesh_);
+	render_data.model_matrix_ = glm::translate(glm::mat4(1.0f), { event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth });
 
-		if (!chunk_event.has_value())
-		{
-			continue;
-		}
-		
-		std::visit(overloaded
-			{
-				[this](chunk_event::ChunkMeshReady& e)
-				{
-					// TODO: Make render_data a member variable and reuse the GPU buffers, not erase and allocate new.
-					MeshRenderData render_data;
-					render_data.gpu_mesh_.InitializeBuffers();
-					render_data.gpu_mesh_.UploadMeshData(*e.cpu_mesh_);
-					render_data.model_matrix_ = glm::translate(glm::mat4(1.0f), { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth });
+	const AABB aabb(
+		glm::dvec3{ event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth },
+		glm::dvec3{ (event.world_coords_.x + 1) * constants::chunk::width, constants::chunk::height, (event.world_coords_.y + 1) * constants::chunk::depth }
+	);
 
-					AABB aabb(
-						glm::dvec3{ e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth }, 
-						glm::dvec3{ (e.world_coords_.x + 1) * constants::chunk::width, constants::chunk::height, (e.world_coords_.y + 1) * constants::chunk::depth }
-					);
+	chunks_data_.emplace(event.chunk_id_, ChunkData{ std::move(render_data), aabb });
+}
 
-					chunks_data_.emplace(e.chunk_id_, ChunkData{ std::move(render_data), aabb });
-				},
-
-				[this](chunk_event::ChunkDestroyed& e)
-				{
-					chunks_data_.erase(e.chunk_id_);
-				}
-			}, 
-			*chunk_event
-		);
-	}
+void ChunkOpaqueRenderPass::ProcessChunkDestroyed(const ChunkDestroyed& event)
+{
+	chunks_data_.erase(event.chunk_id_);
 }
 
 void ChunkOpaqueRenderPass::RenderOpaqueChunks(const Camera& camera, const ResourceManager& resource_manager)
@@ -89,7 +70,7 @@ void ChunkOpaqueRenderPass::RenderOpaqueChunks(const Camera& camera, const Resou
 
 	auto& frustum = camera.GetFrustumPlanes();
 
-	const auto inside_frustum = [frustum = std::move(frustum)](const ChunkData& chunk_data) {
+	const auto inside_frustum = [&frustum](const ChunkData& chunk_data) {
 		return geometry::Intersects(frustum, chunk_data.aabb_);
 	};
 
