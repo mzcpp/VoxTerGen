@@ -5,6 +5,8 @@
 
 #include "physics/AABB.hpp"
 
+#include "mesh/Mesh.hpp"
+
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
 
@@ -16,7 +18,7 @@ class ChunkWireframeRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
-	const std::unique_ptr<Mesh> chunk_wireframe_mesh_;
+	Mesh chunk_wireframe_mesh_;
 	bool render_wireframe_;
 
 public:

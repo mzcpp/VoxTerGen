@@ -18,7 +18,7 @@ ChunkWireframeRenderPass::ChunkWireframeRenderPass(const MeshRenderer& mesh_rend
 
 void ChunkWireframeRenderPass::PrepareChunkWireframeRenderData()
 {
-    chunk_wireframe_mesh_ = BuildChunkWireframeMesh();
+    chunk_wireframe_mesh_ = MeshBuilder::BuildChunkWireframeMesh();
 }
 
 void ChunkWireframeRenderPass::RenderChunkWireframe(const ResourceManager& resource_manager)
