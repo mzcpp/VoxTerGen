@@ -36,15 +36,16 @@ void WorldRenderer::Initialize()
 	skybox_render_pass_.PrepareSkyboxRenderData();
 	chunk_wireframe_render_pass_.PrepareChunkWireframeRenderData();
 
-	SubscribeEvents();
+	SubscribeToEvents();
 }
 
-void WorldRenderer::SubscribeEvents()
+void WorldRenderer::SubscribeToEvents()
 {
 	chunk_event_dispatcher_.SubscribeEvent<ChunkMeshReady>(
 		[this](const ChunkMeshReady& event)
 		{
 			chunk_mesh_render_pass_.ProcessChunkMeshReady(event);
+			// ProcessChunkMeshReady(event);
 		}
 	);
 
@@ -52,8 +53,31 @@ void WorldRenderer::SubscribeEvents()
 		[this](const ChunkDestroyed& event)
 		{
 			chunk_mesh_render_pass_.ProcessChunkDestroyed(event);
+			// ProcessChunkDestroyed(event);
 		}
 	);
+}
+
+void WorldRenderer::ProcessChunkMeshReady(const ChunkMeshReady& event)
+{
+	// // TODO: Make chunk_mesh_render_data a member variable and reuse the GPU buffers, not erase and allocate new.
+	// MeshRenderData chunk_mesh_render_data;
+	// chunk_mesh_render_data.gpu_mesh_.InitializeBuffers();
+	// chunk_mesh_render_data.gpu_mesh_.UploadMeshData(*event.cpu_chunk_mesh_);
+	// chunk_mesh_render_data.model_matrix_ = glm::translate(glm::mat4(1.0f), { event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth });
+
+	// const AABB aabb(
+	// 	glm::dvec3{ event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth },
+	// 	glm::dvec3{ (event.world_coords_.x + 1) * constants::chunk::width, constants::chunk::height, (event.world_coords_.y + 1) * constants::chunk::depth }
+	// );
+
+	// // TODO: This fails if entry with event.chunk_id_ already exists.
+	// chunks_data_.emplace(event.chunk_id_, ChunkData{ std::move(chunk_mesh_render_data), aabb });
+}
+
+void WorldRenderer::ProcessChunkDestroyed(const ChunkDestroyed& event)
+{
+	// chunks_data_.erase(event.chunk_id_);
 }
 
 void WorldRenderer::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera)

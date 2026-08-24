@@ -42,7 +42,11 @@ public:
 
 	void Initialize();
 
-	void SubscribeEvents();
+	void SubscribeToEvents();
+
+	void ProcessChunkMeshReady(const ChunkMeshReady& event);
+
+	void ProcessChunkDestroyed(const ChunkDestroyed& event);
 
 	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera);
 

@@ -192,19 +192,20 @@ Mesh MeshBuilder::BuildChunkWireframeMesh()
 {
 	Mesh chunk_wireframe_mesh;
 
-	for (int z = 0; z < constants::chunk::depth; z += 2)
-	{
-		for (int y = 0; y < constants::chunk::height; y += 2)
-		{
-			for (int x = 0; x < constants::chunk::width; x += 2)
-			{
-				const glm::ivec3 block_coords = { x, y, z };
+	// for (int z = 0; z < constants::chunk::depth; z += 2)
+	// {
+	// 	for (int y = 0; y < constants::chunk::height; y += 2)
+	// 	{
+	// 		for (int x = 0; x < constants::chunk::width; x += 2)
+	// 		{
+	// 			const glm::ivec2 chunk_coords = { 0, 0 };
+	// 			const glm::ivec3 block_coords = { x, y, z };
 				
-				SaveQuadMesh(glm::ivec2{ 0, 0 }, BlockType::Air, block_coords, Direction::PosX, chunk_mesh);
-				SaveQuadMesh(glm::ivec2{ 0, 0 }, BlockType::Air, block_coords, Direction::PosZ, chunk_mesh);
-			}
-		}
-	}
+	// 			SaveQuadMesh(chunk_coords, BlockType::Air, block_coords, Direction::PosX, chunk_wireframe_mesh);
+	// 			SaveQuadMesh(chunk_coords, BlockType::Air, block_coords, Direction::PosZ, chunk_wireframe_mesh);
+	// 		}
+	// 	}
+	// }
 
 	return chunk_wireframe_mesh;
 }
