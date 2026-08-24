@@ -1259,7 +1259,7 @@
     <ClInclude Include="include\physics\AABB.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\MeshRenderData.hpp">
+    <ClInclude Include="include\render\RenderData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\render\events\ChunkEvents.hpp">

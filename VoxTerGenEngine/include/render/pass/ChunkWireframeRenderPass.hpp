@@ -8,7 +8,6 @@
 #include "mesh/Mesh.hpp"
 
 #include "render/MeshRenderer.hpp"
-#include "render/MeshRenderData.hpp"
 
 #include <memory>
 

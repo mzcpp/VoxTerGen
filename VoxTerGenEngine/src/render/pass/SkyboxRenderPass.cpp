@@ -8,7 +8,7 @@
 #include "mesh/MeshBuilder.hpp"
 
 #include "render/MeshRenderer.hpp"
-#include "render/MeshRenderData.hpp"
+#include "render/RenderData.hpp"
 
 #include <glm/mat3x3.hpp>
 #include <glm/mat4x4.hpp>

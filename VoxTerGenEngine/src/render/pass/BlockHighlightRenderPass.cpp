@@ -12,7 +12,7 @@
 #include "physics/DigitalDifferentialAnalyzer.hpp"
 
 #include "render/MeshRenderer.hpp"
-#include "render/MeshRenderData.hpp"
+#include "render/RenderData.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/vec3.hpp>

@@ -1,6 +1,6 @@
 #include "render/pass/ChunkMeshRenderPass.hpp"
 #include "render/MeshRenderer.hpp"
-#include "render/MeshRenderData.hpp"
+#include "render/RenderData.hpp"
 
 #include "core/ResourceManager.hpp"
 
@@ -34,29 +34,7 @@ ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) :
 {
 }
 
-void ChunkMeshRenderPass::ProcessChunkMeshReady(const ChunkMeshReady& event)
-{
-	// TODO: Make chunk_mesh_render_data a member variable and reuse the GPU buffers, not erase and allocate new.
-	MeshRenderData chunk_mesh_render_data;
-	chunk_mesh_render_data.gpu_mesh_.InitializeBuffers();
-	chunk_mesh_render_data.gpu_mesh_.UploadMeshData(*event.cpu_chunk_mesh_);
-	chunk_mesh_render_data.model_matrix_ = glm::translate(glm::mat4(1.0f), { event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth });
-
-	const AABB aabb(
-		glm::dvec3{ event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth },
-		glm::dvec3{ (event.world_coords_.x + 1) * constants::chunk::width, constants::chunk::height, (event.world_coords_.y + 1) * constants::chunk::depth }
-	);
-
-	// TODO: This fails if entry with event.chunk_id_ already exists.
-	chunks_data_.emplace(event.chunk_id_, ChunkData{ std::move(chunk_mesh_render_data), aabb });
-}
-
-void ChunkMeshRenderPass::ProcessChunkDestroyed(const ChunkDestroyed& event)
-{
-	chunks_data_.erase(event.chunk_id_);
-}
-
-void ChunkMeshRenderPass::RenderOpaqueChunks(const Camera& camera, const ResourceManager& resource_manager)
+void ChunkMeshRenderPass::RenderOpaqueChunks(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const std::array<Plane, 6>& frustum_planes, const ResourceManager& resource_manager)
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");
 
@@ -70,14 +48,12 @@ void ChunkMeshRenderPass::RenderOpaqueChunks(const Camera& camera, const Resourc
 	glActiveTexture(GL_TEXTURE0);
 	resource_manager.GetTexture("texture_atlas")->Bind();
 
-	auto& frustum = camera.GetFrustumPlanes();
-
-	const auto inside_frustum = [&frustum](const ChunkData& chunk_data) 
+	const auto inside_frustum = [&frustum_planes](const ChunkRenderData& chunk_data)
 	{
-		return geometry::Intersects(frustum, chunk_data.aabb_);
+		return geometry::Intersects(frustum_planes, chunk_data.aabb_);
 	};
 
-	for (const ChunkData& chunk_data : chunks_data_ | std::views::values | std::views::filter(inside_frustum))
+	for (const ChunkRenderData& chunk_data : chunks_render_data | std::views::values | std::views::filter(inside_frustum))
 	{
 		shader_program->Set<glm::mat4>("model", chunk_data.mesh_render_data_.model_matrix_);
 		mesh_renderer_.RenderGpuMesh(chunk_data.mesh_render_data_.gpu_mesh_);

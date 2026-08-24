@@ -8,7 +8,7 @@
 #include "mesh/MeshBuilder.hpp"
 
 #include "render/MeshRenderer.hpp"
-#include "render/MeshRenderData.hpp"
+#include "render/RenderData.hpp"
 
 ChunkWireframeRenderPass::ChunkWireframeRenderPass(const MeshRenderer& mesh_renderer) : 
     mesh_renderer_(mesh_renderer), 

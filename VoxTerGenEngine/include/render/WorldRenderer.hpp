@@ -2,7 +2,6 @@
 #define WORLD_RENDERER_HPP
 
 #include "render/events/ChunkEvents.hpp"
-#include "render/events/EventDispatcher.hpp"
 
 #include "render/pass/BlockHighlightRenderPass.hpp"
 #include "render/pass/ChunkWireframeRenderPass.hpp"
@@ -13,6 +12,7 @@
 
 #include "threading/ThreadSafeQueue.hpp"
 
+#include "world/Chunk.hpp"
 
 #include <unordered_map>
 #include <memory>
@@ -22,7 +22,7 @@
 class Camera;
 class ResourceManager;
 
-struct RaycastResult;
+struct ChunkRenderData;
 
 class WorldRenderer
 {
@@ -35,14 +35,14 @@ private:
 	SkyboxRenderPass skybox_render_pass_;
 	ChunkWireframeRenderPass chunk_wireframe_render_pass_;
 
-	EventDispatcher<ChunkEvent> chunk_event_dispatcher_;
+	std::unordered_map<ChunkID, ChunkRenderData> chunks_render_data_;
 
 public:
 	WorldRenderer();
 
 	void Initialize();
 
-	void SubscribeToEvents();
+	void ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
 	void ProcessChunkMeshReady(const ChunkMeshReady& event);
 
