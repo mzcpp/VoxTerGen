@@ -14,12 +14,11 @@ ChunkWireframeRenderPass::ChunkWireframeRenderPass(const MeshRenderer& mesh_rend
     mesh_renderer_(mesh_renderer), 
     render_wireframe_(false)
 {
-    
 }
 
 void ChunkWireframeRenderPass::PrepareChunkWireframeRenderData()
 {
-
+    chunk_wireframe_mesh_ = BuildChunkWireframeMesh();
 }
 
 void ChunkWireframeRenderPass::RenderChunkWireframe(const ResourceManager& resource_manager)

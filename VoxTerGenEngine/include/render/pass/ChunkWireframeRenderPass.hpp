@@ -8,10 +8,15 @@
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
 
+#include <memory>
+
+class Mesh;
+
 class ChunkWireframeRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
+	const std::unique_ptr<Mesh> chunk_wireframe_mesh_;
 	bool render_wireframe_;
 
 public:

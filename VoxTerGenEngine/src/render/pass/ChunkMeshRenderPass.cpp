@@ -36,11 +36,11 @@ ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) :
 
 void ChunkMeshRenderPass::ProcessChunkMeshReady(const ChunkMeshReady& event)
 {
-	// TODO: Make render_data a member variable and reuse the GPU buffers, not erase and allocate new.
-	MeshRenderData render_data;
-	render_data.gpu_mesh_.InitializeBuffers();
-	render_data.gpu_mesh_.UploadMeshData(*event.cpu_mesh_);
-	render_data.model_matrix_ = glm::translate(glm::mat4(1.0f), { event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth });
+	// TODO: Make chunk_mesh_render_data a member variable and reuse the GPU buffers, not erase and allocate new.
+	MeshRenderData chunk_mesh_render_data;
+	chunk_mesh_render_data.gpu_mesh_.InitializeBuffers();
+	chunk_mesh_render_data.gpu_mesh_.UploadMeshData(*event.cpu_chunk_mesh_);
+	chunk_mesh_render_data.model_matrix_ = glm::translate(glm::mat4(1.0f), { event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth });
 
 	const AABB aabb(
 		glm::dvec3{ event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth },
@@ -48,7 +48,7 @@ void ChunkMeshRenderPass::ProcessChunkMeshReady(const ChunkMeshReady& event)
 	);
 
 	// TODO: This fails if entry with event.chunk_id_ already exists.
-	chunks_data_.emplace(event.chunk_id_, ChunkData{ std::move(render_data), aabb });
+	chunks_data_.emplace(event.chunk_id_, ChunkData{ std::move(chunk_mesh_render_data), aabb });
 }
 
 void ChunkMeshRenderPass::ProcessChunkDestroyed(const ChunkDestroyed& event)

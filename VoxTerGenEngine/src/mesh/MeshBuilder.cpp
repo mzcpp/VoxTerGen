@@ -29,15 +29,15 @@ Mesh MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offse
 	return unit_cube_mesh;
 }
 
-void MeshBuilder::CreateMeshIndices(Mesh& chunk_mesh)
+void MeshBuilder::CreateMeshIndices(Mesh& mesh)
 {
 	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
 	{
-		chunk_mesh.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
+		mesh.AddIndex(i + static_cast<std::uint32_t>(mesh.Vertices().size()));
 	}
 }
 
-void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh& chunk_mesh)
+void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh& mesh)
 {
 	for (int i = 0; i < 4; ++i)
 	{
@@ -99,11 +99,11 @@ void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, float scale,
 		vertex.uv_ = glm::vec2{ i % 2 != 0, (i / 2) % 2 != 0 };
 		vertex.material_ = GetQuadMaterial(type, dir);
 
-		chunk_mesh.AddVertex(vertex);
+		mesh.AddVertex(vertex);
 	}
 }
 
-Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshDependencies& chunk_mesh_dependencies)
+Mesh MeshBuilder::BuildChunkMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshDependencies& chunk_mesh_dependencies)
 {
 	Mesh chunk_mesh;
 
@@ -171,7 +171,7 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 	return chunk_mesh;
 }
 
-Mesh MeshBuilder::BuildMeshGreedy(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
+Mesh MeshBuilder::BuildChunkMeshGreedy(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
 {
 	Mesh chunk_mesh;
 
@@ -188,7 +188,28 @@ Mesh MeshBuilder::BuildMeshGreedy(const ChunkMeshDependencies& chunk_mesh_depend
 	return chunk_mesh;
 }
 
-void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& chunk_mesh)
+Mesh MeshBuilder::BuildChunkWireframeMesh()
+{
+	Mesh chunk_wireframe_mesh;
+
+	for (int z = 0; z < constants::chunk::depth; z += 2)
+	{
+		for (int y = 0; y < constants::chunk::height; y += 2)
+		{
+			for (int x = 0; x < constants::chunk::width; x += 2)
+			{
+				const glm::ivec3 block_coords = { x, y, z };
+				
+				SaveQuadMesh(glm::ivec2{ 0, 0 }, BlockType::Air, block_coords, Direction::PosX, chunk_mesh);
+				SaveQuadMesh(glm::ivec2{ 0, 0 }, BlockType::Air, block_coords, Direction::PosZ, chunk_mesh);
+			}
+		}
+	}
+
+	return chunk_wireframe_mesh;
+}
+
+void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& mesh)
 {
 	const glm::vec3 block_abs_pos = {
 		chunk_world_coords.x * constants::chunk::width + block_rel_coords.x,
@@ -196,10 +217,10 @@ void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, gl
 		chunk_world_coords.y * constants::chunk::depth + block_rel_coords.z
 	};
 
-	CreateMeshIndices(chunk_mesh);
-	CreateMeshVertices(type, dir, 1.0, block_abs_pos, chunk_mesh);
+	CreateMeshIndices(mesh);
+	CreateMeshVertices(type, dir, 1.0, block_abs_pos, mesh);
 	
-	assert(chunk_mesh.Vertices().size() % 4 == 0);
+	assert(mesh.Vertices().size() % 4 == 0);
 }
 
 std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
@@ -240,7 +261,7 @@ std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 	return static_cast<std::uint8_t>(Material::Air);
 }
 
-void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token, Mesh& chunk_mesh)
+void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token, Mesh& mesh)
 {
 	int major_axis_size = 0;
 	int cross_axis_1_size = 0;
@@ -275,7 +296,7 @@ void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, const ChunkMeshDependencie
 		}
 
 		BuildSliceMask(major_axis, major_axis_index, major_axis_size, cross_axis_1_size, cross_axis_2_size, chunk_mesh_dependencies, slice_mask);
-		MergeFacesAndEmitData(major_axis, major_axis_index, cross_axis_2_size, cross_axis_1_size, slice_mask, chunk_mesh);
+		MergeFacesAndEmitData(major_axis, major_axis_index, cross_axis_2_size, cross_axis_1_size, slice_mask, mesh);
 	}
 }
 
@@ -420,11 +441,11 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 	}
 }
 
-void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, Mesh& chunk_mesh)
+void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, Mesh& mesh)
 {
 	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
 	{
-		chunk_mesh.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
+		mesh.AddIndex(i + static_cast<std::uint32_t>(mesh.Vertices().size()));
 	}
 
 	glm::vec3 vertex_position(0.0f);
@@ -460,12 +481,12 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 			const glm::vec2 uv = { j * merged_quad.width_, i * merged_quad.height_ };
 			const std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
 
-			chunk_mesh.AddVertex(vertex_position, normal, uv, material);
+			mesh.AddVertex(vertex_position, normal, uv, material);
 		}
 	}
 }
 
-void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh)
+void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, Mesh& mesh)
 {
 	for (int y = 0; y < mask_height; ++y)
 	{
@@ -512,7 +533,7 @@ void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_ind
 			merged_quad.width_ = merged_quad_width;
 			merged_quad.height_ = merged_quad_height;
 			
-			EmitVerticesAndIndices(major_axis, merged_quad, major_axis_index, cell, chunk_mesh);
+			EmitVerticesAndIndices(major_axis, merged_quad, major_axis_index, cell, mesh);
 
 			for (int dy = 0; dy < merged_quad_height; ++dy)
             {

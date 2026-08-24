@@ -13,7 +13,7 @@ struct ChunkMeshReady
 {
     ChunkID chunk_id_;
     glm::ivec2 world_coords_;
-    std::unique_ptr<Mesh> cpu_mesh_;
+    std::unique_ptr<Mesh> cpu_chunk_mesh_;
 };
 
 struct ChunkDestroyed
