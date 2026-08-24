@@ -22,14 +22,14 @@ struct ChunkData
 
 class Camera;
 
-class ChunkOpaqueRenderPass
+class ChunkMeshRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
 	std::unordered_map<ChunkID, ChunkData> chunks_data_;
 
 public:
-	ChunkOpaqueRenderPass(const MeshRenderer& mesh_renderer);
+	ChunkMeshRenderPass(const MeshRenderer& mesh_renderer);
 
 	void ProcessChunkMeshReady(const ChunkMeshReady& event);
 	

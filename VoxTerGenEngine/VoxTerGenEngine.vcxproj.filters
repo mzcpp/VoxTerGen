@@ -120,10 +120,7 @@
     <ClCompile Include="src\render\pass\BlockHighlightRenderPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\render\pass\ChunkOpaqueRenderPass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\render\pass\ChunkTransparentRenderPass.cpp">
+    <ClCompile Include="src\render\pass\ChunkMeshRenderPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\render\pass\ChunkWireframeRenderPass.cpp">
@@ -1301,10 +1298,7 @@
     <ClInclude Include="include\render\pass\BlockHighlightRenderPass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\pass\ChunkOpaqueRenderPass.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\render\pass\ChunkTransparentRenderPass.hpp">
+    <ClInclude Include="include\render\pass\ChunkMeshRenderPass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\render\pass\ChunkWireframeRenderPass.hpp">

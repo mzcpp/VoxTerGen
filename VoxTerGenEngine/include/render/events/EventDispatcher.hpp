@@ -18,7 +18,7 @@ class EventDispatcher
 private:
     using GenericHandler = std::function<void(const EventType&)>;
 
-    std::unordered_map<std::type_index, std::vector<GenericHandler>> handlers;
+    std::unordered_map<std::type_index, std::vector<GenericHandler>> handlers_;
 
 public:
     template <typename Event>
@@ -27,7 +27,7 @@ public:
     template <typename Event>
     void SubscribeEvent(Handler<Event> handler)
     {
-        handlers[std::type_index(typeid(Event))].push_back(
+        handlers_[std::type_index(typeid(Event))].push_back(
             [handler](const EventType& event)
             {
                 handler(std::get<Event>(event));
@@ -49,18 +49,18 @@ public:
             std::visit(
                 [this, &event_opt](const auto& event)
                 {
-                    const auto it = handlers.find(typeid(event));
+                    const auto it = handlers_.find(std::type_index(typeid(event)));
 
-                    if (it == handlers.end())
+                    if (it == handlers_.end())
                     {
                         return;
                     }
 
-                    for (auto& handler : it->second)
+                    for (const auto& handler : it->second)
                     {
                         handler(*event_opt);
                     }
-                },
+                }, 
                 *event_opt
             );
         }

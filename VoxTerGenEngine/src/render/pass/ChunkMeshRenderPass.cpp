@@ -1,4 +1,4 @@
-#include "render/pass/ChunkOpaqueRenderPass.hpp"
+#include "render/pass/ChunkMeshRenderPass.hpp"
 #include "render/MeshRenderer.hpp"
 #include "render/MeshRenderData.hpp"
 
@@ -29,13 +29,14 @@
 #include <variant>
 #include <optional>
 
-ChunkOpaqueRenderPass::ChunkOpaqueRenderPass(const MeshRenderer& mesh_renderer) : 
+ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) : 
 	mesh_renderer_(mesh_renderer)
 {
 }
 
-void ChunkOpaqueRenderPass::ProcessChunkMeshReady(const ChunkMeshReady& event)
+void ChunkMeshRenderPass::ProcessChunkMeshReady(const ChunkMeshReady& event)
 {
+	// TODO: Make render_data a member variable and reuse the GPU buffers, not erase and allocate new.
 	MeshRenderData render_data;
 	render_data.gpu_mesh_.InitializeBuffers();
 	render_data.gpu_mesh_.UploadMeshData(*event.cpu_mesh_);
@@ -46,15 +47,16 @@ void ChunkOpaqueRenderPass::ProcessChunkMeshReady(const ChunkMeshReady& event)
 		glm::dvec3{ (event.world_coords_.x + 1) * constants::chunk::width, constants::chunk::height, (event.world_coords_.y + 1) * constants::chunk::depth }
 	);
 
+	// TODO: This fails if entry with event.chunk_id_ already exists.
 	chunks_data_.emplace(event.chunk_id_, ChunkData{ std::move(render_data), aabb });
 }
 
-void ChunkOpaqueRenderPass::ProcessChunkDestroyed(const ChunkDestroyed& event)
+void ChunkMeshRenderPass::ProcessChunkDestroyed(const ChunkDestroyed& event)
 {
 	chunks_data_.erase(event.chunk_id_);
 }
 
-void ChunkOpaqueRenderPass::RenderOpaqueChunks(const Camera& camera, const ResourceManager& resource_manager)
+void ChunkMeshRenderPass::RenderOpaqueChunks(const Camera& camera, const ResourceManager& resource_manager)
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");
 
@@ -70,7 +72,8 @@ void ChunkOpaqueRenderPass::RenderOpaqueChunks(const Camera& camera, const Resou
 
 	auto& frustum = camera.GetFrustumPlanes();
 
-	const auto inside_frustum = [&frustum](const ChunkData& chunk_data) {
+	const auto inside_frustum = [&frustum](const ChunkData& chunk_data) 
+	{
 		return geometry::Intersects(frustum, chunk_data.aabb_);
 	};
 
