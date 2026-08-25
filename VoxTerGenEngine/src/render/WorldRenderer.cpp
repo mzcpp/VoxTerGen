@@ -110,7 +110,7 @@ void WorldRenderer::RenderWorld(const Camera& camera, float alpha, const Resourc
 {
 	camera_uniform_buffer_.UpdateCameraData(camera, alpha);
 
-	chunk_mesh_render_pass_.RenderOpaqueChunks(chunks_render_data_, camera.GetFrustumPlanes(), resource_manager);
+	chunk_mesh_render_pass_.RenderOpaqueChunkMeshes(chunks_render_data_, camera.GetFrustumPlanes(), resource_manager);
 	block_highlight_render_pass_.RenderBlockHighlight(resource_manager);
 	skybox_render_pass_.RenderSkybox(resource_manager);
 	chunk_wireframe_render_pass_.RenderChunkWireframe(resource_manager);

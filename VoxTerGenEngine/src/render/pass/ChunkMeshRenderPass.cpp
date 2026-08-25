@@ -34,7 +34,7 @@ ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) :
 {
 }
 
-void ChunkMeshRenderPass::RenderOpaqueChunks(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const std::array<Plane, 6>& frustum_planes, const ResourceManager& resource_manager)
+void ChunkMeshRenderPass::RenderOpaqueChunkMeshes(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const std::array<Plane, 6>& frustum_planes, const ResourceManager& resource_manager)
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");
 
@@ -60,4 +60,9 @@ void ChunkMeshRenderPass::RenderOpaqueChunks(const std::unordered_map<ChunkID, C
 	}
 
 	glUseProgram(0);
+}
+
+void ChunkMeshRenderPass::RenderTransparentChunkMeshes(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const std::array<Plane, 6>& frustum_planes, const ResourceManager& resource_manager)
+{
+
 }
