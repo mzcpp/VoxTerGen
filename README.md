@@ -4,7 +4,7 @@
 Procedural terrain and cave generation in a custom voxel engine written in C++ and OpenGL.
 
 ## Overview
-VoxTerGen is a experiment-driven voxel engine created for evaluating procedural generation algorithms in 3D environments.
+VoxTerGen is an experiment-driven voxel engine created for evaluating procedural generation algorithms in 3D environments.
 
 ## Features
 - Custom C++ OpenGL engine
