@@ -5,7 +5,6 @@
 #include "physics/DigitalDifferentialAnalyzer.hpp"
 
 #include "math/Geometry.hpp"
-#include "math/Plane.hpp"
 
 #include "render/pass/BlockHighlightRenderPass.hpp"
 #include "render/pass/ChunkMeshRenderPass.hpp"
@@ -22,7 +21,6 @@
 #include <glm/mat4x4.hpp>
 
 #include <queue>
-#include <array>
 #include <optional>
 
 WorldRenderer::WorldRenderer(const Camera& camera) : 

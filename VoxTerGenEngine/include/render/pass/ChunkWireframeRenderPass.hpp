@@ -25,7 +25,7 @@ public:
 
 	void PrepareChunkWireframeRenderData();
 
-	void RenderChunkWireframe(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const std::array<Plane, 6>& frustum_planes, const ResourceManager& resource_manager);
+	void RenderChunkWireframe(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager);
 };
 
 #endif // CHUNK_WIREFRAME_RENDER_PASS_HPP
