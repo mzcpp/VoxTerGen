@@ -43,15 +43,8 @@ void WorldRenderer::Initialize()
 
 void WorldRenderer::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
-	while (!chunk_event_queue.Empty())
+	while (const std::optional<ChunkEvent> chunk_event_opt = chunk_event_queue.TryPop())
 	{
-		const std::optional<ChunkEvent> chunk_event_opt = chunk_event_queue.TryPop();
-
-		if (!chunk_event_opt.has_value())
-		{
-			continue;
-		}
-
 		std::visit(
 			overloaded
 			{

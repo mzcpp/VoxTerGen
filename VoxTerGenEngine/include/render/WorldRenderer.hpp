@@ -28,6 +28,7 @@ class WorldRenderer
 {
 private:
 	const Camera& camera_;
+	
 	CameraUniformBuffer camera_uniform_buffer_;
 	MeshRenderer mesh_renderer_;
 
