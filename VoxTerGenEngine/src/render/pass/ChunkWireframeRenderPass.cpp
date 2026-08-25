@@ -45,6 +45,7 @@ void ChunkWireframeRenderPass::RenderChunkWireframe(const std::unordered_map<Chu
 		return chunk_data.visible_;
 	};
 
+	glDisable(GL_CULL_FACE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
 	 for (const ChunkRenderData& chunk_data : chunks_render_data | std::views::values | std::views::filter(chunk_wireframe_visible))
@@ -54,6 +55,7 @@ void ChunkWireframeRenderPass::RenderChunkWireframe(const std::unordered_map<Chu
 	 }
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_CULL_FACE);
 
 	glUseProgram(0);
 }

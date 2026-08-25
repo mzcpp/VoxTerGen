@@ -207,10 +207,11 @@ Mesh MeshBuilder::BuildChunkWireframeMesh()
 			{
 				const BlockType type = BlockType::Air;
 				const glm::ivec2 chunk_coords = { 0, 0 };
-				const glm::ivec3 origin_offset = { 0, 0, 0 };
+				const glm::ivec3 pos_x_block_coords = { constants::chunk::width - 2, y, z };
+				const glm::ivec3 pos_z_block_coords = { x, y, constants::chunk::depth - 2 };
 
-				SaveQuadMesh(chunk_coords, type, origin_offset, static_cast<float>(step), Direction::PosX, chunk_wireframe_mesh);
-				SaveQuadMesh(chunk_coords, type, origin_offset, static_cast<float>(step), Direction::PosZ, chunk_wireframe_mesh);
+				SaveQuadMesh(chunk_coords, type, pos_x_block_coords, static_cast<float>(step), Direction::PosX, chunk_wireframe_mesh);
+				SaveQuadMesh(chunk_coords, type, pos_z_block_coords, static_cast<float>(step), Direction::PosZ, chunk_wireframe_mesh);
 			}
 		}
 	}
