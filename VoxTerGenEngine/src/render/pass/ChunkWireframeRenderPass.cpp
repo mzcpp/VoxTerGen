@@ -12,13 +12,16 @@
 
 ChunkWireframeRenderPass::ChunkWireframeRenderPass(const MeshRenderer& mesh_renderer) : 
     mesh_renderer_(mesh_renderer), 
-    render_wireframe_(false)
+    render_wireframe_(true)
 {
 }
 
 void ChunkWireframeRenderPass::PrepareChunkWireframeRenderData()
 {
     chunk_wireframe_mesh_ = MeshBuilder::BuildChunkWireframeMesh();
+
+	chunk_wireframe_mesh_render_data_.gpu_mesh_.InitializeBuffers();
+	chunk_wireframe_mesh_render_data_.gpu_mesh_.UploadMeshData(chunk_wireframe_mesh_);
 }
 
 void ChunkWireframeRenderPass::RenderChunkWireframe(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager)
@@ -47,7 +50,7 @@ void ChunkWireframeRenderPass::RenderChunkWireframe(const std::unordered_map<Chu
 	 for (const ChunkRenderData& chunk_data : chunks_render_data | std::views::values | std::views::filter(chunk_wireframe_visible))
 	 {
 	 	shader_program->Set<glm::mat4>("model", chunk_data.mesh_render_data_.model_matrix_);
-	 	mesh_renderer_.RenderGpuMesh(chunk_data.mesh_render_data_.gpu_mesh_);
+	 	mesh_renderer_.RenderGpuMesh(chunk_wireframe_mesh_render_data_.gpu_mesh_);
 	 }
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
