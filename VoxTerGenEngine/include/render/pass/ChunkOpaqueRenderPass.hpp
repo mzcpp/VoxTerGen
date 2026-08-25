@@ -3,29 +3,23 @@
 
 #include "core/ResourceManager.hpp"
 
-#include "physics/AABB.hpp"
-
 #include "render/MeshRenderer.hpp"
-#include "render/events/ChunkEvents.hpp"
 
-#include "threading/ThreadSafeQueue.hpp"
+#include "world/Chunk.hpp"
 
-class Camera;
+#include <unordered_map>
 
 struct ChunkRenderData;
-struct Plane;
 
-class ChunkMeshRenderPass
+class ChunkOpaqueRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
 
 public:
-	ChunkMeshRenderPass(const MeshRenderer& mesh_renderer);
+	ChunkOpaqueRenderPass(const MeshRenderer& mesh_renderer);
 
 	void RenderOpaqueChunkMeshes(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager);
-	
-	void RenderTransparentChunkMeshes(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager);
 };
 
 #endif // CHUNK_OPAQUE_RENDER_PASS_HPP

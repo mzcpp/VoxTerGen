@@ -1,4 +1,5 @@
-#include "render/pass/ChunkMeshRenderPass.hpp"
+#include "render/pass/ChunkOpaqueRenderPass.hpp"
+
 #include "render/MeshRenderer.hpp"
 #include "render/RenderData.hpp"
 
@@ -6,35 +7,20 @@
 
 #include "mesh/Mesh.hpp"
 
-#include "graphics/Camera.hpp"
-
-#include "math/Geometry.hpp"
-
-#include "physics/AABB.hpp"
-
-#include "threading/ThreadSafeQueue.hpp"
-
-#include "render/events/ChunkEvents.hpp"
-
 #include "world/Chunk.hpp"
 
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
 
 #include <memory>
-#include <queue>
 #include <ranges>
-#include <variant>
-#include <optional>
+#include <unordered_map>
 
-ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) : 
+ChunkOpaqueRenderPass::ChunkOpaqueRenderPass(const MeshRenderer& mesh_renderer) : 
 	mesh_renderer_(mesh_renderer)
 {
 }
 
-void ChunkMeshRenderPass::RenderOpaqueChunkMeshes(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager)
+void ChunkOpaqueRenderPass::RenderOpaqueChunkMeshes(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager)
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");
 
@@ -60,9 +46,4 @@ void ChunkMeshRenderPass::RenderOpaqueChunkMeshes(const std::unordered_map<Chunk
 	}
 
 	glUseProgram(0);
-}
-
-void ChunkMeshRenderPass::RenderTransparentChunkMeshes(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager)
-{
-
 }
