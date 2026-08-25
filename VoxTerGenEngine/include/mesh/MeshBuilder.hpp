@@ -56,7 +56,7 @@ public:
 
 	static Mesh BuildChunkWireframeMesh();
 
-	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& mesh);
+	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, float scale, Direction dir, Mesh& mesh);
 
 	static std::uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 

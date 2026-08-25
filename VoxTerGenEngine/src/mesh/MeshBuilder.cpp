@@ -162,7 +162,7 @@ Mesh MeshBuilder::BuildChunkMeshNaive(glm::ivec2 chunk_world_coords, const Chunk
 						continue;
 					}
 
-					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, dir, chunk_mesh);
+					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, 1.0, dir, chunk_mesh);
 				}
 			}
 		}
@@ -192,25 +192,28 @@ Mesh MeshBuilder::BuildChunkWireframeMesh()
 {
 	Mesh chunk_wireframe_mesh;
 
-	// for (int z = 0; z < constants::chunk::depth; z += 2)
-	// {
-	// 	for (int y = 0; y < constants::chunk::height; y += 2)
-	// 	{
-	// 		for (int x = 0; x < constants::chunk::width; x += 2)
-	// 		{
-	// 			const glm::ivec2 chunk_coords = { 0, 0 };
-	// 			const glm::ivec3 block_coords = { x, y, z };
+	for (int z = 0; z < constants::chunk::depth; z += 2)
+	{
+		for (int y = 0; y < constants::chunk::height; y += 2)
+		{
+			for (int x = 0; x < constants::chunk::width; x += 2)
+			{
+				const BlockType type = BlockType::Air;
+				const float scale = 2.0;
+				const glm::ivec2 chunk_coords = { 0, 0 };
+				const glm::ivec3 pos_x_block_coords = { constants::chunk::width - 1, y, z };
+				const glm::ivec3 pos_z_block_coords = { x, y, constants::chunk::depth - 1 };
 				
-	// 			SaveQuadMesh(chunk_coords, BlockType::Air, block_coords, Direction::PosX, chunk_wireframe_mesh);
-	// 			SaveQuadMesh(chunk_coords, BlockType::Air, block_coords, Direction::PosZ, chunk_wireframe_mesh);
-	// 		}
-	// 	}
-	// }
+				SaveQuadMesh(chunk_coords, type, pos_x_block_coords, scale, Direction::PosX, chunk_wireframe_mesh);
+				SaveQuadMesh(chunk_coords, type, pos_z_block_coords, scale, Direction::PosZ, chunk_wireframe_mesh);
+			}
+		}
+	}
 
 	return chunk_wireframe_mesh;
 }
 
-void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& mesh)
+void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, float scale, Direction dir, Mesh& mesh)
 {
 	const glm::vec3 block_abs_pos = {
 		chunk_world_coords.x * constants::chunk::width + block_rel_coords.x,
@@ -219,7 +222,7 @@ void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, gl
 	};
 
 	CreateMeshIndices(mesh);
-	CreateMeshVertices(type, dir, 1.0, block_abs_pos, mesh);
+	CreateMeshVertices(type, dir, scale, block_abs_pos, mesh);
 	
 	assert(mesh.Vertices().size() % 4 == 0);
 }
@@ -230,6 +233,7 @@ std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 	{
 	case BlockType::Air:
 		return static_cast<std::uint8_t>(Material::Air);
+
 	case BlockType::Grass:
 		if (dir == Direction::PosY)
 		{
@@ -243,16 +247,22 @@ std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 		{
 			return static_cast<std::uint8_t>(Material::GrassSide);
 		}
+	
 	case BlockType::Dirt:
 		return static_cast<std::uint8_t>(Material::Dirt);
+	
 	case BlockType::Stone:
 		return static_cast<std::uint8_t>(Material::Stone);
+	
 	case BlockType::Water:
 		return static_cast<std::uint8_t>(Material::Water);
+	
 	case BlockType::Sand:
 		return static_cast<std::uint8_t>(Material::Sand);
+	
 	case BlockType::Snow:
 		return static_cast<std::uint8_t>(Material::Snow);
+	
 	case BlockType::Bedrock:
 		return static_cast<std::uint8_t>(Material::Bedrock);
 	}
