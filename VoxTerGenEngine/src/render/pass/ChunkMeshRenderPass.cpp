@@ -34,7 +34,7 @@ ChunkMeshRenderPass::ChunkMeshRenderPass(const MeshRenderer& mesh_renderer) :
 {
 }
 
-void ChunkMeshRenderPass::RenderOpaqueChunkMeshes(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const std::array<Plane, 6>& frustum_planes, const ResourceManager& resource_manager)
+void ChunkMeshRenderPass::RenderOpaqueChunkMeshes(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager)
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");
 
@@ -48,12 +48,12 @@ void ChunkMeshRenderPass::RenderOpaqueChunkMeshes(const std::unordered_map<Chunk
 	glActiveTexture(GL_TEXTURE0);
 	resource_manager.GetTexture("texture_atlas")->Bind();
 
-	const auto inside_frustum = [&frustum_planes](const ChunkRenderData& chunk_data)
+	const auto chunk_visible = [](const ChunkRenderData& chunk_data)
 	{
-		return geometry::Intersects(frustum_planes, chunk_data.aabb_);
+		return chunk_data.visible_;
 	};
 
-	for (const ChunkRenderData& chunk_data : chunks_render_data | std::views::values | std::views::filter(inside_frustum))
+	for (const ChunkRenderData& chunk_data : chunks_render_data | std::views::values | std::views::filter(chunk_visible))
 	{
 		shader_program->Set<glm::mat4>("model", chunk_data.mesh_render_data_.model_matrix_);
 		mesh_renderer_.RenderGpuMesh(chunk_data.mesh_render_data_.gpu_mesh_);

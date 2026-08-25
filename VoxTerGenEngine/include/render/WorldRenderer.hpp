@@ -27,6 +27,7 @@ struct ChunkRenderData;
 class WorldRenderer
 {
 private:
+	const Camera& camera_;
 	CameraUniformBuffer camera_uniform_buffer_;
 	MeshRenderer mesh_renderer_;
 
@@ -38,7 +39,7 @@ private:
 	std::unordered_map<ChunkID, ChunkRenderData> chunks_render_data_;
 
 public:
-	WorldRenderer();
+	WorldRenderer(const Camera& camera);
 
 	void Initialize();
 
@@ -48,9 +49,9 @@ public:
 
 	void ProcessChunkDestroyed(const ChunkDestroyed& event);
 
-	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera);
+	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
-	void RenderWorld(const Camera& camera, float alpha, const ResourceManager& resource_manager);
+	void RenderWorld(float alpha, const ResourceManager& resource_manager);
 };
 
 #endif // WORLD_RENDERER_HPP

@@ -4,6 +4,9 @@
 
 #include "physics/DigitalDifferentialAnalyzer.hpp"
 
+#include "math/Geometry.hpp"
+#include "math/Plane.hpp"
+
 #include "render/pass/BlockHighlightRenderPass.hpp"
 #include "render/pass/ChunkMeshRenderPass.hpp"
 #include "render/pass/ChunkWireframeRenderPass.hpp"
@@ -19,9 +22,11 @@
 #include <glm/mat4x4.hpp>
 
 #include <queue>
+#include <array>
 #include <optional>
 
-WorldRenderer::WorldRenderer() : 
+WorldRenderer::WorldRenderer(const Camera& camera) : 
+	camera_(camera), 
 	chunk_mesh_render_pass_(mesh_renderer_),
 	block_highlight_render_pass_(mesh_renderer_), 
 	skybox_render_pass_(mesh_renderer_), 
@@ -75,13 +80,15 @@ void WorldRenderer::ProcessChunkMeshReady(const ChunkMeshReady& event)
 	 chunk_mesh_render_data.gpu_mesh_.UploadMeshData(*event.cpu_chunk_mesh_);
 	 chunk_mesh_render_data.model_matrix_ = glm::translate(glm::mat4(1.0f), { event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth });
 
-	 const AABB aabb(
+	 const AABB chunk_aabb(
 	 	glm::dvec3{ event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth },
 	 	glm::dvec3{ (event.world_coords_.x + 1) * constants::chunk::width, constants::chunk::height, (event.world_coords_.y + 1) * constants::chunk::depth }
 	 );
 
+	const bool chunk_visible = geometry::Intersects(camera_.GetFrustumPlanes(), chunk_aabb);
+
 	 // TODO: This fails if entry with event.chunk_id_ already exists.
-	 chunks_render_data_.emplace(event.chunk_id_, ChunkRenderData{ std::move(chunk_mesh_render_data), aabb });
+	 chunks_render_data_.emplace(event.chunk_id_, ChunkRenderData{ std::move(chunk_mesh_render_data), chunk_aabb, chunk_visible });
 }
 
 void WorldRenderer::ProcessChunkDestroyed(const ChunkDestroyed& event)
@@ -89,18 +96,18 @@ void WorldRenderer::ProcessChunkDestroyed(const ChunkDestroyed& event)
 	chunks_render_data_.erase(event.chunk_id_);
 }
 
-void WorldRenderer::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera)
+void WorldRenderer::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
 	ProcessChunkEvents(chunk_event_queue);
 
-	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(camera.RaycastResult());
+	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(camera_.RaycastResult());
 }
 
-void WorldRenderer::RenderWorld(const Camera& camera, float alpha, const ResourceManager& resource_manager)
+void WorldRenderer::RenderWorld(float alpha, const ResourceManager& resource_manager)
 {
-	camera_uniform_buffer_.UpdateCameraData(camera, alpha);
+	camera_uniform_buffer_.UpdateCameraData(camera_, alpha);
 
-	chunk_mesh_render_pass_.RenderOpaqueChunkMeshes(chunks_render_data_, camera.GetFrustumPlanes(), resource_manager);
+	chunk_mesh_render_pass_.RenderOpaqueChunkMeshes(chunks_render_data_, resource_manager);
 	block_highlight_render_pass_.RenderBlockHighlight(resource_manager);
 	skybox_render_pass_.RenderSkybox(resource_manager);
 	chunk_wireframe_render_pass_.RenderChunkWireframe(chunks_render_data_, resource_manager);

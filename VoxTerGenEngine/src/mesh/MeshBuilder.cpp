@@ -192,20 +192,26 @@ Mesh MeshBuilder::BuildChunkWireframeMesh()
 {
 	Mesh chunk_wireframe_mesh;
 
-	for (int z = 0; z < constants::chunk::depth; z += 2)
+	constexpr int step = 2;
+
+	static_assert(step > 0);
+	static_assert(constants::chunk::width % step == 0);
+	static_assert(constants::chunk::height % step == 0);
+	static_assert(constants::chunk::depth % step == 0);
+
+	for (int z = 0; z < constants::chunk::depth; z += step)
 	{
-		for (int y = 0; y < constants::chunk::height; y += 2)
+		for (int y = 0; y < constants::chunk::height; y += step)
 		{
-			for (int x = 0; x < constants::chunk::width; x += 2)
+			for (int x = 0; x < constants::chunk::width; x += step)
 			{
 				const BlockType type = BlockType::Air;
-				const float scale = 2.0;
 				const glm::ivec2 chunk_coords = { 0, 0 };
 				const glm::ivec3 pos_x_block_coords = { constants::chunk::width - 1, y, z };
 				const glm::ivec3 pos_z_block_coords = { x, y, constants::chunk::depth - 1 };
 				
-				SaveQuadMesh(chunk_coords, type, pos_x_block_coords, scale, Direction::PosX, chunk_wireframe_mesh);
-				SaveQuadMesh(chunk_coords, type, pos_z_block_coords, scale, Direction::PosZ, chunk_wireframe_mesh);
+				SaveQuadMesh(chunk_coords, type, pos_x_block_coords, static_cast<float>(step), Direction::PosX, chunk_wireframe_mesh);
+				SaveQuadMesh(chunk_coords, type, pos_z_block_coords, static_cast<float>(step), Direction::PosZ, chunk_wireframe_mesh);
 			}
 		}
 	}

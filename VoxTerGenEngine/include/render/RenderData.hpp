@@ -17,6 +17,7 @@ struct ChunkRenderData
 {
 	MeshRenderData mesh_render_data_;
 	AABB aabb_;
+    bool visible_ = false;
 };
 
 #endif // RENDER_DATA_HPP
