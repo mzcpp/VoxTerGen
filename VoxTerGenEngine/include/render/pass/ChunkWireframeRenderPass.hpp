@@ -7,11 +7,14 @@
 
 #include "mesh/Mesh.hpp"
 
+#include "world/Chunk.hpp"
+
 #include "render/MeshRenderer.hpp"
 
 #include <memory>
+#include <unordered_map>
 
-class Mesh;
+struct ChunkRenderData;
 
 class ChunkWireframeRenderPass
 {

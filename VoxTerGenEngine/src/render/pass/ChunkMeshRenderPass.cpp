@@ -62,7 +62,7 @@ void ChunkMeshRenderPass::RenderOpaqueChunkMeshes(const std::unordered_map<Chunk
 	glUseProgram(0);
 }
 
-void ChunkMeshRenderPass::RenderTransparentChunkMeshes(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const std::array<Plane, 6>& frustum_planes, const ResourceManager& resource_manager)
+void ChunkMeshRenderPass::RenderTransparentChunkMeshes(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager)
 {
 
 }

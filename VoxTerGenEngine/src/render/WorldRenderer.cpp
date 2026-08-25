@@ -105,7 +105,7 @@ void WorldRenderer::RenderWorld(float alpha, const ResourceManager& resource_man
 
 void WorldRenderer::UpdateChunksVisibility()
 {
-	for (ChunkRenderData& chunk_render_data : chunks_render_data | std::views::values)
+	for (ChunkRenderData& chunk_render_data : chunks_render_data_ | std::views::values)
 	{
 		chunk_render_data.visible_ = geometry::Intersects(camera_.GetFrustumPlanes(), chunk_render_data.aabb_);
 	}
