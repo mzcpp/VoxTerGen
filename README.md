@@ -8,10 +8,7 @@ VoxTerGen is a experiment-driven voxel engine created for evaluating procedural 
 
 ## Features
 - Custom C++ OpenGL engine
-- Perlin noise and Perlin worms terrain/cave generation
-- SDL2-based UI and text rendering
 - Seed-based world reproducibility
-- Modular engine structure for experimentation
 
 ## Build
 (brief build instructions)
