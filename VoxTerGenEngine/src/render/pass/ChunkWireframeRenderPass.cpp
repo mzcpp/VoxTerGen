@@ -44,13 +44,11 @@ void ChunkWireframeRenderPass::RenderChunkWireframe(const std::unordered_map<Chu
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
-    // VERIFY THE MESH OF WIREFRAME IS CORRECT!
-
-	// for (const ChunkRenderData& chunk_data : chunks_render_data | std::views::values | std::views::filter(chunk_wireframe_visible))
-	// {
-	// 	shader_program->Set<glm::mat4>("model", chunk_data.mesh_render_data_.model_matrix_);
-	// 	mesh_renderer_.RenderGpuMesh(chunk_data.mesh_render_data_.gpu_mesh_);
-	// }
+	 for (const ChunkRenderData& chunk_data : chunks_render_data | std::views::values | std::views::filter(chunk_wireframe_visible))
+	 {
+	 	shader_program->Set<glm::mat4>("model", chunk_data.mesh_render_data_.model_matrix_);
+	 	mesh_renderer_.RenderGpuMesh(chunk_data.mesh_render_data_.gpu_mesh_);
+	 }
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
