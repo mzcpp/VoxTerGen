@@ -16,11 +16,12 @@
 SkyboxRenderPass::SkyboxRenderPass(const MeshRenderer& mesh_renderer) : 
     mesh_renderer_(mesh_renderer)
 {
-    skybox_mesh_ = MeshBuilder::BuildUnitCubeMesh(BlockType::Air, glm::vec3(-constants::geometry::block_center_offset));
 }
 
 void SkyboxRenderPass::PrepareSkyboxRenderData()
 {
+    skybox_mesh_ = MeshBuilder::BuildUnitCubeMesh(BlockType::Air, glm::vec3(-constants::geometry::block_center_offset));
+    
     render_data_.gpu_mesh_.InitializeBuffers();
     render_data_.gpu_mesh_.UploadMeshData(skybox_mesh_);
 }

@@ -21,7 +21,7 @@ void ChunkWireframeRenderPass::PrepareChunkWireframeRenderData()
     chunk_wireframe_mesh_ = MeshBuilder::BuildChunkWireframeMesh();
 }
 
-void ChunkWireframeRenderPass::RenderChunkWireframe(const ResourceManager& resource_manager)
+void ChunkWireframeRenderPass::RenderChunkWireframe(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager)
 {
     if (!render_wireframe_)
     {

@@ -25,11 +25,12 @@ BlockHighlightRenderPass::BlockHighlightRenderPass(const MeshRenderer& mesh_rend
     mesh_renderer_(mesh_renderer), 
     render_highlight_(false)
 {
-    block_highlight_mesh_ = MeshBuilder::BuildUnitCubeMesh(BlockType::Air, glm::vec3(-constants::geometry::block_center_offset));
 }
 
 void BlockHighlightRenderPass::PrepareBlockRenderData()
 {
+    block_highlight_mesh_ = MeshBuilder::BuildUnitCubeMesh(BlockType::Air, glm::vec3(-constants::geometry::block_center_offset));
+    
     render_data_.gpu_mesh_.InitializeBuffers();
     render_data_.gpu_mesh_.UploadMeshData(block_highlight_mesh_);
 }

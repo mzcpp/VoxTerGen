@@ -49,29 +49,19 @@ void WorldRenderer::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_
 			continue;
 		}
 
-		std::visit(overloaded
-		{
-			[this](const ChunkMeshReady& e)
+		std::visit(
+			overloaded
 			{
-				// TODO: Make render_data a member variable and reuse the GPU buffers, not erase and allocate new.
-				MeshRenderData render_data;
-				render_data.gpu_mesh_.InitializeBuffers();
-				render_data.gpu_mesh_.UploadMeshData(*e.cpu_chunk_mesh_);
-				render_data.model_matrix_ = glm::translate(glm::mat4(1.0f), { e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth });
+				[this](const ChunkMeshReady& e)
+				{
+					ProcessChunkMeshReady(e);
+				},
 
-				const AABB aabb(
-					glm::dvec3{ e.world_coords_.x * constants::chunk::width, 0, e.world_coords_.y * constants::chunk::depth },
-					glm::dvec3{ (e.world_coords_.x + 1) * constants::chunk::width, constants::chunk::height, (e.world_coords_.y + 1) * constants::chunk::depth }
-				);
-
-				chunks_render_data_.emplace(e.chunk_id_, ChunkRenderData{ std::move(render_data), aabb });
-			},
-
-			[this](const ChunkDestroyed& e)
-			{
-				chunks_render_data_.erase(e.chunk_id_);
-			}
-		},
+				[this](const ChunkDestroyed& e)
+				{
+					ProcessChunkDestroyed(e);
+				}
+			}, 
 			*chunk_event_opt
 		);
 	}
@@ -113,5 +103,5 @@ void WorldRenderer::RenderWorld(const Camera& camera, float alpha, const Resourc
 	chunk_mesh_render_pass_.RenderOpaqueChunkMeshes(chunks_render_data_, camera.GetFrustumPlanes(), resource_manager);
 	block_highlight_render_pass_.RenderBlockHighlight(resource_manager);
 	skybox_render_pass_.RenderSkybox(resource_manager);
-	chunk_wireframe_render_pass_.RenderChunkWireframe(resource_manager);
+	chunk_wireframe_render_pass_.RenderChunkWireframe(chunks_render_data_, resource_manager);
 }
