@@ -52,6 +52,8 @@ public:
 	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
 	void RenderWorld(float alpha, const ResourceManager& resource_manager);
+
+	void UpdateChunksVisibility();
 };
 
 #endif // WORLD_RENDERER_HPP

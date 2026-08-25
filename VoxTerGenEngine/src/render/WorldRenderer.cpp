@@ -83,10 +83,8 @@ void WorldRenderer::ProcessChunkMeshReady(const ChunkMeshReady& event)
 	 	glm::dvec3{ (event.world_coords_.x + 1) * constants::chunk::width, constants::chunk::height, (event.world_coords_.y + 1) * constants::chunk::depth }
 	 );
 
-	const bool chunk_visible = geometry::Intersects(camera_.GetFrustumPlanes(), chunk_aabb);
-
 	 // TODO: This fails if entry with event.chunk_id_ already exists.
-	 chunks_render_data_.emplace(event.chunk_id_, ChunkRenderData{ std::move(chunk_mesh_render_data), chunk_aabb, chunk_visible });
+	 chunks_render_data_.emplace(event.chunk_id_, ChunkRenderData{ std::move(chunk_mesh_render_data), chunk_aabb, false });
 }
 
 void WorldRenderer::ProcessChunkDestroyed(const ChunkDestroyed& event)
@@ -97,6 +95,7 @@ void WorldRenderer::ProcessChunkDestroyed(const ChunkDestroyed& event)
 void WorldRenderer::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
 	ProcessChunkEvents(chunk_event_queue);
+	UpdateChunksVisibility();
 
 	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(camera_.RaycastResult());
 }
@@ -109,4 +108,12 @@ void WorldRenderer::RenderWorld(float alpha, const ResourceManager& resource_man
 	block_highlight_render_pass_.RenderBlockHighlight(resource_manager);
 	skybox_render_pass_.RenderSkybox(resource_manager);
 	chunk_wireframe_render_pass_.RenderChunkWireframe(chunks_render_data_, resource_manager);
+}
+
+void WorldRenderer::UpdateChunksVisibility()
+{
+	for (ChunkRenderData& chunk_render_data : chunks_render_data | std::views::values)
+	{
+		chunk_render_data.visible_ = geometry::Intersects(camera_.GetFrustumPlanes(), chunk_render_data.aabb_);
+	}
 }
