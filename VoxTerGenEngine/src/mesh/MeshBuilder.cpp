@@ -162,7 +162,7 @@ ChunkMesh MeshBuilder::BuildChunkMeshNaive(glm::ivec2 chunk_world_coords, const 
 						continue;
 					}
 					
-					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, 1.0, dir, current_block.Type().IsTransparent() ? chunk_mesh.cpu_transparent_mesh_ : chunk_mesh.cpu_opaque_mesh_);
+					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, 1.0, dir, current_block.IsTransparent() ? chunk_mesh.cpu_transparent_mesh_ : chunk_mesh.cpu_opaque_mesh_);
 				}
 			}
 		}
@@ -466,7 +466,7 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 
 void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, ChunkMesh& chunk_mesh)
 {
-	const bool isMeshTransparent = first_merged_cell.block_type_.IsTransparent();
+	const bool isMeshTransparent = first_merged_cell.block_type_ == BlockType::Water;
 	const std::uint8_t normal = static_cast<std::uint8_t>(first_merged_cell.dir_);
 	const std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
 
@@ -477,11 +477,11 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 	{
 		if (isMeshTransparent)
 		{
-			chunk_mesh.cpu_transparent_mesh_.AddIndex(i + static_cast<std::uint32_t>(mesh.Vertices().size()));
+			chunk_mesh.cpu_transparent_mesh_.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.cpu_transparent_mesh_.Vertices().size()));
 		}
 		else
 		{
-			chunk_mesh.cpu_opaque_mesh_.AddIndex(i + static_cast<std::uint32_t>(mesh.Vertices().size()));
+			chunk_mesh.cpu_opaque_mesh_.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.cpu_opaque_mesh_.Vertices().size()));
 		}
 	}
 

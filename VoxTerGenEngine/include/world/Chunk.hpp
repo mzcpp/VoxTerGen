@@ -10,6 +10,8 @@
 
 #include "world/Block.hpp"
 
+#include "mesh/Mesh.hpp"
+
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
@@ -57,7 +59,7 @@ struct ChunkMesh
 {
     Mesh cpu_opaque_mesh_;
     Mesh cpu_transparent_mesh_;
-}
+};
 
 using ChunkID = std::uint64_t;
 

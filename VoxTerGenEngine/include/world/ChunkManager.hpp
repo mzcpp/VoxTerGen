@@ -64,7 +64,7 @@ public:
 
 	void BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
-	std::unique_ptr<Mesh> BuildChunkMesh(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token);
+	std::unique_ptr<ChunkMesh> BuildChunkMesh(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token);
 
 	BlockInfo WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const;
 

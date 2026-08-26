@@ -69,9 +69,9 @@ void WorldRenderer::ProcessChunkMeshReady(const ChunkMeshReady& event)
 	 // TODO: Make chunk_mesh_render_data a member variable and reuse the GPU buffers, not erase and allocate new.
 	 MeshRenderData chunk_mesh_render_data;
 	 chunk_mesh_render_data.gpu_opaque_mesh_.InitializeBuffers();
-	 chunk_mesh_render_data.gpu_opaque_mesh_.UploadMeshData(*event.chunk_mesh_.cpu_opaque_mesh_);
+	 chunk_mesh_render_data.gpu_opaque_mesh_.UploadMeshData(event.chunk_mesh_->cpu_opaque_mesh_);
 	 chunk_mesh_render_data.gpu_transparent_mesh_.InitializeBuffers();
-	 chunk_mesh_render_data.gpu_transparent_mesh_.UploadMeshData(*event.chunk_mesh_.cpu_transparent_mesh_);
+	 chunk_mesh_render_data.gpu_transparent_mesh_.UploadMeshData(event.chunk_mesh_->cpu_transparent_mesh_);
 	 chunk_mesh_render_data.model_matrix_ = glm::translate(glm::mat4(1.0f), { event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth });
 
 	 const AABB chunk_aabb(
@@ -103,7 +103,7 @@ void WorldRenderer::RenderWorld(float alpha, const ResourceManager& resource_man
 	chunk_opaque_render_pass_.RenderOpaqueChunkMeshes(chunks_render_data_, resource_manager);
 	block_highlight_render_pass_.RenderBlockHighlight(resource_manager);
 	skybox_render_pass_.RenderSkybox(resource_manager);
-	chunk_wireframe_render_pass_.RenderChunkWireframe(chunks_render_data_, resource_manager);
+	chunk_wireframe_render_pass_.RenderChunkWireframe(camera_, resource_manager);
 	chunk_transparent_render_pass_.RenderTransparentChunkMeshes(chunks_render_data_, resource_manager);
 }
 
