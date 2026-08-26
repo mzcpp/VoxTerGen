@@ -13,7 +13,8 @@
 #include "render/MeshRenderer.hpp"
 
 #include <memory>
-#include <unordered_map>
+
+class Camera;
 
 struct ChunkRenderData;
 
@@ -30,7 +31,7 @@ public:
 
 	void PrepareChunkWireframeRenderData();
 
-	void RenderChunkWireframe(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager);
+	void RenderChunkWireframe(const Camera& camera, const ResourceManager& resource_manager);
 };
 
 #endif // CHUNK_WIREFRAME_RENDER_PASS_HPP

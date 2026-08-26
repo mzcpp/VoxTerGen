@@ -3,6 +3,7 @@
 #include "core/ResourceManager.hpp"
 
 #include "graphics/ShaderProgram.hpp"
+#include "graphics/Camera.hpp"
 
 #include "mesh/Mesh.hpp"
 #include "mesh/MeshBuilder.hpp"
@@ -24,7 +25,7 @@ void ChunkWireframeRenderPass::PrepareChunkWireframeRenderData()
 	chunk_wireframe_mesh_render_data_.gpu_mesh_.UploadMeshData(chunk_wireframe_mesh_);
 }
 
-void ChunkWireframeRenderPass::RenderChunkWireframe(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager)
+void ChunkWireframeRenderPass::RenderChunkWireframe(const Camera& camera, const ResourceManager& resource_manager)
 {
     if (!render_wireframe_)
     {
@@ -40,20 +41,13 @@ void ChunkWireframeRenderPass::RenderChunkWireframe(const std::unordered_map<Chu
 	
 	shader_program->Use();
 
-	const auto chunk_wireframe_visible = [](const ChunkRenderData& chunk_data)
-	{
-		return chunk_data.visible_;
-	};
-
 	glDisable(GL_CULL_FACE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    
-	 for (const ChunkRenderData& chunk_data : chunks_render_data | std::views::values | std::views::filter(chunk_wireframe_visible))
-	 {
-	 	shader_program->Set<glm::mat4>("model", chunk_data.mesh_render_data_.model_matrix_);
-	 	mesh_renderer_.RenderGpuMesh(chunk_wireframe_mesh_render_data_.gpu_mesh_);
-	 }
 
+    // find chunk_coords based on camera pos
+    // calculate and set model matrix based on the chunk_coords
+    // mesh_renderer_.RenderGpuMesh(chunk_wireframe_mesh_render_data_.gpu_mesh_);
+    
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_CULL_FACE);
 
