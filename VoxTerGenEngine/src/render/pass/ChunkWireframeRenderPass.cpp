@@ -11,6 +11,9 @@
 #include "render/MeshRenderer.hpp"
 #include "render/RenderData.hpp"
 
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 ChunkWireframeRenderPass::ChunkWireframeRenderPass(const MeshRenderer& mesh_renderer) : 
     mesh_renderer_(mesh_renderer), 
     render_wireframe_(true)
@@ -44,9 +47,11 @@ void ChunkWireframeRenderPass::RenderChunkWireframe(const Camera& camera, const 
 	glDisable(GL_CULL_FACE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    // find chunk_coords based on camera pos
-    // calculate and set model matrix based on the chunk_coords
-    // mesh_renderer_.RenderGpuMesh(chunk_wireframe_mesh_render_data_.gpu_mesh_);
+    const glm::ivec2 camera_chunk_pos = { std::floor(camera.Pos().x / constants::chunk::width), std::floor(camera.Pos().z / constants::chunk::depth) };
+    const glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), { camera_chunk_pos.x * constants::chunk::width, 0, camera_chunk_pos.y * constants::chunk::depth });
+
+    shader_program->Set<glm::mat4>("model", model_matrix);
+    mesh_renderer_.RenderGpuMesh(chunk_wireframe_mesh_render_data_.gpu_mesh_);
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_CULL_FACE);
