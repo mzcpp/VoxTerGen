@@ -362,8 +362,6 @@ bool Application::InitOpenGL()
 	glFrontFace(GL_CCW);
 	glEnable(GL_MULTISAMPLE);
 	glDepthFunc(GL_LESS);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// V-Sync
 	SDL_GL_SetSwapInterval(0);

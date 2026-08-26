@@ -466,6 +466,12 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 
 void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, Mesh& mesh)
 {
+	const std::uint8_t normal = static_cast<std::uint8_t>(first_merged_cell.dir_);
+	const std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
+
+	const bool dir_is_even = static_cast<std::uint8_t>(first_merged_cell.dir_) % 2 == 0;
+	const bool invert_j = ((major_axis == MajorAxis::X || major_axis == MajorAxis::Y) && dir_is_even) || (major_axis == MajorAxis::Z && !dir_is_even);
+
 	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
 	{
 		mesh.AddIndex(i + static_cast<std::uint32_t>(mesh.Vertices().size()));
@@ -477,9 +483,7 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 	{
 		for (int j : { 0, 1 })
 		{
-			if ((major_axis == MajorAxis::X && static_cast<std::uint8_t>(first_merged_cell.dir_) % 2 == 0) || 
-				(major_axis == MajorAxis::Y && static_cast<std::uint8_t>(first_merged_cell.dir_) % 2 == 0) || 
-				(major_axis == MajorAxis::Z && static_cast<std::uint8_t>(first_merged_cell.dir_) % 2 != 0))
+			if (invert_j)
 			{
 				j = 1 - j;
 			}
@@ -500,9 +504,7 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 				vertex_position = glm::vec3{ x_pos, y_pos, major_axis_index + 1 };
 			}
 
-			const std::uint8_t normal = static_cast<std::uint8_t>(first_merged_cell.dir_);
 			const glm::vec2 uv = { j * merged_quad.width_, i * merged_quad.height_ };
-			const std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
 
 			mesh.AddVertex(vertex_position, normal, uv, material);
 		}
