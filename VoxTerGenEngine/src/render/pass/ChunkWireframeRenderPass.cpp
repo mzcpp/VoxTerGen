@@ -24,8 +24,8 @@ void ChunkWireframeRenderPass::PrepareChunkWireframeRenderData()
 {
     chunk_wireframe_mesh_ = MeshBuilder::BuildChunkWireframeMesh();
 
-	chunk_wireframe_mesh_render_data_.gpu_mesh_.InitializeBuffers();
-	chunk_wireframe_mesh_render_data_.gpu_mesh_.UploadMeshData(chunk_wireframe_mesh_);
+	render_data_.gpu_transparent_mesh_.InitializeBuffers();
+	render_data_.gpu_transparent_mesh_.UploadMeshData(chunk_wireframe_mesh_);
 }
 
 void ChunkWireframeRenderPass::RenderChunkWireframe(const Camera& camera, const ResourceManager& resource_manager)
@@ -51,7 +51,7 @@ void ChunkWireframeRenderPass::RenderChunkWireframe(const Camera& camera, const 
     const glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), { camera_chunk_pos.x * constants::chunk::width, 0, camera_chunk_pos.y * constants::chunk::depth });
 
     shader_program->Set<glm::mat4>("model", model_matrix);
-    mesh_renderer_.RenderGpuMesh(chunk_wireframe_mesh_render_data_.gpu_mesh_);
+    mesh_renderer_.RenderGpuMesh(render_data_.gpu_transparent_mesh_);
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_CULL_FACE);

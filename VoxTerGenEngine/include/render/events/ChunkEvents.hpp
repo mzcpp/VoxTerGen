@@ -7,8 +7,6 @@
 
 #include <memory>
 
-class Mesh;
-
 /**
  * @brief Helper struct to combine multiple lambdas for std::visit.
  * @note Taken from cppreference.com:
@@ -21,7 +19,7 @@ struct ChunkMeshReady
 {
     ChunkID chunk_id_;
     glm::ivec2 world_coords_;
-    std::unique_ptr<Mesh> cpu_chunk_mesh_;
+    std::unique_ptr<ChunkMesh> chunk_mesh_;
 };
 
 struct ChunkDestroyed

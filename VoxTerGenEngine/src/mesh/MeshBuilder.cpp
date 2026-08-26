@@ -103,9 +103,9 @@ void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, float scale,
 	}
 }
 
-Mesh MeshBuilder::BuildChunkMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshDependencies& chunk_mesh_dependencies)
+ChunkMesh MeshBuilder::BuildChunkMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshDependencies& chunk_mesh_dependencies)
 {
-	Mesh chunk_mesh;
+	ChunkMesh chunk_mesh;
 
 	const Chunk* current_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 0 });
 	const Chunk* west_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ -1, 0 });
@@ -161,8 +161,8 @@ Mesh MeshBuilder::BuildChunkMeshNaive(glm::ivec2 chunk_world_coords, const Chunk
 					{
 						continue;
 					}
-
-					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, 1.0, dir, chunk_mesh);
+					
+					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, 1.0, dir, current_block.Type().IsTransparent() ? chunk_mesh.cpu_transparent_mesh_ : chunk_mesh.cpu_opaque_mesh_);
 				}
 			}
 		}
@@ -171,15 +171,15 @@ Mesh MeshBuilder::BuildChunkMeshNaive(glm::ivec2 chunk_world_coords, const Chunk
 	return chunk_mesh;
 }
 
-Mesh MeshBuilder::BuildChunkMeshGreedy(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
+ChunkMesh MeshBuilder::BuildChunkMeshGreedy(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
 {
-	Mesh chunk_mesh;
+	ChunkMesh chunk_mesh;
 
 	for (MajorAxis axis : AllAxes())
 	{
 		if (stop_token.stop_requested())
 		{
-			return Mesh();
+			return ChunkMesh();
 		}
 
 		BuildAxisMesh(axis, chunk_mesh_dependencies, stop_token, chunk_mesh);
@@ -284,7 +284,7 @@ std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 	return static_cast<std::uint8_t>(Material::Air);
 }
 
-void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token, Mesh& mesh)
+void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token, ChunkMesh& chunk_mesh)
 {
 	int major_axis_size = 0;
 	int cross_axis_1_size = 0;
@@ -319,7 +319,7 @@ void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, const ChunkMeshDependencie
 		}
 
 		BuildSliceMask(major_axis, major_axis_index, major_axis_size, cross_axis_1_size, cross_axis_2_size, chunk_mesh_dependencies, slice_mask);
-		MergeFacesAndEmitData(major_axis, major_axis_index, cross_axis_2_size, cross_axis_1_size, slice_mask, mesh);
+		MergeFacesAndEmitData(major_axis, major_axis_index, cross_axis_2_size, cross_axis_1_size, slice_mask, chunk_mesh);
 	}
 }
 
@@ -464,8 +464,9 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 	}
 }
 
-void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, Mesh& mesh)
+void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, ChunkMesh& chunk_mesh)
 {
+	const bool isMeshTransparent = first_merged_cell.block_type_.IsTransparent();
 	const std::uint8_t normal = static_cast<std::uint8_t>(first_merged_cell.dir_);
 	const std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
 
@@ -474,7 +475,14 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 
 	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
 	{
-		mesh.AddIndex(i + static_cast<std::uint32_t>(mesh.Vertices().size()));
+		if (isMeshTransparent)
+		{
+			chunk_mesh.cpu_transparent_mesh_.AddIndex(i + static_cast<std::uint32_t>(mesh.Vertices().size()));
+		}
+		else
+		{
+			chunk_mesh.cpu_opaque_mesh_.AddIndex(i + static_cast<std::uint32_t>(mesh.Vertices().size()));
+		}
 	}
 
 	glm::vec3 vertex_position(0.0f);
@@ -506,12 +514,19 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 
 			const glm::vec2 uv = { j * merged_quad.width_, i * merged_quad.height_ };
 
-			mesh.AddVertex(vertex_position, normal, uv, material);
+			if (isMeshTransparent)
+			{
+				chunk_mesh.cpu_transparent_mesh_.AddVertex(vertex_position, normal, uv, material);
+			}
+			else
+			{
+				chunk_mesh.cpu_opaque_mesh_.AddVertex(vertex_position, normal, uv, material);
+			}
 		}
 	}
 }
 
-void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, Mesh& mesh)
+void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, ChunkMesh& chunk_mesh)
 {
 	for (int y = 0; y < mask_height; ++y)
 	{
@@ -558,7 +573,7 @@ void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_ind
 			merged_quad.width_ = merged_quad_width;
 			merged_quad.height_ = merged_quad_height;
 			
-			EmitVerticesAndIndices(major_axis, merged_quad, major_axis_index, cell, mesh);
+			EmitVerticesAndIndices(major_axis, merged_quad, major_axis_index, cell, chunk_mesh);
 
 			for (int dy = 0; dy < merged_quad_height; ++dy)
             {

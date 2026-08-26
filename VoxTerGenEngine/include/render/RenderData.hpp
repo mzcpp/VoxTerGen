@@ -9,7 +9,8 @@
 
 struct MeshRenderData
 {
-    GpuMesh gpu_mesh_;
+    GpuMesh gpu_opaque_mesh_;
+    GpuMesh gpu_transparent_mesh_;
     glm::mat4 model_matrix_ = glm::mat4(1.0f);
 };
 

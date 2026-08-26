@@ -53,6 +53,12 @@ struct ChunkMeshDependencies
     }
 };
 
+struct ChunkMesh
+{
+    Mesh cpu_opaque_mesh_;
+    Mesh cpu_transparent_mesh_;
+}
+
 using ChunkID = std::uint64_t;
 
 class Chunk

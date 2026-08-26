@@ -23,7 +23,7 @@ class ChunkWireframeRenderPass
 private:
 	const MeshRenderer& mesh_renderer_;
 	Mesh chunk_wireframe_mesh_;
-	MeshRenderData chunk_wireframe_mesh_render_data_;
+	MeshRenderData render_data_;
 	bool render_wireframe_;
 
 public:

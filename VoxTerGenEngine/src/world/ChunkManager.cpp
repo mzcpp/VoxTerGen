@@ -206,7 +206,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		
 		thread_pool_.Enqueue([this, chunk, chunk_mesh_dependencies = GetMeshDependencies(chunk->WorldCoords()), &chunk_event_queue]()
 		{
-			std::unique_ptr<Mesh> chunk_mesh = BuildChunkMesh(chunk_mesh_dependencies, chunk->StopSource().get_token());
+			std::unique_ptr<ChunkMesh> chunk_mesh = BuildChunkMesh(chunk_mesh_dependencies, chunk->StopSource().get_token());
 
 			if (chunk_mesh == nullptr)
 			{
@@ -223,9 +223,9 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 	}
 }
 
-std::unique_ptr<Mesh> ChunkManager::BuildChunkMesh(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
+std::unique_ptr<ChunkMesh> ChunkManager::BuildChunkMesh(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
 {
-	std::unique_ptr<Mesh> chunk_mesh = std::make_unique<Mesh>(MeshBuilder::BuildChunkMeshGreedy(chunk_mesh_dependencies, stop_token));
+	std::unique_ptr<ChunkMesh> chunk_mesh = std::make_unique<ChunkMesh>(MeshBuilder::BuildChunkMeshGreedy(chunk_mesh_dependencies, stop_token));
 		
 	if (stop_token.stop_requested())
 	{

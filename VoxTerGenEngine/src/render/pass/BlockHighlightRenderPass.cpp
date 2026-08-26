@@ -30,9 +30,9 @@ BlockHighlightRenderPass::BlockHighlightRenderPass(const MeshRenderer& mesh_rend
 void BlockHighlightRenderPass::PrepareBlockRenderData()
 {
     block_highlight_mesh_ = MeshBuilder::BuildUnitCubeMesh(BlockType::Air, glm::vec3(-constants::geometry::block_center_offset));
-    
-    render_data_.gpu_mesh_.InitializeBuffers();
-    render_data_.gpu_mesh_.UploadMeshData(block_highlight_mesh_);
+
+    render_data_.gpu_transparent_mesh_.InitializeBuffers();
+    render_data_.gpu_transparent_mesh_.UploadMeshData(block_highlight_mesh_);
 }
 
 void BlockHighlightRenderPass::UpdateBlockHighlightModelMatrix(const std::optional<RaycastResult>& raycast_result)
@@ -70,7 +70,7 @@ void BlockHighlightRenderPass::RenderBlockHighlight(const ResourceManager& resou
     constexpr float distance_threshold = 0.002f;
     shader_program->Set<float>("distance_threshold", distance_threshold);
     
-    mesh_renderer_.RenderGpuMesh(render_data_.gpu_mesh_);
+    mesh_renderer_.RenderGpuMesh(render_data_.gpu_transparent_mesh_);
     
     glUseProgram(0);
 }
