@@ -22,6 +22,7 @@
 
 #include <queue>
 #include <optional>
+#include <ranges>
 
 WorldRenderer::WorldRenderer(const Camera& camera) : 
 	camera_(camera), 
@@ -92,6 +93,7 @@ void WorldRenderer::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
 	ProcessChunkEvents(chunk_event_queue);
 	UpdateChunksVisibility();
+	UpdateTransparentChunks();
 
 	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(camera_.RaycastResult());
 }
@@ -104,7 +106,7 @@ void WorldRenderer::RenderWorld(float alpha, const ResourceManager& resource_man
 	block_highlight_render_pass_.RenderBlockHighlight(resource_manager);
 	skybox_render_pass_.RenderSkybox(resource_manager);
 	chunk_wireframe_render_pass_.RenderChunkWireframe(camera_, resource_manager);
-	chunk_transparent_render_pass_.RenderTransparentChunkMeshes(chunks_render_data_, resource_manager);
+	chunk_transparent_render_pass_.RenderTransparentChunkMeshes(transparent_chunks_render_data_, resource_manager);
 }
 
 void WorldRenderer::UpdateChunksVisibility()
@@ -113,4 +115,27 @@ void WorldRenderer::UpdateChunksVisibility()
 	{
 		chunk_render_data.visible_ = geometry::Intersects(camera_.GetFrustumPlanes(), chunk_render_data.aabb_);
 	}
+}
+
+void WorldRenderer::UpdateTransparentChunks()
+{
+	transparent_chunks_render_data_.clear();
+
+	for (ChunkRenderData& chunk_render_data : chunks_render_data_ | std::views::values)
+	{
+		if (chunk_render_data.visible_ && chunk_render_data.mesh_render_data_.gpu_transparent_mesh_.IndexCount() != 0)
+		{
+			transparent_chunks_render_data_.emplace_back(&chunk_render_data);
+		}
+	}
+
+	std::ranges::sort(transparent_chunks_render_data_,
+		[this](const ChunkRenderData* lhs, const ChunkRenderData* rhs)
+		{
+			const glm::dvec3 lhs_center = (lhs->aabb_.min_ + lhs->aabb_.max_) / 2.0;
+			const glm::dvec3 rhs_center = (rhs->aabb_.min_ + rhs->aabb_.max_) / 2.0;
+
+			return geometry::DistanceSquared(camera_.Pos(), lhs_center) > geometry::DistanceSquared(camera_.Pos(), rhs_center);
+		}
+	);
 }

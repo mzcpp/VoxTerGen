@@ -2,8 +2,10 @@
 
 !!! DOCUMENT ALL FUNCTIONS !!!
 
+implement more sophisticated transparent render order
+make wireframe of chunk 'nicer'
 move functions like GetChunkCoords to math?
-prioritize chunks based on camera direction
+prioritize chunk streaming based on camera direction
 make chunk frustum aabb bigger to avoid popping in/out
 Chunk::Pos() ??
 in headers, use forwarding declarations whenever possible instead of include
@@ -49,6 +51,7 @@ add Graphics Device Interface - move all graphics apis inits into it - App will 
 
 ********* BUGS *********
 
+transparent chunks (water) glitchy - ocasionally not transparent when next to a solid, or when 2 waters are next to each other on chunk borders! 16x1x16|16x1x16
 face culling on the chunk borders!
 fix bug when running very fast, I fall through the floor
 fix bug when falling very fast, I fall through the floor

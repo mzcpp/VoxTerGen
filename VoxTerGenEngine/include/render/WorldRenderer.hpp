@@ -19,6 +19,7 @@
 #include <memory>
 #include <queue>
 #include <optional>
+#include <vector>
 
 class Camera;
 class ResourceManager;
@@ -40,6 +41,7 @@ private:
 	ChunkTransparentRenderPass chunk_transparent_render_pass_;
 
 	std::unordered_map<ChunkID, ChunkRenderData> chunks_render_data_;
+	std::vector<const ChunkRenderData*> transparent_chunks_render_data_;
 
 public:
 	WorldRenderer(const Camera& camera);
@@ -57,6 +59,8 @@ public:
 	void RenderWorld(float alpha, const ResourceManager& resource_manager);
 
 	void UpdateChunksVisibility();
+
+	void UpdateTransparentChunks();
 };
 
 #endif // WORLD_RENDERER_HPP

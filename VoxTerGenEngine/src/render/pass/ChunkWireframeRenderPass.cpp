@@ -16,7 +16,7 @@
 
 ChunkWireframeRenderPass::ChunkWireframeRenderPass(const MeshRenderer& mesh_renderer) : 
     mesh_renderer_(mesh_renderer), 
-    render_wireframe_(true)
+    render_wireframe_(false)
 {
 }
 

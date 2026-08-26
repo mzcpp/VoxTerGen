@@ -7,7 +7,7 @@
 
 #include "world/Chunk.hpp"
 
-#include <unordered_map>
+#include <vector>
 
 struct ChunkRenderData;
 
@@ -19,7 +19,7 @@ private:
 public:
 	ChunkTransparentRenderPass(const MeshRenderer& mesh_renderer);
 
-	void RenderTransparentChunkMeshes(const std::unordered_map<ChunkID, ChunkRenderData>& chunks_render_data, const ResourceManager& resource_manager);
+	void RenderTransparentChunkMeshes(const std::vector<const ChunkRenderData*>& transparent_chunks_render_data, const ResourceManager& resource_manager);
 };
 
 #endif // CHUNK_TRANSPARENT_RENDER_PASS_HPP
