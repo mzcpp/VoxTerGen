@@ -210,8 +210,14 @@ Mesh MeshBuilder::BuildChunkWireframeMesh()
 				const glm::ivec3 pos_x_block_coords = { constants::chunk::width - 2, y, z };
 				const glm::ivec3 pos_z_block_coords = { x, y, constants::chunk::depth - 2 };
 
+				const glm::ivec3 neg_x_block_coords = { 0, y, z };
+				const glm::ivec3 neg_z_block_coords = { x, y, 0 };
+
 				SaveQuadMesh(chunk_coords, type, pos_x_block_coords, static_cast<float>(step), Direction::PosX, chunk_wireframe_mesh);
 				SaveQuadMesh(chunk_coords, type, pos_z_block_coords, static_cast<float>(step), Direction::PosZ, chunk_wireframe_mesh);
+
+				SaveQuadMesh(chunk_coords, type, neg_x_block_coords, static_cast<float>(step), Direction::PosX, chunk_wireframe_mesh);
+				SaveQuadMesh(chunk_coords, type, neg_z_block_coords, static_cast<float>(step), Direction::PosZ, chunk_wireframe_mesh);
 			}
 		}
 	}
