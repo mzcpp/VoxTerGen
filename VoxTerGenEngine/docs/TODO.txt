@@ -16,8 +16,6 @@ rework MathUtils
 make classes MeshBuilder & CollisionSystem a namespace
 move world_up into better nested namespace
 use & fix GetChunkCoords - math_utils
-rename math_utils & all namespaces using snake_case?
-rename MathUtils class?
 start simplifying constructors, for example in Texture2D, move parameters that belong together into struct Texture2DSettings, Observer, etc
 simplify Observer::RelativeBlockPos lol
 

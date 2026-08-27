@@ -15,7 +15,7 @@
 class ResourceManager
 {
 private:
-    std::unordered_map<std::string, std::unique_ptr<TextureUtils::Texture2D>> textures_;
+    std::unordered_map<std::string, std::unique_ptr<texture_utils::Texture2D>> textures_;
     std::unordered_map<std::string, std::unique_ptr<ShaderProgram>> shader_programs_;
     std::unordered_map<std::string, std::unique_ptr<TTF_Font, decltype(&TTF_CloseFont)>> fonts_;
     std::unordered_map<std::string, std::unique_ptr<Mix_Chunk, decltype(&Mix_FreeChunk)>> sounds_;
@@ -23,7 +23,7 @@ private:
 public:
     void InitializeResources();
 
-    TextureUtils::Texture2D* GetTexture(const std::string& texture_name) const;
+    texture_utils::Texture2D* GetTexture(const std::string& texture_name) const;
 
     ShaderProgram* GetShaderProgram(const std::string& shader_program_name) const;
 
@@ -31,7 +31,7 @@ public:
 
     Mix_Chunk* GetSound(const std::string& sound_name) const;
     
-    void AddTexture(const std::string& texture_name, std::unique_ptr<TextureUtils::Texture2D> texture);
+    void AddTexture(const std::string& texture_name, std::unique_ptr<texture_utils::Texture2D> texture);
 
     void AddShaderProgram(const std::string& shader_program_name, std::unique_ptr<ShaderProgram> shader_program);
 

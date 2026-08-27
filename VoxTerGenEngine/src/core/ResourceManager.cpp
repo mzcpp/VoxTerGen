@@ -17,13 +17,13 @@
 
 void ResourceManager::InitializeResources()
 {
-    AddTexture("texture_atlas", std::make_unique<TextureUtils::Texture2D>(constants::paths::texture_atlas, true, false, true, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
+    AddTexture("texture_atlas", std::make_unique<texture_utils::Texture2D>(constants::paths::texture_atlas, true, false, true, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
     
     // -Y +Y -X -Z +X +Z
     constexpr std::array<GLint, 6> skybox_z_offsets = { 3, 2, 0, 5, 1, 4 };
     constexpr GLuint columns_n = 3; 
     constexpr GLuint rows_n = 2;
-    AddTexture("sky_cubemap", std::make_unique<TextureUtils::Texture2D>(constants::paths::sky_cubemap, columns_n, rows_n, skybox_z_offsets, true, false, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
+    AddTexture("sky_cubemap", std::make_unique<texture_utils::Texture2D>(constants::paths::sky_cubemap, columns_n, rows_n, skybox_z_offsets, true, false, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
 
     std::unique_ptr<ShaderProgram> chunk_mesh_shader = std::make_unique<ShaderProgram>(constants::paths::chunk_mesh_vertex_shader, constants::paths::chunk_mesh_fragment_shader);
 
@@ -47,7 +47,7 @@ void ResourceManager::InitializeResources()
     LoadSound("button_click", constants::paths::button_click);
 }
 
-TextureUtils::Texture2D* ResourceManager::GetTexture(const std::string& texture_name) const
+texture_utils::Texture2D* ResourceManager::GetTexture(const std::string& texture_name) const
 {
     const auto texture_it = textures_.find(texture_name);
 
@@ -99,7 +99,7 @@ Mix_Chunk* ResourceManager::GetSound(const std::string& sound_name) const
     return sound_it->second.get();
 }
 
-void ResourceManager::AddTexture(const std::string& texture_name, std::unique_ptr<TextureUtils::Texture2D> texture)
+void ResourceManager::AddTexture(const std::string& texture_name, std::unique_ptr<texture_utils::Texture2D> texture)
 {
     if (texture_name.empty() || texture == nullptr)
     {

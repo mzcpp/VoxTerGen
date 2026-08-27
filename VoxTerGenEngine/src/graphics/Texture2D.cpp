@@ -16,7 +16,7 @@
 #include <string>
 #include <string_view>
 
-namespace TextureUtils
+namespace texture_utils
 {
     static void GetTextureFormats(int n_components, bool sRGB, GLenum* internal_format, GLenum* data_format)
     {
