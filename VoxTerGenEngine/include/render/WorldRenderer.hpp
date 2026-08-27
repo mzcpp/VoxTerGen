@@ -41,7 +41,7 @@ private:
 	ChunkTransparentRenderPass chunk_transparent_render_pass_;
 
 	std::unordered_map<ChunkID, ChunkRenderData> chunks_render_data_;
-	std::vector<const ChunkRenderData*> transparent_chunks_render_data_;
+	std::vector<TransparentChunkData> transparent_chunks_data_;
 
 public:
 	WorldRenderer(const Camera& camera);

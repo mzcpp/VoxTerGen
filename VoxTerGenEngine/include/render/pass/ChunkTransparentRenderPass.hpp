@@ -9,7 +9,7 @@
 
 #include <vector>
 
-struct ChunkRenderData;
+struct TransparentChunkData;
 
 class ChunkTransparentRenderPass
 {
@@ -19,7 +19,7 @@ private:
 public:
 	ChunkTransparentRenderPass(const MeshRenderer& mesh_renderer);
 
-	void RenderTransparentChunkMeshes(const std::vector<const ChunkRenderData*>& transparent_chunks_render_data, const ResourceManager& resource_manager);
+	void RenderTransparentChunkMeshes(const std::vector<TransparentChunkData>& transparent_chunks_data, const ResourceManager& resource_manager);
 };
 
 #endif // CHUNK_TRANSPARENT_RENDER_PASS_HPP

@@ -21,4 +21,10 @@ struct ChunkRenderData
     bool visible_ = false;
 };
 
+struct TransparentChunkData
+{
+	const ChunkRenderData* render_data_;
+	double distance_squared_;
+};
+
 #endif // RENDER_DATA_HPP
