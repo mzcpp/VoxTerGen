@@ -4,8 +4,6 @@
 #include "core/ResourceManager.hpp"
 #include "core/Settings.hpp"
 
-#include "events/ChunkEvents.hpp"
-
 #include "graphics/Camera.hpp"
 
 #include "input/CameraController.hpp"
@@ -15,6 +13,7 @@
 #include "physics/CollisionSystem.hpp"
 
 #include "render/WorldRenderer.hpp"
+#include "render/events/ChunkEvents.hpp"
 
 #include "threading/ThreadPool.hpp"
 #include "threading/ThreadSafeQueue.hpp"

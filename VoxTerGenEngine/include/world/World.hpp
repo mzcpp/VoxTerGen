@@ -1,6 +1,8 @@
 #ifndef WORLD_HPP
 #define WORLD_HPP
 
+#include "render/events/ChunkEvents.hpp"
+
 #include "threading/ThreadSafeQueue.hpp"
 
 #include "world/Chunk.hpp"
@@ -8,8 +10,6 @@
 
 class Observer;
 class ThreadPool;
-
-struct ChunkEvent;
 
 class World
 {
