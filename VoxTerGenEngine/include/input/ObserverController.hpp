@@ -1,11 +1,11 @@
 #ifndef OBSERVER_CONTROLLER_HPP
 #define OBSERVER_CONTROLLER_HPP
 
+#include "world/Block.hpp"
+#include "world/Observer.hpp"
+
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-
-#include "world/Observer.hpp"
-#include "world/Block.hpp"
 
 class Block;
 class Camera;
@@ -66,5 +66,5 @@ public:
 	void ClampObserverHorizontalVelocity(double max);
 };
 
-#endif
+#endif // OBSERVER_CONTROLLER_HPP
 

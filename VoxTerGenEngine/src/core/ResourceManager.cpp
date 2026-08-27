@@ -1,6 +1,8 @@
 #include "core/ResourceManager.hpp"
+
 #include "graphics/Texture2D.hpp"
 #include "graphics/ShaderProgram.hpp"
+
 #include "utils/Logger.hpp"
 #include "utils/Constants.hpp"
 
@@ -9,9 +11,9 @@
 
 #include <glad/glad.h>
 
-#include <memory>
-#include <filesystem>
 #include <array>
+#include <filesystem>
+#include <memory>
 
 void ResourceManager::InitializeResources()
 {

@@ -3,7 +3,7 @@
 !!! DOCUMENT ALL FUNCTIONS !!!
 
 implement more sophisticated transparent render order
-make wireframe of chunk 'nicer'
+make wireframe of chunk look nicer
 move functions like GetChunkCoords to math?
 prioritize chunk streaming based on camera direction
 make chunk frustum aabb bigger to avoid popping in/out
@@ -26,6 +26,10 @@ create a single templated class for opensimplex, they are the same headers only 
 	template <typename Variant>
 	class OpenSimplexNoise
 rethink hashing for noise, better math::DotGrad?
+
+std::uint8_t -> Material in Mesh & Vertex?
+delete Material.cpp and DDA.cpp
+cleanup thread classes includes
 
 sort all #includes by alphabetical order and these order rules:
 	// 1. Corresponding header
@@ -58,5 +62,4 @@ fix bug when falling very fast, I fall through the floor
 
 ********* NOTES *********
 
-when the spawn point is found outside 0,0 chunk, need to stream the chunks from that spawn point chunk!
 Test with multiple compilers, GPU's, etc.!

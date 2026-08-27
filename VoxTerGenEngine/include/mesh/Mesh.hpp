@@ -3,8 +3,8 @@
 
 #include "mesh/Vertex.hpp"
 
-#include <vector>
 #include <cstdint>
+#include <vector>
 
 class Mesh
 {

@@ -1,3 +1,5 @@
+#include "world/ChunkManager.hpp"
+
 #include "mesh/MeshBuilder.hpp"
 
 #include "render/events/ChunkEvents.hpp"
@@ -6,20 +8,15 @@
 #include "threading/ThreadSafeQueue.hpp"
 
 #include "utils/MathUtils.hpp"
-#include "utils/Timer.hpp"
 
 #include "world/Chunk.hpp"
-#include "world/ChunkManager.hpp"
 
-#include <queue>
 #include <cmath>
 #include <ranges>
-#include <mutex>
 #include <shared_mutex>
 #include <stop_token>
 #include <memory>
 #include <cassert>
-#include <array>
 
 ChunkManager::ChunkManager(Observer& observer, ThreadPool& thread_pool) :
 	observer_(observer), 

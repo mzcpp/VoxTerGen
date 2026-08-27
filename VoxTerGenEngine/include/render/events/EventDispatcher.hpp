@@ -6,10 +6,10 @@
 #include "threading/ThreadSafeQueue.hpp"
 
 #include <functional>
+#include <optional>
+#include <typeindex>
 #include <unordered_map>
 #include <vector>
-#include <typeindex>
-#include <optional>
 #include <variant>
 
 template <typename EventType>

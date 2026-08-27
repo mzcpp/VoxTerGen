@@ -1,13 +1,13 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
-#include <fstream>
-#include <string>
-#include <iostream>
-#include <sstream>
 #include <chrono>
 #include <format>
+#include <fstream>
+#include <iostream>
 #include <mutex>
+#include <sstream>
+#include <string>
 #include <string_view>
 
 /**

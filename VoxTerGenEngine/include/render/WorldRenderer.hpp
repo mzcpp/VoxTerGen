@@ -4,10 +4,10 @@
 #include "render/events/ChunkEvents.hpp"
 
 #include "render/pass/BlockHighlightRenderPass.hpp"
-#include "render/pass/ChunkWireframeRenderPass.hpp"
 #include "render/pass/ChunkOpaqueRenderPass.hpp"
-#include "render/pass/SkyboxRenderPass.hpp"
 #include "render/pass/ChunkTransparentRenderPass.hpp"
+#include "render/pass/ChunkWireframeRenderPass.hpp"
+#include "render/pass/SkyboxRenderPass.hpp"
 
 #include "render/CameraUniformBuffer.hpp"
 
@@ -16,9 +16,6 @@
 #include "world/Chunk.hpp"
 
 #include <unordered_map>
-#include <memory>
-#include <queue>
-#include <optional>
 #include <vector>
 
 class Camera;

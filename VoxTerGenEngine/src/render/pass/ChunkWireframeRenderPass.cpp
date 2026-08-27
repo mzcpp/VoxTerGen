@@ -11,8 +11,8 @@
 #include "render/MeshRenderer.hpp"
 #include "render/RenderData.hpp"
 
-#include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
 
 ChunkWireframeRenderPass::ChunkWireframeRenderPass(const MeshRenderer& mesh_renderer) : 
     mesh_renderer_(mesh_renderer), 

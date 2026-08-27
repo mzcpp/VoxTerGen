@@ -8,8 +8,8 @@
 
 #include <array>
 #include <algorithm>
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
 namespace geometry
 {

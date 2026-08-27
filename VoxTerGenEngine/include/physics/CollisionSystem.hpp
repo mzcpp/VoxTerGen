@@ -2,17 +2,18 @@
 #define COLLISION_SYSTEM_HPP
 
 #include "physics/AABB.hpp"
-#include "world/Observer.hpp"
+
 #include "world/Block.hpp"
 #include "world/ChunkManager.hpp"
+#include "world/Observer.hpp"
 
-#include <glm/vec3.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
+#include <glm/vec3.hpp>
 
+#include <cmath>
 #include <concepts>
 #include <vector>
-#include <cmath>
 
 class Block;
 class Observer;

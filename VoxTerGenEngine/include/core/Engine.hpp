@@ -4,6 +4,8 @@
 #include "core/ResourceManager.hpp"
 #include "core/Settings.hpp"
 
+#include "events/ChunkEvents.hpp"
+
 #include "graphics/Camera.hpp"
 
 #include "input/CameraController.hpp"
@@ -19,8 +21,6 @@
 
 #include "world/Observer.hpp"
 #include "world/World.hpp"
-
-#include <queue>
 
 union SDL_Event;
 

@@ -1,13 +1,18 @@
 #include "mesh/MeshBuilder.hpp"
+
+#include "core/Direction.hpp"
+
 #include "mesh/Vertex.hpp"
 #include "mesh/Mesh.hpp"
-#include "world/ChunkManager.hpp"
-#include "world/Chunk.hpp"
+
 #include "render/Material.hpp"
-#include "utils/Logger.hpp"
-#include "core/Direction.hpp"
+
 #include "utils/Constants.hpp"
+#include "utils/Logger.hpp"
 #include "utils/Timer.hpp"
+
+#include "world/Chunk.hpp"
+#include "world/ChunkManager.hpp"
 
 #include <glm/vec3.hpp>
 

@@ -1,13 +1,11 @@
 #ifndef CHUNK_TRANSPARENT_RENDER_PASS_HPP
 #define CHUNK_TRANSPARENT_RENDER_PASS_HPP
 
-#include "core/ResourceManager.hpp"
-
 #include "render/MeshRenderer.hpp"
 
-#include "world/Chunk.hpp"
-
 #include <vector>
+
+class ResourceManager;
 
 struct TransparentChunkData;
 

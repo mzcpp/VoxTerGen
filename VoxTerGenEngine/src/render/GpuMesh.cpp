@@ -1,7 +1,7 @@
+#include "render/GpuMesh.hpp"
+
 #include "mesh/Vertex.hpp"
 #include "mesh/Mesh.hpp"
-
-#include "render/GpuMesh.hpp"
 
 #include <glad/glad.h>
 

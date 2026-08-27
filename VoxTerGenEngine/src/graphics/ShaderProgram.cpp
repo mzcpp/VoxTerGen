@@ -1,13 +1,11 @@
-#include "graphics/ShaderProgram.hpp"
 #include "graphics/Shader.hpp"
-
-#include <glm/glm.hpp>
+#include "graphics/ShaderProgram.hpp"
 
 #include <filesystem>
-#include <stdexcept>
-#include <vector>
-#include <string>
 #include <optional>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
 ShaderProgram::ShaderProgram(const std::filesystem::path& vertex_path, const std::filesystem::path& fragment_path, const std::filesystem::path& geometry_path) : 
     id_(0)

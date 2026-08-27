@@ -1,13 +1,13 @@
 #ifndef CHUNK_OPAQUE_RENDER_PASS_HPP
 #define CHUNK_OPAQUE_RENDER_PASS_HPP
 
-#include "core/ResourceManager.hpp"
-
 #include "render/MeshRenderer.hpp"
 
 #include "world/Chunk.hpp"
 
 #include <unordered_map>
+
+class ResourceManager;
 
 struct ChunkRenderData;
 
@@ -23,4 +23,3 @@ public:
 };
 
 #endif // CHUNK_OPAQUE_RENDER_PASS_HPP
-

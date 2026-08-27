@@ -1,4 +1,10 @@
 #include "mesh/Mesh.hpp"
+#include "mesh/Vertex.hpp"
+
+#include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
+
+#include <cstdint>
 
 void Mesh::AddVertex(glm::vec3 position, std::uint8_t normal, glm::vec2 uv, std::uint8_t material)
 {

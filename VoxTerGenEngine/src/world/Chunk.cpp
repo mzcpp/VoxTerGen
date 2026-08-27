@@ -1,16 +1,19 @@
 #include "world/Chunk.hpp"
-#include "utils/Logger.hpp"
+
 #include "core/Direction.hpp"
+
 #include "render/GpuMesh.hpp"
+
+#include "utils/Logger.hpp"
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-#include <stdexcept>
-#include <memory>
-#include <cstdint>
-#include <stop_token>
 #include <cassert>
+#include <cstdint>
+#include <memory>
+#include <stdexcept>
+#include <stop_token>
 
 namespace
 {

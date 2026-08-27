@@ -12,10 +12,8 @@
 #include <glm/vec3.hpp>
 
 #include <filesystem>
-#include <string>
 #include <string_view>
 #include <type_traits>
-#include <unordered_map>
 
 /**
  * @brief Represents an OpenGL shader program.

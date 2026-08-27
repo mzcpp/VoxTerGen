@@ -1,8 +1,10 @@
 #include "graphics/Shader.hpp"
 
+#include <glad/glad.h>
+
+#include <fstream>
 #include <stdexcept>
 #include <vector>
-#include <fstream>
 
 Shader::Shader(const std::filesystem::path& shader_path, GLenum shader_type) : 
     id_(0), 

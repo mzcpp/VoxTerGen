@@ -1,12 +1,13 @@
 #include "world/Observer.hpp"
 
+#include "utils/Logger.hpp"
+
 #include <glad/glad.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <SDL2/SDL.h>
-
-#include "utils/Logger.hpp"
 
 Observer::Observer(const glm::dvec3 position, float yaw, float pitch) : 
 	position_(position), 

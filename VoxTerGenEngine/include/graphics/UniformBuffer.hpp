@@ -3,8 +3,8 @@
 
 #include <glad/glad.h>
 
-#include <type_traits>
 #include <cassert>
+#include <type_traits>
 
 class UniformBuffer
 {

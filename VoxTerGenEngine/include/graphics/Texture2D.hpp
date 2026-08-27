@@ -4,7 +4,6 @@
 #include <glad/glad.h>
 
 #include <string_view>
-#include <span>
 
 namespace TextureUtils
 {

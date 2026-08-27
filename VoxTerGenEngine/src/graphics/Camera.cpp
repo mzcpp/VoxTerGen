@@ -1,7 +1,9 @@
 #include "graphics/Camera.hpp"
+
 #include "utils/Logger.hpp"
 
 #include <glad/glad.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 

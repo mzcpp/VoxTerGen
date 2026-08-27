@@ -3,6 +3,8 @@
 
 #include "core/Direction.hpp"
 
+#include "mesh/Mesh.hpp"
+
 #include "render/GpuMesh.hpp"
 
 #include "utils/Constants.hpp"
@@ -10,19 +12,17 @@
 
 #include "world/Block.hpp"
 
-#include "mesh/Mesh.hpp"
-
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
 #include <array>
-#include <memory>
-#include <variant>
-#include <cstdint>
-#include <unordered_map>
-#include <stop_token>
 #include <atomic>
+#include <cstdint>
+#include <memory>
+#include <stop_token>
+#include <unordered_map>
+#include <variant>
 
 enum class MeshState
 {

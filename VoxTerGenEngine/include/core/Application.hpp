@@ -3,12 +3,6 @@
 
 #include "core/Engine.hpp"
 
-#include "input/CameraController.hpp"
-#include "input/InputManager.hpp"
-
-#include "graphics/Camera.hpp"
-
-
 struct SDL_Window;
 struct TTF_Font;
 

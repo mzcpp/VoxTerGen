@@ -18,8 +18,8 @@
 
 #include <concepts>
 #include <cstdint>
-#include <vector>
 #include <stop_token>
+#include <vector>
 
 struct MaskCell
 {

@@ -1,19 +1,19 @@
-#include "core/Direction.hpp"
-
 #include "input/CameraController.hpp"
-#include "input/InputManager.hpp"
 
-#include "utils/MathUtils.hpp"
+#include "core/Direction.hpp"
 
 #include "graphics/Camera.hpp"
 
+#include "input/InputManager.hpp"
+
 #include "physics/DigitalDifferentialAnalyzer.hpp"
+
+#include "utils/MathUtils.hpp"
 
 #include "world/ChunkManager.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
-#include <glm/gtx/string_cast.hpp>
 
 #include <SDL2/SDL.h>
 

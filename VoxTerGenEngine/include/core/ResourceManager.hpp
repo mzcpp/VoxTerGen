@@ -7,10 +7,10 @@
 #include <SDL2_ttf/SDL_ttf.h>
 #include <SDL2_mixer/SDL_mixer.h>
 
-#include <unordered_map>
-#include <string>
-#include <memory>
 #include <filesystem>
+#include <memory>
+#include <string>
+#include <unordered_map>
 
 class ResourceManager
 {

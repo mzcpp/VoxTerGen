@@ -1,10 +1,6 @@
 #ifndef CHUNK_WIREFRAME_RENDER_PASS_HPP
 #define CHUNK_WIREFRAME_RENDER_PASS_HPP
 
-#include "core/ResourceManager.hpp"
-
-#include "physics/AABB.hpp"
-
 #include "mesh/Mesh.hpp"
 
 #include "world/Chunk.hpp"
@@ -12,9 +8,8 @@
 #include "render/RenderData.hpp"
 #include "render/MeshRenderer.hpp"
 
-#include <memory>
-
 class Camera;
+class ResourceManager;
 
 struct ChunkRenderData;
 

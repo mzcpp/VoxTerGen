@@ -1,18 +1,18 @@
+#include "render/WorldRenderer.hpp"
+
 #include "core/ResourceManager.hpp"
 
 #include "graphics/Camera.hpp"
 
-#include "physics/DigitalDifferentialAnalyzer.hpp"
-
 #include "math/Geometry.hpp"
 
+#include "physics/DigitalDifferentialAnalyzer.hpp"
+
+#include "render/RenderData.hpp"
 #include "render/pass/BlockHighlightRenderPass.hpp"
 #include "render/pass/ChunkOpaqueRenderPass.hpp"
 #include "render/pass/ChunkWireframeRenderPass.hpp"
 #include "render/pass/SkyboxRenderPass.hpp"
-
-#include "render/WorldRenderer.hpp"
-#include "render/RenderData.hpp"
 
 #include "world/Chunk.hpp"
 
@@ -20,10 +20,8 @@
 
 #include <glm/mat4x4.hpp>
 
-#include <queue>
 #include <optional>
 #include <ranges>
-#include <vector>
 
 WorldRenderer::WorldRenderer(const Camera& camera) : 
 	camera_(camera), 

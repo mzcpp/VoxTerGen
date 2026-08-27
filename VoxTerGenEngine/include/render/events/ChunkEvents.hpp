@@ -6,6 +6,7 @@
 #include <glm/vec2.hpp>
 
 #include <memory>
+#include <variant>
 
 /**
  * @brief Helper struct to combine multiple lambdas for std::visit.

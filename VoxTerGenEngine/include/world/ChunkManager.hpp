@@ -1,14 +1,14 @@
 #ifndef CHUNK_MANAGER_HPP
 #define CHUNK_MANAGER_HPP
 
-#include "utils/Hash.hpp"
-
 #include "graphics/Camera.hpp"
+
+#include "render/events/ChunkEvents.hpp"
 
 #include "threading/ThreadSafeQueue.hpp"
 #include "threading/ThreadSafePriorityQueue.hpp"
 
-#include "render/events/ChunkEvents.hpp"
+#include "utils/Hash.hpp"
 
 #include "world/Block.hpp"
 #include "world/Chunk.hpp"
@@ -16,12 +16,12 @@
 
 #include <glm/vec2.hpp>
 
+#include <memory>
 #include <mutex>
 #include <shared_mutex>
 #include <stop_token>
 #include <unordered_map>
 #include <queue>
-#include <memory>
 
 class ThreadPool;
 

@@ -1,12 +1,15 @@
 #ifndef WORLD_HPP
 #define WORLD_HPP
 
+#include "threading/ThreadSafeQueue.hpp"
+
 #include "world/Chunk.hpp"
 #include "world/ChunkManager.hpp"
 
-#include "threading/ThreadSafeQueue.hpp"
-
+class Observer;
 class ThreadPool;
+
+struct ChunkEvent;
 
 class World
 {
