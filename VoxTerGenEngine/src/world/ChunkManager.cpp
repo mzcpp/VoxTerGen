@@ -11,6 +11,10 @@
 
 #include "world/Chunk.hpp"
 
+#include <glm/common.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+
 #include <cmath>
 #include <ranges>
 #include <shared_mutex>
@@ -162,6 +166,7 @@ void ChunkManager::UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 
 	while (it != chunks_.end())
 	{
+		assert(it->second != nullptr);
 		Chunk& chunk = *(it->second);
 
 		if (chunk.GetChunkState() == ChunkState::PendingUnload)
@@ -246,33 +251,35 @@ std::shared_ptr<Chunk> ChunkManager::GetChunkAt(glm::ivec2 chunk_coord) const
 
 glm::ivec3 ChunkManager::AbsoluteBlockPos(glm::dvec3 position, glm::dvec3 pos_offset) const noexcept
 {
-    return glm::ivec3{ std::floor(position.x + pos_offset.x), std::floor(position.y + pos_offset.y), std::floor(position.z + pos_offset.z) };
+	return glm::floor(position + pos_offset);
 }
 
 glm::ivec3 ChunkManager::RelativeBlockPos(glm::dvec3 position, glm::dvec3 pos_offset) const noexcept
 {
 	glm::ivec3 block_pos(0);
 
-	if (position.x + pos_offset.x < 0.0)
+	const glm::dvec3 offset_pos = position + pos_offset;
+
+	if (offset_pos.x < 0.0)
 	{
-		const int chunk_x_offset = (std::abs(static_cast<int>(position.x + pos_offset.x)) / constants::chunk::width) + 1;
-		block_pos.x = (static_cast<int>(position.x + pos_offset.x) + chunk_x_offset * constants::chunk::width) - 1;
+		const int chunk_x_offset = (std::abs(static_cast<int>(offset_pos.x)) / constants::chunk::width) + 1;
+		block_pos.x = (static_cast<int>(offset_pos.x) + chunk_x_offset * constants::chunk::width) - 1;
 	}
 	else
 	{
-		block_pos.x = static_cast<int>(position.x + pos_offset.x) % constants::chunk::width;
+		block_pos.x = static_cast<int>(offset_pos.x) % constants::chunk::width;
 	}
 
-	block_pos.y = static_cast<int>(std::floor(position.y + pos_offset.y));
+	block_pos.y = static_cast<int>(std::floor(offset_pos.y));
 
-	if (position.z + pos_offset.z < 0.0)
+	if (offset_pos.z < 0.0)
 	{
-		const int chunk_z_offset = (std::abs(static_cast<int>(position.z + pos_offset.z)) / constants::chunk::depth) + 1;
-		block_pos.z = (static_cast<int>(position.z + pos_offset.z) + chunk_z_offset * constants::chunk::depth) - 1;
+		const int chunk_z_offset = (std::abs(static_cast<int>(offset_pos.z)) / constants::chunk::depth) + 1;
+		block_pos.z = (static_cast<int>(offset_pos.z) + chunk_z_offset * constants::chunk::depth) - 1;
 	}
 	else
 	{
-		block_pos.z = static_cast<int>(position.z + pos_offset.z) % constants::chunk::depth;
+		block_pos.z = static_cast<int>(offset_pos.z) % constants::chunk::depth;
 	}
 
 	return block_pos;
