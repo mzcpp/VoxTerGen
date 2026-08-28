@@ -3,7 +3,7 @@
 #include "core/Direction.hpp"
 
 #include "mesh/Vertex.hpp"
-#include "mesh/Mesh.hpp"
+#include "mesh/Mesh3D.hpp"
 
 #include "render/Material.hpp"
 
@@ -19,9 +19,9 @@
 #include <array>
 #include <cassert>
 
-Mesh MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offset)
+Mesh3D MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offset)
 {
-	Mesh unit_cube_mesh;
+	Mesh3D unit_cube_mesh;
 
 	for (Direction dir : AllDirections())
     {
@@ -34,7 +34,7 @@ Mesh MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offse
 	return unit_cube_mesh;
 }
 
-void MeshBuilder::CreateMeshIndices(Mesh& mesh)
+void MeshBuilder::CreateMeshIndices(Mesh3D& mesh)
 {
 	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
 	{
@@ -42,11 +42,11 @@ void MeshBuilder::CreateMeshIndices(Mesh& mesh)
 	}
 }
 
-void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh& mesh)
+void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh3D& mesh)
 {
 	for (int i = 0; i < 4; ++i)
 	{
-		Vertex vertex;
+		Vertex3D vertex;
 
 		switch (dir) 
 		{
@@ -193,9 +193,9 @@ ChunkMesh MeshBuilder::BuildChunkMeshGreedy(const ChunkMeshDependencies& chunk_m
 	return chunk_mesh;
 }
 
-Mesh MeshBuilder::BuildChunkWireframeMesh()
+Mesh3D MeshBuilder::BuildChunkWireframeMesh()
 {
-	Mesh chunk_wireframe_mesh;
+	Mesh3D chunk_wireframe_mesh;
 
 	constexpr int step = 2;
 
@@ -230,7 +230,7 @@ Mesh MeshBuilder::BuildChunkWireframeMesh()
 	return chunk_wireframe_mesh;
 }
 
-void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, float scale, Direction dir, Mesh& mesh)
+void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, float scale, Direction dir, Mesh3D& mesh)
 {
 	const glm::vec3 block_abs_pos = {
 		chunk_world_coords.x * constants::chunk::width + block_rel_coords.x,

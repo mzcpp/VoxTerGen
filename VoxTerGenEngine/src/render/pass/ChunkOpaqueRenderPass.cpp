@@ -5,7 +5,7 @@
 
 #include "core/ResourceManager.hpp"
 
-#include "mesh/Mesh.hpp"
+#include "mesh/Mesh3D.hpp"
 
 #include "world/Chunk.hpp"
 

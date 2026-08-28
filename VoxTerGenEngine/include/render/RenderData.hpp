@@ -3,25 +3,25 @@
 
 #include "physics/AABB.hpp"
 
-#include "render/GpuMesh.hpp"
+#include "render/GpuMesh3D.hpp"
 
 #include <glm/mat4x4.hpp>
 
-struct 2DTextureRenderData
+struct Texture2DRenderData
 {
 
-}
+};
 
-struct MeshRenderData
+struct ChunkMeshRenderData
 {
-    GpuMesh gpu_opaque_mesh_;
-    GpuMesh gpu_transparent_mesh_;
+    GpuMesh3D gpu_opaque_mesh_;
+    GpuMesh3D gpu_transparent_mesh_;
     glm::mat4 model_matrix_ = glm::mat4(1.0f);
 };
 
 struct ChunkRenderData
 {
-	MeshRenderData mesh_render_data_;
+	ChunkMeshRenderData mesh_render_data_;
 	AABB aabb_;
     bool visible_ = false;
 };

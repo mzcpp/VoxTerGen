@@ -3,7 +3,7 @@
 
 #include "core/Direction.hpp"
 
-#include "mesh/Mesh.hpp"
+#include "mesh/Mesh3D.hpp"
 
 #include "render/Material.hpp"
 #include "render/events/ChunkEvents.hpp"
@@ -44,19 +44,19 @@ public:
 	MeshBuilder(const MeshBuilder& other) = delete;
 	MeshBuilder& operator=(const MeshBuilder& other) = delete;
 
-	static Mesh BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offset = { 0.0f, 0.0f, 0.0f });
+	static Mesh3D BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offset = { 0.0f, 0.0f, 0.0f });
 
-	static void CreateMeshIndices(Mesh& mesh);
+	static void CreateMeshIndices(Mesh3D& mesh);
 
-	static void CreateMeshVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh& mesh);
+	static void CreateMeshVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh3D& mesh);
 
 	static ChunkMesh BuildChunkMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshDependencies& chunk_mesh_dependencies);
 	
 	static ChunkMesh BuildChunkMeshGreedy(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token);
 
-	static Mesh BuildChunkWireframeMesh();
+	static Mesh3D BuildChunkWireframeMesh();
 
-	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, float scale, Direction dir, Mesh& mesh);
+	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, float scale, Direction dir, Mesh3D& mesh);
 
 	static std::uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 

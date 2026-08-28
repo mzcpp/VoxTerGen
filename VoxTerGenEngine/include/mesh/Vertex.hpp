@@ -6,7 +6,13 @@
 
 #include <cstdint>
 
-struct Vertex
+struct Vertex2D
+{
+    glm::vec3 position_ = glm::vec3(0.0f);
+    glm::vec2 uv_ = glm::vec2(0.0f);
+};
+
+struct Vertex3D
 {
     glm::vec3 position_ = glm::vec3(0.0f);
     std::uint8_t normal_ = 0;

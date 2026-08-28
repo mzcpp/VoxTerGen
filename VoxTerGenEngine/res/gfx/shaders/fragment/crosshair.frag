@@ -2,7 +2,7 @@
 
 uniform sampler2D crosshair_texture;
 
-in vec3 tex_coords;
+in vec2 tex_coords;
 
 out vec4 fragment_color;
 

@@ -3,9 +3,9 @@
 
 #include "core/Direction.hpp"
 
-#include "mesh/Mesh.hpp"
+#include "mesh/Mesh3D.hpp"
 
-#include "render/GpuMesh.hpp"
+#include "render/GpuMesh3D.hpp"
 
 #include "utils/Constants.hpp"
 #include "utils/Hash.hpp"
@@ -57,8 +57,8 @@ struct ChunkMeshDependencies
 
 struct ChunkMesh
 {
-    Mesh cpu_opaque_mesh_;
-    Mesh cpu_transparent_mesh_;
+    Mesh3D cpu_opaque_mesh_;
+    Mesh3D cpu_transparent_mesh_;
 };
 
 using ChunkID = std::uint64_t;

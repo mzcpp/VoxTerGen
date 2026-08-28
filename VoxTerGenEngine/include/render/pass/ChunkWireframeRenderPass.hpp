@@ -1,7 +1,7 @@
 #ifndef CHUNK_WIREFRAME_RENDER_PASS_HPP
 #define CHUNK_WIREFRAME_RENDER_PASS_HPP
 
-#include "mesh/Mesh.hpp"
+#include "mesh/Mesh3D.hpp"
 
 #include "world/Chunk.hpp"
 
@@ -17,8 +17,8 @@ class ChunkWireframeRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
-	Mesh chunk_wireframe_mesh_;
-	MeshRenderData render_data_;
+	Mesh3D chunk_wireframe_mesh_;
+	ChunkMeshRenderData render_data_;
 	bool render_wireframe_;
 
 public:

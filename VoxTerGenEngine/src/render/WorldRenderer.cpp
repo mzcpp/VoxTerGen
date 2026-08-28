@@ -69,7 +69,7 @@ void WorldRenderer::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_
 void WorldRenderer::ProcessChunkMeshReady(const ChunkMeshReady& event)
 {
 	 // TODO: Make chunk_mesh_render_data a member variable and reuse the GPU buffers, not erase and allocate new.
-	 MeshRenderData chunk_mesh_render_data;
+	 ChunkMeshRenderData chunk_mesh_render_data;
 	 chunk_mesh_render_data.gpu_opaque_mesh_.InitializeBuffers();
 	 chunk_mesh_render_data.gpu_opaque_mesh_.UploadMeshData(event.chunk_mesh_->cpu_opaque_mesh_);
 	 chunk_mesh_render_data.gpu_transparent_mesh_.InitializeBuffers();

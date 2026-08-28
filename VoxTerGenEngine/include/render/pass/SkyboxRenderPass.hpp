@@ -1,7 +1,7 @@
 #ifndef SKYBOX_RENDER_PASS_HPP
 #define SKYBOX_RENDER_PASS_HPP
 
-#include "mesh/Mesh.hpp"
+#include "mesh/Mesh3D.hpp"
 
 #include "render/MeshRenderer.hpp"
 #include "render/RenderData.hpp"
@@ -12,8 +12,8 @@ class SkyboxRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
-	Mesh skybox_mesh_;
-	MeshRenderData render_data_;
+	Mesh3D skybox_mesh_;
+	ChunkMeshRenderData render_data_;
 
 public:
 	SkyboxRenderPass(const MeshRenderer& mesh_renderer);

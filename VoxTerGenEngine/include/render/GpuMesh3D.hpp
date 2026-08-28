@@ -1,14 +1,14 @@
-#ifndef GPU_MESH_HPP
-#define GPU_MESH_HPP
+#ifndef GPU_MESH_3D_HPP
+#define GPU_MESH_3D_HPP
 
 #include "graphics/Buffer.hpp"
 #include "graphics/VertexArray.hpp"
 
 #include <glad/glad.h>
 
-class Mesh;
+class Mesh3D;
 
-class GpuMesh
+class GpuMesh3D
 {
 private:
     VertexArray vao_;
@@ -17,19 +17,19 @@ private:
     GLsizei index_count_ = 0;
 
 public:
-    GpuMesh() = default;
+    GpuMesh3D() = default;
 
-    GpuMesh(const GpuMesh& other) = delete;
-    GpuMesh& operator=(const GpuMesh& other) = delete;
+    GpuMesh3D(const GpuMesh3D& other) = delete;
+    GpuMesh3D& operator=(const GpuMesh3D& other) = delete;
 
-    GpuMesh(GpuMesh&& other) noexcept;
-    GpuMesh& operator=(GpuMesh&& other) noexcept;
+    GpuMesh3D(GpuMesh3D&& other) noexcept;
+    GpuMesh3D& operator=(GpuMesh3D&& other) noexcept;
 
-    ~GpuMesh() = default;
+    ~GpuMesh3D() = default;
 
     void InitializeBuffers() noexcept;
 
-    void UploadMeshData(const Mesh& mesh) noexcept;
+    void UploadMeshData(const Mesh3D& mesh) noexcept;
 
     // Getters
     const VertexArray& VAO() const noexcept { return vao_; }
@@ -38,5 +38,5 @@ public:
     GLsizei IndexCount() const noexcept { return index_count_; }
 };
 
-#endif // GPU_MESH_HPP
+#endif // GPU_MESH_3D_HPP
 

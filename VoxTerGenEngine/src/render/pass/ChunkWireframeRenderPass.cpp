@@ -5,7 +5,7 @@
 #include "graphics/ShaderProgram.hpp"
 #include "graphics/Camera.hpp"
 
-#include "mesh/Mesh.hpp"
+#include "mesh/Mesh3D.hpp"
 #include "mesh/MeshBuilder.hpp"
 
 #include "render/MeshRenderer.hpp"

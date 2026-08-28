@@ -2,7 +2,7 @@
 
 #include "core/Direction.hpp"
 
-#include "render/GpuMesh.hpp"
+#include "render/GpuMesh3D.hpp"
 
 #include "utils/Logger.hpp"
 

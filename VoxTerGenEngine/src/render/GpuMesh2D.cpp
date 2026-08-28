@@ -1,13 +1,13 @@
-#include "render/GpuMesh.hpp"
+#include "render/GpuMesh2D.hpp"
 
 #include "mesh/Vertex.hpp"
-#include "mesh/Mesh.hpp"
+#include "mesh/Mesh2D.hpp"
 
 #include <glad/glad.h>
 
 #include <utility>
 
-GpuMesh::GpuMesh(GpuMesh&& other) noexcept
+GpuMesh2D::GpuMesh2D(GpuMesh2D&& other) noexcept
 {
     vao_ = std::move(other.vao_);
     vbo_ = std::move(other.vbo_);
@@ -15,7 +15,7 @@ GpuMesh::GpuMesh(GpuMesh&& other) noexcept
     index_count_ = std::exchange(other.index_count_, 0);
 }
 
-GpuMesh& GpuMesh::operator=(GpuMesh&& other) noexcept
+GpuMesh2D& GpuMesh2D::operator=(GpuMesh2D&& other) noexcept
 {
     if (&other == this)
     {
@@ -30,42 +30,32 @@ GpuMesh& GpuMesh::operator=(GpuMesh&& other) noexcept
     return *this;
 }
 
-void GpuMesh::InitializeBuffers() noexcept
+void GpuMesh2D::InitializeBuffers() noexcept
 {
     vao_.Initialize();
     vbo_.Initialize();
     ebo_.Initialize();
 
-    vao_.BindVertexBuffer(0, vbo_, 0, sizeof(Vertex));
+    vao_.BindVertexBuffer(0, vbo_, 0, sizeof(Vertex2D));
     vao_.BindElementBuffer(ebo_);
 
     // Position
     vao_.EnableAttribute(0);
-    vao_.SetAttribute(0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position_));
+    vao_.SetAttribute(0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex2D, position_));
     vao_.BindAttribute(0, 0);
 
-    // Normal
-    vao_.EnableAttribute(1);
-    vao_.SetIntAttribute(1, 1, GL_UNSIGNED_BYTE, offsetof(Vertex, normal_));
-    vao_.BindAttribute(1, 0);
-
     // UV
-    vao_.EnableAttribute(2);
-    vao_.SetAttribute(2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, uv_));
-    vao_.BindAttribute(2, 0);
-
-    // Material
-    vao_.EnableAttribute(3);
-    vao_.SetIntAttribute(3, 1, GL_UNSIGNED_BYTE, offsetof(Vertex, material_));
-    vao_.BindAttribute(3, 0);
+    vao_.EnableAttribute(1);
+    vao_.SetAttribute(1, 1, GL_FLOAT, GL_FALSE, offsetof(Vertex2D, uv_));
+    vao_.BindAttribute(1, 0);
 }
 
-void GpuMesh::UploadMeshData(const Mesh& mesh) noexcept
+void GpuMesh2D::UploadMeshData(const Mesh2D& mesh) noexcept
 {
-    const std::vector<Vertex>& vertices = mesh.Vertices();
+    const std::vector<Vertex2D>& vertices = mesh.Vertices();
     const std::vector<std::uint32_t>& indices = mesh.Indices();
 
-    vbo_.UploadData(vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+    vbo_.UploadData(vertices.size() * sizeof(Vertex2D), vertices.data(), GL_STATIC_DRAW);
     ebo_.UploadData(indices.size() * sizeof(std::uint32_t), indices.data(), GL_STATIC_DRAW);
     index_count_ = static_cast<GLsizei>(indices.size());
 }
