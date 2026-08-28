@@ -7,6 +7,11 @@
 
 #include <glm/mat4x4.hpp>
 
+struct 2DTextureRenderData
+{
+
+}
+
 struct MeshRenderData
 {
     GpuMesh gpu_opaque_mesh_;

@@ -8,6 +8,7 @@
 #include "render/pass/ChunkTransparentRenderPass.hpp"
 #include "render/pass/ChunkWireframeRenderPass.hpp"
 #include "render/pass/SkyboxRenderPass.hpp"
+#include "render/pass/UIRenderPass.hpp"
 
 #include "render/CameraUniformBuffer.hpp"
 
@@ -36,6 +37,7 @@ private:
 	SkyboxRenderPass skybox_render_pass_;
 	ChunkWireframeRenderPass chunk_wireframe_render_pass_;
 	ChunkTransparentRenderPass chunk_transparent_render_pass_;
+	UIRenderPass ui_render_pass_;
 
 	std::unordered_map<ChunkID, ChunkRenderData> chunks_render_data_;
 	std::vector<TransparentChunkData> transparent_chunks_data_;

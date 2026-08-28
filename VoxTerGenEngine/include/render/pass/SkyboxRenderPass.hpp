@@ -23,5 +23,5 @@ public:
 	void RenderSkybox(const ResourceManager& resource_manager);
 };
 
-#endif
+#endif // SKYBOX_RENDER_PASS_HPP
 

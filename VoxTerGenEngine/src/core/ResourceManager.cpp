@@ -25,6 +25,8 @@ void ResourceManager::InitializeResources()
     constexpr GLuint rows_n = 2;
     AddTexture("sky_cubemap", std::make_unique<texture_utils::Texture2D>(constants::paths::sky_cubemap, columns_n, rows_n, skybox_z_offsets, true, false, false, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
 
+    AddTexture("crosshair", std::make_unique<texture_utils::Texture2D>(constants::paths::crosshair, true, false, true, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_NEAREST));
+
     std::unique_ptr<ShaderProgram> chunk_mesh_shader = std::make_unique<ShaderProgram>(constants::paths::chunk_mesh_vertex_shader, constants::paths::chunk_mesh_fragment_shader);
 
     chunk_mesh_shader->Use();
@@ -41,6 +43,7 @@ void ResourceManager::InitializeResources()
     AddShaderProgram("block_highlight_shader", std::make_unique<ShaderProgram>(constants::paths::block_highlight_vertex_shader, constants::paths::block_highlight_fragment_shader));
     AddShaderProgram("skybox_shader", std::make_unique<ShaderProgram>(constants::paths::skybox_vertex_shader, constants::paths::skybox_fragment_shader));
     AddShaderProgram("chunk_wireframe_shader", std::make_unique<ShaderProgram>(constants::paths::chunk_wireframe_vertex_shader, constants::paths::chunk_wireframe_fragment_shader));
+    AddShaderProgram("crosshair_shader", std::make_unique<ShaderProgram>(constants::paths::crosshair_vertex_shader, constants::paths::crosshair_fragment_shader));
     
     constexpr int font_size = 28;
     LoadFont("default_font", constants::paths::default_font, font_size);

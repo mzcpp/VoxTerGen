@@ -98,6 +98,7 @@ namespace constants
     {
         inline constexpr const char* texture_atlas = "res/gfx/textures/block_atlas.png";
         inline constexpr const char* sky_cubemap = "res/gfx/textures/cubemap/cloudbox.png";
+        inline constexpr const char* crosshair = "res/gfx/textures/crosshair.png";
         inline constexpr const char* chunk_mesh_vertex_shader = "res/gfx/shaders/vertex/chunk_mesh.vert";
         inline constexpr const char* chunk_mesh_fragment_shader = "res/gfx/shaders/fragment/chunk_mesh.frag";
         inline constexpr const char* block_highlight_vertex_shader = "res/gfx/shaders/vertex/block_highlight.vert";
@@ -106,6 +107,8 @@ namespace constants
         inline constexpr const char* skybox_fragment_shader = "res/gfx/shaders/fragment/skybox.frag";
         inline constexpr const char* chunk_wireframe_vertex_shader = "res/gfx/shaders/vertex/chunk_wireframe.vert";
         inline constexpr const char* chunk_wireframe_fragment_shader = "res/gfx/shaders/fragment/chunk_wireframe.frag";
+        inline constexpr const char* crosshair_vertex_shader = "res/gfx/shaders/vertex/crosshair.vert";
+        inline constexpr const char* crosshair_fragment_shader = "res/gfx/shaders/fragment/crosshair.frag";
         inline constexpr const char* default_font = "res/font/VT323-Regular.ttf";
         inline constexpr const char* button_click = "res/sfx/click.wav";
     } // namespace paths
