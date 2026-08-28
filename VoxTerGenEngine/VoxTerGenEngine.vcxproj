@@ -186,7 +186,6 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\render\pass\ChunkOpaqueRenderPass.cpp" />
     <ClCompile Include="src\render\pass\ChunkWireframeRenderPass.cpp" />
     <ClCompile Include="src\render\pass\SkyboxRenderPass.cpp" />
-    <ClCompile Include="src\physics\DigitalDifferentialAnalyzer.cpp" />
     <ClCompile Include="src\physics\CollisionSystem.cpp" />
     <ClCompile Include="include\external\glm\detail\glm.cpp" />
     <ClCompile Include="src\input\ObserverController.cpp" />
@@ -205,7 +204,6 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\input\InputManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mesh\MeshBuilder.cpp" />
-    <ClCompile Include="src\render\Material.cpp" />
     <ClCompile Include="src\render\MeshRenderer.cpp" />
     <ClCompile Include="src\render\GpuMesh.cpp" />
     <ClCompile Include="src\render\WorldRenderer.cpp" />
