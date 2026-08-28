@@ -3,13 +3,14 @@
 
 #include "physics/AABB.hpp"
 
+#include "render/GpuMesh2D.hpp"
 #include "render/GpuMesh3D.hpp"
 
 #include <glm/mat4x4.hpp>
 
 struct Texture2DRenderData
 {
-
+    GpuMesh2D gpu_mesh_;
 };
 
 struct ChunkMeshRenderData

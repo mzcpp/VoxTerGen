@@ -1,5 +1,5 @@
-#ifndef MESH_HPP
-#define MESH_HPP
+#ifndef MESH_2D_HPP
+#define MESH_2D_HPP
 
 #include "mesh/Vertex.hpp"
 
@@ -13,7 +13,7 @@ private:
 	std::vector<std::uint32_t> indices_;
 
 public:
-	void AddVertex(glm::vec3 position, glm::vec2 uv);
+	void AddVertex(glm::vec2 position, glm::vec2 uv);
 
 	void AddVertex(Vertex2D vertex);
 
@@ -24,5 +24,5 @@ public:
 	const std::vector<std::uint32_t>& Indices() const noexcept { return indices_; }
 };
 
-#endif // MESH_HPP
+#endif // MESH_2D_HPP
 

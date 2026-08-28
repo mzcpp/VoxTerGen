@@ -40,7 +40,7 @@ void ChunkTransparentRenderPass::RenderTransparentChunkMeshes(const std::vector<
 	for (const TransparentChunkData& transparent_chunk_data : transparent_chunks_data)
 	{
 		shader_program->Set<glm::mat4>("model", transparent_chunk_data.render_data_->mesh_render_data_.model_matrix_);
-		mesh_renderer_.RenderGpuMesh(transparent_chunk_data.render_data_->mesh_render_data_.gpu_transparent_mesh_);
+		mesh_renderer_.RenderGpuMesh<GpuMesh3D>(transparent_chunk_data.render_data_->mesh_render_data_.gpu_transparent_mesh_);
 	}
 
 	glDisable(GL_BLEND);

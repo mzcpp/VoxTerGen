@@ -41,7 +41,7 @@ void WorldRenderer::Initialize()
 	block_highlight_render_pass_.PrepareBlockRenderData();
 	skybox_render_pass_.PrepareSkyboxRenderData();
 	chunk_wireframe_render_pass_.PrepareChunkWireframeRenderData();
-	ui_render_pass_.PrepareCrosshairRenderData();
+	//ui_render_pass_.PrepareCrosshairRenderData();
 }
 
 void WorldRenderer::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
@@ -108,7 +108,7 @@ void WorldRenderer::RenderWorld(float alpha, const ResourceManager& resource_man
 	skybox_render_pass_.RenderSkybox(resource_manager);
 	chunk_wireframe_render_pass_.RenderChunkWireframe(camera_, resource_manager);
 	chunk_transparent_render_pass_.RenderTransparentChunkMeshes(transparent_chunks_data_, resource_manager);
-	ui_render_pass_.RenderCrosshair(resource_manager);
+	//ui_render_pass_.RenderCrosshair(resource_manager);
 }
 
 void WorldRenderer::UpdateChunksVisibility()

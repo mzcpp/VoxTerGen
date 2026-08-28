@@ -42,7 +42,7 @@ void ChunkOpaqueRenderPass::RenderOpaqueChunkMeshes(const std::unordered_map<Chu
 	for (const ChunkRenderData& chunk_data : chunks_render_data | std::views::values | std::views::filter(chunk_visible))
 	{
 		shader_program->Set<glm::mat4>("model", chunk_data.mesh_render_data_.model_matrix_);
-		mesh_renderer_.RenderGpuMesh(chunk_data.mesh_render_data_.gpu_opaque_mesh_);
+		mesh_renderer_.RenderGpuMesh<GpuMesh3D>(chunk_data.mesh_render_data_.gpu_opaque_mesh_);
 	}
 
 	glUseProgram(0);

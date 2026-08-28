@@ -3,6 +3,7 @@
 
 #include "core/Direction.hpp"
 
+#include "mesh/Mesh2D.hpp"
 #include "mesh/Mesh3D.hpp"
 
 #include "render/Material.hpp"
@@ -36,6 +37,9 @@ struct MergedQuad
 	int height_;
 };
 
+template <typename T>
+concept Mesh = std::same_as<T, Mesh2D> || std::same_as<T, Mesh3D>;
+
 class MeshBuilder final
 {
 public:
@@ -44,11 +48,22 @@ public:
 	MeshBuilder(const MeshBuilder& other) = delete;
 	MeshBuilder& operator=(const MeshBuilder& other) = delete;
 
-	static Mesh3D BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offset = { 0.0f, 0.0f, 0.0f });
+	static Mesh2D BuildUnitMesh2D();
 
-	static void CreateMeshIndices(Mesh3D& mesh);
+	static Mesh3D BuildUnitMesh3D(BlockType block_type, glm::vec3 origin_offset = { 0.0f, 0.0f, 0.0f });
 
-	static void CreateMeshVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh3D& mesh);
+	template <Mesh T>
+	static void CreateMeshIndices(T& mesh)
+	{
+		for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
+		{
+			mesh.AddIndex(i + static_cast<std::uint32_t>(mesh.Vertices().size()));
+		}
+	}
+
+	static void CreateMesh2DVertices(float scale, glm::vec2 origin_offset, Mesh2D& mesh);
+
+	static void CreateMesh3DVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh3D& mesh);
 
 	static ChunkMesh BuildChunkMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshDependencies& chunk_mesh_dependencies);
 	

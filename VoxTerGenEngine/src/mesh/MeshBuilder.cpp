@@ -3,6 +3,7 @@
 #include "core/Direction.hpp"
 
 #include "mesh/Vertex.hpp"
+#include "mesh/Mesh2D.hpp"
 #include "mesh/Mesh3D.hpp"
 
 #include "render/Material.hpp"
@@ -19,14 +20,24 @@
 #include <array>
 #include <cassert>
 
-Mesh3D MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offset)
+Mesh2D MeshBuilder::BuildUnitMesh2D()
+{
+	Mesh2D crosshair_mesh;
+
+	CreateMeshIndices<Mesh2D>(crosshair_mesh);
+	CreateMesh2DVertices(1.0f, { 0, 0 }, crosshair_mesh);
+
+	return crosshair_mesh;
+}
+
+Mesh3D MeshBuilder::BuildUnitMesh3D(BlockType block_type, glm::vec3 origin_offset)
 {
 	Mesh3D unit_cube_mesh;
 
 	for (Direction dir : AllDirections())
     {
-		CreateMeshIndices(unit_cube_mesh);
-        CreateMeshVertices(block_type, dir, 1.0, origin_offset, unit_cube_mesh);
+		CreateMeshIndices<Mesh3D>(unit_cube_mesh);
+        CreateMesh3DVertices(block_type, dir, 1.0, origin_offset, unit_cube_mesh);
     }
 
 	assert(unit_cube_mesh.Vertices().size() % 4 == 0);
@@ -34,15 +45,26 @@ Mesh3D MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_off
 	return unit_cube_mesh;
 }
 
-void MeshBuilder::CreateMeshIndices(Mesh3D& mesh)
+void MeshBuilder::CreateMesh2DVertices(float scale, glm::vec2 origin_offset, Mesh2D& mesh)
 {
-	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
+	for (int i = 0; i < 4; ++i)
 	{
-		mesh.AddIndex(i + static_cast<std::uint32_t>(mesh.Vertices().size()));
+		Vertex2D vertex;
+
+		// 0, 0
+		// 1, 0
+		// 0, 1
+		// 1, 1
+		vertex.position_ = glm::vec2{ i % 2 != 0, (i / 2) % 2 != 0 };
+		vertex.position_ *= scale;
+		vertex.position_ += origin_offset;
+		vertex.uv_ = glm::vec2{ i % 2 != 0, (i / 2) % 2 != 0 };
+
+		mesh.AddVertex(vertex);
 	}
 }
 
-void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh3D& mesh)
+void MeshBuilder::CreateMesh3DVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh3D& mesh)
 {
 	for (int i = 0; i < 4; ++i)
 	{
@@ -238,8 +260,8 @@ void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, gl
 		chunk_world_coords.y * constants::chunk::depth + block_rel_coords.z
 	};
 
-	CreateMeshIndices(mesh);
-	CreateMeshVertices(type, dir, scale, block_abs_pos, mesh);
+	CreateMeshIndices<Mesh3D>(mesh);
+	CreateMesh3DVertices(type, dir, scale, block_abs_pos, mesh);
 	
 	assert(mesh.Vertices().size() % 4 == 0);
 }

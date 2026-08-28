@@ -6,7 +6,7 @@
 
 #include <cstdint>
 
-void Mesh2D::AddVertex(glm::vec3 position, glm::vec2 uv)
+void Mesh2D::AddVertex(glm::vec2 position, glm::vec2 uv)
 {
 	vertices_.emplace_back(position, uv);
 }

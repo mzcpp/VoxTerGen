@@ -20,7 +20,7 @@ SkyboxRenderPass::SkyboxRenderPass(const MeshRenderer& mesh_renderer) :
 
 void SkyboxRenderPass::PrepareSkyboxRenderData()
 {
-    skybox_mesh_ = MeshBuilder::BuildUnitCubeMesh(BlockType::Air, glm::vec3(-constants::geometry::block_center_offset));
+    skybox_mesh_ = MeshBuilder::BuildUnitMesh3D(BlockType::Air, glm::vec3(-constants::geometry::block_center_offset));
 
     render_data_.gpu_opaque_mesh_.InitializeBuffers();
     render_data_.gpu_opaque_mesh_.UploadMeshData(skybox_mesh_);
@@ -43,7 +43,7 @@ void SkyboxRenderPass::RenderSkybox(const ResourceManager& resource_manager)
 	resource_manager.GetTexture("sky_cubemap")->Bind();
 	shader_program->Set<int>("skybox", 0);
 
-    mesh_renderer_.RenderGpuMesh(render_data_.gpu_opaque_mesh_);
+    mesh_renderer_.RenderGpuMesh<GpuMesh3D>(render_data_.gpu_opaque_mesh_);
 
     glDepthFunc(GL_LESS);
     glCullFace(GL_BACK);

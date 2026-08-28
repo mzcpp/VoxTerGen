@@ -1,5 +1,5 @@
-#ifndef MESH_HPP
-#define MESH_HPP
+#ifndef MESH_3D_HPP
+#define MESH_3D_HPP
 
 #include "mesh/Vertex.hpp"
 
@@ -24,5 +24,5 @@ public:
 	const std::vector<std::uint32_t>& Indices() const noexcept { return indices_; }
 };
 
-#endif // MESH_HPP
+#endif // MESH_3D_HPP
 
