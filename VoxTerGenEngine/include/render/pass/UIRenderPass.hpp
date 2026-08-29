@@ -8,15 +8,19 @@
 
 class ResourceManager;
 
+struct ScreenDimensionsData;
+
 class UIRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
+	const ScreenDimensionsData& screen_dimensions_data_;
+
 	Mesh2D crosshair_mesh_;
 	Texture2DRenderData crosshair_render_data_;
 
 public:
-	UIRenderPass(const MeshRenderer& mesh_renderer);
+	UIRenderPass(const MeshRenderer& mesh_renderer, const ScreenDimensionsData& screen_dimensions_data);
 
 	void PrepareCrosshairRenderData();
 

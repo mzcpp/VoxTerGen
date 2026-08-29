@@ -6,6 +6,13 @@
 struct SDL_Window;
 struct TTF_Font;
 
+struct ScreenDimensionsData
+{
+	int screen_width_;
+	int screen_height_;
+	float aspect_ratio_;
+};
+
 /**
  * @brief Main application class.
  *
@@ -30,9 +37,7 @@ private:
 
 	SDL_GLContext gl_context_;
 
-	int screen_width_;
-	int screen_height_;
-	float aspect_ratio_;
+	ScreenDimensionsData screen_dimensions_data_;
 
 	Engine engine_;
 

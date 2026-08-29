@@ -22,11 +22,13 @@
 class Camera;
 class ResourceManager;
 
+struct ScreenDimensionsData;
 struct ChunkRenderData;
 
 class WorldRenderer
 {
 private:
+	const ScreenDimensionsData& screen_dimensions_data_;
 	const Camera& camera_;
 	
 	CameraUniformBuffer camera_uniform_buffer_;
@@ -43,7 +45,7 @@ private:
 	std::vector<TransparentChunkData> transparent_chunks_data_;
 
 public:
-	WorldRenderer(const Camera& camera);
+	WorldRenderer(const ScreenDimensionsData& screen_dimensions_data, const Camera& camera);
 
 	void Initialize();
 

@@ -2,6 +2,7 @@
 
 !!! DOCUMENT ALL FUNCTIONS !!!
 
+move ScreenDimensionsData somewhere so I dont have to include Application.hpp???
 implement more sophisticated transparent render order
 make wireframe of chunk look nicer
 move functions like GetChunkCoords to math?

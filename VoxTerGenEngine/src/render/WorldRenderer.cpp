@@ -1,5 +1,6 @@
 #include "render/WorldRenderer.hpp"
 
+#include "core/Application.hpp"
 #include "core/ResourceManager.hpp"
 
 #include "graphics/Camera.hpp"
@@ -23,14 +24,15 @@
 #include <optional>
 #include <ranges>
 
-WorldRenderer::WorldRenderer(const Camera& camera) : 
+WorldRenderer::WorldRenderer(const ScreenDimensionsData& screen_dimensions_data, const Camera& camera) : 
+	screen_dimensions_data_(screen_dimensions_data), 
 	camera_(camera), 
 	chunk_opaque_render_pass_(mesh_renderer_),
 	block_highlight_render_pass_(mesh_renderer_), 
 	skybox_render_pass_(mesh_renderer_), 
 	chunk_wireframe_render_pass_(mesh_renderer_), 
 	chunk_transparent_render_pass_(mesh_renderer_), 
-	ui_render_pass_(mesh_renderer_)
+	ui_render_pass_(mesh_renderer_, screen_dimensions_data_)
 {
 }
 

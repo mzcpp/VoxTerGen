@@ -1,5 +1,6 @@
 #include "render/pass/UIRenderPass.hpp"
 
+#include "core/Application.hpp"
 #include "core/ResourceManager.hpp"
 
 #include "graphics/ShaderProgram.hpp"
@@ -8,8 +9,9 @@
 
 #include "render/MeshRenderer.hpp"
 
-UIRenderPass::UIRenderPass(const MeshRenderer& mesh_renderer) : 
-    mesh_renderer_(mesh_renderer)
+UIRenderPass::UIRenderPass(const MeshRenderer& mesh_renderer, const ScreenDimensionsData& screen_dimensions_data) :
+    mesh_renderer_(mesh_renderer),
+    screen_dimensions_data_(screen_dimensions_data)
 {
 }
 

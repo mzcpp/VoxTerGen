@@ -1,3 +1,5 @@
+#include "core/Application.hpp"
+
 #include "core/Engine.hpp"
 
 #include "threading/ThreadPool.hpp"
@@ -8,12 +10,13 @@
 
 #include <thread>
 
-Engine::Engine() :
+Engine::Engine(const ScreenDimensionsData& screen_dimensions_data) : 
+	screen_dimensions_data_(screen_dimensions_data), 
 	thread_pool_(std::max(1u, std::thread::hardware_concurrency() - 1)), 
 	camera_controller_(camera_), 
 	observer_controller_(observer_), 
 	world_(observer_, thread_pool_), 
-	world_renderer_(camera_)
+	world_renderer_(screen_dimensions_data_, camera_)
 {
 }
 
@@ -50,7 +53,7 @@ void Engine::HandleEvents(SDL_Event e)
 	input_manager_.ProcessEvent(e);
 }
 
-void Engine::Tick(float aspect_ratio)
+void Engine::Tick()
 {
 	const ChunkManager& chunk_manager = world_.ChunkManagerRef();
 	
@@ -58,7 +61,7 @@ void Engine::Tick(float aspect_ratio)
 	camera_controller_.Tick(chunk_manager);
 	
 	observer_.Tick();
-	camera_.Tick(aspect_ratio);
+	camera_.Tick(screen_dimensions_data_.aspect_ratio_);
 
 	world_.Tick(chunk_event_queue_);
 	world_renderer_.Tick(chunk_event_queue_);
