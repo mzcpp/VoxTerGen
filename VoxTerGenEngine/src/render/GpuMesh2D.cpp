@@ -41,12 +41,12 @@ void GpuMesh2D::InitializeBuffers() noexcept
 
     // Position
     vao_.EnableAttribute(0);
-    vao_.SetAttribute(0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex2D, position_));
+    vao_.SetAttribute(0, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex2D, position_));
     vao_.BindAttribute(0, 0);
 
     // UV
     vao_.EnableAttribute(1);
-    vao_.SetAttribute(1, 1, GL_FLOAT, GL_FALSE, offsetof(Vertex2D, uv_));
+    vao_.SetAttribute(1, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex2D, uv_));
     vao_.BindAttribute(1, 0);
 }
 
