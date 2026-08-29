@@ -50,14 +50,16 @@ void UIRenderPass::RenderCrosshair(const ResourceManager& resource_manager)
         return;
     }
 
-    const float half_width = static_cast<float>(texture->Width()) * 0.5f;
-    const float half_height = static_cast<float>(texture->Height()) * 0.5f;
+    const float half_texture_width = static_cast<float>(texture->Width()) * 0.5f;
+    const float half_texture_height = static_cast<float>(texture->Height()) * 0.5f;
+    const float half_screen_width = static_cast<float>(screen_dimensions_data_.screen_width_) * 0.5f;
+    const float half_screen_height = static_cast<float>(screen_dimensions_data_.screen_height_) * 0.5f;
 
     const glm::mat4 model = glm::translate(
         glm::mat4(1.0f),
         glm::vec3{
-            static_cast<float>(screen_dimensions_data_.screen_width_) * 0.5f - half_width,
-            static_cast<float>(screen_dimensions_data_.screen_height_) * 0.5f - half_height,
+            half_screen_width - half_texture_width,
+            half_screen_height - half_texture_height,
             0.0f
         }
     );
