@@ -29,8 +29,9 @@ void SkyboxRenderPass::PrepareSkyboxRenderData()
 void SkyboxRenderPass::RenderSkybox(const ResourceManager& resource_manager)
 {
     const ShaderProgram* shader_program = resource_manager.GetShaderProgram("skybox_shader");
+    const texture_utils::Texture2D* texture_sky = resource_manager.GetTexture("sky_cubemap");
 
-    if (shader_program == nullptr)
+    if (shader_program == nullptr || texture_sky == nullptr)
     {
         return;
     }
@@ -40,7 +41,7 @@ void SkyboxRenderPass::RenderSkybox(const ResourceManager& resource_manager)
 
     shader_program->Use();
     glActiveTexture(GL_TEXTURE0);
-	resource_manager.GetTexture("sky_cubemap")->Bind();
+    texture_sky->Bind();
 	shader_program->Set<int>("skybox", 0);
 
     mesh_renderer_.RenderGpuMesh<GpuMesh3D>(render_data_.gpu_opaque_mesh_);

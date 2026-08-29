@@ -15,7 +15,7 @@ UIRenderPass::UIRenderPass(const MeshRenderer& mesh_renderer) :
 
 void UIRenderPass::PrepareCrosshairRenderData()
 {
-    crosshair_mesh_ = MeshBuilder::BuildUnitMesh2D();
+    crosshair_mesh_ = MeshBuilder::BuildUnitMesh2D(1.0f, { -0.5, -0.5 });
     crosshair_render_data_.gpu_mesh_.InitializeBuffers();
     crosshair_render_data_.gpu_mesh_.UploadMeshData(crosshair_mesh_);
 }
@@ -23,8 +23,9 @@ void UIRenderPass::PrepareCrosshairRenderData()
 void UIRenderPass::RenderCrosshair(const ResourceManager& resource_manager)
 {
     const ShaderProgram* shader_program = resource_manager.GetShaderProgram("crosshair_shader");
+    const texture_utils::Texture2D* texture = resource_manager.GetTexture("crosshair");
 
-    if (shader_program == nullptr)
+    if (shader_program == nullptr || texture == nullptr)
     {
         return;
     }
@@ -37,7 +38,7 @@ void UIRenderPass::RenderCrosshair(const ResourceManager& resource_manager)
     shader_program->Use();
 
     glActiveTexture(GL_TEXTURE0);
-    resource_manager.GetTexture("crosshair")->Bind();
+    texture->Bind();
 
     shader_program->Set<int>("crosshair_texture", 0);
 

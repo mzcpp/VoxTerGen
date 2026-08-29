@@ -22,8 +22,9 @@ ChunkTransparentRenderPass::ChunkTransparentRenderPass(const MeshRenderer& mesh_
 void ChunkTransparentRenderPass::RenderTransparentChunkMeshes(const std::vector<TransparentChunkData>& transparent_chunks_data, const ResourceManager& resource_manager)
 {
 	const ShaderProgram* shader_program = resource_manager.GetShaderProgram("chunk_mesh_shader");
+	const texture_utils::Texture2D* texture_atlas = resource_manager.GetTexture("texture_atlas");
 
-	if (shader_program == nullptr)
+	if (shader_program == nullptr || texture_atlas == nullptr)
 	{
 		return;
 	}
@@ -31,7 +32,7 @@ void ChunkTransparentRenderPass::RenderTransparentChunkMeshes(const std::vector<
 	shader_program->Use();
 
 	glActiveTexture(GL_TEXTURE0);
-	resource_manager.GetTexture("texture_atlas")->Bind();
+	texture_atlas->Bind();
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

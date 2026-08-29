@@ -48,7 +48,7 @@ public:
 	MeshBuilder(const MeshBuilder& other) = delete;
 	MeshBuilder& operator=(const MeshBuilder& other) = delete;
 
-	static Mesh2D BuildUnitMesh2D();
+	static Mesh2D BuildUnitMesh2D(float scale, glm::vec2 origin_offset);
 
 	static Mesh3D BuildUnitMesh3D(BlockType block_type, glm::vec3 origin_offset = { 0.0f, 0.0f, 0.0f });
 

@@ -20,12 +20,12 @@
 #include <array>
 #include <cassert>
 
-Mesh2D MeshBuilder::BuildUnitMesh2D()
+Mesh2D MeshBuilder::BuildUnitMesh2D(float scale, glm::vec2 origin_offset)
 {
 	Mesh2D crosshair_mesh;
 
 	CreateMeshIndices<Mesh2D>(crosshair_mesh);
-	CreateMesh2DVertices(1.0f, { 0, 0 }, crosshair_mesh);
+	CreateMesh2DVertices(scale, origin_offset, crosshair_mesh);
 
 	return crosshair_mesh;
 }
