@@ -8,9 +8,9 @@ struct TTF_Font;
 
 struct ScreenDimensionsData
 {
-	int screen_width_;
-	int screen_height_;
-	float aspect_ratio_;
+	int screen_width_ = 0;
+	int screen_height_ = 0;
+	float aspect_ratio_ = 0.0f;
 };
 
 /**

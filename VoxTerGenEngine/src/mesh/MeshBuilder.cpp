@@ -20,7 +20,7 @@
 #include <array>
 #include <cassert>
 
-Mesh2D MeshBuilder::BuildUnitMesh2D(float scale, glm::vec2 origin_offset)
+Mesh2D MeshBuilder::BuildUnitMesh2D(glm::vec2 scale, glm::vec2 origin_offset)
 {
 	Mesh2D crosshair_mesh;
 
@@ -37,7 +37,7 @@ Mesh3D MeshBuilder::BuildUnitMesh3D(BlockType block_type, glm::vec3 origin_offse
 	for (Direction dir : AllDirections())
     {
 		CreateMeshIndices<Mesh3D>(unit_cube_mesh);
-        CreateMesh3DVertices(block_type, dir, 1.0, origin_offset, unit_cube_mesh);
+		CreateMesh3DVertices(block_type, dir, glm::vec3(1.0f), origin_offset, unit_cube_mesh);
     }
 
 	assert(unit_cube_mesh.Vertices().size() % 4 == 0);
@@ -45,7 +45,7 @@ Mesh3D MeshBuilder::BuildUnitMesh3D(BlockType block_type, glm::vec3 origin_offse
 	return unit_cube_mesh;
 }
 
-void MeshBuilder::CreateMesh2DVertices(float scale, glm::vec2 origin_offset, Mesh2D& mesh)
+void MeshBuilder::CreateMesh2DVertices(glm::vec2 scale, glm::vec2 origin_offset, Mesh2D& mesh)
 {
 	for (int i = 0; i < 4; ++i)
 	{
@@ -64,7 +64,7 @@ void MeshBuilder::CreateMesh2DVertices(float scale, glm::vec2 origin_offset, Mes
 	}
 }
 
-void MeshBuilder::CreateMesh3DVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh3D& mesh)
+void MeshBuilder::CreateMesh3DVertices(BlockType type, Direction dir, glm::vec3 scale, glm::vec3 origin_offset, Mesh3D& mesh)
 {
 	for (int i = 0; i < 4; ++i)
 	{
@@ -189,7 +189,7 @@ ChunkMesh MeshBuilder::BuildChunkMeshNaive(glm::ivec2 chunk_world_coords, const 
 						continue;
 					}
 					
-					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, 1.0, dir, current_block.IsTransparent() ? chunk_mesh.cpu_transparent_mesh_ : chunk_mesh.cpu_opaque_mesh_);
+					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, glm::vec3(1.0f), dir, current_block.IsTransparent() ? chunk_mesh.cpu_transparent_mesh_ : chunk_mesh.cpu_opaque_mesh_);
 				}
 			}
 		}
@@ -240,11 +240,11 @@ Mesh3D MeshBuilder::BuildChunkWireframeMesh()
 				const glm::ivec3 neg_x_block_coords = { -2, y, z };
 				const glm::ivec3 neg_z_block_coords = { x, y, -2 };
 
-				SaveQuadMesh(chunk_coords, type, pos_x_block_coords, static_cast<float>(step), Direction::PosX, chunk_wireframe_mesh);
-				SaveQuadMesh(chunk_coords, type, pos_z_block_coords, static_cast<float>(step), Direction::PosZ, chunk_wireframe_mesh);
+				SaveQuadMesh(chunk_coords, type, pos_x_block_coords, glm::vec3(static_cast<float>(step)), Direction::PosX, chunk_wireframe_mesh);
+				SaveQuadMesh(chunk_coords, type, pos_z_block_coords, glm::vec3(static_cast<float>(step)), Direction::PosZ, chunk_wireframe_mesh);
 
-				SaveQuadMesh(chunk_coords, type, neg_x_block_coords, static_cast<float>(step), Direction::PosX, chunk_wireframe_mesh);
-				SaveQuadMesh(chunk_coords, type, neg_z_block_coords, static_cast<float>(step), Direction::PosZ, chunk_wireframe_mesh);
+				SaveQuadMesh(chunk_coords, type, neg_x_block_coords, glm::vec3(static_cast<float>(step)), Direction::PosX, chunk_wireframe_mesh);
+				SaveQuadMesh(chunk_coords, type, neg_z_block_coords, glm::vec3(static_cast<float>(step)), Direction::PosZ, chunk_wireframe_mesh);
 			}
 		}
 	}
@@ -252,7 +252,7 @@ Mesh3D MeshBuilder::BuildChunkWireframeMesh()
 	return chunk_wireframe_mesh;
 }
 
-void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, float scale, Direction dir, Mesh3D& mesh)
+void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, glm::vec3 scale, Direction dir, Mesh3D& mesh)
 {
 	const glm::vec3 block_abs_pos = {
 		chunk_world_coords.x * constants::chunk::width + block_rel_coords.x,

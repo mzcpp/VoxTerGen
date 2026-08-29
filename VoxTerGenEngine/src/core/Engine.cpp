@@ -16,7 +16,7 @@ Engine::Engine(const ScreenDimensionsData& screen_dimensions_data) :
 	camera_controller_(camera_), 
 	observer_controller_(observer_), 
 	world_(observer_, thread_pool_), 
-	world_renderer_(screen_dimensions_data_, camera_)
+	world_renderer_(screen_dimensions_data_, resource_manager_, camera_)
 {
 }
 
@@ -72,5 +72,5 @@ void Engine::Render(float alpha)
 	glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	world_renderer_.RenderWorld(alpha, resource_manager_);
+	world_renderer_.RenderWorld(alpha);
 }

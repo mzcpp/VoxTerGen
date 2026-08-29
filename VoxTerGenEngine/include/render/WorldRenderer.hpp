@@ -29,6 +29,7 @@ class WorldRenderer
 {
 private:
 	const ScreenDimensionsData& screen_dimensions_data_;
+	const ResourceManager& resource_manager_;
 	const Camera& camera_;
 	
 	CameraUniformBuffer camera_uniform_buffer_;
@@ -45,7 +46,7 @@ private:
 	std::vector<TransparentChunkData> transparent_chunks_data_;
 
 public:
-	WorldRenderer(const ScreenDimensionsData& screen_dimensions_data, const Camera& camera);
+	WorldRenderer(const ScreenDimensionsData& screen_dimensions_data, const ResourceManager& resource_manager, const Camera& camera);
 
 	void Initialize();
 
@@ -57,7 +58,7 @@ public:
 
 	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
-	void RenderWorld(float alpha, const ResourceManager& resource_manager);
+	void RenderWorld(float alpha);
 
 	void UpdateChunksVisibility();
 

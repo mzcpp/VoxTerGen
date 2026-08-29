@@ -6,6 +6,9 @@
 #include "render/MeshRenderer.hpp"
 #include "render/RenderData.hpp"
 
+#include <glm/mat4x4.hpp>
+
+
 class ResourceManager;
 
 struct ScreenDimensionsData;
@@ -18,11 +21,14 @@ private:
 
 	Mesh2D crosshair_mesh_;
 	Texture2DRenderData crosshair_render_data_;
+	glm::mat4 projection_;
 
 public:
 	UIRenderPass(const MeshRenderer& mesh_renderer, const ScreenDimensionsData& screen_dimensions_data);
 
-	void PrepareCrosshairRenderData();
+	void PrepareCrosshairRenderData(const ResourceManager& resource_manager);
+
+	void UpdateProjection();
 
 	void RenderCrosshair(const ResourceManager& resource_manager);
 };

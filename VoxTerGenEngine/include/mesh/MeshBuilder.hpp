@@ -48,7 +48,7 @@ public:
 	MeshBuilder(const MeshBuilder& other) = delete;
 	MeshBuilder& operator=(const MeshBuilder& other) = delete;
 
-	static Mesh2D BuildUnitMesh2D(float scale, glm::vec2 origin_offset);
+	static Mesh2D BuildUnitMesh2D(glm::vec2 scale, glm::vec2 origin_offset);
 
 	static Mesh3D BuildUnitMesh3D(BlockType block_type, glm::vec3 origin_offset = { 0.0f, 0.0f, 0.0f });
 
@@ -61,9 +61,9 @@ public:
 		}
 	}
 
-	static void CreateMesh2DVertices(float scale, glm::vec2 origin_offset, Mesh2D& mesh);
+	static void CreateMesh2DVertices(glm::vec2 scale, glm::vec2 origin_offset, Mesh2D& mesh);
 
-	static void CreateMesh3DVertices(BlockType type, Direction dir, float scale, glm::vec3 origin_offset, Mesh3D& mesh);
+	static void CreateMesh3DVertices(BlockType type, Direction dir, glm::vec3 scale, glm::vec3 origin_offset, Mesh3D& mesh);
 
 	static ChunkMesh BuildChunkMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshDependencies& chunk_mesh_dependencies);
 	
@@ -71,7 +71,7 @@ public:
 
 	static Mesh3D BuildChunkWireframeMesh();
 
-	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, float scale, Direction dir, Mesh3D& mesh);
+	static void SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, glm::vec3 scale, Direction dir, Mesh3D& mesh);
 
 	static std::uint8_t GetQuadMaterial(BlockType block_type, Direction dir);
 

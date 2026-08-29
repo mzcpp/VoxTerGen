@@ -24,8 +24,9 @@
 #include <optional>
 #include <ranges>
 
-WorldRenderer::WorldRenderer(const ScreenDimensionsData& screen_dimensions_data, const Camera& camera) : 
+WorldRenderer::WorldRenderer(const ScreenDimensionsData& screen_dimensions_data, const ResourceManager& resource_manager, const Camera& camera) :
 	screen_dimensions_data_(screen_dimensions_data), 
+	resource_manager_(resource_manager), 
 	camera_(camera), 
 	chunk_opaque_render_pass_(mesh_renderer_),
 	block_highlight_render_pass_(mesh_renderer_), 
@@ -43,7 +44,7 @@ void WorldRenderer::Initialize()
 	block_highlight_render_pass_.PrepareBlockRenderData();
 	skybox_render_pass_.PrepareSkyboxRenderData();
 	chunk_wireframe_render_pass_.PrepareChunkWireframeRenderData();
-	ui_render_pass_.PrepareCrosshairRenderData();
+	ui_render_pass_.PrepareCrosshairRenderData(resource_manager_);
 }
 
 void WorldRenderer::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
@@ -97,20 +98,21 @@ void WorldRenderer::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 	ProcessChunkEvents(chunk_event_queue);
 	UpdateChunksVisibility();
 	UpdateTransparentChunks();
-
+	
+	ui_render_pass_.UpdateProjection();
 	block_highlight_render_pass_.UpdateBlockHighlightModelMatrix(camera_.RaycastResult());
 }
 
-void WorldRenderer::RenderWorld(float alpha, const ResourceManager& resource_manager)
+void WorldRenderer::RenderWorld(float alpha)
 {
 	camera_uniform_buffer_.UpdateCameraData(camera_, alpha);
 
-	chunk_opaque_render_pass_.RenderOpaqueChunkMeshes(chunks_render_data_, resource_manager);
-	block_highlight_render_pass_.RenderBlockHighlight(resource_manager);
-	skybox_render_pass_.RenderSkybox(resource_manager);
-	chunk_wireframe_render_pass_.RenderChunkWireframe(camera_, resource_manager);
-	chunk_transparent_render_pass_.RenderTransparentChunkMeshes(transparent_chunks_data_, resource_manager);
-	ui_render_pass_.RenderCrosshair(resource_manager);
+	chunk_opaque_render_pass_.RenderOpaqueChunkMeshes(chunks_render_data_, resource_manager_);
+	block_highlight_render_pass_.RenderBlockHighlight(resource_manager_);
+	skybox_render_pass_.RenderSkybox(resource_manager_);
+	chunk_wireframe_render_pass_.RenderChunkWireframe(camera_, resource_manager_);
+	chunk_transparent_render_pass_.RenderTransparentChunkMeshes(transparent_chunks_data_, resource_manager_);
+	ui_render_pass_.RenderCrosshair(resource_manager_);
 }
 
 void WorldRenderer::UpdateChunksVisibility()
