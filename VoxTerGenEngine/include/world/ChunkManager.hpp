@@ -22,6 +22,7 @@
 #include <shared_mutex>
 #include <stop_token>
 #include <unordered_map>
+#include <vector>
 #include <queue>
 
 class ThreadPool;
@@ -49,6 +50,8 @@ private:
 	ThreadSafePriorityQueue<ChunkJob, ChunkJobCompare> chunk_build_queue_;
 	ChunkID next_chunk_id_ = 1;
 	mutable std::shared_mutex chunks_shared_mutex_;
+	std::vector<glm::ivec2> chunks_to_load_;
+	std::vector<glm::ivec2> chunks_to_unload_;
 
 public:
 	ChunkManager(Observer& observer, ThreadPool& thread_pool);
@@ -58,6 +61,8 @@ public:
 	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
 	void MarkChunksForUnload();
+
+	void DetermineChunksCoordsForLoad();
 
 	void LoadChunks();
 	

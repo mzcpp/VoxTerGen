@@ -96,13 +96,18 @@ void ChunkManager::InitChunks(int chunk_radius)
 void ChunkManager::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
 	MarkChunksForUnload();
-	LoadChunks();
-	BuildChunkMeshes(chunk_event_queue);
+	DetermineChunksCoordsForLoad();
+	
 	UnloadChunks(chunk_event_queue);
+	LoadChunks();
+
+	BuildChunkMeshes(chunk_event_queue);
 }
 
 void ChunkManager::MarkChunksForUnload()
 {
+	chunks_to_unload_.clear();
+
 	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());
 	const glm::ivec2 observer_prev_chunk_coords = GetChunkCoords(observer_.PrevPos());
 
@@ -123,14 +128,17 @@ void ChunkManager::MarkChunksForUnload()
 			chunk->StopSource().request_stop();
 			chunk->SetChunkState(ChunkState::PendingUnload);
 			chunk->SetMeshState(MeshState::Cancelled);
+			chunks_to_unload_.push_back(chunk_world_coords);
 		}
 	}
 }
 
-void ChunkManager::LoadChunks()
+void ChunkManager::DetermineChunksCoordsForLoad()
 {
+	chunks_to_load_.clear();
+
 	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());
-	
+
 	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
 
 	for (int y = observer_chunk_coords.y - constants::chunk::default_radius; y < observer_chunk_coords.y + constants::chunk::default_radius + 1; ++y)
@@ -139,19 +147,33 @@ void ChunkManager::LoadChunks()
 		{
 			const glm::ivec2 chunk_world_coords = { x, y };
 
-			if (chunks_.find(chunk_world_coords) == chunks_.end())
+			if (chunks_.find(chunk_world_coords) != chunks_.end())
 			{
-				std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
-				
-				FillChunkTmp(*chunk);
-
-				chunk_build_queue_.Push(ChunkJob{ chunk, ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords) });
-				chunk->SetChunkState(ChunkState::Loaded);
-				chunk->SetMeshState(MeshState::Invalid);
-
-				chunks_.try_emplace(chunk_world_coords, std::move(chunk));
+				continue;
 			}
+
+			chunks_to_load_.emplace_back(x, y);
 		}
+	}
+}
+
+void ChunkManager::LoadChunks()
+{
+	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());
+
+	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
+
+	for (glm::ivec2 chunk_coords : chunks_to_load_)
+	{
+		std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_coords);
+
+		FillChunkTmp(*chunk);
+
+		chunk_build_queue_.Push(ChunkJob{ chunk, ChunkDistanceSquared(observer_chunk_coords, chunk_coords) });
+		chunk->SetChunkState(ChunkState::Loaded);
+		chunk->SetMeshState(MeshState::Invalid);
+
+		chunks_.try_emplace(chunk_coords, std::move(chunk));
 	}
 }
 
