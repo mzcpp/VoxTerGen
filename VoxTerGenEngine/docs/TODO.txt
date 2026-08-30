@@ -2,6 +2,9 @@
 
 !!! DOCUMENT ALL FUNCTIONS !!!
 
+study orthographic/pixel-coordinate UI approach
+investigate why I need to do '-2' and '- 2' in Wireframe mesh
+DO NOT send 'this' into threads
 move ScreenDimensionsData somewhere so I dont have to include Application.hpp???
 implement more sophisticated transparent render order
 make wireframe of chunk look nicer
