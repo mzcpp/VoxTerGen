@@ -84,15 +84,12 @@ void ChunkManager::InitChunks(int chunk_radius)
 			const glm::ivec2 chunk_world_coords = { start_coords.x + x, start_coords.y + z };
 			const double distance_squared = ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords);
 			std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
+			FillChunkTmp(*chunk);
+
 			chunk_build_queue_.Push(ChunkJob{ chunk, distance_squared });
 
 			chunks_.try_emplace(chunk_world_coords, std::move(chunk));
 		}
-	}
-
-	for (auto& chunk : chunks_ | std::views::values)
-	{
-		FillChunkTmp(*chunk);
 	}
 }
 
