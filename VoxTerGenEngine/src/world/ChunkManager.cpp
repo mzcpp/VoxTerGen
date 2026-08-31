@@ -259,6 +259,9 @@ void ChunkManager::EnqueueNeighborChunkMeshesBuild(glm::ivec2 observer_chunk_coo
 				continue;
 			}
 
+			neighbor_chunk->StopSource().request_stop();
+			neighbor_chunk->StopSource() = std::stop_source{};
+			
 			neighbor_chunk->SetMeshState(MeshState::Invalid);
 
 			chunk_build_queue_.Push(
