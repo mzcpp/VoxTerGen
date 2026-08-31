@@ -31,6 +31,7 @@ struct ChunkJob
 {
 	std::shared_ptr<Chunk> chunk_;
 	double distance_squared_;
+	std::stop_token stop_token_;
 };
 
 struct ChunkJobCompare
