@@ -241,7 +241,7 @@ void ChunkManager::DetermineChunksMeshesToBuild()
 		chunk_build_queue_.Push(
 			ChunkJob{ 
 				current_chunk, 
-				current_chunk->MeshId();
+				current_chunk->MeshId(),
 				ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords), 
 				current_chunk->StopSource().get_token() 
 			}
@@ -287,7 +287,7 @@ void ChunkManager::EnqueueNeighborChunkMeshesBuild(glm::ivec2 observer_chunk_coo
 			chunk_build_queue_.Push(
 				ChunkJob{
 					neighbor_chunk, 
-					neighbor_chunk->MeshId();
+					neighbor_chunk->MeshId(),
 					ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords + offset), 
 					neighbor_chunk->StopSource().get_token()
 				}
@@ -311,7 +311,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		}
 
 		const ChunkJob chunk_job = chunk_job_opt.value();
-		assert(chunk_job->chunk_ != nullptr);
+		assert(chunk_job.chunk_ != nullptr);
 		const std::shared_ptr<Chunk> chunk = chunk_job.chunk_;
 		// TODO CHECK FOR JOB TOKEN!
 
