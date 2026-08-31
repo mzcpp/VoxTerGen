@@ -137,8 +137,9 @@ void ChunkManager::MarkChunksForUnload()
 			chunk_world_coords.y < observer_chunk_coords.y - constants::chunk::default_radius ||
 			chunk_world_coords.y > observer_chunk_coords.y + constants::chunk::default_radius)
 		{
-			chunk->StopSource().request_stop();
-			chunk->StopSource() = std::stop_source{};
+			// TODO ENABLE
+			// chunk->StopSource().request_stop();
+			// chunk->StopSource() = std::stop_source{};
 
 			chunk->SetChunkState(ChunkState::PendingUnload);
 			chunk->SetMeshState(MeshState::Cancelled);
@@ -276,8 +277,9 @@ void ChunkManager::EnqueueNeighborChunkMeshesBuild(glm::ivec2 observer_chunk_coo
 				continue;
 			}
 
-			neighbor_chunk->StopSource().request_stop();
-			neighbor_chunk->StopSource() = std::stop_source{};
+			// TODO ENABLE
+			// neighbor_chunk->StopSource().request_stop();
+			// neighbor_chunk->StopSource() = std::stop_source{};
 			neighbor_chunk->SetMeshState(MeshState::Invalid);
 
 			neighbor_chunk->IncrementMeshId();
