@@ -65,9 +65,13 @@ public:
 
 	void DetermineChunksCoordsForLoad();
 
-	void LoadChunks();
-	
 	void UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
+	
+	void LoadChunks();
+
+	void DetermineChunksMeshesToBuild();
+
+	void EnqueueNeighborChunkMeshesBuild(glm::ivec2 observer_chunk_coords, glm::ivec2 chunk_world_coords);
 
 	void BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
