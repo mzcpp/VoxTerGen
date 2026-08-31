@@ -86,12 +86,12 @@ void ChunkManager::InitChunks(int chunk_radius)
 
 			FillChunkTmp(*chunk);
 
-			current_chunk->IncrementMeshId();
+			chunk->IncrementMeshId();
 
 			chunk_build_queue_.Push(
 				ChunkJob{ 
 					chunk, 
-					current_chunk->MeshId(), 
+					chunk->MeshId(), 
 					ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords), 
 					chunk->StopSource().get_token() 
 				}
