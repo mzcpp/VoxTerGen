@@ -101,6 +101,10 @@ void ChunkManager::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 	LoadChunks();
 
 	BuildChunkMeshes(chunk_event_queue);
+
+	// mesh id
+	// InitChunks is really ok??
+	// token into worker
 }
 
 // TODO rename
@@ -208,7 +212,6 @@ void ChunkManager::LoadChunks()
 	}
 }
 
-
 void ChunkManager::DetermineChunksMeshesToBuild()
 {
 	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());
@@ -219,7 +222,10 @@ void ChunkManager::DetermineChunksMeshesToBuild()
 	{
 		std::shared_ptr<Chunk> current_chunk = GetChunkAt(chunk_world_coords);
 
-		current_chunk->SetMeshState(MeshState::Invalid);
+		if (current_chunk == nullptr)
+		{
+			continue;
+		}
 
 		chunk_build_queue_.Push(
 			ChunkJob{ 
@@ -261,7 +267,6 @@ void ChunkManager::EnqueueNeighborChunkMeshesBuild(glm::ivec2 observer_chunk_coo
 
 			neighbor_chunk->StopSource().request_stop();
 			neighbor_chunk->StopSource() = std::stop_source{};
-			
 			neighbor_chunk->SetMeshState(MeshState::Invalid);
 
 			chunk_build_queue_.Push(
