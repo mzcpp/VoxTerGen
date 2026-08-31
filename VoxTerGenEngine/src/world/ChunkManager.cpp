@@ -86,7 +86,17 @@ void ChunkManager::InitChunks(int chunk_radius)
 
 			FillChunkTmp(*chunk);
 
-			chunk_build_queue_.Push(ChunkJob{ chunk, ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords), chunk->StopSource().get_token() });
+			current_chunk->IncrementMeshId();
+
+			chunk_build_queue_.Push(
+				ChunkJob{ 
+					chunk, 
+					current_chunk->MeshId(), 
+					ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords), 
+					chunk->StopSource().get_token() 
+				}
+			);
+
 			chunks_.try_emplace(chunk_world_coords, std::move(chunk));
 		}
 	}
@@ -102,7 +112,6 @@ void ChunkManager::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 
 	BuildChunkMeshes(chunk_event_queue);
 
-	// mesh id
 	// InitChunks is really ok??
 	// token into worker
 }
@@ -202,7 +211,7 @@ void ChunkManager::LoadChunks()
 		FillChunkTmp(*chunk);
 
 		// TODO REMOVE LATER
-		chunk_build_queue_.Push(ChunkJob{ chunk, ChunkDistanceSquared(observer_chunk_coords, chunk_coords), chunk->StopSource().get_token() });
+		chunk_build_queue_.Push(ChunkJob{ chunk, 0, ChunkDistanceSquared(observer_chunk_coords, chunk_coords), chunk->StopSource().get_token() });
 		// TODO REMOVE LATER
 
 		chunk->SetChunkState(ChunkState::Loaded);
@@ -227,9 +236,12 @@ void ChunkManager::DetermineChunksMeshesToBuild()
 			continue;
 		}
 
+		current_chunk->IncrementMeshId();
+
 		chunk_build_queue_.Push(
 			ChunkJob{ 
 				current_chunk, 
+				current_chunk->MeshId();
 				ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords), 
 				current_chunk->StopSource().get_token() 
 			}
@@ -269,9 +281,12 @@ void ChunkManager::EnqueueNeighborChunkMeshesBuild(glm::ivec2 observer_chunk_coo
 			neighbor_chunk->StopSource() = std::stop_source{};
 			neighbor_chunk->SetMeshState(MeshState::Invalid);
 
+			neighbor_chunk->IncrementMeshId();
+
 			chunk_build_queue_.Push(
 				ChunkJob{
 					neighbor_chunk, 
+					neighbor_chunk->MeshId();
 					ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords + offset), 
 					neighbor_chunk->StopSource().get_token()
 				}

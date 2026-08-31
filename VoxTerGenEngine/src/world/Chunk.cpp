@@ -26,6 +26,7 @@ namespace
 
 Chunk::Chunk(ChunkID id, glm::ivec2 world_coords) : 
 	id_(id), 
+	mesh_id_(0), 
 	world_coords_(world_coords), 
 	mesh_state_(MeshState::Invalid), 
 	chunk_state_(ChunkState::Unloaded)
@@ -101,6 +102,11 @@ Block& Chunk::NeighborRefAt(glm::ivec3 coords, Direction dir)
 
 	const auto& offset = neighbor_offsets_[dir_index];
 	return BlockAt({ coords.x + offset.x, coords.y + offset.y, coords.z + offset.z });
+}
+
+std::uint64_t Chunk::IncrementMeshId() noexcept
+{
+	return ++mesh_id_;
 }
 
 int Chunk::Index(glm::ivec3 coords) const

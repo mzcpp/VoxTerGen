@@ -30,6 +30,7 @@ class ThreadPool;
 struct ChunkJob
 {
 	std::shared_ptr<Chunk> chunk_;
+	std::uint64_t mesh_id_;
 	double distance_squared_;
 	std::stop_token stop_token_;
 };
