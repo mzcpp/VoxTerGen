@@ -113,7 +113,6 @@ void ChunkManager::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 	BuildChunkMeshes(chunk_event_queue);
 
 	// InitChunks is really ok??
-	// token into worker
 }
 
 // TODO rename
@@ -312,6 +311,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		const ChunkJob chunk_job = chunk_job_opt.value();
 		assert(chunk_job->chunk_ != nullptr);
 		const std::shared_ptr<Chunk> chunk = chunk_job.chunk_;
+		// TODO CHECK FOR JOB TOKEN!
 
 		if (chunk->StopSource().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
 		{
@@ -327,9 +327,11 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 			&chunk_event_queue]()
 			{
 				std::unique_ptr<ChunkMesh> chunk_mesh = BuildChunkMesh(chunk_mesh_dependencies, chunk->StopSource().get_token());
+				// TODO CHECK FOR MESH ID!
 
 				if (chunk_mesh == nullptr)
 				{
+					// TODO RETURN!
 					chunk->SetChunkState(ChunkState::PendingUnload);
 				}
 				else
