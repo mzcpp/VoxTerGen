@@ -6,7 +6,6 @@
 #include "render/events/ChunkEvents.hpp"
 
 #include "threading/ThreadSafeQueue.hpp"
-#include "threading/ThreadSafePriorityQueue.hpp"
 
 #include "utils/Hash.hpp"
 
@@ -17,6 +16,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include <deque>
 #include <memory>
 #include <mutex>
 #include <shared_mutex>
@@ -33,7 +33,7 @@ private:
 	Observer& observer_;
 	ThreadPool& thread_pool_;
 	std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash> chunks_;
-	ThreadSafePriorityQueue<ChunkMeshJobData, ChunkMeshJobCompare> chunk_build_queue_;
+	std::deque<std::shared_ptr<Chunk>> chunk_build_deque_;
 	ChunkID next_chunk_id_ = 1;
 	mutable std::shared_mutex chunks_shared_mutex_;
 	std::vector<glm::ivec2> chunks_to_load_;

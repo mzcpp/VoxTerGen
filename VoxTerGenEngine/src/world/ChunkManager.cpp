@@ -88,15 +88,12 @@ void ChunkManager::InitChunks(int chunk_radius)
 
 			chunk->IncrementMeshId();
 
-			chunk_build_queue_.Push(
-				ChunkMeshJobData{ 
-					chunk, 
-					chunk->MeshId(), 
-					ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords), 
-					chunk->StopSource().get_token() 
-				}
-			);
-
+			if (!chunk->GetChunkMeshJobData().has_value())
+			{
+				chunk_build_deque_.push_back(chunk);
+			}
+			
+			chunk->SetChunkMeshJobData(ChunkMeshJobData{ chunk->MeshId(), ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords) });
 			chunks_.try_emplace(chunk_world_coords, std::move(chunk));
 		}
 	}
@@ -222,14 +219,12 @@ void ChunkManager::EnqueueChunkMeshBuild(const std::shared_ptr<Chunk>& chunk, do
 	chunk->SetMeshState(MeshState::Invalid);
 	chunk->IncrementMeshId();
 
-	chunk_build_queue_.Push(
-		ChunkMeshJobData{ 
-			chunk, 
-			chunk->MeshId(),
-			distance, 
-			chunk->StopSource().get_token() 
-		}
-	);
+	if (!chunk->GetChunkMeshJobData().has_value())
+	{
+		chunk_build_deque_.push_back(chunk);
+	}
+
+	chunk->SetChunkMeshJobData(ChunkMeshJobData{ chunk->MeshId(), distance });
 }
 
 void ChunkManager::ScheduleChunkMeshBuilds()
@@ -287,20 +282,24 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 	constexpr int jobs_submitted_limit = 2048;
 	int jobs_submitted = 0;
 
-	while (jobs_submitted < jobs_submitted_limit)
-	{
-		const std::optional<ChunkMeshJobData> chunk_job_opt = chunk_build_queue_.TryPop();
-
-		if (!chunk_job_opt.has_value())
+	std::ranges::sort(chunk_build_deque_, [](const std::shared_ptr<Chunk>& left, const std::shared_ptr<Chunk>& right)
 		{
-			return;
-		}
+			return left->GetChunkMeshJobData().value().distance_squared_ < right->GetChunkMeshJobData().value().distance_squared_;
+		});
 
-		const ChunkMeshJobData chunk_job = chunk_job_opt.value();
-		assert(chunk_job.chunk_ != nullptr);
-		const std::shared_ptr<Chunk> chunk = chunk_job.chunk_;
+	while (jobs_submitted < jobs_submitted_limit && !chunk_build_deque_.empty())
+	{
+		const std::shared_ptr<Chunk> chunk = chunk_build_deque_.front();
+		chunk_build_deque_.pop_front();
 
-		if (chunk_job.stop_token_.stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
+		assert(chunk->GetChunkMeshJobData().has_value());
+		assert(chunk != nullptr);
+
+		const ChunkMeshJobData chunk_job = chunk->GetChunkMeshJobData().value();
+
+		chunk->ResetChunkMeshJobData();
+
+		if (chunk->StopSource().get_token().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
 		{
 			continue;
 		}
@@ -311,10 +310,11 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 			[this, 
 			chunk, 
 			chunk_job, 
+			stop_token = chunk->StopSource().get_token(), 
 			chunk_mesh_dependencies = GetMeshDependencies(chunk->WorldCoords()), 
 			&chunk_event_queue]()
 			{
-				std::unique_ptr<ChunkMesh> chunk_mesh = BuildChunkMesh(chunk_mesh_dependencies, chunk_job.stop_token_);
+				std::unique_ptr<ChunkMesh> chunk_mesh = BuildChunkMesh(chunk_mesh_dependencies, stop_token);
 
 				if (chunk_mesh == nullptr || chunk_job.mesh_id_ != chunk->MeshId())
 				{
