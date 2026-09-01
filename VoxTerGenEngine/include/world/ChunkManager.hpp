@@ -27,7 +27,7 @@
 
 class ThreadPool;
 
-struct ChunkJob
+struct ChunkMeshJob
 {
 	std::shared_ptr<Chunk> chunk_;
 	std::uint64_t mesh_id_;
@@ -35,9 +35,9 @@ struct ChunkJob
 	std::stop_token stop_token_;
 };
 
-struct ChunkJobCompare
+struct ChunkMeshJobCompare
 {
-	bool operator()(const ChunkJob& a, const ChunkJob& b) const
+	bool operator()(const ChunkMeshJob& a, const ChunkMeshJob& b) const
 	{
 		return a.distance_squared_ > b.distance_squared_;
 	}
@@ -49,7 +49,7 @@ private:
 	Observer& observer_;
 	ThreadPool& thread_pool_;
 	std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash> chunks_;
-	ThreadSafePriorityQueue<ChunkJob, ChunkJobCompare> chunk_build_queue_;
+	ThreadSafePriorityQueue<ChunkMeshJob, ChunkMeshJobCompare> chunk_build_queue_;
 	ChunkID next_chunk_id_ = 1;
 	mutable std::shared_mutex chunks_shared_mutex_;
 	std::vector<glm::ivec2> chunks_to_load_;
@@ -64,15 +64,17 @@ public:
 
 	void MarkChunksForUnload();
 
-	void DetermineChunksCoordsForLoad();
+	void FindChunksToLoad();
 
 	void UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 	
 	void LoadChunks();
 
-	void DetermineChunksMeshesToBuild();
+	void EnqueueChunkMeshBuild(Chunk& chunk, double distance);
 
-	void EnqueueNeighborChunkMeshesBuild(glm::ivec2 observer_chunk_coords, glm::ivec2 chunk_world_coords);
+	void ScheduleChunkMeshBuilds();
+
+	void ScheduleNeighborChunkMeshBuilds(glm::ivec2 observer_chunk_coords, glm::ivec2 chunk_world_coords);
 
 	void BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
