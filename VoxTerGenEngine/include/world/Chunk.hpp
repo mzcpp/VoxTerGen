@@ -23,6 +23,7 @@
 #include <stop_token>
 #include <unordered_map>
 #include <variant>
+#include <optional>
 
 enum class MeshState
 {
@@ -63,6 +64,8 @@ struct ChunkMesh
 
 using ChunkID = std::uint64_t;
 
+struct ChunkMeshJob;
+
 class Chunk
 {
 private:
@@ -70,6 +73,7 @@ private:
     std::atomic<std::uint64_t> mesh_id_;
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
+    std::optional<ChunkMeshJob> pending_mesh_job_;
     std::atomic<MeshState> mesh_state_;
     std::atomic<ChunkState> chunk_state_;
     std::stop_source mesh_building_stop_source_;
