@@ -64,7 +64,21 @@ struct ChunkMesh
 
 using ChunkID = std::uint64_t;
 
-struct ChunkMeshJob;
+struct ChunkMeshJobData
+{
+    std::shared_ptr<Chunk> chunk_;
+    std::uint64_t mesh_id_;
+    double distance_squared_;
+    std::stop_token stop_token_;
+};
+
+struct ChunkMeshJobCompare
+{
+    bool operator()(const ChunkMeshJobData& a, const ChunkMeshJobData& b) const
+    {
+        return a.distance_squared_ > b.distance_squared_;
+    }
+};
 
 class Chunk
 {
@@ -73,7 +87,7 @@ private:
     std::atomic<std::uint64_t> mesh_id_;
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
-    std::optional<ChunkMeshJob> pending_mesh_job_;
+    //std::optional<ChunkMeshJobData> pending_mesh_job_;
     std::atomic<MeshState> mesh_state_;
     std::atomic<ChunkState> chunk_state_;
     std::stop_source mesh_building_stop_source_;

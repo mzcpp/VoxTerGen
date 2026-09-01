@@ -89,7 +89,7 @@ void ChunkManager::InitChunks(int chunk_radius)
 			chunk->IncrementMeshId();
 
 			chunk_build_queue_.Push(
-				ChunkMeshJob{ 
+				ChunkMeshJobData{ 
 					chunk, 
 					chunk->MeshId(), 
 					ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords), 
@@ -223,7 +223,7 @@ void ChunkManager::EnqueueChunkMeshBuild(const std::shared_ptr<Chunk>& chunk, do
 	chunk->IncrementMeshId();
 
 	chunk_build_queue_.Push(
-		ChunkMeshJob{ 
+		ChunkMeshJobData{ 
 			chunk, 
 			chunk->MeshId(),
 			distance, 
@@ -289,14 +289,14 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 
 	while (jobs_submitted < jobs_submitted_limit)
 	{
-		const std::optional<ChunkMeshJob> chunk_job_opt = chunk_build_queue_.TryPop();
+		const std::optional<ChunkMeshJobData> chunk_job_opt = chunk_build_queue_.TryPop();
 
 		if (!chunk_job_opt.has_value())
 		{
 			return;
 		}
 
-		const ChunkMeshJob chunk_job = chunk_job_opt.value();
+		const ChunkMeshJobData chunk_job = chunk_job_opt.value();
 		assert(chunk_job.chunk_ != nullptr);
 		const std::shared_ptr<Chunk> chunk = chunk_job.chunk_;
 

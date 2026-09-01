@@ -28,7 +28,7 @@ Chunk::Chunk(ChunkID id, glm::ivec2 world_coords) :
 	id_(id), 
 	mesh_id_(0), 
 	world_coords_(world_coords), 
-	pending_mesh_job_(std::nullopt), 
+	//pending_mesh_job_(std::nullopt), 
 	mesh_state_(MeshState::Invalid), 
 	chunk_state_(ChunkState::Unloaded)
 {
