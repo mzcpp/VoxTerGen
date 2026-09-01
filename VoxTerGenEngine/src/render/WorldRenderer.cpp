@@ -71,7 +71,6 @@ void WorldRenderer::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_
 
 void WorldRenderer::ProcessChunkMeshReady(const ChunkMeshReady& event)
 {
-	 // TODO: Make chunk_mesh_render_data a member variable and reuse the GPU buffers, not erase and allocate new.
 	 ChunkMeshRenderData chunk_mesh_render_data;
 	 chunk_mesh_render_data.gpu_opaque_mesh_.InitializeBuffers();
 	 chunk_mesh_render_data.gpu_opaque_mesh_.UploadMeshData(event.chunk_mesh_->cpu_opaque_mesh_);
@@ -84,8 +83,7 @@ void WorldRenderer::ProcessChunkMeshReady(const ChunkMeshReady& event)
 	 	glm::dvec3{ (event.world_coords_.x + 1) * constants::chunk::width, constants::chunk::height, (event.world_coords_.y + 1) * constants::chunk::depth }
 	 );
 
-	 // TODO: This fails if entry with event.chunk_id_ already exists.
-	 chunks_render_data_.emplace(event.chunk_id_, ChunkRenderData{ std::move(chunk_mesh_render_data), chunk_aabb, false });
+	 chunks_render_data_.insert_or_assign(event.chunk_id_, ChunkRenderData{ std::move(chunk_mesh_render_data), chunk_aabb, false });
 }
 
 void WorldRenderer::ProcessChunkDestroyed(const ChunkDestroyed& event)

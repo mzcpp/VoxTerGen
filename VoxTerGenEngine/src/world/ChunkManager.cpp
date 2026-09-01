@@ -110,6 +110,8 @@ void ChunkManager::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 	UnloadChunks(chunk_event_queue);
 	LoadChunks();
 
+	DetermineChunksMeshesToBuild();
+
 	BuildChunkMeshes(chunk_event_queue);
 
 	// InitChunks is really ok??
@@ -137,9 +139,8 @@ void ChunkManager::MarkChunksForUnload()
 			chunk_world_coords.y < observer_chunk_coords.y - constants::chunk::default_radius ||
 			chunk_world_coords.y > observer_chunk_coords.y + constants::chunk::default_radius)
 		{
-			// TODO ENABLE
-			// chunk->StopSource().request_stop();
-			// chunk->StopSource() = std::stop_source{};
+			chunk->StopSource().request_stop();
+			chunk->StopSource() = std::stop_source{};
 
 			chunk->SetChunkState(ChunkState::PendingUnload);
 			chunk->SetMeshState(MeshState::Cancelled);
@@ -210,10 +211,6 @@ void ChunkManager::LoadChunks()
 
 		FillChunkTmp(*chunk);
 
-		// TODO REMOVE LATER
-		chunk_build_queue_.Push(ChunkJob{ chunk, 0, ChunkDistanceSquared(observer_chunk_coords, chunk_coords), chunk->StopSource().get_token() });
-		// TODO REMOVE LATER
-
 		chunk->SetChunkState(ChunkState::Loaded);
 		chunk->SetMeshState(MeshState::Invalid);
 
@@ -221,6 +218,8 @@ void ChunkManager::LoadChunks()
 	}
 }
 
+
+// TODO rename
 void ChunkManager::DetermineChunksMeshesToBuild()
 {
 	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());
@@ -235,6 +234,9 @@ void ChunkManager::DetermineChunksMeshesToBuild()
 		{
 			continue;
 		}
+
+		current_chunk->StopSource().request_stop();
+		current_chunk->StopSource() = std::stop_source{};
 
 		current_chunk->IncrementMeshId();
 
@@ -259,13 +261,13 @@ void ChunkManager::DetermineChunksMeshesToBuild()
 
 void ChunkManager::EnqueueNeighborChunkMeshesBuild(glm::ivec2 observer_chunk_coords, glm::ivec2 chunk_world_coords)
 {
-	for (int i : { -1, 1 })
+	for (int j = 0; j < 2; ++j)
 	{
-		for (int j = 0; j < 4; ++j)
+		for (int i : { -1, 1 })
 		{
 			glm::ivec2 offset = { i, 0 };
 
-			if (j > 1)
+			if (j == 1)
 			{
 				std::swap(offset.x, offset.y);
 			}
@@ -277,11 +279,10 @@ void ChunkManager::EnqueueNeighborChunkMeshesBuild(glm::ivec2 observer_chunk_coo
 				continue;
 			}
 
-			// TODO ENABLE
-			// neighbor_chunk->StopSource().request_stop();
-			// neighbor_chunk->StopSource() = std::stop_source{};
-			neighbor_chunk->SetMeshState(MeshState::Invalid);
+			neighbor_chunk->StopSource().request_stop();
+			neighbor_chunk->StopSource() = std::stop_source{};
 
+			neighbor_chunk->SetMeshState(MeshState::Invalid);
 			neighbor_chunk->IncrementMeshId();
 
 			chunk_build_queue_.Push(
@@ -313,9 +314,8 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		const ChunkJob chunk_job = chunk_job_opt.value();
 		assert(chunk_job.chunk_ != nullptr);
 		const std::shared_ptr<Chunk> chunk = chunk_job.chunk_;
-		// TODO CHECK FOR JOB TOKEN!
 
-		if (chunk->StopSource().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
+		if (chunk_job.stop_token_.stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
 		{
 			continue;
 		}
@@ -325,22 +325,19 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		thread_pool_.Enqueue(
 			[this, 
 			chunk, 
+			chunk_job, 
 			chunk_mesh_dependencies = GetMeshDependencies(chunk->WorldCoords()), 
 			&chunk_event_queue]()
 			{
-				std::unique_ptr<ChunkMesh> chunk_mesh = BuildChunkMesh(chunk_mesh_dependencies, chunk->StopSource().get_token());
-				// TODO CHECK FOR MESH ID!
+				std::unique_ptr<ChunkMesh> chunk_mesh = BuildChunkMesh(chunk_mesh_dependencies, chunk_job.stop_token_);
 
-				if (chunk_mesh == nullptr)
+				if (chunk_mesh == nullptr || chunk_job.mesh_id_ != chunk->MeshId())
 				{
-					// TODO RETURN!
-					chunk->SetChunkState(ChunkState::PendingUnload);
+					return;
 				}
-				else
-				{
-					chunk_event_queue.Push(ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), std::move(chunk_mesh) });
-					chunk->SetMeshState(MeshState::Ready);
-				}
+
+				chunk_event_queue.Push(ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), std::move(chunk_mesh) });
+				chunk->SetMeshState(MeshState::Ready);
 			}
 		);
 
