@@ -88,12 +88,18 @@ void ChunkManager::InitChunks(int chunk_radius)
 
 			chunk->IncrementMeshId();
 
-			if (!chunk->GetChunkMeshJobData().has_value())
+			if (!chunk->GetPendingMeshBuild().has_value())
 			{
 				chunk_build_deque_.push_back(chunk);
 			}
 			
-			chunk->SetChunkMeshJobData(ChunkMeshJobData{ chunk->MeshId(), ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords) });
+			chunk->SetPendingMeshBuild(
+				ChunkMeshBuildData{ 
+					chunk->MeshId(), 
+					ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords) 
+				}
+			);
+			
 			chunks_.try_emplace(chunk_world_coords, std::move(chunk));
 		}
 	}
@@ -219,12 +225,17 @@ void ChunkManager::EnqueueChunkMeshBuild(const std::shared_ptr<Chunk>& chunk, do
 	chunk->SetMeshState(MeshState::Invalid);
 	chunk->IncrementMeshId();
 
-	if (!chunk->GetChunkMeshJobData().has_value())
+	if (!chunk->GetPendingMeshBuild().has_value())
 	{
 		chunk_build_deque_.push_back(chunk);
 	}
 
-	chunk->SetChunkMeshJobData(ChunkMeshJobData{ chunk->MeshId(), distance });
+	chunk->SetPendingMeshBuild(
+		ChunkMeshBuildData{ 
+			chunk->MeshId(), 
+			distance 
+		}
+	);
 }
 
 void ChunkManager::ScheduleChunkMeshBuilds()
@@ -284,7 +295,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 
 	std::ranges::sort(chunk_build_deque_, [](const std::shared_ptr<Chunk>& left, const std::shared_ptr<Chunk>& right)
 		{
-			return left->GetChunkMeshJobData().value().distance_squared_ < right->GetChunkMeshJobData().value().distance_squared_;
+			return left->GetPendingMeshBuild().value().distance_squared_ < right->GetPendingMeshBuild().value().distance_squared_;
 		});
 
 	while (jobs_submitted < jobs_submitted_limit && !chunk_build_deque_.empty())
@@ -292,12 +303,12 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		const std::shared_ptr<Chunk> chunk = chunk_build_deque_.front();
 		chunk_build_deque_.pop_front();
 
-		assert(chunk->GetChunkMeshJobData().has_value());
 		assert(chunk != nullptr);
+		assert(chunk->GetPendingMeshBuild().has_value());
 
-		const ChunkMeshJobData chunk_job = chunk->GetChunkMeshJobData().value();
+		const ChunkMeshBuildData chunk_job = chunk->GetPendingMeshBuild().value();
 
-		chunk->ResetChunkMeshJobData();
+		chunk->ClearPendingMeshBuild();
 
 		if (chunk->StopSource().get_token().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
 		{

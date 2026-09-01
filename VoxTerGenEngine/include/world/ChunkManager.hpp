@@ -18,12 +18,9 @@
 
 #include <deque>
 #include <memory>
-#include <mutex>
 #include <shared_mutex>
-#include <stop_token>
 #include <unordered_map>
 #include <vector>
-#include <queue>
 
 class ThreadPool;
 

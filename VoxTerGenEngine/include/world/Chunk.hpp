@@ -62,7 +62,7 @@ struct ChunkMeshDependencies
     }
 };
 
-struct ChunkMeshJobData
+struct ChunkMeshBuildData
 {
     std::uint64_t mesh_id_;
     double distance_squared_;
@@ -77,7 +77,7 @@ private:
     std::atomic<std::uint64_t> mesh_id_;
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
-    std::optional<ChunkMeshJobData> pending_mesh_job_;
+    std::optional<ChunkMeshBuildData> pending_mesh_build_;
     std::atomic<MeshState> mesh_state_;
     std::atomic<ChunkState> chunk_state_;
     std::stop_source mesh_building_stop_source_;
@@ -104,7 +104,7 @@ public:
     std::uint64_t MeshId() const noexcept { return mesh_id_; }
     glm::ivec2 WorldCoords() const noexcept { return world_coords_; }
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
-    const std::optional<ChunkMeshJobData>& GetChunkMeshJobData() const noexcept { return pending_mesh_job_; }
+    const std::optional<ChunkMeshBuildData>& GetPendingMeshBuild() const noexcept { return pending_mesh_build_; }
     MeshState GetMeshState() const noexcept { return mesh_state_; }
     ChunkState GetChunkState() const noexcept { return chunk_state_; }
     std::stop_source& StopSource() noexcept { return mesh_building_stop_source_; }
@@ -113,8 +113,8 @@ public:
     // Setters
     void SetMeshState(MeshState mesh_state) noexcept { mesh_state_ = mesh_state; }
     void SetChunkState(ChunkState chunk_state) noexcept { chunk_state_ = chunk_state; }
-    void SetChunkMeshJobData(ChunkMeshJobData job_data) noexcept { pending_mesh_job_ = std::make_optional<ChunkMeshJobData>(std::move(job_data)); }
-    void ResetChunkMeshJobData() noexcept { pending_mesh_job_ = std::nullopt; }
+    void SetPendingMeshBuild(ChunkMeshBuildData job_data) noexcept { pending_mesh_build_ = std::move(job_data); }
+    void ClearPendingMeshBuild() noexcept { pending_mesh_build_ = std::nullopt; }
 
 private:
     int Index(glm::ivec3 coords) const;
