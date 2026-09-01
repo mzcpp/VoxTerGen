@@ -40,6 +40,12 @@ enum class ChunkState
     Loaded
 };
 
+struct ChunkMesh
+{
+    Mesh3D cpu_opaque_mesh_;
+    Mesh3D cpu_transparent_mesh_;
+};
+
 class Chunk;
 
 struct ChunkMeshDependencies
@@ -55,14 +61,6 @@ struct ChunkMeshDependencies
         return chunks_[(offset.y + 1) * 3 + (offset.x + 1)].get();
     }
 };
-
-struct ChunkMesh
-{
-    Mesh3D cpu_opaque_mesh_;
-    Mesh3D cpu_transparent_mesh_;
-};
-
-using ChunkID = std::uint64_t;
 
 struct ChunkMeshJobData
 {
@@ -80,6 +78,8 @@ struct ChunkMeshJobCompare
     }
 };
 
+using ChunkID = std::uint64_t;
+
 class Chunk
 {
 private:
@@ -87,7 +87,7 @@ private:
     std::atomic<std::uint64_t> mesh_id_;
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
-    //std::optional<ChunkMeshJobData> pending_mesh_job_;
+    std::optional<ChunkMeshJobData> pending_mesh_job_;
     std::atomic<MeshState> mesh_state_;
     std::atomic<ChunkState> chunk_state_;
     std::stop_source mesh_building_stop_source_;
