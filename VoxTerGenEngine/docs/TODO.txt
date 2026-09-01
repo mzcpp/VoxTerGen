@@ -30,7 +30,6 @@ create a single templated class for opensimplex, they are the same headers only 
 rethink hashing for noise, better math::DotGrad?
 
 std::uint8_t -> Material in Mesh & Vertex?
-delete Material.cpp and DDA.cpp
 cleanup thread classes includes
 
 sort all #includes by alphabetical order and these order rules:
