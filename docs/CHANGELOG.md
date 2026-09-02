@@ -24,6 +24,7 @@ The format follows Keep a Changelog and Semantic Versioning.
 - Added rendering of transparent blocks by splitting `ChunkMeshRenderPass` into `ChunkOpaqueRenderPass` and `ChunkTransparentRenderPass`.
 - Added `ChunkWireframeRenderPass` for rendering the wireframe of the currently selected chunk.
 - Added a screen-centered crosshair using `UIRenderPass`.
+- Added a fog effect to hide chunk streaming artifacts.
 - Added `EventDispatcher` for basic event distribution.
 
 ### Changed
