@@ -1,11 +1,14 @@
 #ifndef WORLD_HPP
 #define WORLD_HPP
 
-#include "world/Chunk.hpp"
-#include "world/ChunkManager.hpp"
+#include "render/events/ChunkEvents.hpp"
 
 #include "threading/ThreadSafeQueue.hpp"
 
+#include "world/Chunk.hpp"
+#include "world/ChunkManager.hpp"
+
+class Observer;
 class ThreadPool;
 
 class World

@@ -1,4 +1,5 @@
 #include "core/Application.hpp"
+#include "core/Engine.hpp"
 
 #include "utils/Constants.hpp"
 #include "utils/Logger.hpp"
@@ -27,11 +28,13 @@ Application::Application() :
 	window_(nullptr),
 	font_(nullptr),
 	gl_context_(nullptr),
-	screen_width_(constants::window::screen_width),
-	screen_height_(constants::window::screen_height),
-	aspect_ratio_(static_cast<float>(screen_width_) / static_cast<float>(screen_height_)),
+	engine_(screen_dimensions_data_), 
 	running_(false)
 {
+	screen_dimensions_data_.screen_width_ = constants::window::screen_width;
+	screen_dimensions_data_.screen_height_ = constants::window::screen_height;
+	screen_dimensions_data_.aspect_ratio_ = static_cast<float>(screen_dimensions_data_.screen_width_) / static_cast<float>(screen_dimensions_data_.screen_height_);
+
 	Logger::Log(LogLevel::INFO, "Application object created.");
 }
 
@@ -179,16 +182,13 @@ void Application::HandleEvents()
 		{
 			if (e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
 			{
-				screen_width_ = e.window.data1;
-				screen_height_ = e.window.data2;
-				aspect_ratio_ = static_cast<float>(screen_width_) / static_cast<float>(screen_height_);
+				screen_dimensions_data_.screen_width_ = e.window.data1;
+				screen_dimensions_data_.screen_height_ = e.window.data2;
+				screen_dimensions_data_.aspect_ratio_ = static_cast<float>(screen_dimensions_data_.screen_width_) / static_cast<float>(screen_dimensions_data_.screen_height_);
 
-				glViewport(0, 0, screen_width_, screen_height_);
+				glViewport(0, 0, screen_dimensions_data_.screen_width_, screen_dimensions_data_.screen_height_);
 
-				// SetScreenWidth(screen_width_);
-				// SetScreenHeight(screen_height_);
-
-				Logger::Log(LogLevel::INFO, "Window resized to {}x{}", screen_width_, screen_height_);
+				Logger::Log(LogLevel::INFO, "Window resized to {}x{}", screen_dimensions_data_.screen_width_, screen_dimensions_data_.screen_height_);
 			}
 		}
 
@@ -198,7 +198,7 @@ void Application::HandleEvents()
 
 void Application::Tick()
 {
-	engine_.Tick(aspect_ratio_);
+	engine_.Tick();
 }
 
 void Application::Render(float alpha)

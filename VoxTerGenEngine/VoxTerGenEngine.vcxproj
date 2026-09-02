@@ -178,12 +178,16 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\mesh\Mesh2D.cpp" />
+    <ClCompile Include="src\render\GpuMesh2D.cpp" />
+    <ClCompile Include="src\render\pass\ChunkTransparentRenderPass.cpp" />
     <ClCompile Include="src\graphics\Buffer.cpp" />
     <ClCompile Include="src\math\Geometry.cpp" />
     <ClCompile Include="src\render\CameraUniformBuffer.cpp" />
-    <ClCompile Include="src\render\SkyboxRenderPass.cpp" />
-    <ClCompile Include="src\render\BlockHighlightRenderPass.cpp" />
-    <ClCompile Include="src\physics\DigitalDifferentialAnalyzer.cpp" />
+    <ClCompile Include="src\render\pass\BlockHighlightRenderPass.cpp" />
+    <ClCompile Include="src\render\pass\ChunkOpaqueRenderPass.cpp" />
+    <ClCompile Include="src\render\pass\ChunkWireframeRenderPass.cpp" />
+    <ClCompile Include="src\render\pass\SkyboxRenderPass.cpp" />
     <ClCompile Include="src\physics\CollisionSystem.cpp" />
     <ClCompile Include="include\external\glm\detail\glm.cpp" />
     <ClCompile Include="src\input\ObserverController.cpp" />
@@ -194,7 +198,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\external\glad\glad.c" />
     <ClCompile Include="src\graphics\Camera.cpp" />
     <ClCompile Include="src\graphics\ui\menu\Button.cpp" />
-    <ClCompile Include="src\mesh\Mesh.cpp" />
+    <ClCompile Include="src\mesh\Mesh3D.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\ShaderProgram.cpp" />
     <ClCompile Include="src\graphics\Texture2D.cpp" />
@@ -202,10 +206,9 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\input\InputManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mesh\MeshBuilder.cpp" />
-    <ClCompile Include="src\render\ChunkMeshRenderPass.cpp" />
-    <ClCompile Include="src\render\Material.cpp" />
     <ClCompile Include="src\render\MeshRenderer.cpp" />
-    <ClCompile Include="src\render\GpuMesh.cpp" />
+    <ClCompile Include="src\render\GpuMesh3D.cpp" />
+    <ClCompile Include="src\render\pass\UIRenderPass.cpp" />
     <ClCompile Include="src\render\WorldRenderer.cpp" />
     <ClCompile Include="src\world\Block.cpp" />
     <ClCompile Include="src\world\Chunk.cpp" />
@@ -217,10 +220,12 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\threading\ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\mesh\Mesh2D.hpp" />
+    <ClInclude Include="include\render\GpuMesh2D.hpp" />
+    <ClInclude Include="include\render\pass\ChunkTransparentRenderPass.hpp" />
     <ClInclude Include="include\graphics\Buffer.hpp" />
     <ClInclude Include="include\math\Geometry.hpp" />
     <ClInclude Include="include\math\Plane.hpp" />
-    <ClInclude Include="include\render\BlockHighlightRenderPass.hpp" />
     <ClInclude Include="include\physics\AABB.hpp" />
     <ClInclude Include="include\physics\DigitalDifferentialAnalyzer.hpp" />
     <ClInclude Include="include\physics\CollisionSystem.hpp" />
@@ -574,7 +579,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\Game.hpp" />
     <ClInclude Include="include\graphics\Camera.hpp" />
     <ClInclude Include="include\graphics\ui\menu\Button.hpp" />
-    <ClInclude Include="include\mesh\Mesh.hpp" />
+    <ClInclude Include="include\mesh\Mesh3D.hpp" />
     <ClInclude Include="include\graphics\Shader.hpp" />
     <ClInclude Include="include\graphics\ShaderProgram.hpp" />
     <ClInclude Include="include\graphics\Texture2D.hpp" />
@@ -584,11 +589,16 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\mesh\MeshBuilder.hpp" />
     <ClInclude Include="include\mesh\Vertex.hpp" />
     <ClInclude Include="include\render\CameraUniformBuffer.hpp" />
-    <ClInclude Include="include\render\ChunkMeshRenderPass.hpp" />
+    <ClInclude Include="include\render\events\EventDispatcher.hpp" />
     <ClInclude Include="include\render\Material.hpp" />
-    <ClInclude Include="include\render\MeshRenderData.hpp" />
+    <ClInclude Include="include\render\pass\UIRenderPass.hpp" />
+    <ClInclude Include="include\render\RenderData.hpp" />
     <ClInclude Include="include\render\MeshRenderer.hpp" />
-    <ClInclude Include="include\render\GpuMesh.hpp" />
+    <ClInclude Include="include\render\GpuMesh3D.hpp" />
+    <ClInclude Include="include\render\pass\BlockHighlightRenderPass.hpp" />
+    <ClInclude Include="include\render\pass\ChunkOpaqueRenderPass.hpp" />
+    <ClInclude Include="include\render\pass\ChunkWireframeRenderPass.hpp" />
+    <ClInclude Include="include\render\pass\SkyboxRenderPass.hpp" />
     <ClInclude Include="include\render\WorldRenderer.hpp" />
     <ClInclude Include="include\threading\ThreadSafePriorityQueue.hpp" />
     <ClInclude Include="include\threading\ThreadSafeQueue.hpp" />
@@ -599,12 +609,11 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\utils\Timer.hpp" />
     <ClInclude Include="include\world\Block.hpp" />
     <ClInclude Include="include\world\Chunk.hpp" />
-    <ClInclude Include="include\world\ChunkEvents.hpp" />
+    <ClInclude Include="include\render\events\ChunkEvents.hpp" />
     <ClInclude Include="include\world\ChunkManager.hpp" />
     <ClInclude Include="include\world\Observer.hpp" />
     <ClInclude Include="include\world\World.hpp" />
     <ClInclude Include="include\input\ObserverController.hpp" />
-    <ClInclude Include="include\render\SkyboxRenderPass.hpp" />
     <ClInclude Include="include\graphics\UniformBuffer.hpp" />
     <ClInclude Include="include\graphics\VertexArray.hpp" />
     <ClInclude Include="include\threading\ThreadPool.hpp" />

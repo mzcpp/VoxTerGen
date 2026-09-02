@@ -13,6 +13,7 @@
 #include "physics/CollisionSystem.hpp"
 
 #include "render/WorldRenderer.hpp"
+#include "render/events/ChunkEvents.hpp"
 
 #include "threading/ThreadPool.hpp"
 #include "threading/ThreadSafeQueue.hpp"
@@ -20,13 +21,15 @@
 #include "world/Observer.hpp"
 #include "world/World.hpp"
 
-#include <queue>
-
 union SDL_Event;
+
+struct ScreenDimensionsData;
 
 class Engine
 {
 private:
+	const ScreenDimensionsData& screen_dimensions_data_;
+
 	InputManager input_manager_;
 	Camera camera_;
 	Observer observer_;
@@ -42,7 +45,7 @@ private:
 	ThreadPool thread_pool_;
 
 public:
-	Engine();
+	Engine(const ScreenDimensionsData& screen_dimensions_data);
 
 	void Initialize();
 
@@ -54,7 +57,7 @@ public:
 
 	void HandleEvents(SDL_Event e);
 
-	void Tick(float aspect_ratio);
+	void Tick();
 
 	void Render(float alpha);
 

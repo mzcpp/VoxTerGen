@@ -96,14 +96,19 @@ namespace constants
      */
     namespace paths
     {
-        inline constexpr const char* texture_atlas = "res/gfx/textures/atlas.png";
-        inline constexpr const char* sky_cubemap = "res/gfx/textures/cloudbox.png";
-        inline constexpr const char* chunk_mesh_vertex_shader = "res/gfx/shaders/chunk_mesh.vert";
-        inline constexpr const char* chunk_mesh_fragment_shader = "res/gfx/shaders/chunk_mesh.frag";
-        inline constexpr const char* block_highlight_vertex_shader = "res/gfx/shaders/block_highlight.vert";
-        inline constexpr const char* block_highlight_fragment_shader = "res/gfx/shaders/block_highlight.frag";
-        inline constexpr const char* skybox_vertex_shader = "res/gfx/shaders/skybox.vert";
-        inline constexpr const char* skybox_fragment_shader = "res/gfx/shaders/skybox.frag";
+        inline constexpr const char* texture_atlas = "res/gfx/textures/block_atlas.png";
+        inline constexpr const char* sky_cubemap = "res/gfx/textures/cubemap/cloudbox.png";
+        inline constexpr const char* crosshair = "res/gfx/textures/crosshair.png";
+        inline constexpr const char* chunk_mesh_vertex_shader = "res/gfx/shaders/vertex/chunk_mesh.vert";
+        inline constexpr const char* chunk_mesh_fragment_shader = "res/gfx/shaders/fragment/chunk_mesh.frag";
+        inline constexpr const char* block_highlight_vertex_shader = "res/gfx/shaders/vertex/block_highlight.vert";
+        inline constexpr const char* block_highlight_fragment_shader = "res/gfx/shaders/fragment/block_highlight.frag";
+        inline constexpr const char* skybox_vertex_shader = "res/gfx/shaders/vertex/skybox.vert";
+        inline constexpr const char* skybox_fragment_shader = "res/gfx/shaders/fragment/skybox.frag";
+        inline constexpr const char* chunk_wireframe_vertex_shader = "res/gfx/shaders/vertex/chunk_wireframe.vert";
+        inline constexpr const char* chunk_wireframe_fragment_shader = "res/gfx/shaders/fragment/chunk_wireframe.frag";
+        inline constexpr const char* crosshair_vertex_shader = "res/gfx/shaders/vertex/crosshair.vert";
+        inline constexpr const char* crosshair_fragment_shader = "res/gfx/shaders/fragment/crosshair.frag";
         inline constexpr const char* default_font = "res/font/VT323-Regular.ttf";
         inline constexpr const char* button_click = "res/sfx/click.wav";
     } // namespace paths
@@ -124,7 +129,7 @@ namespace constants
         inline constexpr float zoom_min = 1.0f;
         inline constexpr float zoom_max = 45.0f;
         inline constexpr float near_plane = 0.1f;
-        inline constexpr float far_plane = 450.0f;
+        inline constexpr float far_plane = 2000.0f;
     } // namespace camera
 
     /**

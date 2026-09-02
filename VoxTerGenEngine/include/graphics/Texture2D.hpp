@@ -4,9 +4,8 @@
 #include <glad/glad.h>
 
 #include <string_view>
-#include <span>
 
-namespace TextureUtils
+namespace texture_utils
 {
     enum class TextureType 
     { 
@@ -71,6 +70,6 @@ namespace TextureUtils
         GLenum Target() const noexcept { return target_; }
     };
 
-} // namespace TextureUtils
+} // namespace texture_utils
 
 #endif // TEXTURE_2D_HPP

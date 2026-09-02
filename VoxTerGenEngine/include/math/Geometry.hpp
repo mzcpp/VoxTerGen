@@ -18,6 +18,10 @@ namespace geometry
 
     double GetSignedDistance(const Plane& plane, glm::dvec3 point);
 
+    double DistanceSquared(const glm::dvec3 p1, const glm::dvec3 p2);
+    
+    double Distance(const glm::dvec3 p1, const glm::dvec3 p2);
+
 } // namespace geometry
 
 #endif

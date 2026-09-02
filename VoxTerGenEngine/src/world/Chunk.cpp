@@ -1,16 +1,19 @@
 #include "world/Chunk.hpp"
-#include "utils/Logger.hpp"
+
 #include "core/Direction.hpp"
-#include "render/GpuMesh.hpp"
+
+#include "render/GpuMesh3D.hpp"
+
+#include "utils/Logger.hpp"
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-#include <stdexcept>
-#include <memory>
-#include <cstdint>
-#include <stop_token>
 #include <cassert>
+#include <cstdint>
+#include <memory>
+#include <stdexcept>
+#include <stop_token>
 
 namespace
 {
@@ -23,7 +26,9 @@ namespace
 
 Chunk::Chunk(ChunkID id, glm::ivec2 world_coords) : 
 	id_(id), 
+	mesh_id_(0), 
 	world_coords_(world_coords), 
+	pending_mesh_build_(std::nullopt),
 	mesh_state_(MeshState::Invalid), 
 	chunk_state_(ChunkState::Unloaded)
 {
@@ -98,6 +103,11 @@ Block& Chunk::NeighborRefAt(glm::ivec3 coords, Direction dir)
 
 	const auto& offset = neighbor_offsets_[dir_index];
 	return BlockAt({ coords.x + offset.x, coords.y + offset.y, coords.z + offset.z });
+}
+
+std::uint64_t Chunk::IncrementMeshId() noexcept
+{
+	return ++mesh_id_;
 }
 
 int Chunk::Index(glm::ivec3 coords) const

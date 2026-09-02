@@ -8,6 +8,7 @@
 
 #include <array>
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 
 namespace geometry
@@ -38,5 +39,17 @@ namespace geometry
     double GetSignedDistance(const Plane& plane, glm::dvec3 point)
     {
         return glm::dot(plane.normal_, point) + plane.dist_;
+    }
+
+    double DistanceSquared(const glm::dvec3 p1, const glm::dvec3 p2)
+    {
+        const glm::dvec3 delta = p1 - p2;
+
+        return glm::dot(delta, delta);
+    }
+
+    double Distance(const glm::dvec3 p1, const glm::dvec3 p2)
+    {
+        return std::sqrt(DistanceSquared(p1, p2));
     }
 } // namespace geometry

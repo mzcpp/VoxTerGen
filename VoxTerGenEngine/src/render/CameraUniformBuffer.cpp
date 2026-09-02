@@ -6,15 +6,21 @@ void CameraUniformBuffer::Initialize() noexcept
 {
     constexpr GLuint binding_point = 0;
 
-    buffer_.Initialize(sizeof(CameraMatrices), binding_point);
+    static_assert(offsetof(CameraData, view_) == 0);
+    static_assert(offsetof(CameraData, projection_) == 64);
+    static_assert(offsetof(CameraData, pos_) == 128);
+    static_assert(sizeof(CameraData) == 144);
+
+    buffer_.Initialize(sizeof(CameraData), binding_point);
 }
 
-void CameraUniformBuffer::UpdateMatrices(const Camera& camera, float alpha) const noexcept
+void CameraUniformBuffer::UpdateCameraData(const Camera& camera, float alpha) const noexcept
 {
-    CameraMatrices matrices;
+    CameraData camera_data;
  
-    matrices.view_ = camera.InterpolatedViewMatrix(alpha);
-    matrices.projection_ = camera.ProjectionMatrix();
+    camera_data.view_ = camera.InterpolatedViewMatrix(alpha);
+    camera_data.projection_ = camera.ProjectionMatrix();
+    camera_data.pos_ = glm::vec3(camera.Pos());
 
-    buffer_.UploadData(matrices);
+    buffer_.UploadData(camera_data);
 }

@@ -1,42 +1,28 @@
 #ifndef CHUNK_MANAGER_HPP
 #define CHUNK_MANAGER_HPP
 
-#include "utils/Hash.hpp"
-
 #include "graphics/Camera.hpp"
 
+#include "render/events/ChunkEvents.hpp"
+
 #include "threading/ThreadSafeQueue.hpp"
-#include "threading/ThreadSafePriorityQueue.hpp"
+
+#include "utils/Hash.hpp"
 
 #include "world/Block.hpp"
 #include "world/Chunk.hpp"
-#include "world/ChunkEvents.hpp"
 #include "world/Observer.hpp"
 
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
-#include <mutex>
-#include <shared_mutex>
-#include <stop_token>
-#include <unordered_map>
-#include <queue>
+#include <deque>
 #include <memory>
+#include <shared_mutex>
+#include <unordered_map>
+#include <vector>
 
 class ThreadPool;
-
-struct ChunkJob
-{
-	std::shared_ptr<Chunk> chunk_;
-	double distance_squared_;
-};
-
-struct ChunkJobCompare
-{
-	bool operator()(const ChunkJob& a, const ChunkJob& b) const
-	{
-		return a.distance_squared_ > b.distance_squared_;
-	}
-};
 
 class ChunkManager
 {
@@ -44,9 +30,11 @@ private:
 	Observer& observer_;
 	ThreadPool& thread_pool_;
 	std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash> chunks_;
-	ThreadSafePriorityQueue<ChunkJob, ChunkJobCompare> chunk_build_queue_;
+	std::deque<std::shared_ptr<Chunk>> chunk_build_deque_;
 	ChunkID next_chunk_id_ = 1;
 	mutable std::shared_mutex chunks_shared_mutex_;
+	std::vector<glm::ivec2> chunks_to_load_;
+	std::vector<glm::ivec2> chunks_to_unload_;
 
 public:
 	ChunkManager(Observer& observer, ThreadPool& thread_pool);
@@ -57,13 +45,21 @@ public:
 
 	void MarkChunksForUnload();
 
-	void LoadChunks();
-	
+	void FindChunksToLoad();
+
 	void UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
+	
+	void LoadChunks();
+
+	void EnqueueChunkMeshBuild(const std::shared_ptr<Chunk>& chunk, double distance);
+
+	void ScheduleChunkMeshBuilds();
+
+	void ScheduleNeighborChunkMeshBuilds(glm::ivec2 observer_chunk_coords, glm::ivec2 chunk_world_coords);
 
 	void BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
-	std::unique_ptr<Mesh> BuildChunkMesh(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token);
+	std::unique_ptr<ChunkMesh> BuildChunkMesh(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token);
 
 	BlockInfo WorldBlockQuery(glm::ivec2 current_chunk_coord, glm::ivec3 block_coords) const;
 

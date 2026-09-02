@@ -1,11 +1,11 @@
 #ifndef OBSERVER_HPP
 #define OBSERVER_HPP
 
+#include "utils/Constants.hpp"
+
 #include <SDL2/SDL.h>
 
 #include <glm/vec3.hpp>
-
-#include "utils/Constants.hpp"
 
 enum class MovementState
 {

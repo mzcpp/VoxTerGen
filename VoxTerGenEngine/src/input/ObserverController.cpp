@@ -1,9 +1,14 @@
 #include "input/ObserverController.hpp"
-#include "input/InputManager.hpp"
+
 #include "graphics/Camera.hpp"
+
+#include "input/InputManager.hpp"
+
+#include "physics/CollisionSystem.hpp"
+
 #include "utils/Constants.hpp"
 #include "utils/MathUtils.hpp"
-#include "physics/CollisionSystem.hpp"
+
 #include "world/ChunkManager.hpp"
 
 #include <glm/glm.hpp>

@@ -1,9 +1,10 @@
+#include "world/World.hpp"
+
 #include "graphics/Camera.hpp"
 
 #include "threading/ThreadPool.hpp"
 #include "threading/ThreadSafeQueue.hpp"
 
-#include "world/World.hpp"
 #include "world/Chunk.hpp"
 
 #include <queue>

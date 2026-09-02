@@ -3,14 +3,15 @@
 
 #include "core/Engine.hpp"
 
-#include "input/CameraController.hpp"
-#include "input/InputManager.hpp"
-
-#include "graphics/Camera.hpp"
-
-
 struct SDL_Window;
 struct TTF_Font;
+
+struct ScreenDimensionsData
+{
+	int screen_width_ = 0;
+	int screen_height_ = 0;
+	float aspect_ratio_ = 0.0f;
+};
 
 /**
  * @brief Main application class.
@@ -36,9 +37,7 @@ private:
 
 	SDL_GLContext gl_context_;
 
-	int screen_width_;
-	int screen_height_;
-	float aspect_ratio_;
+	ScreenDimensionsData screen_dimensions_data_;
 
 	Engine engine_;
 

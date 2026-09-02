@@ -1,24 +1,19 @@
 #ifndef SKYBOX_RENDER_PASS_HPP
 #define SKYBOX_RENDER_PASS_HPP
 
-#include "mesh/Mesh.hpp"
+#include "mesh/Mesh3D.hpp"
 
 #include "render/MeshRenderer.hpp"
-#include "render/MeshRenderData.hpp"
+#include "render/RenderData.hpp"
 
-#include "world/Chunk.hpp"
-
-#include <glm/mat4x4.hpp>
-
-class Camera;
 class ResourceManager;
 
 class SkyboxRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
-	Mesh skybox_mesh_;
-	MeshRenderData render_data_;
+	Mesh3D skybox_mesh_;
+	ChunkMeshRenderData render_data_;
 
 public:
 	SkyboxRenderPass(const MeshRenderer& mesh_renderer);
@@ -28,5 +23,5 @@ public:
 	void RenderSkybox(const ResourceManager& resource_manager);
 };
 
-#endif
+#endif // SKYBOX_RENDER_PASS_HPP
 

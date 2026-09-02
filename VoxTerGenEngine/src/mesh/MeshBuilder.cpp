@@ -1,124 +1,138 @@
 #include "mesh/MeshBuilder.hpp"
-#include "mesh/Vertex.hpp"
-#include "mesh/Mesh.hpp"
-#include "world/ChunkManager.hpp"
-#include "world/Chunk.hpp"
-#include "render/Material.hpp"
-#include "utils/Logger.hpp"
+
 #include "core/Direction.hpp"
+
+#include "mesh/Vertex.hpp"
+#include "mesh/Mesh2D.hpp"
+#include "mesh/Mesh3D.hpp"
+
+#include "render/Material.hpp"
+
 #include "utils/Constants.hpp"
+#include "utils/Logger.hpp"
 #include "utils/Timer.hpp"
+
+#include "world/Chunk.hpp"
+#include "world/ChunkManager.hpp"
 
 #include <glm/vec3.hpp>
 
 #include <array>
 #include <cassert>
 
-Mesh MeshBuilder::BuildUnitCubeMesh(BlockType block_type, glm::vec3 origin_offset)
+Mesh2D MeshBuilder::BuildUnitMesh2D(glm::vec2 scale, glm::vec2 origin_offset)
 {
-	Mesh unit_cube_mesh;
+	Mesh2D crosshair_mesh;
+
+	CreateMeshIndices<Mesh2D>(crosshair_mesh);
+	CreateMesh2DVertices(scale, origin_offset, crosshair_mesh);
+
+	return crosshair_mesh;
+}
+
+Mesh3D MeshBuilder::BuildUnitMesh3D(BlockType block_type, glm::vec3 origin_offset)
+{
+	Mesh3D unit_cube_mesh;
 
 	for (Direction dir : AllDirections())
     {
-		CreateMeshIndices(unit_cube_mesh);
-        CreateMeshVertices(block_type, dir, origin_offset, unit_cube_mesh);
+		CreateMeshIndices<Mesh3D>(unit_cube_mesh);
+		CreateMesh3DVertices(block_type, dir, glm::vec3(1.0f), origin_offset, unit_cube_mesh);
     }
+
+	assert(unit_cube_mesh.Vertices().size() % 4 == 0);
 
 	return unit_cube_mesh;
 }
 
-void MeshBuilder::CreateMeshIndices(Mesh& chunk_mesh)
-{
-	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
-	{
-		chunk_mesh.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
-	}
-}
-
-void MeshBuilder::CreateMeshVertices(BlockType type, Direction dir, glm::vec3 origin_offset, Mesh& chunk_mesh)
+void MeshBuilder::CreateMesh2DVertices(glm::vec2 scale, glm::vec2 origin_offset, Mesh2D& mesh)
 {
 	for (int i = 0; i < 4; ++i)
 	{
-		Vertex vertex;
+		Vertex2D vertex;
 
-		if (dir == Direction::PosX)
-		{
-			// 1, 0, 1
-			// 1, 0, 0
-			// 1, 1, 1
-			// 1, 1, 0
-			vertex.position_.x = 1.0f;
-			vertex.position_.y = static_cast<float>((i / 2) % 2 != 0);
-			vertex.position_.z = static_cast<float>(i % 2 == 0);
-			vertex.normal_ = 0;
-		}
-		else if (dir == Direction::NegX)
-		{
-			// 0, 0, 0
-			// 0, 0, 1
-			// 0, 1, 0
-			// 0, 1, 1
-			vertex.position_.x = 0.0f;
-			vertex.position_.y = static_cast<float>((i / 2) % 2 != 0);
-			vertex.position_.z = static_cast<float>(i % 2 != 0);
-			vertex.normal_ = 1;
-		}
-		else if (dir == Direction::PosY)
-		{
-			// 0, 1, 1
-			// 1, 1, 1
-			// 0, 1, 0
-			// 1, 1, 0
-			vertex.position_.x = static_cast<float>(i % 2 != 0);
-			vertex.position_.y = 1.0f;
-			vertex.position_.z = static_cast<float>((i / 2) % 2 == 0);
-			vertex.normal_ = 2;
-		}
-		else if (dir == Direction::NegY)
-		{
-			// 1, 0, 1
-			// 0, 0, 1
-			// 1, 0, 0
-			// 0, 0, 0
-			vertex.position_.x = static_cast<float>(i % 2 == 0);
-			vertex.position_.y = 0.0f;
-			vertex.position_.z = static_cast<float>((i / 2) % 2 == 0);
-			vertex.normal_ = 3;
-		}
-		else if (dir == Direction::PosZ)
-		{
-			// 0, 0, 1
-			// 1, 0, 1
-			// 0, 1, 1
-			// 1, 1, 1
-			vertex.position_.x = static_cast<float>(i % 2 != 0);
-			vertex.position_.y = static_cast<float>((i / 2) % 2 != 0);
-			vertex.position_.z = 1.0f;
-			vertex.normal_ = 4;
-		}
-		else if (dir == Direction::NegZ)
-		{
-			// 1, 0, 0
-			// 0, 0, 0
-			// 1, 1, 0
-			// 0, 1, 0
-			vertex.position_.x = static_cast<float>(i % 2 == 0);
-			vertex.position_.y = static_cast<float>((i / 2) % 2 != 0);
-			vertex.position_.z = 0.0f;
-			vertex.normal_ = 5;
-		}
-
+		// 0, 0
+		// 1, 0
+		// 0, 1
+		// 1, 1
+		vertex.position_ = glm::vec2{ i % 2 != 0, (i / 2) % 2 != 0 };
+		vertex.position_ *= scale;
 		vertex.position_ += origin_offset;
-		vertex.uv_ = { static_cast<float>(i % 2 != 0), static_cast<float>((i / 2) % 2 != 0) };
-		vertex.material_ = GetQuadMaterial(type, dir);
+		vertex.uv_ = glm::vec2{ i % 2 != 0, (i / 2) % 2 != 0 };
 
-		chunk_mesh.AddVertex(vertex);
+		mesh.AddVertex(vertex);
 	}
 }
 
-Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshDependencies& chunk_mesh_dependencies)
+void MeshBuilder::CreateMesh3DVertices(BlockType type, Direction dir, glm::vec3 scale, glm::vec3 origin_offset, Mesh3D& mesh)
 {
-	Mesh chunk_mesh;
+	for (int i = 0; i < 4; ++i)
+	{
+		Vertex3D vertex;
+
+		switch (dir) 
+		{
+		case Direction::PosX:
+			// 1, 0, 1
+			// 1, 0, 0
+			// 1, 1, 1
+			// 1, 1, 0
+			vertex.position_ = glm::vec3{ 1.0f, (i / 2) % 2 != 0, i % 2 == 0 };
+			break;
+		case Direction::NegX:
+			// 0, 0, 0
+			// 0, 0, 1
+			// 0, 1, 0
+			// 0, 1, 1
+			vertex.position_ = glm::vec3{ 0.0f, (i / 2) % 2 != 0, i % 2 != 0 };
+			break;
+		case Direction::PosY:
+			// 0, 1, 1
+			// 1, 1, 1
+			// 0, 1, 0
+			// 1, 1, 0
+			vertex.position_ = glm::vec3{ i % 2 != 0, 1.0f, (i / 2) % 2 == 0 };
+			break;
+		case Direction::NegY:
+			// 1, 0, 1
+			// 0, 0, 1
+			// 1, 0, 0
+			// 0, 0, 0
+			vertex.position_ = glm::vec3{ i % 2 == 0, 0.0f, (i / 2) % 2 == 0 };
+			break;
+		case Direction::PosZ:
+			// 0, 0, 1
+			// 1, 0, 1
+			// 0, 1, 1
+			// 1, 1, 1
+			vertex.position_ = glm::vec3{ i % 2 != 0, (i / 2) % 2 != 0, 1.0f };
+			break;
+		case Direction::NegZ:
+			// 1, 0, 0
+			// 0, 0, 0
+			// 1, 1, 0
+			// 0, 1, 0
+			vertex.position_ = glm::vec3{ i % 2 == 0, (i / 2) % 2 != 0, 0.0f };
+			break;
+		default:
+			assert(false);
+			Logger::Log(LogLevel::ERROR, "CreateMeshVertices received an unknown type of Direction!: dir = {}", static_cast<std::uint8_t>(dir));
+			return;
+		}
+
+		vertex.position_ *= scale;
+		vertex.position_ += origin_offset;
+		vertex.normal_ = static_cast<uint8_t>(dir);
+		vertex.uv_ = glm::vec2{ i % 2 != 0, (i / 2) % 2 != 0 };
+		vertex.material_ = GetQuadMaterial(type, dir);
+
+		mesh.AddVertex(vertex);
+	}
+}
+
+ChunkMesh MeshBuilder::BuildChunkMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshDependencies& chunk_mesh_dependencies)
+{
+	ChunkMesh chunk_mesh;
 
 	const Chunk* current_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 0 });
 	const Chunk* west_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ -1, 0 });
@@ -148,12 +162,12 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 					if (neighbor_coords.x < 0)
 					{
 						neighbor_chunk = west_chunk;
-						neighbor_coords.x += constants::chunk::width;
+						neighbor_coords += glm::ivec3{ constants::chunk::width, 0, 0 };
 					}
 					else if (neighbor_coords.x >= constants::chunk::width)
 					{
 						neighbor_chunk = east_chunk;
-						neighbor_coords.x -= constants::chunk::width;
+						neighbor_coords -= glm::ivec3{ constants::chunk::width, 0, 0 };
 					}
 					else if (neighbor_coords.y < 0 || neighbor_coords.y >= constants::chunk::height)
 					{
@@ -162,20 +176,20 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 					else if (neighbor_coords.z < 0)
 					{
 						neighbor_chunk = north_chunk;
-						neighbor_coords.z += constants::chunk::depth;
+						neighbor_coords += glm::ivec3{ 0, 0, constants::chunk::depth };
 					}
 					else if (neighbor_coords.z >= constants::chunk::depth)
 					{
 						neighbor_chunk = south_chunk;
-						neighbor_coords.z -= constants::chunk::depth;
+						neighbor_coords -= glm::ivec3{ 0, 0, constants::chunk::depth };
 					}
 
 					if (neighbor_chunk != nullptr && neighbor_chunk->BlockAt(neighbor_coords).IsSolid())
 					{
 						continue;
 					}
-
-					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, dir, chunk_mesh);
+					
+					SaveQuadMesh(chunk_world_coords, current_block.Type(), block_coords, glm::vec3(1.0f), dir, current_block.IsTransparent() ? chunk_mesh.cpu_transparent_mesh_ : chunk_mesh.cpu_opaque_mesh_);
 				}
 			}
 		}
@@ -184,15 +198,15 @@ Mesh MeshBuilder::BuildMeshNaive(glm::ivec2 chunk_world_coords, const ChunkMeshD
 	return chunk_mesh;
 }
 
-Mesh MeshBuilder::BuildMeshGreedy(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
+ChunkMesh MeshBuilder::BuildChunkMeshGreedy(const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token)
 {
-	Mesh chunk_mesh;
+	ChunkMesh chunk_mesh;
 
 	for (MajorAxis axis : AllAxes())
 	{
 		if (stop_token.stop_requested())
 		{
-			return Mesh();
+			return ChunkMesh();
 		}
 
 		BuildAxisMesh(axis, chunk_mesh_dependencies, stop_token, chunk_mesh);
@@ -201,18 +215,55 @@ Mesh MeshBuilder::BuildMeshGreedy(const ChunkMeshDependencies& chunk_mesh_depend
 	return chunk_mesh;
 }
 
-void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, Direction dir, Mesh& chunk_mesh)
+Mesh3D MeshBuilder::BuildChunkWireframeMesh()
 {
-	const glm::vec3 block_abs_pos = { 
-		static_cast<float>(chunk_world_coords.x * constants::chunk::width + block_rel_coords.x), 
-		static_cast<float>(block_rel_coords.y), 
-		static_cast<float>(chunk_world_coords.y * constants::chunk::depth + block_rel_coords.z) 
+	Mesh3D chunk_wireframe_mesh;
+
+	constexpr int step = 2;
+
+	static_assert(step > 0);
+	static_assert(constants::chunk::width % step == 0);
+	static_assert(constants::chunk::height % step == 0);
+	static_assert(constants::chunk::depth % step == 0);
+
+	for (int z = 0; z < constants::chunk::depth; z += step)
+	{
+		for (int y = 0; y < constants::chunk::height; y += step)
+		{
+			for (int x = 0; x < constants::chunk::width; x += step)
+			{
+				const BlockType type = BlockType::Air;
+				const glm::ivec2 chunk_coords = { 0, 0 };
+				const glm::ivec3 pos_x_block_coords = { constants::chunk::width - 2, y, z };
+				const glm::ivec3 pos_z_block_coords = { x, y, constants::chunk::depth - 2 };
+
+				const glm::ivec3 neg_x_block_coords = { -2, y, z };
+				const glm::ivec3 neg_z_block_coords = { x, y, -2 };
+
+				SaveQuadMesh(chunk_coords, type, pos_x_block_coords, glm::vec3(static_cast<float>(step)), Direction::PosX, chunk_wireframe_mesh);
+				SaveQuadMesh(chunk_coords, type, pos_z_block_coords, glm::vec3(static_cast<float>(step)), Direction::PosZ, chunk_wireframe_mesh);
+
+				SaveQuadMesh(chunk_coords, type, neg_x_block_coords, glm::vec3(static_cast<float>(step)), Direction::PosX, chunk_wireframe_mesh);
+				SaveQuadMesh(chunk_coords, type, neg_z_block_coords, glm::vec3(static_cast<float>(step)), Direction::PosZ, chunk_wireframe_mesh);
+			}
+		}
+	}
+
+	return chunk_wireframe_mesh;
+}
+
+void MeshBuilder::SaveQuadMesh(glm::ivec2 chunk_world_coords, BlockType type, glm::ivec3 block_rel_coords, glm::vec3 scale, Direction dir, Mesh3D& mesh)
+{
+	const glm::vec3 block_abs_pos = {
+		chunk_world_coords.x * constants::chunk::width + block_rel_coords.x,
+		block_rel_coords.y,
+		chunk_world_coords.y * constants::chunk::depth + block_rel_coords.z
 	};
 
-	CreateMeshIndices(chunk_mesh);
-	CreateMeshVertices(type, dir, block_abs_pos, chunk_mesh);
+	CreateMeshIndices<Mesh3D>(mesh);
+	CreateMesh3DVertices(type, dir, scale, block_abs_pos, mesh);
 	
-	assert(chunk_mesh.Vertices().size() % 4 == 0);
+	assert(mesh.Vertices().size() % 4 == 0);
 }
 
 std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
@@ -221,6 +272,7 @@ std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 	{
 	case BlockType::Air:
 		return static_cast<std::uint8_t>(Material::Air);
+
 	case BlockType::Grass:
 		if (dir == Direction::PosY)
 		{
@@ -234,16 +286,22 @@ std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 		{
 			return static_cast<std::uint8_t>(Material::GrassSide);
 		}
+	
 	case BlockType::Dirt:
 		return static_cast<std::uint8_t>(Material::Dirt);
+	
 	case BlockType::Stone:
 		return static_cast<std::uint8_t>(Material::Stone);
+	
 	case BlockType::Water:
 		return static_cast<std::uint8_t>(Material::Water);
+	
 	case BlockType::Sand:
 		return static_cast<std::uint8_t>(Material::Sand);
+	
 	case BlockType::Snow:
 		return static_cast<std::uint8_t>(Material::Snow);
+	
 	case BlockType::Bedrock:
 		return static_cast<std::uint8_t>(Material::Bedrock);
 	}
@@ -253,7 +311,7 @@ std::uint8_t MeshBuilder::GetQuadMaterial(BlockType block_type, Direction dir)
 	return static_cast<std::uint8_t>(Material::Air);
 }
 
-void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token, Mesh& chunk_mesh)
+void MeshBuilder::BuildAxisMesh(MajorAxis major_axis, const ChunkMeshDependencies& chunk_mesh_dependencies, std::stop_token stop_token, ChunkMesh& chunk_mesh)
 {
 	int major_axis_size = 0;
 	int cross_axis_1_size = 0;
@@ -340,8 +398,8 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 	{
 		for (int cross_axis_2_index = 0; cross_axis_2_index < cross_axis_2_size; ++cross_axis_2_index)
 		{
-			glm::ivec3 left_query_coords = { 0, 0, 0 };
-			glm::ivec3 right_query_coords = { 0, 0, 0 };
+			glm::ivec3 left_query_coords(0);
+			glm::ivec3 right_query_coords(0);
 			
 			switch (major_axis)
 			{
@@ -355,11 +413,11 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 
 				if (!left_block_inside)
 				{
-					left_query_coords.x += constants::chunk::width;
+					left_query_coords += glm::ivec3{ constants::chunk::width, 0, 0 };
 				}
 				else if (!right_block_inside)
 				{
-					right_query_coords.x -= constants::chunk::width;
+					right_query_coords -= glm::ivec3{ constants::chunk::width, 0, 0 };
 				}
 				
 				break;
@@ -384,11 +442,12 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 
 				if (!left_block_inside)
 				{
-					left_query_coords.z += constants::chunk::depth;
+					left_query_coords += glm::ivec3{ 0, 0, constants::chunk::depth };
+					
 				}
 				else if (!right_block_inside)
 				{
-					right_query_coords.z -= constants::chunk::depth;
+					right_query_coords -= glm::ivec3{ 0, 0, constants::chunk::depth };
 				}
 
 				break;
@@ -432,22 +491,34 @@ void MeshBuilder::BuildSliceMask(MajorAxis major_axis, int major_axis_index, int
 	}
 }
 
-void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, Mesh& chunk_mesh)
+void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad& merged_quad, int major_axis_index, const MaskCell& first_merged_cell, ChunkMesh& chunk_mesh)
 {
+	const bool isMeshTransparent = first_merged_cell.block_type_ == BlockType::Water;
+	const std::uint8_t normal = static_cast<std::uint8_t>(first_merged_cell.dir_);
+	const std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
+
+	const bool dir_is_even = static_cast<std::uint8_t>(first_merged_cell.dir_) % 2 == 0;
+	const bool invert_j = ((major_axis == MajorAxis::X || major_axis == MajorAxis::Y) && dir_is_even) || (major_axis == MajorAxis::Z && !dir_is_even);
+
 	for (std::uint32_t i : { 0, 1, 2, 1, 3, 2 })
 	{
-		chunk_mesh.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.Vertices().size()));
+		if (isMeshTransparent)
+		{
+			chunk_mesh.cpu_transparent_mesh_.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.cpu_transparent_mesh_.Vertices().size()));
+		}
+		else
+		{
+			chunk_mesh.cpu_opaque_mesh_.AddIndex(i + static_cast<std::uint32_t>(chunk_mesh.cpu_opaque_mesh_.Vertices().size()));
+		}
 	}
 
-	glm::vec3 vertex_position = { 0.0f, 0.0f, 0.0f };
+	glm::vec3 vertex_position(0.0f);
 	
 	for (int i : { 0, 1 })
 	{
 		for (int j : { 0, 1 })
 		{
-			if ((major_axis == MajorAxis::X && static_cast<std::uint8_t>(first_merged_cell.dir_) % 2 == 0) || 
-				(major_axis == MajorAxis::Y && static_cast<std::uint8_t>(first_merged_cell.dir_) % 2 == 0) || 
-				(major_axis == MajorAxis::Z && static_cast<std::uint8_t>(first_merged_cell.dir_) % 2 != 0))
+			if (invert_j)
 			{
 				j = 1 - j;
 			}
@@ -457,27 +528,32 @@ void MeshBuilder::EmitVerticesAndIndices(MajorAxis major_axis, const MergedQuad&
 
 			if (major_axis == MajorAxis::X)
 			{
-				vertex_position = { major_axis_index + 1, y_pos, x_pos };
+				vertex_position = glm::vec3{ major_axis_index + 1, y_pos, x_pos };
 			}
 			else if (major_axis == MajorAxis::Y)
 			{
-				vertex_position = { x_pos, major_axis_index + 1, y_pos };
+				vertex_position = glm::vec3{ x_pos, major_axis_index + 1, y_pos };
 			}
 			else
 			{
-				vertex_position = { x_pos, y_pos, major_axis_index + 1 };
+				vertex_position = glm::vec3{ x_pos, y_pos, major_axis_index + 1 };
 			}
 
-			const std::uint8_t normal = static_cast<std::uint8_t>(first_merged_cell.dir_);
-			const glm::vec2 uv = { static_cast<float>(j * merged_quad.width_), static_cast<float>(i * merged_quad.height_) };
-			const std::uint8_t material = GetQuadMaterial(first_merged_cell.block_type_, first_merged_cell.dir_);
+			const glm::vec2 uv = { j * merged_quad.width_, i * merged_quad.height_ };
 
-			chunk_mesh.AddVertex(vertex_position, normal, uv, material);
+			if (isMeshTransparent)
+			{
+				chunk_mesh.cpu_transparent_mesh_.AddVertex(vertex_position, normal, uv, material);
+			}
+			else
+			{
+				chunk_mesh.cpu_opaque_mesh_.AddVertex(vertex_position, normal, uv, material);
+			}
 		}
 	}
 }
 
-void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, Mesh& chunk_mesh)
+void MeshBuilder::MergeFacesAndEmitData(MajorAxis major_axis, int major_axis_index, int mask_width, int mask_height, std::vector<MaskCell>& slice_mask, ChunkMesh& chunk_mesh)
 {
 	for (int y = 0; y < mask_height; ++y)
 	{

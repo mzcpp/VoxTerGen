@@ -1,18 +1,13 @@
 #ifndef BLOCK_HIGHLIGHT_RENDER_PASS_HPP
 #define BLOCK_HIGHLIGHT_RENDER_PASS_HPP
 
-#include "mesh/Mesh.hpp"
+#include "mesh/Mesh3D.hpp"
 
 #include "render/MeshRenderer.hpp"
-#include "render/MeshRenderData.hpp"
+#include "render/RenderData.hpp"
 
-#include "world/Chunk.hpp"
+#include <optional>
 
-#include <glm/vec3.hpp>
-
-#include <memory>
-
-class Camera;
 class ResourceManager;
 
 struct RaycastResult;
@@ -21,8 +16,8 @@ class BlockHighlightRenderPass
 {
 private:
 	const MeshRenderer& mesh_renderer_;
-	Mesh block_highlight_mesh_;
-	MeshRenderData render_data_;
+	Mesh3D block_highlight_mesh_;
+	ChunkMeshRenderData render_data_;
 	bool render_highlight_;
 
 public:

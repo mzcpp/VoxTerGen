@@ -2,8 +2,8 @@
 
 #include <glad/glad.h>
 
-#include <utility>
 #include <cassert>
+#include <utility>
 
 UniformBuffer::UniformBuffer(UniformBuffer&& other) noexcept
 {

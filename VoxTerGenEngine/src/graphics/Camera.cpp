@@ -1,7 +1,9 @@
 #include "graphics/Camera.hpp"
+
 #include "utils/Logger.hpp"
 
 #include <glad/glad.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -29,12 +31,7 @@ Camera::Camera(glm::dvec3 position, float yaw, float pitch) :
 	enabled_zoom_(true), 
 	stale_(true)
 {
-	fps_offset_ = {
-		static_cast<double>(constants::observer::width) / 2.0, 
-		static_cast<double>(constants::observer::height) * (3.0 / 4.0), 
-		static_cast<double>(constants::observer::depth) / 2.0
-	};
-
+	fps_offset_ = glm::dvec3{ constants::observer::width / 2.0, constants::observer::height * (3.0 / 4.0), constants::observer::depth / 2.0 };
 	position_ += fps_offset_;
 }
 

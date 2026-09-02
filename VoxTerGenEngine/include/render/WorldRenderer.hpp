@@ -1,45 +1,68 @@
 #ifndef WORLD_RENDERER_HPP
 #define WORLD_RENDERER_HPP
 
+#include "render/events/ChunkEvents.hpp"
+
+#include "render/pass/BlockHighlightRenderPass.hpp"
+#include "render/pass/ChunkOpaqueRenderPass.hpp"
+#include "render/pass/ChunkTransparentRenderPass.hpp"
+#include "render/pass/ChunkWireframeRenderPass.hpp"
+#include "render/pass/SkyboxRenderPass.hpp"
+#include "render/pass/UIRenderPass.hpp"
+
 #include "render/CameraUniformBuffer.hpp"
-#include "render/ChunkMeshRenderPass.hpp"
-#include "render/BlockHighlightRenderPass.hpp"
-#include "render/SkyboxRenderPass.hpp"
 
 #include "threading/ThreadSafeQueue.hpp"
 
-#include "world/ChunkEvents.hpp"
-
-#include <glm/vec2.hpp>
-#include <glm/mat4x4.hpp>
+#include "world/Chunk.hpp"
 
 #include <unordered_map>
-#include <memory>
-#include <queue>
-#include <optional>
+#include <vector>
 
 class Camera;
 class ResourceManager;
 
-struct RaycastResult;
+struct ScreenDimensionsData;
+struct ChunkRenderData;
 
 class WorldRenderer
 {
 private:
+	const ScreenDimensionsData& screen_dimensions_data_;
+	const ResourceManager& resource_manager_;
+	const Camera& camera_;
+	
 	CameraUniformBuffer camera_uniform_buffer_;
 	MeshRenderer mesh_renderer_;
-	ChunkMeshRenderPass chunk_mesh_render_pass_;
+
+	ChunkOpaqueRenderPass chunk_opaque_render_pass_;
 	BlockHighlightRenderPass block_highlight_render_pass_;
 	SkyboxRenderPass skybox_render_pass_;
+	ChunkWireframeRenderPass chunk_wireframe_render_pass_;
+	ChunkTransparentRenderPass chunk_transparent_render_pass_;
+	UIRenderPass ui_render_pass_;
+
+	std::unordered_map<ChunkID, ChunkRenderData> chunks_render_data_;
+	std::vector<TransparentChunkData> transparent_chunks_data_;
 
 public:
-	WorldRenderer();
+	WorldRenderer(const ScreenDimensionsData& screen_dimensions_data, const ResourceManager& resource_manager, const Camera& camera);
 
 	void Initialize();
 
-	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue, const Camera& camera);
+	void ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
-	void RenderWorld(const Camera& camera, float alpha, const ResourceManager& resource_manager);
+	void ProcessChunkMeshReady(const ChunkMeshReady& event);
+
+	void ProcessChunkDestroyed(const ChunkDestroyed& event);
+
+	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
+
+	void RenderWorld(float alpha);
+
+	void UpdateChunksVisibility();
+
+	void UpdateTransparentChunks();
 };
 
 #endif // WORLD_RENDERER_HPP

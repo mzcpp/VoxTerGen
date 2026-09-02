@@ -1,0 +1,33 @@
+#ifndef CHUNK_WIREFRAME_RENDER_PASS_HPP
+#define CHUNK_WIREFRAME_RENDER_PASS_HPP
+
+#include "mesh/Mesh3D.hpp"
+
+#include "world/Chunk.hpp"
+
+#include "render/RenderData.hpp"
+#include "render/MeshRenderer.hpp"
+
+class Camera;
+class ResourceManager;
+
+struct ChunkRenderData;
+
+class ChunkWireframeRenderPass
+{
+private:
+	const MeshRenderer& mesh_renderer_;
+	Mesh3D chunk_wireframe_mesh_;
+	ChunkMeshRenderData render_data_;
+	bool render_wireframe_;
+
+public:
+	ChunkWireframeRenderPass(const MeshRenderer& mesh_renderer);
+
+	void PrepareChunkWireframeRenderData();
+
+	void RenderChunkWireframe(const Camera& camera, const ResourceManager& resource_manager);
+};
+
+#endif // CHUNK_WIREFRAME_RENDER_PASS_HPP
+

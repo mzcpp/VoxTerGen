@@ -2,17 +2,18 @@
 #define COLLISION_SYSTEM_HPP
 
 #include "physics/AABB.hpp"
-#include "world/Observer.hpp"
+
 #include "world/Block.hpp"
 #include "world/ChunkManager.hpp"
+#include "world/Observer.hpp"
 
-#include <glm/vec3.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
+#include <glm/vec3.hpp>
 
+#include <cmath>
 #include <concepts>
 #include <vector>
-#include <cmath>
 
 class Block;
 class Observer;
@@ -58,11 +59,7 @@ public:
                         continue;
                     }
 
-                    const glm::dvec3 neighbor_block_min = {
-                        static_cast<double>(neighbor_block_info.absolute_pos_.x), 
-                        static_cast<double>(neighbor_block_info.absolute_pos_.y), 
-                        static_cast<double>(neighbor_block_info.absolute_pos_.z)
-                    };
+                    const glm::dvec3 neighbor_block_min = neighbor_block_info.absolute_pos_;
 
                     const AABB neighbor_block(neighbor_block_min, neighbor_block_min + glm::dvec3(1.0));
 
@@ -71,11 +68,7 @@ public:
             }
         }
 
-        const glm::dvec3 observer_coords_offset = {
-            static_cast<double>(observer.Width()),
-            static_cast<double>(observer.Height()),
-            static_cast<double>(observer.Depth())
-        };
+        const glm::dvec3 observer_coords_offset = { observer.Width(), observer.Height(), observer.Depth() };
 
         glm::dvec3 clipped_movement_vector = displacement_vector;
         AABB observer_aabb = { observer.Pos(), observer.Pos() + observer_coords_offset };

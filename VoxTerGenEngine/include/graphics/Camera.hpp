@@ -1,11 +1,11 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include "utils/Constants.hpp"
-
 #include "math/Plane.hpp"
 
 #include "physics/DigitalDifferentialAnalyzer.hpp"
+
+#include "utils/Constants.hpp"
 
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>

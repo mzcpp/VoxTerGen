@@ -18,18 +18,36 @@ The format follows Keep a Changelog and Semantic Versioning.
 
 ---
 
+## [0.6.1] - 2 September 2026
+
+### Added
+- Added rendering of transparent blocks by splitting `ChunkMeshRenderPass` into `ChunkOpaqueRenderPass` and `ChunkTransparentRenderPass`.
+- Added `ChunkWireframeRenderPass` for rendering the wireframe of the currently occupied chunk.
+- Added a screen-centered crosshair using `UIRenderPass`.
+- Added a fog effect to hide chunk streaming artifacts.
+- Added `EventDispatcher` for basic event distribution.
+
+### Changed
+- Split rendering classes into separate 2D and 3D rendering classes.
+- Renamed and refactored numerous functions to improve consistency and code organization.
+
+### Fixed
+- Fixed chunk meshes not being rebuilt correctly when neighboring chunks are loaded or unloaded.
+
+---
+
 ## [0.6.0] - 16 August 2026
 
 ### Added
-- Added multithreaded chunk streaming and mesh generation
-- Added custom `ThreadPool`, `ThreadSafeQueue`, and `ThreadSafePriorityQueue` classes
-- Added a custom `Timer` class for profiling
-- Added priority-based chunk streaming based on distance from the observer
+- Added multithreaded chunk streaming and mesh generation.
+- Added custom `ThreadPool`, `ThreadSafeQueue`, and `ThreadSafePriorityQueue` classes.
+- Added a custom `Timer` class for profiling.
+- Added priority-based chunk streaming based on distance from the observer.
 
 ### Changed
-- Redesigned chunk meshing to use snapshots of neighboring chunks instead of querying the world during mesh generation
-- Added chunk mesh generation cancellation using `std::stop_token`
-- Improved chunk lifetime management during asynchronous mesh generation using `std::shared_ptr`
+- Redesigned chunk meshing to use snapshots of neighboring chunks instead of querying the world during mesh generation.
+- Added chunk mesh generation cancellation using `std::stop_token`.
+- Improved chunk lifetime management during asynchronous mesh generation using `std::shared_ptr`.
 
 ---
 
@@ -43,36 +61,36 @@ The format follows Keep a Changelog and Semantic Versioning.
 ## [0.5.2] - 22 July 2026
 
 ### Added
-- Added support for loading cubemap textures from a texture atlas
-- Added skybox rendering
+- Added support for loading cubemap textures from a texture atlas.
+- Added skybox rendering.
 
 ---
 
 ## [0.5.1] - 17 July 2026
 
 ### Added
-- Implemented Digital Differential Analyzer (DDA) raycasting for voxel traversal
-- Added block selection highlight rendered with a dedicated render pass
+- Implemented Digital Differential Analyzer (DDA) raycasting for voxel traversal.
+- Added block selection highlight rendered with a dedicated render pass.
 
 ---
 
 ## [0.5.0] - 30 June 2026
 
 ### Added
-- Basic AABB collision detection and collision resolution against voxel terrain
-- Observer physics system
-- Walking with acceleration, friction and maximum movement speed
-- Gravity and jumping
-- Airborne and Grounded movement states
-- Noclip mode toggle
-- Fixed-timestep movement simulation
-- Horizontal movement independent of camera pitch
-- Velocity-based movement with collision clipping
+- Basic AABB collision detection and collision resolution against voxel terrain.
+- Observer physics system.
+- Walking with acceleration, friction and maximum movement speed.
+- Gravity and jumping.
+- Airborne and Grounded movement states.
+- Noclip mode toggle.
+- Fixed-timestep movement simulation.
+- Horizontal movement independent of camera pitch.
+- Velocity-based movement with collision clipping.
 
 ### Changed
-- Refactored observer movement to use acceleration and velocity instead of direct position changes
-- Separated input gathering from movement simulation
-- Camera now follows observer movement after physics simulation
+- Refactored observer movement to use acceleration and velocity instead of direct position changes.
+- Separated input gathering from movement simulation.
+- Camera now follows observer movement after physics simulation.
 
 ---
 
