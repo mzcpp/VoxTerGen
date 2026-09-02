@@ -71,19 +71,26 @@ void WorldRenderer::ProcessChunkEvents(ThreadSafeQueue<ChunkEvent>& chunk_event_
 
 void WorldRenderer::ProcessChunkMeshReady(const ChunkMeshReady& event)
 {
-	 ChunkMeshRenderData chunk_mesh_render_data;
-	 chunk_mesh_render_data.gpu_opaque_mesh_.InitializeBuffers();
-	 chunk_mesh_render_data.gpu_opaque_mesh_.UploadMeshData(event.chunk_mesh_->cpu_opaque_mesh_);
-	 chunk_mesh_render_data.gpu_transparent_mesh_.InitializeBuffers();
-	 chunk_mesh_render_data.gpu_transparent_mesh_.UploadMeshData(event.chunk_mesh_->cpu_transparent_mesh_);
-	 chunk_mesh_render_data.model_matrix_ = glm::translate(glm::mat4(1.0f), { event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth });
+	if (event.chunk_->MeshId() != event.mesh_id_)
+	{
+		return;
+	}
 
-	 const AABB chunk_aabb(
-	 	glm::dvec3{ event.world_coords_.x * constants::chunk::width, 0, event.world_coords_.y * constants::chunk::depth },
-	 	glm::dvec3{ (event.world_coords_.x + 1) * constants::chunk::width, constants::chunk::height, (event.world_coords_.y + 1) * constants::chunk::depth }
-	 );
+	const glm::ivec2 chunk_world_coords = event.chunk_->WorldCoords();
 
-	 chunks_render_data_.insert_or_assign(event.chunk_id_, ChunkRenderData{ std::move(chunk_mesh_render_data), chunk_aabb, false });
+	ChunkMeshRenderData chunk_mesh_render_data;
+	chunk_mesh_render_data.gpu_opaque_mesh_.InitializeBuffers();
+	chunk_mesh_render_data.gpu_opaque_mesh_.UploadMeshData(event.chunk_mesh_->cpu_opaque_mesh_);
+	chunk_mesh_render_data.gpu_transparent_mesh_.InitializeBuffers();
+	chunk_mesh_render_data.gpu_transparent_mesh_.UploadMeshData(event.chunk_mesh_->cpu_transparent_mesh_);
+	chunk_mesh_render_data.model_matrix_ = glm::translate(glm::mat4(1.0f), { chunk_world_coords.x * constants::chunk::width, 0, chunk_world_coords.y * constants::chunk::depth });
+
+	const AABB chunk_aabb(
+		glm::dvec3{ chunk_world_coords.x * constants::chunk::width, 0, chunk_world_coords.y * constants::chunk::depth },
+		glm::dvec3{ (chunk_world_coords.x + 1) * constants::chunk::width, constants::chunk::height, (chunk_world_coords.y + 1) * constants::chunk::depth }
+	);
+
+	chunks_render_data_.insert_or_assign(event.chunk_->Id(), ChunkRenderData{std::move(chunk_mesh_render_data), chunk_aabb, false});
 }
 
 void WorldRenderer::ProcessChunkDestroyed(const ChunkDestroyed& event)

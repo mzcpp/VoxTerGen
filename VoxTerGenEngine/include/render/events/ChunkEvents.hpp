@@ -5,6 +5,7 @@
 
 #include <glm/vec2.hpp>
 
+#include <cstdint>
 #include <memory>
 #include <variant>
 
@@ -18,8 +19,8 @@ struct overloaded : Ts... { using Ts::operator()...; };
 
 struct ChunkMeshReady
 {
-    ChunkID chunk_id_;
-    glm::ivec2 world_coords_;
+    std::shared_ptr<Chunk> chunk_;
+    std::uint64_t mesh_id_;
     std::unique_ptr<ChunkMesh> chunk_mesh_;
 };
 

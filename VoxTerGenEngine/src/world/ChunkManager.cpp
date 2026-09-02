@@ -306,7 +306,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		assert(chunk != nullptr);
 		assert(chunk->GetPendingMeshBuild().has_value());
 
-		const ChunkMeshBuildData chunk_job = chunk->GetPendingMeshBuild().value();
+		const ChunkMeshBuildData chunk_build_data = chunk->GetPendingMeshBuild().value();
 
 		chunk->ClearPendingMeshBuild();
 
@@ -320,19 +320,19 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		thread_pool_.Enqueue(
 			[this, 
 			chunk, 
-			chunk_job, 
+			chunk_build_data,
 			stop_token = chunk->StopSource().get_token(), 
 			chunk_mesh_dependencies = GetMeshDependencies(chunk->WorldCoords()), 
 			&chunk_event_queue]()
 			{
 				std::unique_ptr<ChunkMesh> chunk_mesh = BuildChunkMesh(chunk_mesh_dependencies, stop_token);
 
-				if (chunk_mesh == nullptr || chunk_job.mesh_id_ != chunk->MeshId())
+				if (chunk_mesh == nullptr || chunk_build_data.mesh_id_ != chunk->MeshId())
 				{
 					return;
 				}
 
-				chunk_event_queue.Push(ChunkMeshReady{ chunk->Id(), chunk->WorldCoords(), std::move(chunk_mesh) });
+				chunk_event_queue.Push(ChunkMeshReady{ chunk, chunk_build_data.mesh_id_, std::move(chunk_mesh) });
 
 				if (chunk->GetMeshState() == MeshState::Building)
 				{
