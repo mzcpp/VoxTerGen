@@ -40,7 +40,7 @@ namespace domain_transform
         auto operator()(Args... coords) const
         {
             // TODO: warp each axis separately
-            const double offset_coords = warp_noise_.Noise(coords...) * strength_;
+            const double offset_coords = warp_noise_.Sample(coords...) * strength_;
             return std::tuple<Args...>((coords + offset_coords)...);
         }
     };
@@ -155,7 +155,7 @@ public:
         for (int octave = 0; octave < octaves_; ++octave)
         {
             double signal = std::apply([&](auto... coord) {
-                return noise_.Noise((coord * frequency)...);
+                return noise_.Sample((coord * frequency)...);
                 }, warped_coords);
 
             signal = signal_transform_(signal);
