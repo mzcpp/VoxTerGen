@@ -1,8 +1,8 @@
 #include "mesh/Mesh3D.hpp"
 #include "mesh/Vertex.hpp"
 
-#include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 #include <cstdint>
 
