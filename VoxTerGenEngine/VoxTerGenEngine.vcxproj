@@ -178,6 +178,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\generator\CaveGenerator.cpp" />
     <ClCompile Include="src\mesh\Mesh2D.cpp" />
     <ClCompile Include="src\render\GpuMesh2D.cpp" />
     <ClCompile Include="src\render\pass\ChunkTransparentRenderPass.cpp" />
@@ -218,8 +219,10 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\graphics\UniformBuffer.cpp" />
     <ClCompile Include="src\graphics\VertexArray.cpp" />
     <ClCompile Include="src\threading\ThreadPool.cpp" />
+    <ClCompile Include="src\generator\TerrainGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\generator\CaveGenerator.hpp" />
     <ClInclude Include="include\mesh\Mesh2D.hpp" />
     <ClInclude Include="include\render\GpuMesh2D.hpp" />
     <ClInclude Include="include\render\pass\ChunkTransparentRenderPass.hpp" />
@@ -617,6 +620,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\graphics\UniformBuffer.hpp" />
     <ClInclude Include="include\graphics\VertexArray.hpp" />
     <ClInclude Include="include\threading\ThreadPool.hpp" />
+    <ClInclude Include="include\generator\TerrainGenerator.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\external\glm\detail\func_common.inl" />
