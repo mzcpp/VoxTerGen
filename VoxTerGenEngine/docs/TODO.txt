@@ -22,7 +22,7 @@ move world_up into better nested namespace
 use & fix GetChunkCoords - math_utils
 start simplifying constructors, for example in Texture2D, move parameters that belong together into struct Texture2DSettings, Observer, etc
 simplify Observer::RelativeBlockPos lol
-
+add the 'using' stuff in static lib into namespace
 add a proper templated Vec class into "VoxTerGenAlgorithms/utils/Math.hpp"
 create a single templated class for opensimplex, they are the same headers only different names! 
 	template <typename Variant>
