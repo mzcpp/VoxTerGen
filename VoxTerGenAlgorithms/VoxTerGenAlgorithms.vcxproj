@@ -32,6 +32,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\Noise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2FNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\OpenSimplex2SNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\SimplexNoise.hpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\PerlinNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\WorleyNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\VectorFieldWalker.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Common.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Math.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Vec2.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Vec3.hpp" />

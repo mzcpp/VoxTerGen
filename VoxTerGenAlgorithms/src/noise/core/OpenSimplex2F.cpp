@@ -397,15 +397,20 @@ namespace
 
 OpenSimplex2FNoise::OpenSimplex2FNoise(
 	std::uint64_t seed,
-	Noise2DModifier noise_2d_modifier,
-	Noise3DModifier noise_3d_modifier,
-	Noise4DModifier noise_4d_modifier)
+	OpenSimplex2FNoise2DModifier noise_2d_modifier,
+	OpenSimplex2FNoise3DModifier noise_3d_modifier,
+	OpenSimplex2FNoise4DModifier noise_4d_modifier)
 	:
 	Noise(seed),
 	noise_2d_modifier_(noise_2d_modifier),
 	noise_3d_modifier_(noise_3d_modifier),
 	noise_4d_modifier_(noise_4d_modifier)
 {
+}
+
+double OpenSimplex2FNoise::Sample(double x) const noexcept
+{
+	return 0.0f;
 }
 
 double OpenSimplex2FNoise::Sample(double x, double y) const noexcept
@@ -685,14 +690,14 @@ double OpenSimplex2FNoise::Sample(double x, double y, double z, double w) const 
 
 void OpenSimplex2FNoise::RotateCoords(double& xr, double& yr) const noexcept
 {
-	if (noise_2d_modifier_ == Noise2DModifier::Skew)
+	if (noise_2d_modifier_ == OpenSimplex2FNoise2DModifier::Skew)
 	{
 		const double s = skew_2d * (xr + yr);
 
 		xr += s;
 		yr += s;
 	}
-	else if (noise_2d_modifier_ == Noise2DModifier::ImproveX)
+	else if (noise_2d_modifier_ == OpenSimplex2FNoise2DModifier::ImproveX)
 	{
 		const double xx = xr * root2_over_2;
 		const double yy = yr * (root2_over_2 * (1 + 2 * skew_2d));
@@ -704,7 +709,7 @@ void OpenSimplex2FNoise::RotateCoords(double& xr, double& yr) const noexcept
 
 void OpenSimplex2FNoise::RotateCoords(double& xr, double& yr, double& zr) const noexcept
 {
-	if (noise_3d_modifier_ == Noise3DModifier::ImproveXZ)
+	if (noise_3d_modifier_ == OpenSimplex2FNoise3DModifier::ImproveXZ)
 	{
 		const double xz = xr + zr;
 		const double s2 = xz * rotate_3d_orthogonalizer;
@@ -714,7 +719,7 @@ void OpenSimplex2FNoise::RotateCoords(double& xr, double& yr, double& zr) const 
 		zr = zr + s2 + yy;
 		yr = xz * -root3_over_3 + yy;
 	}
-	else if (noise_3d_modifier_ == Noise3DModifier::ImproveXY)
+	else if (noise_3d_modifier_ == OpenSimplex2FNoise3DModifier::ImproveXY)
 	{
 		const double xy = xr + yr;
 		const double s2 = xy * rotate_3d_orthogonalizer;
@@ -724,7 +729,7 @@ void OpenSimplex2FNoise::RotateCoords(double& xr, double& yr, double& zr) const 
 		yr = yr + s2 + zz;
 		zr = xy * -root3_over_3 + zz;
 	}
-	else if (noise_3d_modifier_ == Noise3DModifier::Fallback)
+	else if (noise_3d_modifier_ == OpenSimplex2FNoise3DModifier::Fallback)
 	{
 		const double r = fallback_rotate_3d * (xr + yr + zr);
 
@@ -736,7 +741,7 @@ void OpenSimplex2FNoise::RotateCoords(double& xr, double& yr, double& zr) const 
 
 void OpenSimplex2FNoise::RotateCoords(double& xr, double& yr, double& zr, double& wr) const noexcept
 {
-	if (noise_4d_modifier_ == Noise4DModifier::ImproveXYZ)
+	if (noise_4d_modifier_ == OpenSimplex2FNoise4DModifier::ImproveXYZ)
 	{
 		const double xyz = xr + yr + zr;
 		const double ww = wr * 0.2236067977499788;
@@ -747,7 +752,7 @@ void OpenSimplex2FNoise::RotateCoords(double& xr, double& yr, double& zr, double
 		zr += s2;
 		wr = -0.5 * xyz + ww;
 	}
-	else if (noise_4d_modifier_ == Noise4DModifier::ImproveXYZ_ImproveXY)
+	else if (noise_4d_modifier_ == OpenSimplex2FNoise4DModifier::ImproveXYZ_ImproveXY)
 	{
 		const double xy = xr + yr;
 		const double s2 = xy * -0.21132486540518699998;
@@ -759,7 +764,7 @@ void OpenSimplex2FNoise::RotateCoords(double& xr, double& yr, double& zr, double
 		zr = xy * -0.57735026918962599998 + (zz + ww);
 		wr = zr * -0.866025403784439 + ww;
 	}
-	else if (noise_4d_modifier_ == Noise4DModifier::ImproveXYZ_ImproveXZ)
+	else if (noise_4d_modifier_ == OpenSimplex2FNoise4DModifier::ImproveXYZ_ImproveXZ)
 	{
 		const double xz = xr + zr;
 		const double s2 = xz * -0.21132486540518699998;
@@ -771,7 +776,7 @@ void OpenSimplex2FNoise::RotateCoords(double& xr, double& yr, double& zr, double
 		yr = xz * -0.57735026918962599998 + (yy + ww);
 		wr = yr * -0.866025403784439 + ww;
 	}
-	else if (noise_4d_modifier_ == Noise4DModifier::ImproveXY_ImproveZW)
+	else if (noise_4d_modifier_ == OpenSimplex2FNoise4DModifier::ImproveXY_ImproveZW)
 	{
 		const double s2 = (xr + yr) * -0.178275657951399372 + (zr + wr) * 0.215623393288842828;
 		const double t2 = (zr + wr) * -0.403949762580207112 + (xr + yr) * -0.375199083010075342;
@@ -781,7 +786,7 @@ void OpenSimplex2FNoise::RotateCoords(double& xr, double& yr, double& zr, double
 		zr += t2;
 		wr += t2;
 	}
-	else if (noise_4d_modifier_ == Noise4DModifier::Fallback)
+	else if (noise_4d_modifier_ == OpenSimplex2FNoise4DModifier::Fallback)
 	{
 		const double s = skew_4d * (xr + yr + zr + wr);
 

@@ -2,15 +2,10 @@
 #define SIMPLEX_NOISE_HPP
 
 #include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
+#include "VoxTerGenAlgorithms/utils/Common.hpp"
 
 #include <cstdint>
 #include <array>
-
-using ivec2 = std::array<int, 2>;
-using ivec3 = std::array<int, 3>;
-using dvec2 = std::array<double, 2>;
-using dvec3 = std::array<double, 3>;
-using dvec4 = std::array<double, 4>;
 
 class SimplexNoise : public Noise
 {

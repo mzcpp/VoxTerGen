@@ -121,13 +121,13 @@ void SimplexNoise::GetP2P3Offsets(const dvec3& p1, ivec3& p2_offsets, ivec3& p3_
 	const double& y0 = p1[1];
 	const double& z0 = p1[2];
 
-	int& i1 = p2_offsets[0];
-	int& j1 = p2_offsets[1];
-	int& k1 = p2_offsets[2];
+	std::int64_t& i1 = p2_offsets[0];
+	std::int64_t& j1 = p2_offsets[1];
+	std::int64_t& k1 = p2_offsets[2];
 
-	int& i2 = p3_offsets[0];
-	int& j2 = p3_offsets[1];
-	int& k2 = p3_offsets[2];
+	std::int64_t& i2 = p3_offsets[0];
+	std::int64_t& j2 = p3_offsets[1];
+	std::int64_t& k2 = p3_offsets[2];
 
 	if (x0 >= y0)
 	{

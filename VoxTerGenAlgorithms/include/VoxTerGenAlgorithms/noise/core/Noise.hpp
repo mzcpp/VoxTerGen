@@ -5,7 +5,7 @@
 
 class Noise
 {
-private:
+protected:
 	std::uint64_t seed_;
 
 public:

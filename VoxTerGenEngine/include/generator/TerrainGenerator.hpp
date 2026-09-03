@@ -1,7 +1,6 @@
 #ifndef TERRAIN_GENERATOR_HPP
 #define TERRAIN_GENERATOR_HPP
 
-#include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
 #include "VoxTerGenAlgorithms/noise/core/OpenSimplex2FNoise.hpp"
 #include "VoxTerGenAlgorithms/noise/core/OpenSimplex2SNoise.hpp"
 #include "VoxTerGenAlgorithms/noise/core/PerlinNoise.hpp"
@@ -20,7 +19,7 @@ enum class NoiseType
     OPEN_SIMPLEX_2S
 };
 
-class Noise
+class Noise;
 
 class TerrainGenerator
 {
@@ -28,10 +27,10 @@ private:
     NoiseType noise_type_;
     std::uint64_t seed_;
     
-    std::unordered_map<NoiseType, Noise> noises_;
+    std::unordered_map<NoiseType, std::unique_ptr<Noise>> noises_;
 
 public:
-    TerrainGenerator(std::uint64_t seed);
+    TerrainGenerator(NoiseType noise_type, std::uint64_t seed);
 
     double GetCoordHeight(double x, double y);
 

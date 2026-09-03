@@ -80,5 +80,11 @@
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Vec3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\VoxTerGenAlgorithms\utils\Common.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\Noise.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

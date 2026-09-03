@@ -753,6 +753,11 @@ OpenSimplex2SNoise::OpenSimplex2SNoise(
 {
 }
 
+double OpenSimplex2SNoise::Sample(double x) const noexcept
+{
+	return 0.0f;
+}
+
 double OpenSimplex2SNoise::Sample(double x, double y) const noexcept
 {
 	double xr = x;

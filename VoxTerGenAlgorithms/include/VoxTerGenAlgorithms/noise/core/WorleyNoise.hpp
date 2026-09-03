@@ -2,6 +2,7 @@
 #define WORLEY_NOISE_HPP
 
 #include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
+#include "VoxTerGenAlgorithms/utils/Common.hpp"
 
 #include <cstdint>
 #include <array>
@@ -33,9 +34,6 @@ enum class FeaturePointMode
 	FIXED,
 	WEIGHTED_RANDOM
 };
-
-using ivec3 = std::array<std::int64_t, 3>;
-using dvec3 = std::array<double, 3>;
 
 class WorleyNoise : public Noise
 {

@@ -7,6 +7,7 @@
 #include <concepts>
 #include <cmath>
 
+#include "VoxTerGenAlgorithms/utils/Common.hpp"
 #include "VoxTerGenAlgorithms/utils/Vec2.hpp"
 #include "VoxTerGenAlgorithms/utils/Vec3.hpp"
 
@@ -22,13 +23,6 @@ concept Field3D = requires(const Field & f, double x, double y, double z)
 {
     { f.Sample(x, y, z) } -> std::convertible_to<double>;
 };
-
-using ivec2 = std::array<std::int64_t, 2>;
-using ivec3 = std::array<std::int64_t, 3>;
-using uivec2 = std::array<std::uint64_t, 2>;
-using uivec3 = std::array<std::uint64_t, 3>;
-using dvec2 = std::array<double, 2>;
-using dvec3 = std::array<double, 3>;
 
 template <typename Field>
 class VectorFieldWalker
