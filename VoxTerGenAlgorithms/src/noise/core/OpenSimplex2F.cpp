@@ -1,6 +1,8 @@
 #include "pch.h"
 
 #include "VoxTerGenAlgorithms/noise/core/OpenSimplex2FNoise.hpp"
+
+#include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
 #include "VoxTerGenAlgorithms/utils/Math.hpp"
 
 #include <cstdint>
@@ -399,7 +401,7 @@ OpenSimplex2FNoise::OpenSimplex2FNoise(
 	Noise3DModifier noise_3d_modifier,
 	Noise4DModifier noise_4d_modifier)
 	:
-	seed_(seed),
+	Noise(seed),
 	noise_2d_modifier_(noise_2d_modifier),
 	noise_3d_modifier_(noise_3d_modifier),
 	noise_4d_modifier_(noise_4d_modifier)

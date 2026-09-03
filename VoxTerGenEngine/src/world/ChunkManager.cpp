@@ -276,7 +276,7 @@ void ChunkManager::ScheduleNeighborChunkMeshBuilds(glm::ivec2 observer_chunk_coo
 				std::swap(offset.x, offset.y);
 			}
 
-			std::shared_ptr<Chunk> neighbor_chunk = GetChunkAt(chunk_world_coords + offset);
+			const std::shared_ptr<Chunk> neighbor_chunk = GetChunkAt(chunk_world_coords + offset);
 
 			if (neighbor_chunk == nullptr)
 			{

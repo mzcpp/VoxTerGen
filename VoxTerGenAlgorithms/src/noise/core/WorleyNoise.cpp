@@ -1,6 +1,8 @@
 #include "pch.h"
 
 #include "VoxTerGenAlgorithms/noise/core/WorleyNoise.hpp"
+
+#include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
 #include "VoxTerGenAlgorithms/utils/Hash.hpp"
 
 #include <cstdint>
@@ -33,9 +35,16 @@ namespace
 	constexpr int fp_threshold_20 = 230;
 }
 
-WorleyNoise::WorleyNoise(std::uint64_t seed, DistanceMetric dist_metric, DistanceResultType dist_result_type,
-	FeaturePointMode fp_mode, int n_feature_points, float minkowski_p, int dimension) :
-	seed_(seed),
+WorleyNoise::WorleyNoise(
+	std::uint64_t seed, 
+	DistanceMetric dist_metric, 
+	DistanceResultType dist_result_type,
+	FeaturePointMode fp_mode, 
+	int n_feature_points, 
+	float minkowski_p, 
+	int dimension) 
+	:
+	Noise(seed),
 	dist_metric_(dist_metric),
 	dist_result_type_(dist_result_type),
 	fp_mode_(fp_mode),
@@ -120,10 +129,10 @@ double WorleyNoise::Sample(double x, double y, double z) const noexcept
 	return GetResult(min_distances);
 }
 
-//double WorleyNoise::Sample(double x, double y, double z, double w) const noexcept
-//{
-//	return 0.0;
-//}
+double WorleyNoise::Sample(double x, double y, double z, double w) const noexcept
+{
+	return 0.0;
+}
 
 std::uint64_t WorleyNoise::HashCell(const ivec3& coords) const noexcept
 {

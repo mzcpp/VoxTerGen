@@ -1,6 +1,8 @@
 #include "pch.h"
 
 #include "VoxTerGenAlgorithms/noise/core/SimplexNoise.hpp"
+
+#include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
 #include "VoxTerGenAlgorithms/utils/Hash.hpp"
 #include "VoxTerGenAlgorithms/utils/Math.hpp"
 
@@ -23,8 +25,13 @@ namespace
 	constexpr double unskew_4d = -0.138196601125011f;
 }
 
-SimplexNoise::SimplexNoise(std::uint64_t seed) : seed_(seed)
+SimplexNoise::SimplexNoise(std::uint64_t seed) : Noise(seed)
 {
+}
+
+double SimplexNoise::Sample(double x) const noexcept
+{
+	return 0.0;
 }
 
 double SimplexNoise::Sample(double x, double y) const noexcept
@@ -103,10 +110,10 @@ double SimplexNoise::Sample(double x, double y, double z) const noexcept
 	return std::accumulate(corner_contributions.begin(), corner_contributions.end(), 0.0); // normalize
 }
 
-//double SimplexNoise::Sample(double x, double y, double z, double w) const noexcept
-//{
-//	return 0.0;
-//}
+double SimplexNoise::Sample(double x, double y, double z, double w) const noexcept
+{
+	return 0.0;
+}
 
 void SimplexNoise::GetP2P3Offsets(const dvec3& p1, ivec3& p2_offsets, ivec3& p3_offsets) const noexcept
 {
