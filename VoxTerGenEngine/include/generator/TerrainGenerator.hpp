@@ -31,7 +31,7 @@ public:
 
     void InitializeNoises();
 
-    void GenerateChunkTerrain(Chunk& chunk);
+    void GenerateChunkTerrain(const std::shared_ptr<Chunk>& chunk);
 
     double GetCoordHeight(double x, double y);
 

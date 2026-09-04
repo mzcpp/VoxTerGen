@@ -26,21 +26,23 @@ void TerrainGenerator::InitializeNoises()
     noises_.emplace(NoiseType::OPEN_SIMPLEX_2S, std::make_unique<OpenSimplex2SNoise>(OpenSimplex2SNoise{ seed_ }));
 }
 
-void TerrainGenerator::GenerateChunkTerrain(Chunk& chunk)
+void TerrainGenerator::GenerateChunkTerrain(const std::shared_ptr<Chunk>& chunk)
 {
+	assert(chunk != nullptr);
+
 	double frequency = 0.01;
 
 	for (int z = 0; z < constants::chunk::depth; ++z)
 	{
 		for (int x = 0; x < constants::chunk::width; ++x)
 		{
-			int worldX = chunk.WorldCoords().x * constants::chunk::width + x;
-			int worldZ = chunk.WorldCoords().y * constants::chunk::depth + z;
+			int worldX = chunk->WorldCoords().x * constants::chunk::width + x;
+			int worldZ = chunk->WorldCoords().y * constants::chunk::depth + z;
 
 			double nx = worldX * frequency;
 			double nz = worldZ * frequency;
 
-			double noise = noises_.find(NoiseType::PERLIN)->second->Sample(nx, nz);
+			double noise = noises_.find(NoiseType::OPEN_SIMPLEX_2F)->second->Sample(nx, nz);
 
 			int height = static_cast<int>((noise * 0.5 + 0.5) * 40) + 20;
 
@@ -48,15 +50,17 @@ void TerrainGenerator::GenerateChunkTerrain(Chunk& chunk)
 			{
 				if (y <= height)
 				{
-					chunk.BlockAt({ x, y, z }).SetType(BlockType::Grass);
+					chunk->BlockAt({ x, y, z }).SetType(BlockType::Grass);
 				}
 				else
 				{
-					chunk.BlockAt({ x, y, z }).SetType(BlockType::Air);
+					chunk->BlockAt({ x, y, z }).SetType(BlockType::Air);
 				}
 			}
 		}
 	}
+
+	chunk->SetTerrainGenerated(true);
 }
 
 double TerrainGenerator::GetCoordHeight(double x, double y)

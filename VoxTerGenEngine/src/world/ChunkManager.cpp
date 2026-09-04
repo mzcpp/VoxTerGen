@@ -113,7 +113,8 @@ void ChunkManager::UnloadChunks(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 		if (chunk.GetChunkState() == ChunkState::PendingUnload)
 		{
 			chunk.SetChunkState(ChunkState::Unloaded);
-			
+			chunk.SetTerrainGenerated(false);
+
 			chunk_event_queue.Push(ChunkDestroyed{ chunk.Id() });
 			it = chunks_.erase(it);
 		}
@@ -132,7 +133,7 @@ void ChunkManager::LoadChunks()
 	{
 		std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_coords);
 
-		terrain_generator_.GenerateChunkTerrain(*chunk);
+		terrain_generator_.GenerateChunkTerrain(chunk);
 
 		chunk->SetChunkState(ChunkState::Loaded);
 		chunk->SetMeshState(MeshState::Invalid);
