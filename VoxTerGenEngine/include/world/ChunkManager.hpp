@@ -1,6 +1,8 @@
 #ifndef CHUNK_MANAGER_HPP
 #define CHUNK_MANAGER_HPP
 
+#include "generator/TerrainGenerator.hpp"
+
 #include "graphics/Camera.hpp"
 
 #include "render/events/ChunkEvents.hpp"
@@ -35,12 +37,11 @@ private:
 	mutable std::shared_mutex chunks_shared_mutex_;
 	std::vector<glm::ivec2> chunks_to_load_;
 	std::vector<glm::ivec2> chunks_to_unload_;
+	TerrainGenerator terrain_generator_;
 
 public:
 	ChunkManager(Observer& observer, ThreadPool& thread_pool);
 	
-    void InitChunks(int chunk_radius);
-    
 	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
 	void MarkChunksForUnload();
@@ -74,9 +75,6 @@ public:
 	double ChunkDistanceSquared(glm::ivec2 first, glm::ivec2 second) const noexcept;
 
 	ChunkMeshDependencies GetMeshDependencies(glm::ivec2 coords) const;
-
-	// TODO: TEMPORARY CHUNK FILL - REMOVE LATER!
-	void FillChunkTmp(Chunk& chunk);
 
 	// Getters
 	const std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash>& Chunks() const { return chunks_; }

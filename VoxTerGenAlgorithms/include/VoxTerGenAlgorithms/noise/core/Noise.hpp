@@ -13,6 +13,8 @@ public:
 	{
 	}
 
+	virtual ~Noise() = default;
+
 	virtual double Sample(double x) const noexcept = 0;
 
 	virtual double Sample(double x, double y) const noexcept = 0;

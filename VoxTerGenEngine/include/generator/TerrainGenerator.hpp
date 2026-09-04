@@ -1,11 +1,7 @@
 #ifndef TERRAIN_GENERATOR_HPP
 #define TERRAIN_GENERATOR_HPP
 
-#include "VoxTerGenAlgorithms/noise/core/OpenSimplex2FNoise.hpp"
-#include "VoxTerGenAlgorithms/noise/core/OpenSimplex2SNoise.hpp"
-#include "VoxTerGenAlgorithms/noise/core/PerlinNoise.hpp"
-#include "VoxTerGenAlgorithms/noise/core/SimplexNoise.hpp"
-#include "VoxTerGenAlgorithms/noise/core/WorleyNoise.hpp"
+#include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
 
 #include <memory>
 #include <unordered_map>
@@ -31,6 +27,10 @@ private:
 
 public:
     TerrainGenerator(NoiseType noise_type, std::uint64_t seed);
+
+    void InitializeNoises();
+
+    void GenerateChunkTerrain(Chunk& chunk);
 
     double GetCoordHeight(double x, double y);
 

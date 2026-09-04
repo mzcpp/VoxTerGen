@@ -1,5 +1,7 @@
 #include "world/ChunkManager.hpp"
 
+#include "generator/TerrainGenerator.hpp"
+
 #include "mesh/MeshBuilder.hpp"
 
 #include "render/events/ChunkEvents.hpp"
@@ -24,85 +26,9 @@
 
 ChunkManager::ChunkManager(Observer& observer, ThreadPool& thread_pool) :
 	observer_(observer), 
-	thread_pool_(thread_pool)
+	thread_pool_(thread_pool), 
+	terrain_generator_(NoiseType::PERLIN, 1426728)
 {	
-}
-
-void ChunkManager::FillChunkTmp(Chunk& chunk)
-{
-	static int i = 1;
-
-	//chunk.BlockAt({ 0, 0, 0 }).SetType(static_cast<BlockType>(i));
-	//chunk.BlockAt({ 1, 0, 0 }).SetType(static_cast<BlockType>(i));
-	////chunk.BlockAt({ 2, 2, 0 }).SetType(static_cast<BlockType>(1));
-
-	//if (++i >= 8)
-	//{
-	//	i = 1;
-	//}
-
-	//return;
-
-	for (int y = 0; y < constants::chunk::height; ++y)
-	{
-		for (int z = 0; z < constants::chunk::depth; ++z)
-		{
-			for (int x = 0; x < constants::chunk::width; ++x)
-			{
-				chunk.BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(i));
-				//if (i >= 8)
-				//{
-				//	i = 1;
-				//}
-			}
-		}
-	}
-
-	if (++i >= 8)
-	{
-		i = 1;
-	}
-}
-
-void ChunkManager::InitChunks(int chunk_radius)
-{
-	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
-
-	assert(chunk_radius >= 0);
-	const int chunk_square_size = 2 * chunk_radius + 1;
-	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());
-
-	const glm::ivec2 start_coords = {
-		observer_chunk_coords.x - chunk_radius,
-		observer_chunk_coords.y - chunk_radius
-	};
-
-	for (int z = 0; z < chunk_square_size; ++z)
-	{
-		for (int x = 0; x < chunk_square_size; ++x)
-		{
-			const glm::ivec2 chunk_world_coords = { start_coords.x + x, start_coords.y + z };
-			std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_world_coords);
-
-			FillChunkTmp(*chunk);
-
-			chunk->IncrementMeshId();
-
-			if (!chunk->GetPendingMeshBuild().has_value())
-			{
-				chunk_build_deque_.push_back(chunk);
-			}
-			
-			chunk->SetPendingMeshBuild(
-				ChunkMeshBuildData{ 
-					chunk->MeshId(), 
-					ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords) 
-				}
-			);
-			
-			chunks_.try_emplace(chunk_world_coords, std::move(chunk));
-		}
-	}
 }
 
 void ChunkManager::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
@@ -206,7 +132,7 @@ void ChunkManager::LoadChunks()
 	{
 		std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_coords);
 
-		FillChunkTmp(*chunk);
+		terrain_generator_.GenerateChunkTerrain(*chunk);
 
 		chunk->SetChunkState(ChunkState::Loaded);
 		chunk->SetMeshState(MeshState::Invalid);

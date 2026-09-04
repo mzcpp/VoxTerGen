@@ -19,8 +19,6 @@ private:
 public:
 	World(Observer& observer, ThreadPool& thread_pool);
 
-	void InitChunks(int chunk_radius);
-
 	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
 	// Getters
