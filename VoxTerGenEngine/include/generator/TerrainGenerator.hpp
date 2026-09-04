@@ -16,6 +16,7 @@ enum class NoiseType
 };
 
 class Noise;
+class Chunk;
 
 class TerrainGenerator
 {

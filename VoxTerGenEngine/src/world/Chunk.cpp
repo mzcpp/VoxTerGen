@@ -30,7 +30,8 @@ Chunk::Chunk(ChunkID id, glm::ivec2 world_coords) :
 	world_coords_(world_coords), 
 	pending_mesh_build_(std::nullopt),
 	mesh_state_(MeshState::Invalid), 
-	chunk_state_(ChunkState::Unloaded)
+	chunk_state_(ChunkState::Unloaded), 
+	terrain_generated_(false)
 {
 }
 

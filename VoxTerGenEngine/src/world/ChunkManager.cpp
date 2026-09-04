@@ -216,7 +216,6 @@ void ChunkManager::ScheduleNeighborChunkMeshBuilds(glm::ivec2 observer_chunk_coo
 
 void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
-	constexpr int jobs_submitted_limit = 2048;
 	int jobs_submitted = 0;
 
 	std::ranges::sort(chunk_build_deque_, [](const std::shared_ptr<Chunk>& left, const std::shared_ptr<Chunk>& right)
@@ -224,7 +223,7 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 			return left->GetPendingMeshBuild().value().distance_squared_ < right->GetPendingMeshBuild().value().distance_squared_;
 		});
 
-	while (jobs_submitted < jobs_submitted_limit && !chunk_build_deque_.empty())
+	while (jobs_submitted < thread_pool_.JobsSubmittedLimit() && !chunk_build_deque_.empty())
 	{
 		const std::shared_ptr<Chunk> chunk = chunk_build_deque_.front();
 		chunk_build_deque_.pop_front();

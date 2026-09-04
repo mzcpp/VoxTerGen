@@ -81,6 +81,7 @@ private:
     std::atomic<MeshState> mesh_state_;
     std::atomic<ChunkState> chunk_state_;
     std::stop_source mesh_building_stop_source_;
+    bool terrain_generated_;
     
 public:
 	explicit Chunk(ChunkID id, glm::ivec2 world_coords);
@@ -109,12 +110,14 @@ public:
     ChunkState GetChunkState() const noexcept { return chunk_state_; }
     std::stop_source& StopSource() noexcept { return mesh_building_stop_source_; }
     const std::stop_source& StopSource() const noexcept { return mesh_building_stop_source_; }
+    bool TerrainGenerated() const noexcept { return terrain_generated_; }
 
     // Setters
     void SetMeshState(MeshState mesh_state) noexcept { mesh_state_ = mesh_state; }
     void SetChunkState(ChunkState chunk_state) noexcept { chunk_state_ = chunk_state; }
     void SetPendingMeshBuild(ChunkMeshBuildData job_data) noexcept { pending_mesh_build_ = std::move(job_data); }
     void ClearPendingMeshBuild() noexcept { pending_mesh_build_ = std::nullopt; }
+    void TerrainGenerated(bool terrain_generated) noexcept { terrain_generated_ = terrain_generated; }
 
 private:
     int Index(glm::ivec3 coords) const;
