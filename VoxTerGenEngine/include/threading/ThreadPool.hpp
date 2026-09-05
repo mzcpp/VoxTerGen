@@ -21,7 +21,6 @@ private:
     std::mutex queue_mutex_;
     std::condition_variable condition_;
     bool stop_ = false;
-    int jobs_submitted_limit_ = 2048;
 
 public:
     ThreadPool(std::size_t thread_count);
@@ -51,12 +50,6 @@ public:
         condition_.notify_one();
         return result;
     }
-
-    // Getters
-    int JobsSubmittedLimit() const noexcept { return jobs_submitted_limit_; }
-
-    // Setters
-    void SetJobsSubmittedLimit(int jobs_submitted_limit) noexcept { jobs_submitted_limit_ = jobs_submitted_limit; }
 };
 
 #endif // THREAD_POOL_HPP

@@ -131,9 +131,22 @@ void ChunkManager::LoadChunks()
 
 	for (glm::ivec2 chunk_coords : chunks_to_load_)
 	{
-		std::shared_ptr<Chunk> chunk = std::make_unique<Chunk>(next_chunk_id_++, chunk_coords);
+		if (chunks_.find(chunk_coords) != chunks_.end())
+		{
+			continue;
+		}
 
+		std::shared_ptr<Chunk> chunk = std::make_shared<Chunk>(next_chunk_id_++, chunk_coords);
+
+		
+		
+		
+		// thread
 		terrain_generator_.GenerateChunkTerrain(chunk);
+
+
+
+
 
 		chunk->SetChunkState(ChunkState::Loaded);
 		chunk->SetMeshState(MeshState::Invalid);
@@ -218,13 +231,14 @@ void ChunkManager::ScheduleNeighborChunkMeshBuilds(glm::ivec2 observer_chunk_coo
 void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
 	int jobs_submitted = 0;
+	int jobs_submitted_limit = 2048;
 
 	std::ranges::sort(chunk_build_deque_, [](const std::shared_ptr<Chunk>& left, const std::shared_ptr<Chunk>& right)
 		{
 			return left->GetPendingMeshBuild().value().distance_squared_ < right->GetPendingMeshBuild().value().distance_squared_;
 		});
 
-	while (jobs_submitted < thread_pool_.JobsSubmittedLimit() && !chunk_build_deque_.empty())
+	while (jobs_submitted < jobs_submitted_limit && !chunk_build_deque_.empty())
 	{
 		const std::shared_ptr<Chunk> chunk = chunk_build_deque_.front();
 		chunk_build_deque_.pop_front();
