@@ -603,6 +603,7 @@ xcopy /Y /D "$(ProjectDir)libs\SDL2_ttf\$(Platform)\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\render\pass\ChunkWireframeRenderPass.hpp" />
     <ClInclude Include="include\render\pass\SkyboxRenderPass.hpp" />
     <ClInclude Include="include\render\WorldRenderer.hpp" />
+    <ClInclude Include="include\threading\ThreadSafeDeque.hpp" />
     <ClInclude Include="include\threading\ThreadSafePriorityQueue.hpp" />
     <ClInclude Include="include\threading\ThreadSafeQueue.hpp" />
     <ClInclude Include="include\utils\Constants.hpp" />

@@ -163,6 +163,14 @@ namespace constants
         inline constexpr int atlas_rows = 4;
     } // namespace texture
 
+    /**
+    * @brief Threading-related constants such as limit for submitted jobs for thread pool.
+    */
+    namespace threading
+    {
+        inline constexpr int jobs_submitted_limit = 2048;
+    } // namespace threading
+
 } // namespace constants
 
 #endif // CONSTANTS_HPP
