@@ -28,7 +28,8 @@ Chunk::Chunk(ChunkID id, glm::ivec2 world_coords) :
 	id_(id), 
 	mesh_id_(0), 
 	world_coords_(world_coords), 
-	pending_mesh_build_(std::nullopt),
+	pending_mesh_build_(std::nullopt), 
+	terrain_state_(TerrainState::Invalid), 
 	mesh_state_(MeshState::Invalid), 
 	chunk_state_(ChunkState::Unloaded), 
 	terrain_generated_(false)
@@ -109,6 +110,20 @@ Block& Chunk::NeighborRefAt(glm::ivec3 coords, Direction dir)
 std::uint64_t Chunk::IncrementMeshId() noexcept
 {
 	return ++mesh_id_;
+}
+
+bool Chunk::IsReadyToBuildMesh(const ChunkMeshDependencies& chunk_mesh_dependencies) const
+{
+	const Chunk* west_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ -1, 0 });
+	const Chunk* east_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 1, 0 });
+	const Chunk* north_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, -1 });
+	const Chunk* south_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 1 });
+
+	return terrain_state_ == TerrainState::Ready &&
+		west_chunk->GetTerrainState() == TerrainState::Ready &&
+		east_chunk->GetTerrainState() == TerrainState::Ready &&
+		north_chunk->GetTerrainState() == TerrainState::Ready &&
+		south_chunk->GetTerrainState() == TerrainState::Ready;
 }
 
 int Chunk::Index(glm::ivec3 coords) const

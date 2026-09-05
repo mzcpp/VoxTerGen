@@ -25,6 +25,13 @@
 #include <variant>
 #include <optional>
 
+enum class TerrainState
+{
+    Invalid, 
+    Building, 
+    Ready
+};
+
 enum class MeshState
 {
     Invalid, 
@@ -78,6 +85,7 @@ private:
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
     std::optional<ChunkMeshBuildData> pending_mesh_build_;
+    std::atomic<TerrainState> terrain_state_;
     std::atomic<MeshState> mesh_state_;
     std::atomic<ChunkState> chunk_state_;
     std::stop_source mesh_building_stop_source_;
@@ -100,12 +108,15 @@ public:
 
     std::uint64_t IncrementMeshId() noexcept;
 
+    bool IsReadyToBuildMesh(const ChunkMeshDependencies& chunk_mesh_dependencies) const;
+
     // Getters
     ChunkID Id() const noexcept { return id_; }
     std::uint64_t MeshId() const noexcept { return mesh_id_; }
     glm::ivec2 WorldCoords() const noexcept { return world_coords_; }
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
     const std::optional<ChunkMeshBuildData>& GetPendingMeshBuild() const noexcept { return pending_mesh_build_; }
+    TerrainState GetTerrainState() const noexcept { return terrain_state_; }
     MeshState GetMeshState() const noexcept { return mesh_state_; }
     ChunkState GetChunkState() const noexcept { return chunk_state_; }
     std::stop_source& StopSource() noexcept { return mesh_building_stop_source_; }
@@ -113,6 +124,7 @@ public:
     bool TerrainGenerated() const noexcept { return terrain_generated_; }
 
     // Setters
+    void SetTerrainState(TerrainState terrain_state) noexcept { terrain_state_ = terrain_state; }
     void SetMeshState(MeshState mesh_state) noexcept { mesh_state_ = mesh_state; }
     void SetChunkState(ChunkState chunk_state) noexcept { chunk_state_ = chunk_state; }
     void SetPendingMeshBuild(ChunkMeshBuildData job_data) noexcept { pending_mesh_build_ = std::move(job_data); }
