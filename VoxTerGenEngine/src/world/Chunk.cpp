@@ -4,6 +4,8 @@
 
 #include "render/GpuMesh3D.hpp"
 
+#include "threading/ThreadSafeDeque.hpp"
+
 #include "utils/Logger.hpp"
 
 #include <glm/vec2.hpp>
@@ -112,18 +114,57 @@ std::uint64_t Chunk::IncrementMeshId() noexcept
 	return ++mesh_id_;
 }
 
-bool Chunk::IsReadyToBuildMesh(const ChunkMeshDependencies& chunk_mesh_dependencies) const
+bool Chunk::IsReadyToBuildMesh(const ChunkMeshDependencies& deps) const
 {
-	const Chunk* west_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ -1, 0 });
-	const Chunk* east_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 1, 0 });
-	const Chunk* north_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, -1 });
-	const Chunk* south_chunk = chunk_mesh_dependencies.GetChunk(glm::ivec2{ 0, 1 });
+	const Chunk* west_chunk = deps.GetChunk({ -1,  0 });
+	const Chunk* east_chunk = deps.GetChunk({ 1,  0 });
+	const Chunk* north_chunk = deps.GetChunk({ 0, -1 });
+	const Chunk* south_chunk = deps.GetChunk({ 0,  1 });
 
 	return terrain_state_ == TerrainState::Ready &&
-		west_chunk->GetTerrainState() == TerrainState::Ready &&
-		east_chunk->GetTerrainState() == TerrainState::Ready &&
-		north_chunk->GetTerrainState() == TerrainState::Ready &&
-		south_chunk->GetTerrainState() == TerrainState::Ready;
+		west_chunk != nullptr && west_chunk->GetTerrainState() == TerrainState::Ready &&
+		east_chunk != nullptr && east_chunk->GetTerrainState() == TerrainState::Ready &&
+		north_chunk != nullptr && north_chunk->GetTerrainState() == TerrainState::Ready &&
+		south_chunk != nullptr && south_chunk->GetTerrainState() == TerrainState::Ready;
+}
+
+std::optional<ChunkMeshBuildData> Chunk::TakePendingMeshBuild()
+{
+	std::lock_guard<std::mutex> lock(pending_mesh_build_mutex_);
+
+	const auto cpy = pending_mesh_build_;
+
+	ClearPendingMeshBuild();
+
+	return cpy;
+}
+
+std::stop_token Chunk::GetMeshStopToken()
+{
+	std::lock_guard<std::mutex> lock(mesh_stop_source_mutex_);
+	return mesh_building_stop_source_.get_token();
+}
+
+void Chunk::ResetMeshStopToken()
+{
+	std::lock_guard<std::mutex> lock(mesh_stop_source_mutex_);
+
+	mesh_building_stop_source_.request_stop();
+	mesh_building_stop_source_ = std::stop_source{};
+}
+
+bool Chunk::TrySetTerrainReady() noexcept
+{
+	TerrainState expected = TerrainState::Building;
+
+	return terrain_state_.compare_exchange_strong(expected, TerrainState::Ready);
+}
+
+bool Chunk::TrySetMeshReady() noexcept
+{
+	MeshState expected = MeshState::Building;
+	
+	return mesh_state_.compare_exchange_strong(expected, MeshState::Ready);
 }
 
 int Chunk::Index(glm::ivec3 coords) const

@@ -10,6 +10,7 @@
 #include "threading/ThreadSafeQueue.hpp"
 
 #include "utils/MathUtils.hpp"
+#include "utils/Constants.hpp"
 
 #include "world/Chunk.hpp"
 
@@ -31,6 +32,42 @@ ChunkManager::ChunkManager(Observer& observer, ThreadPool& thread_pool) :
 {	
 }
 
+void ChunkManager::FillChunkTmp(Chunk& chunk)
+{
+	static int i = 1;
+
+	//chunk.BlockAt({ 0, 0, 0 }).SetType(static_cast<BlockType>(i));
+	//chunk.BlockAt({ 1, 0, 0 }).SetType(static_cast<BlockType>(i));
+	////chunk.BlockAt({ 2, 2, 0 }).SetType(static_cast<BlockType>(1));
+
+	//if (++i >= 8)
+	//{
+	//	i = 1;
+	//}
+
+	//return;
+
+	for (int y = 0; y < constants::chunk::height; ++y)
+	{
+		for (int z = 0; z < constants::chunk::depth; ++z)
+		{
+			for (int x = 0; x < constants::chunk::width; ++x)
+			{
+				chunk.BlockAt({ x, 0, z }).SetType(static_cast<BlockType>(i));
+				//if (i >= 8)
+				//{
+				//	i = 1;
+				//}
+			}
+		}
+	}
+
+	if (++i >= 8)
+	{
+		i = 1;
+	}
+}
+
 void ChunkManager::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 {
 	MarkChunksForUnload();
@@ -39,7 +76,9 @@ void ChunkManager::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 	UnloadChunks(chunk_event_queue);
 	LoadChunks();
 
-	ScheduleChunkMeshBuilds();
+	ScheduleChunkTerrainBuild();
+
+	BuildChunkTerrains();
 	BuildChunkMeshes(chunk_event_queue);
 }
 
@@ -64,11 +103,10 @@ void ChunkManager::MarkChunksForUnload()
 			chunk_world_coords.y < observer_chunk_coords.y - constants::chunk::default_radius ||
 			chunk_world_coords.y > observer_chunk_coords.y + constants::chunk::default_radius)
 		{
-			chunk->StopSource().request_stop();
-			chunk->StopSource() = std::stop_source{};
-
+			chunk->ResetMeshStopToken();
 			chunk->SetChunkState(ChunkState::PendingUnload);
 			chunk->SetMeshState(MeshState::Cancelled);
+			chunk->SetTerrainState(TerrainState::Cancelled);
 
 			chunks_to_unload_.push_back(chunk_world_coords);
 		}
@@ -138,16 +176,6 @@ void ChunkManager::LoadChunks()
 
 		std::shared_ptr<Chunk> chunk = std::make_shared<Chunk>(next_chunk_id_++, chunk_coords);
 
-		
-		
-		
-		// thread
-		terrain_generator_.GenerateChunkTerrain(chunk);
-
-
-
-
-
 		chunk->SetChunkState(ChunkState::Loaded);
 		chunk->SetMeshState(MeshState::Invalid);
 
@@ -159,15 +187,15 @@ void ChunkManager::EnqueueChunkMeshBuild(const std::shared_ptr<Chunk>& chunk, do
 {
 	assert(chunk != nullptr);
 
-	chunk->StopSource().request_stop();
-	chunk->StopSource() = std::stop_source{};
-
+	chunk->ResetMeshStopToken();
 	chunk->SetMeshState(MeshState::Invalid);
 	chunk->IncrementMeshId();
 
+	std::lock_guard lock(chunk->PendingMeshBuildMutex());
+
 	if (!chunk->GetPendingMeshBuild().has_value())
 	{
-		chunk_build_deque_.push_back(chunk);
+		chunk_mesh_build_deque_.PushBack(chunk);
 	}
 
 	chunk->SetPendingMeshBuild(
@@ -178,11 +206,9 @@ void ChunkManager::EnqueueChunkMeshBuild(const std::shared_ptr<Chunk>& chunk, do
 	);
 }
 
-void ChunkManager::ScheduleChunkMeshBuilds()
+void ChunkManager::ScheduleChunkTerrainBuild()
 {
-	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());
-	
-	std::lock_guard<std::shared_mutex> lock(chunks_shared_mutex_);
+	std::shared_lock<std::shared_mutex> lock(chunks_shared_mutex_);
 
 	for (glm::ivec2 chunk_world_coords : chunks_to_load_)
 	{
@@ -193,18 +219,17 @@ void ChunkManager::ScheduleChunkMeshBuilds()
 			continue;
 		}
 
-		EnqueueChunkMeshBuild(current_chunk, ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords));
-		ScheduleNeighborChunkMeshBuilds(observer_chunk_coords, chunk_world_coords);
-	}
-
-	for (glm::ivec2 chunk_world_coords : chunks_to_unload_)
-	{
-		ScheduleNeighborChunkMeshBuilds(observer_chunk_coords, chunk_world_coords);
+		if (!current_chunk->TerrainGenerated())
+		{
+			chunk_terrain_build_deque_.push_front(current_chunk);
+		}
 	}
 }
 
 void ChunkManager::ScheduleNeighborChunkMeshBuilds(glm::ivec2 observer_chunk_coords, glm::ivec2 chunk_world_coords)
 {
+	std::shared_lock<std::shared_mutex> lock(chunks_shared_mutex_);
+
 	for (int j = 0; j < 2; ++j)
 	{
 		for (int i : { -1, 1 })
@@ -228,27 +253,97 @@ void ChunkManager::ScheduleNeighborChunkMeshBuilds(glm::ivec2 observer_chunk_coo
 	}
 }
 
-void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
+void ChunkManager::BuildChunkTerrains()
 {
 	int jobs_submitted = 0;
-	int jobs_submitted_limit = 2048;
+	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());
+	std::unordered_map<glm::ivec2, double, utils::ivec2_hash> distances;
 
-	std::ranges::sort(chunk_build_deque_, [](const std::shared_ptr<Chunk>& left, const std::shared_ptr<Chunk>& right)
-		{
-			return left->GetPendingMeshBuild().value().distance_squared_ < right->GetPendingMeshBuild().value().distance_squared_;
-		});
-
-	while (jobs_submitted < jobs_submitted_limit && !chunk_build_deque_.empty())
+	for (const std::shared_ptr<Chunk>& chunk : chunk_terrain_build_deque_)
 	{
-		const std::shared_ptr<Chunk> chunk = chunk_build_deque_.front();
-		chunk_build_deque_.pop_front();
+		distances.try_emplace(chunk->WorldCoords(), ChunkDistanceSquared(observer_chunk_coords, chunk->WorldCoords()));
+	}
+
+	std::ranges::sort(chunk_terrain_build_deque_, 
+		[&distances](const std::shared_ptr<Chunk>& left, const std::shared_ptr<Chunk>& right)
+		{
+			const auto left_it = distances.find(left->WorldCoords());
+			const auto right_it = distances.find(right->WorldCoords());
+
+			assert(left_it != distances.end());
+			assert(right_it != distances.end());
+
+			return left_it->second < right_it->second;
+		}
+	);
+
+	while (jobs_submitted < constants::threading::jobs_submitted_limit && !chunk_terrain_build_deque_.empty())
+	{
+		const std::shared_ptr<Chunk> chunk = chunk_terrain_build_deque_.front();
+
+		//if (chunk->WorldCoords().x == 0 && chunk->WorldCoords().y == 0)
+		//{
+		//	int x = 1;
+		//}
+
+		chunk_terrain_build_deque_.pop_front();
+
+		assert(chunk != nullptr);
+		assert(!chunk->TerrainGenerated());
+
+		if (chunk->StopSource().get_token().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
+		{
+			continue;
+		}
+
+		chunk->SetTerrainState(TerrainState::Building);
+
+		thread_pool_.Enqueue(
+			[this, 
+			observer_chunk_coords, 
+			chunk, 
+			stop_token = chunk->StopSource().get_token()]()
+			{
+				FillChunkTmp(*chunk);
+				//terrain_generator_.GenerateChunkTerrain(chunk, stop_token);
+
+				if (!chunk->TrySetTerrainReady())
+				{
+					return;
+				}
+
+				EnqueueChunkMeshBuild(chunk, ChunkDistanceSquared(observer_chunk_coords, chunk->WorldCoords()));
+				
+				if (chunk->IsReadyToBuildMesh(GetMeshDependencies(chunk->WorldCoords())))
+				{
+					ScheduleNeighborChunkMeshBuilds(observer_chunk_coords, chunk->WorldCoords());
+				}
+			}
+		);
+
+		++jobs_submitted;
+	}
+}
+
+void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
+{
+	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());
+
+	for (glm::ivec2 chunk_world_coords : chunks_to_unload_)
+	{
+		ScheduleNeighborChunkMeshBuilds(observer_chunk_coords, chunk_world_coords);
+	}
+
+	int jobs_submitted = 0;
+
+	while (const std::optional<std::shared_ptr<Chunk>> chunk_opt = chunk_mesh_build_deque_.TryPopFront())
+	{
+		const std::shared_ptr<Chunk>& chunk = chunk_opt.value();
 
 		assert(chunk != nullptr);
 		assert(chunk->GetPendingMeshBuild().has_value());
 
-		const ChunkMeshBuildData chunk_build_data = chunk->GetPendingMeshBuild().value();
-
-		chunk->ClearPendingMeshBuild();
+		const auto chunk_build_data_opt = chunk->TakePendingMeshBuild();
 
 		if (chunk->StopSource().get_token().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
 		{
@@ -260,8 +355,8 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		thread_pool_.Enqueue(
 			[this, 
 			chunk, 
-			chunk_build_data,
-			stop_token = chunk->StopSource().get_token(), 
+			chunk_build_data = chunk_build_data_opt.value(),
+			stop_token = chunk->GetMeshStopToken(),
 			chunk_mesh_dependencies = GetMeshDependencies(chunk->WorldCoords()), 
 			&chunk_event_queue]()
 			{
@@ -274,14 +369,14 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 
 				chunk_event_queue.Push(ChunkMeshReady{ chunk, chunk_build_data.mesh_id_, std::move(chunk_mesh) });
 
-				if (chunk->GetMeshState() == MeshState::Building)
-				{
-					chunk->SetMeshState(MeshState::Ready);
-				}
+				chunk->TrySetMeshReady();
 			}
 		);
 
-		++jobs_submitted;
+		if (++jobs_submitted >= constants::threading::jobs_submitted_limit)
+		{
+			break;
+		}
 	}
 }
 

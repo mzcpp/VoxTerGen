@@ -10,6 +10,7 @@
 #include "world/Chunk.hpp"
 
 #include <memory>
+#include <stop_token>
 #include <unordered_map>
 
 TerrainGenerator::TerrainGenerator(NoiseType noise_type, std::uint64_t seed) : seed_(seed), noise_type_(noise_type)
@@ -26,7 +27,7 @@ void TerrainGenerator::InitializeNoises()
     noises_.emplace(NoiseType::OPEN_SIMPLEX_2S, std::make_unique<OpenSimplex2SNoise>(OpenSimplex2SNoise{ seed_ }));
 }
 
-void TerrainGenerator::GenerateChunkTerrain(const std::shared_ptr<Chunk>& chunk)
+void TerrainGenerator::GenerateChunkTerrain(const std::shared_ptr<Chunk>& chunk, std::stop_token stop_token)
 {
 	assert(chunk != nullptr);
 
@@ -58,6 +59,12 @@ void TerrainGenerator::GenerateChunkTerrain(const std::shared_ptr<Chunk>& chunk)
 				}
 			}
 		}
+	}
+
+	if (stop_token.stop_requested())
+	{
+		chunk->SetTerrainState(TerrainState::Cancelled);
+		return;
 	}
 
 	chunk->SetTerrainGenerated(true);

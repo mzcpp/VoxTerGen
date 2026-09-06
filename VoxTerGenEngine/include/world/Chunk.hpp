@@ -7,6 +7,8 @@
 
 #include "render/GpuMesh3D.hpp"
 
+#include "threading/ThreadSafeDeque.hpp"
+
 #include "utils/Constants.hpp"
 #include "utils/Hash.hpp"
 
@@ -20,6 +22,7 @@
 #include <atomic>
 #include <cstdint>
 #include <memory>
+#include <mutex>
 #include <stop_token>
 #include <unordered_map>
 #include <variant>
@@ -29,6 +32,7 @@ enum class TerrainState
 {
     Invalid, 
     Building, 
+    Cancelled, 
     Ready
 };
 
@@ -85,10 +89,12 @@ private:
 	glm::ivec2 world_coords_;
 	std::array<Block, constants::chunk::size> blocks_;
     std::optional<ChunkMeshBuildData> pending_mesh_build_;
+    mutable std::mutex pending_mesh_build_mutex_;
     std::atomic<TerrainState> terrain_state_;
     std::atomic<MeshState> mesh_state_;
     std::atomic<ChunkState> chunk_state_;
     std::stop_source mesh_building_stop_source_;
+    mutable std::mutex mesh_stop_source_mutex_;
     std::atomic<bool> terrain_generated_;
     
 public:
@@ -110,12 +116,23 @@ public:
 
     bool IsReadyToBuildMesh(const ChunkMeshDependencies& chunk_mesh_dependencies) const;
 
+    std::optional<ChunkMeshBuildData> TakePendingMeshBuild();
+
+    std::stop_token GetMeshStopToken();
+
+    void ResetMeshStopToken();
+
+    bool TrySetTerrainReady() noexcept;
+
+    bool TrySetMeshReady() noexcept;
+
     // Getters
     ChunkID Id() const noexcept { return id_; }
     std::uint64_t MeshId() const noexcept { return mesh_id_; }
     glm::ivec2 WorldCoords() const noexcept { return world_coords_; }
     const std::array<Block, constants::chunk::size>& Blocks() const noexcept { return blocks_; }
-    const std::optional<ChunkMeshBuildData>& GetPendingMeshBuild() const noexcept { return pending_mesh_build_; }
+    std::optional<ChunkMeshBuildData> GetPendingMeshBuild() const noexcept { return pending_mesh_build_; }
+    std::mutex& PendingMeshBuildMutex() const noexcept { return pending_mesh_build_mutex_; }
     TerrainState GetTerrainState() const noexcept { return terrain_state_; }
     MeshState GetMeshState() const noexcept { return mesh_state_; }
     ChunkState GetChunkState() const noexcept { return chunk_state_; }

@@ -4,6 +4,7 @@
 #include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
 
 #include <memory>
+#include <stop_token>
 #include <unordered_map>
 
 enum class NoiseType
@@ -31,7 +32,7 @@ public:
 
     void InitializeNoises();
 
-    void GenerateChunkTerrain(const std::shared_ptr<Chunk>& chunk);
+    void GenerateChunkTerrain(const std::shared_ptr<Chunk>& chunk, std::stop_token stop_token);
 
     double GetCoordHeight(double x, double y);
 
