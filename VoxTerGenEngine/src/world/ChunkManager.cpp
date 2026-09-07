@@ -198,12 +198,7 @@ void ChunkManager::EnqueueChunkMeshBuild(const std::shared_ptr<Chunk>& chunk, do
 		chunk_mesh_build_deque_.PushBack(chunk);
 	}
 
-	chunk->SetPendingMeshBuild(
-		ChunkMeshBuildData{ 
-			chunk->MeshId(), 
-			distance 
-		}
-	);
+	chunk->SetPendingMeshBuild(ChunkMeshBuildData{ chunk->MeshId(), distance });
 }
 
 void ChunkManager::ScheduleChunkTerrainBuild()
@@ -248,17 +243,7 @@ void ChunkManager::ScheduleNeighborChunkMeshBuilds(glm::ivec2 observer_chunk_coo
 				continue;
 			}
 
-			ChunkMeshDependencies dependencies;
-
-			int index = 0;
-
-			for (int y_offset = -1; y_offset < 2; ++y_offset)
-			{
-				for (int x_offset = -1; x_offset < 2; ++x_offset)
-				{
-					dependencies.chunks_[index++] = GetChunkAt(neighbor_chunk->WorldCoords() + glm::ivec2{ x_offset, y_offset });
-				}
-			}
+			const ChunkMeshDependencies dependencies = GetMeshDependenciesUnlocked(neighbor_chunk->WorldCoords());
 
 			if (!neighbor_chunk->IsReadyToBuildMesh(dependencies))
 			{
@@ -507,9 +492,14 @@ double ChunkManager::ChunkDistanceSquared(glm::ivec2 first_chunk, glm::ivec2 sec
 
 ChunkMeshDependencies ChunkManager::GetMeshDependencies(glm::ivec2 chunk_coords) const
 {
-	ChunkMeshDependencies chunk_mesh_dependencies;
-
     std::shared_lock lock(chunks_shared_mutex_);
+
+	return GetMeshDependenciesUnlocked(chunk_coords);
+}
+
+ChunkMeshDependencies ChunkManager::GetMeshDependenciesUnlocked(glm::ivec2 chunk_coords) const
+{
+	ChunkMeshDependencies chunk_mesh_dependencies;
 
 	int index = 0;
 

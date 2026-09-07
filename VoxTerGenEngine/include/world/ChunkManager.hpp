@@ -82,6 +82,8 @@ public:
 
 	ChunkMeshDependencies GetMeshDependencies(glm::ivec2 coords) const;
 
+	ChunkMeshDependencies GetMeshDependenciesUnlocked(glm::ivec2 chunk_coords) const;
+
 	// Getters
 	const std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash>& Chunks() const { return chunks_; }
 
