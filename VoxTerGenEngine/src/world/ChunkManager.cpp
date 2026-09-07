@@ -248,7 +248,24 @@ void ChunkManager::ScheduleNeighborChunkMeshBuilds(glm::ivec2 observer_chunk_coo
 				continue;
 			}
 
-			EnqueueChunkMeshBuild(neighbor_chunk, ChunkDistanceSquared(observer_chunk_coords, chunk_world_coords + offset));
+			ChunkMeshDependencies dependencies;
+
+			int index = 0;
+
+			for (int y_offset = -1; y_offset < 2; ++y_offset)
+			{
+				for (int x_offset = -1; x_offset < 2; ++x_offset)
+				{
+					dependencies.chunks_[index++] = GetChunkAt(neighbor_chunk->WorldCoords() + glm::ivec2{ x_offset, y_offset });
+				}
+			}
+
+			if (!neighbor_chunk->IsReadyToBuildMesh(dependencies))
+			{
+				continue;
+			}
+
+			EnqueueChunkMeshBuild(neighbor_chunk, ChunkDistanceSquared(observer_chunk_coords, neighbor_chunk->WorldCoords()));
 		}
 	}
 }
@@ -304,20 +321,20 @@ void ChunkManager::BuildChunkTerrains()
 			chunk, 
 			stop_token = chunk->StopSource().get_token()]()
 			{
-				FillChunkTmp(*chunk);
-				//terrain_generator_.GenerateChunkTerrain(chunk, stop_token);
+				//FillChunkTmp(*chunk);
+				terrain_generator_.GenerateChunkTerrain(chunk, stop_token);
 
 				if (!chunk->TrySetTerrainReady())
 				{
 					return;
 				}
 
-				EnqueueChunkMeshBuild(chunk, ChunkDistanceSquared(observer_chunk_coords, chunk->WorldCoords()));
-				
 				if (chunk->IsReadyToBuildMesh(GetMeshDependencies(chunk->WorldCoords())))
 				{
-					ScheduleNeighborChunkMeshBuilds(observer_chunk_coords, chunk->WorldCoords());
+					EnqueueChunkMeshBuild(chunk, ChunkDistanceSquared(observer_chunk_coords, chunk->WorldCoords()));
 				}
+
+				ScheduleNeighborChunkMeshBuilds(observer_chunk_coords, chunk->WorldCoords());
 			}
 		);
 
