@@ -16,11 +16,11 @@
 class ThreadPool
 {
 private:
-    std::vector<std::jthread> workers_;
     std::queue<std::function<void()>> tasks_;
     std::mutex queue_mutex_;
     std::condition_variable condition_;
     bool stop_ = false;
+    std::vector<std::jthread> workers_;
 
 public:
     ThreadPool(std::size_t thread_count);

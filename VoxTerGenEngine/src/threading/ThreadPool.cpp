@@ -1,7 +1,10 @@
 #include "threading/ThreadPool.hpp"
 
+#include "utils/Logger.hpp"
+
 #include <thread>
 #include <mutex>
+#include <cassert>
 #include <condition_variable>
 #include <future>
 #include <functional>
@@ -35,7 +38,28 @@ ThreadPool::ThreadPool(std::size_t thread_count)
                     tasks_.pop();
                 }
 
-                task();
+                try
+                {
+                    task();
+                }
+                catch (const std::future_error& e)
+                {
+                    Logger::Log(
+                        "ThreadPool packaged_task error: {} (code {})",
+                        e.what(),
+                        e.code().value()
+                    );
+
+                    assert(false);
+                }
+                catch (const std::exception& e)
+                {
+                    Logger::Log("ThreadPool task threw an exception: {}", e.what());
+                }
+                catch (...)
+                {
+                    Logger::Log("ThreadPool task threw an unknown exception.");
+                }
             }
         });
     }
@@ -49,4 +73,7 @@ ThreadPool::~ThreadPool()
     }
 
     condition_.notify_all();
+
+    // Ensure all workers have stopped before destroying shared thread-pool state.
+    workers_.clear();
 }
