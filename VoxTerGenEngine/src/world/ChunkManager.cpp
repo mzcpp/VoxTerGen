@@ -293,7 +293,7 @@ void ChunkManager::BuildChunkTerrains()
 		assert(chunk != nullptr);
 		assert(!chunk->TerrainGenerated());
 
-		if (chunk->StopSource().get_token().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
+		if (chunk->GetMeshStopToken().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
 		{
 			continue;
 		}
@@ -304,7 +304,7 @@ void ChunkManager::BuildChunkTerrains()
 			[this, 
 			observer_chunk_coords, 
 			chunk, 
-			stop_token = chunk->StopSource().get_token()]()
+			stop_token = chunk->GetMeshStopToken()]()
 			{
 				//FillChunkTmp(*chunk);
 				terrain_generator_.GenerateChunkTerrain(chunk, stop_token);
@@ -343,11 +343,10 @@ void ChunkManager::BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_que
 		const std::shared_ptr<Chunk>& chunk = chunk_opt.value();
 
 		assert(chunk != nullptr);
-		assert(chunk->GetPendingMeshBuild().has_value());
 
 		const auto chunk_build_data_opt = chunk->TakePendingMeshBuild();
 
-		if (chunk->StopSource().get_token().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
+		if (!chunk_build_data_opt.has_value() || chunk->GetMeshStopToken().stop_requested() || chunk->GetMeshState() != MeshState::Invalid)
 		{
 			continue;
 		}

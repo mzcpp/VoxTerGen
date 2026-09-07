@@ -136,8 +136,6 @@ public:
     TerrainState GetTerrainState() const noexcept { return terrain_state_; }
     MeshState GetMeshState() const noexcept { return mesh_state_; }
     ChunkState GetChunkState() const noexcept { return chunk_state_; }
-    std::stop_source& StopSource() noexcept { return mesh_building_stop_source_; }
-    const std::stop_source& StopSource() const noexcept { return mesh_building_stop_source_; }
     bool TerrainGenerated() const noexcept { return terrain_generated_; }
 
     // Setters
