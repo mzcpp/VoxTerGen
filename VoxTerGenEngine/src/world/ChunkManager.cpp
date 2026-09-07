@@ -187,11 +187,12 @@ void ChunkManager::EnqueueChunkMeshBuild(const std::shared_ptr<Chunk>& chunk, do
 {
 	assert(chunk != nullptr);
 
+	std::lock_guard lock(chunk->PendingMeshBuildMutex());
+
 	chunk->ResetMeshStopToken();
 	chunk->SetMeshState(MeshState::Invalid);
 	chunk->IncrementMeshId();
 
-	std::lock_guard lock(chunk->PendingMeshBuildMutex());
 
 	if (!chunk->GetPendingMeshBuild().has_value())
 	{

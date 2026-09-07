@@ -25,9 +25,6 @@ public:
 
 	// Getters
 	std::uint64_t Seed() const noexcept { return seed_; }
-
-	// Setters
-	void SetSeed(std::uint64_t seed) noexcept { seed_ = seed; }
 };
 
 #endif // NOISE_HPP
