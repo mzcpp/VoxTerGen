@@ -6,5 +6,3 @@
 #include "VoxTerGenAlgorithms/noise/core/PerlinNoise.hpp"
 #include "VoxTerGenAlgorithms/noise/core/SimplexNoise.hpp"
 #include "VoxTerGenAlgorithms/noise/core/WorleyNoise.hpp"
-
-#include "VoxTerGenAlgorithms/noise/methods/Fractal.hpp"
