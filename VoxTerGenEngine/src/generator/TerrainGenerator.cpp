@@ -7,6 +7,8 @@
 #include "VoxTerGenAlgorithms/noise/core/SimplexNoise.hpp"
 #include "VoxTerGenAlgorithms/noise/core/WorleyNoise.hpp"
 
+#include "VoxTerGenAlgorithms/noise/methods/Fractal.hpp"
+
 #include "world/Chunk.hpp"
 
 #include <memory>
@@ -27,29 +29,38 @@ void TerrainGenerator::InitializeNoises()
     noises_.emplace(NoiseType::OPEN_SIMPLEX_2S, std::make_unique<OpenSimplex2SNoise>(OpenSimplex2SNoise{ seed_ }));
 }
 
-void TerrainGenerator::GenerateChunkTerrain(const std::shared_ptr<Chunk>& chunk, std::stop_token stop_token)
+void TerrainGenerator::GenerateChunkHeightMapTerrain(const std::shared_ptr<Chunk>& chunk, std::stop_token stop_token)
 {
 	assert(chunk != nullptr);
 
-	double frequency = 0.01;
+	const double frequency = 0.01;
+	const find_it = noises_.find(GetNoiseType());
+	assert(find_it != noises_.end());
+
+	const std::unique_ptr<Noise> noise = find_it->second;
+	const glm::ivec2 chunk_world_coords = chunk->WorldCoords();
 
 	for (int z = 0; z < constants::chunk::depth; ++z)
 	{
 		for (int x = 0; x < constants::chunk::width; ++x)
 		{
-			int worldX = chunk->WorldCoords().x * constants::chunk::width + x;
-			int worldZ = chunk->WorldCoords().y * constants::chunk::depth + z;
+			const int worldX = chunk_world_coords.x * constants::chunk::width + x;
+			const int worldZ = chunk_world_coords.y * constants::chunk::depth + z;
 
-			double nx = worldX * frequency;
-			double nz = worldZ * frequency;
+			const double nx = worldX * frequency;
+			const double nz = worldZ * frequency;
 
-			double noise = noises_.find(NoiseType::OPEN_SIMPLEX_2F)->second->Sample(nx, nz);
+			const double noise = noise->Sample(nx, nz);
 
-			int height = static_cast<int>((noise * 0.5 + 0.5) * 40) + 20;
+			const int height = static_cast<int>((noise * 0.5 + 0.5) * 40) + 20;
 
 			for (int y = 0; y < constants::chunk::height; ++y)
 			{
-				if (y <= height)
+				if (y == 0)
+				{
+					chunk->BlockAt({ x, y, z }).SetType(BlockType::Bedrock);
+				}
+				else if (y <= height)
 				{
 					chunk->BlockAt({ x, y, z }).SetType(BlockType::Grass);
 				}

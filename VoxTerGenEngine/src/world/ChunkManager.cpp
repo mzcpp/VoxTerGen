@@ -308,7 +308,7 @@ void ChunkManager::BuildChunkTerrains()
 			stop_token = chunk->GetMeshStopToken()]()
 			{
 				//FillChunkTmp(*chunk);
-				terrain_generator_.GenerateChunkTerrain(chunk, stop_token);
+				terrain_generator_.GenerateChunkHeightMapTerrain(chunk, stop_token);
 
 				if (!chunk->TrySetTerrainReady())
 				{

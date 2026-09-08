@@ -2,24 +2,24 @@
 #define VECTOR_FIELD_WALKER_HPP
 
 #include <array>
+#include <cmath>
+#include <concepts>
 #include <cstdint>
 #include <random>
-#include <concepts>
-#include <cmath>
 
 #include "VoxTerGenAlgorithms/utils/Common.hpp"
 #include "VoxTerGenAlgorithms/utils/Vec2.hpp"
 #include "VoxTerGenAlgorithms/utils/Vec3.hpp"
 
 template<typename Field>
-concept Field2D = requires(const Field & f, double x, double y)
+concept Field2D = requires(const Field& f, double x, double y)
 {
     { f.Sample(x, y) } -> std::convertible_to<double>;
 };
 
 
 template<typename Field>
-concept Field3D = requires(const Field & f, double x, double y, double z)
+concept Field3D = requires(const Field& f, double x, double y, double z)
 {
     { f.Sample(x, y, z) } -> std::convertible_to<double>;
 };
@@ -34,10 +34,11 @@ private:
     double step_size_;
 
 public:
-    VectorFieldWalker(Field field, std::uint64_t seed, double step_size) : field_(field), seed_(seed), step_size_(step_size), offsets_(0.0)
+    VectorFieldWalker(const Field& field, std::uint64_t seed, double step_size) : field_(field), seed_(seed), step_size_(step_size), offsets_(0.0)
     {
         constexpr double low_range = -1000.0;
         constexpr double high_range = 1000.0;
+
         std::mt19937_64 mt64(seed_);
         std::uniform_real_distribution<> distrib(low_range, high_range);
 

@@ -32,7 +32,7 @@ public:
 
     void InitializeNoises();
 
-    void GenerateChunkTerrain(const std::shared_ptr<Chunk>& chunk, std::stop_token stop_token);
+    void GenerateChunkHeightMapTerrain(const std::shared_ptr<Chunk>& chunk, std::stop_token stop_token);
 
     double GetCoordHeight(double x, double y);
 
