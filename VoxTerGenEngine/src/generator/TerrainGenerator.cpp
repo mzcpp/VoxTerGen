@@ -14,6 +14,8 @@
 #include <memory>
 #include <stop_token>
 #include <unordered_map>
+#include <cmath>
+#include <algorithm>
 
 TerrainGenerator::TerrainGenerator(NoiseType noise_type, std::uint64_t seed) : seed_(seed), noise_type_(noise_type)
 {
@@ -51,8 +53,9 @@ void TerrainGenerator::GenerateChunkHeightMapTerrain(const std::shared_ptr<Chunk
 			const double nz = worldZ * frequency;
 
 			const double noise_sample = noise->Sample(nx, nz);
-
-			const int height = static_cast<int>((noise_sample * 0.5 + 0.5) * 40) + 20;
+			const double normalized_noise_sample = (noise_sample + 1.0) / 2.0;
+			constexpr double exponent = 2.15;
+			const int height = std::clamp(std::pow(normalized_noise_sample, exponent) * constants::chunk::height, 0, 90);
 
 			for (int y = 0; y < constants::chunk::height; ++y)
 			{
