@@ -28,7 +28,7 @@
 ChunkManager::ChunkManager(Observer& observer, ThreadPool& thread_pool) :
 	observer_(observer), 
 	thread_pool_(thread_pool), 
-	terrain_generator_(NoiseType::PERLIN, 1426728)
+	terrain_generator_(NoiseType::OPEN_SIMPLEX_2F, 1426728)
 {	
 }
 

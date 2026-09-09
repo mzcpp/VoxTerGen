@@ -33,6 +33,9 @@
     <ClCompile Include="src\noise\core\OpenSimplex2S.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\noise\methods\FractionalBrownianMotion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="internal\framework.h">
@@ -84,6 +87,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\Noise.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\FractionalBrownianMotion.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

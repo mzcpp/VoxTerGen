@@ -3,7 +3,7 @@
 
 #include "VoxTerGenAlgorithms/utils/Common.hpp"
 
-template <NoiseType Noise>
+template <GenericNoise Noise>
 class FractionalBrownianMotion
 {
 private:

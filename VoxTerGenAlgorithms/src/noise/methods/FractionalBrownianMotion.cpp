@@ -1,3 +1,3 @@
-#include "VoxTerGenAlgorithms/noise/core/FractionalBrownianMotion.hpp"
+#include "pch.h"
 
-
+#include "VoxTerGenAlgorithms/noise/methods/FractionalBrownianMotion.hpp"

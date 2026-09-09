@@ -3,6 +3,8 @@
 
 #include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
 
+#include "VoxTerGenAlgorithms/utils/Common.hpp"
+
 #include <memory>
 #include <stop_token>
 #include <unordered_map>

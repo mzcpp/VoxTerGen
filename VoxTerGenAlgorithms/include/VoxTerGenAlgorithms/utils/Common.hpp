@@ -24,7 +24,7 @@
 //} // namespace vtg
 
 template<typename Noise>
-concept NoiseType = requires(Noise noise, double x, double y, double z)
+concept GenericNoise = requires(Noise noise, double x, double y, double z)
 {
     noise.Sample(x);
     noise.Sample(x, y);
@@ -42,7 +42,7 @@ namespace domain_transform
         }
     };
 
-    template<NoiseType Noise>
+    template<GenericNoise Noise>
     struct DomainWarp
     {
         DomainWarp(Noise warp_noise, double strength) : warp_noise_(warp_noise), strength_(strength)

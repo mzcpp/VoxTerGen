@@ -7,7 +7,7 @@
 #include "VoxTerGenAlgorithms/noise/core/SimplexNoise.hpp"
 #include "VoxTerGenAlgorithms/noise/core/WorleyNoise.hpp"
 
-#include "VoxTerGenAlgorithms/noise/methods/Fractal.hpp"
+#include "VoxTerGenAlgorithms/utils/Common.hpp"
 
 #include "world/Chunk.hpp"
 
@@ -34,10 +34,10 @@ void TerrainGenerator::GenerateChunkHeightMapTerrain(const std::shared_ptr<Chunk
 	assert(chunk != nullptr);
 
 	const double frequency = 0.01;
-	const find_it = noises_.find(GetNoiseType());
+	const auto find_it = noises_.find(GetNoiseType());
 	assert(find_it != noises_.end());
 
-	const std::unique_ptr<Noise> noise = find_it->second;
+	const std::unique_ptr<Noise>& noise = find_it->second;
 	const glm::ivec2 chunk_world_coords = chunk->WorldCoords();
 
 	for (int z = 0; z < constants::chunk::depth; ++z)
@@ -50,9 +50,9 @@ void TerrainGenerator::GenerateChunkHeightMapTerrain(const std::shared_ptr<Chunk
 			const double nx = worldX * frequency;
 			const double nz = worldZ * frequency;
 
-			const double noise = noise->Sample(nx, nz);
+			const double noise_sample = noise->Sample(nx, nz);
 
-			const int height = static_cast<int>((noise * 0.5 + 0.5) * 40) + 20;
+			const int height = static_cast<int>((noise_sample * 0.5 + 0.5) * 40) + 20;
 
 			for (int y = 0; y < constants::chunk::height; ++y)
 			{

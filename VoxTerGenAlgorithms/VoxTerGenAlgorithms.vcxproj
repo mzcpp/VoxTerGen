@@ -24,6 +24,7 @@
     <ClCompile Include="src\noise\core\PerlinNoise.cpp" />
     <ClCompile Include="src\noise\core\SimplexNoise.cpp" />
     <ClCompile Include="src\noise\core\WorleyNoise.cpp" />
+    <ClCompile Include="src\noise\methods\FractionalBrownianMotion.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
@@ -40,6 +41,7 @@
     <ClInclude Include="include\VoxTerGenAlgorithms.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\PerlinNoise.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\core\WorleyNoise.hpp" />
+    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\FractionalBrownianMotion.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\VectorFieldWalker.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Common.hpp" />
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Math.hpp" />
