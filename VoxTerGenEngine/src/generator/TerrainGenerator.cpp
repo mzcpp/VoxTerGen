@@ -55,7 +55,7 @@ void TerrainGenerator::GenerateChunkHeightMapTerrain(const std::shared_ptr<Chunk
 			const double noise_sample = noise->Sample(nx, nz);
 			const double normalized_noise_sample = (noise_sample + 1.0) / 2.0;
 			constexpr double exponent = 2.15;
-			const int height = std::clamp(std::pow(normalized_noise_sample, exponent) * constants::chunk::height, 0, 90);
+			const int height = std::pow(normalized_noise_sample, exponent) * 90;
 
 			for (int y = 0; y < constants::chunk::height; ++y)
 			{
