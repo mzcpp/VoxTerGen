@@ -55,7 +55,9 @@ void TerrainGenerator::GenerateChunkHeightMapTerrain(const std::shared_ptr<Chunk
 			const double noise_sample = noise->Sample(nx, nz);
 			const double normalized_noise_sample = (noise_sample + 1.0) / 2.0;
 			constexpr double exponent = 2.15;
-			const int height = static_cast<int>(std::pow(normalized_noise_sample, exponent) * 50);
+			constexpr int max_terrain_height = 50;
+			
+			const int height = static_cast<int>(PowerCurve(normalized_noise_sample, exponent) * max_terrain_height);
 
 			for (int y = 0; y < constants::chunk::height; ++y)
 			{
@@ -84,9 +86,16 @@ void TerrainGenerator::GenerateChunkHeightMapTerrain(const std::shared_ptr<Chunk
 	chunk->SetTerrainGenerated(true);
 }
 
-double TerrainGenerator::GetCoordHeight(double x, double y)
+double TerrainGenerator::PowerCurve(double n, double exponent)
 {
-    // which frequency for stupid simple height map?
-    
-	return 0.0;
+	return std::pow(n, exponent);
+}
+
+double TerrainGenerator::LogisticSCurve(double n, double k)
+{
+	const double logistic = 1.0 / (1.0 + std::exp(-k * (n - 0.5)));
+	const double min_value = 1.0 / (1.0 + std::exp(k * 0.5));
+	const double max_value = 1.0 / (1.0 + std::exp(-k * 0.5));
+
+	return (logistic - min_value) / (max_value - min_value);
 }

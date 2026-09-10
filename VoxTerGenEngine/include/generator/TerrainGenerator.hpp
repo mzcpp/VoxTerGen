@@ -36,13 +36,16 @@ public:
 
     void GenerateChunkHeightMapTerrain(const std::shared_ptr<Chunk>& chunk, std::stop_token stop_token);
 
-    double GetCoordHeight(double x, double y);
-
     // Getters
     NoiseType GetNoiseType() const noexcept { return noise_type_; }
 
     // Setters
     void SetNoiseType(NoiseType noise_type) noexcept { noise_type_ = noise_type; }
+
+private:
+    double PowerCurve(double n, double exponent);
+
+    double LogisticSCurve(double n, double k);
 };
 
 #endif // TERRAIN_GENERATOR_HPP
