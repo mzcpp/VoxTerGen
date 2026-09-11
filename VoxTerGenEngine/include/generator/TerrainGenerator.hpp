@@ -34,7 +34,7 @@ public:
 
     void InitializeNoises();
 
-    void GenerateChunkHeightMapTerrain(const std::shared_ptr<Chunk>& chunk, std::stop_token stop_token);
+    void GenerateChunkTerrainFromHeightMap(const std::shared_ptr<Chunk>& chunk, std::stop_token stop_token);
 
     // Getters
     NoiseType GetNoiseType() const noexcept { return noise_type_; }

@@ -31,11 +31,11 @@ void TerrainGenerator::InitializeNoises()
     noises_.emplace(NoiseType::OPEN_SIMPLEX_2S, std::make_unique<OpenSimplex2SNoise>(OpenSimplex2SNoise{ seed_ }));
 }
 
-void TerrainGenerator::GenerateChunkHeightMapTerrain(const std::shared_ptr<Chunk>& chunk, std::stop_token stop_token)
+void TerrainGenerator::GenerateChunkTerrainFromHeightMap(const std::shared_ptr<Chunk>& chunk, std::stop_token stop_token)
 {
 	assert(chunk != nullptr);
 
-	const double frequency = 0.01;
+	const double frequency = 0.0025;
 	const auto find_it = noises_.find(GetNoiseType());
 	assert(find_it != noises_.end());
 
@@ -54,10 +54,10 @@ void TerrainGenerator::GenerateChunkHeightMapTerrain(const std::shared_ptr<Chunk
 
 			const double noise_sample = noise->Sample(nx, nz);
 			const double normalized_noise_sample = (noise_sample + 1.0) / 2.0;
-			constexpr double exponent = 2.15;
-			constexpr int max_terrain_height = 50;
+			constexpr double exponent = 4.00;
+			constexpr int max_terrain_height = 150;
 			
-			const int height = static_cast<int>(PowerCurve(normalized_noise_sample, exponent) * max_terrain_height);
+			const int height = static_cast<int>(LogisticSCurve(normalized_noise_sample, exponent) * max_terrain_height);
 
 			for (int y = 0; y < constants::chunk::height; ++y)
 			{

@@ -44,7 +44,8 @@ private:
 public:
 	ChunkManager(Observer& observer, ThreadPool& thread_pool);
 
-	void FillChunkTmp(Chunk& chunk);
+	// TODO: Remove later
+	void FillFlatChunkTmp(Chunk& chunk);
 	
 	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 

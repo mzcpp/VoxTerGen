@@ -32,7 +32,8 @@ ChunkManager::ChunkManager(Observer& observer, ThreadPool& thread_pool) :
 {	
 }
 
-void ChunkManager::FillChunkTmp(Chunk& chunk)
+// TODO: Remove later
+void ChunkManager::FillFlatChunkTmp(Chunk& chunk)
 {
 	static int i = 1;
 
@@ -307,8 +308,8 @@ void ChunkManager::BuildChunkTerrains()
 			chunk, 
 			stop_token = chunk->GetMeshStopToken()]()
 			{
-				//FillChunkTmp(*chunk);
-				terrain_generator_.GenerateChunkHeightMapTerrain(chunk, stop_token);
+				//FillFlatChunkTmp(*chunk);
+				terrain_generator_.GenerateChunkTerrainFromHeightMap(chunk, stop_token);
 
 				if (!chunk->TrySetTerrainReady())
 				{
