@@ -5,12 +5,12 @@
 
 enum class SignalTransform
 {
-    NONE, 
-    ABS, 
-    INVERT_ABS, 
-    SQUARE, 
+    NONE,
+    ABS,
+    INVERT_ABS,
+    SQUARE,
     RIDGED_SHAPE
-}
+};
 
 template <GenericNoise Noise>
 class FractionalBrownianMotion
