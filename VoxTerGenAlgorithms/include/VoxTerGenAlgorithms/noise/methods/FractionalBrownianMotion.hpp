@@ -39,56 +39,11 @@ public:
     {
     }
 
-    double Sample(double x) const
-    {
-        double result = 0.0;
-        double frequency = 1.0;
-        double amplitude = 1.0;
+    double Sample(double x) const;
 
-        for (int octave = 0; octave < octaves_; ++octave)
-        {
-            result += amplitude * noise_.Sample(x * frequency);
+    double Sample(double x, double y) const;
 
-            frequency *= lacunarity_;
-            amplitude *= persistence_;
-        }
-
-        return result;
-    }
-
-    double Sample(double x, double y) const
-    {
-        double result = 0.0;
-        double frequency = 1.0;
-        double amplitude = 1.0;
-
-        for (int octave = 0; octave < octaves_; ++octave)
-        {
-            result += amplitude * noise_.Sample(x * frequency, y * frequency);
-
-            frequency *= lacunarity_;
-            amplitude *= persistence_;
-        }
-
-        return result;
-    }
-
-    double Sample(double x, double y, double z) const
-    {
-        double result = 0.0;
-        double frequency = 1.0;
-        double amplitude = 1.0;
-
-        for (int octave = 0; octave < octaves_; ++octave)
-        {
-            result += amplitude * noise_.Sample(x * frequency, y * frequency, z * frequency);
-
-            frequency *= lacunarity_;
-            amplitude *= persistence_;
-        }
-
-        return result;
-    }
+    double Sample(double x, double y, double z) const;
 };
 
 #endif // FRACTIONAL_BROWNIAN_MOTION_HPP
