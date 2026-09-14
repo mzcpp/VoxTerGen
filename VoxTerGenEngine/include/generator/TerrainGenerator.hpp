@@ -5,6 +5,9 @@
 
 #include "VoxTerGenAlgorithms/utils/Common.hpp"
 
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+
 #include <memory>
 #include <stop_token>
 #include <unordered_map>
@@ -46,6 +49,12 @@ private:
     double PowerCurve(double n, double exponent);
 
     double LogisticSCurve(double n, double k);
+
+    double GetWarpVector(const Noise* noise, double x);
+
+    glm::vec2 GetWarpVector(const Noise* noise, double x, double y);
+
+    glm::vec3 GetWarpVector(const Noise* noise, double x, double y, double z);
 };
 
 #endif // TERRAIN_GENERATOR_HPP
