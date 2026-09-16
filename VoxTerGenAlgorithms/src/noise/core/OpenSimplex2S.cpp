@@ -625,14 +625,14 @@ namespace
 
 	struct LatticeVertex4D
 	{
-		double dx_;
-		double dy_;
-		double dz_;
-		double dw_;
-		std::int64_t xsvp_;
-		std::int64_t ysvp_;
-		std::int64_t zsvp_;
-		std::int64_t wsvp_;
+		double dx_ = 0.0;
+		double dy_ = 0.0;
+		double dz_ = 0.0;
+		double dw_ = 0.0;
+		std::int64_t xsvp_ = 0;
+		std::int64_t ysvp_ = 0;
+		std::int64_t zsvp_ = 0;
+		std::int64_t wsvp_ = 0;
 
 		LatticeVertex4D() = default;
 

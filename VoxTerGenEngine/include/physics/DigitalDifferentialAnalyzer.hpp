@@ -17,11 +17,11 @@
 
 struct RaycastResult
 {
-	glm::ivec3 block_coords_;
-	BlockType type_;
-	Direction face_;
-	double distance_;
-	glm::dvec3 intersection_;
+	glm::ivec3 block_coords_ = glm::ivec3(0);
+	BlockType type_ = BlockType::Air;
+	Direction face_ = Direction::PosX;
+	double distance_ = 0.0;
+	glm::dvec3 intersection_ = glm::dvec3(0.0);
 };
 
 namespace digital_differential_analyzer

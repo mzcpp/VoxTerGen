@@ -69,7 +69,7 @@ public:
 struct BlockInfo
 {
     Block block_;
-    glm::ivec3 absolute_pos_;
+    glm::ivec3 absolute_pos_ = glm::ivec3(0);
 };
 
 template <typename Fnc>

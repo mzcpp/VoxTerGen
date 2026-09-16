@@ -75,8 +75,8 @@ struct ChunkMeshDependencies
 
 struct ChunkMeshBuildData
 {
-    std::uint64_t mesh_id_;
-    double distance_squared_;
+    std::uint64_t mesh_id_ = 0;
+    double distance_squared_ = 0.0;
 };
 
 using ChunkID = std::uint64_t;
