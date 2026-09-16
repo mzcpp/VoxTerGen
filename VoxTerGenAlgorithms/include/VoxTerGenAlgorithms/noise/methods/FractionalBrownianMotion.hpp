@@ -3,6 +3,8 @@
 
 #include "VoxTerGenAlgorithms/utils/Common.hpp"
 
+#include <cmath>
+
 enum class SignalTransform
 {
     NONE,
@@ -108,14 +110,14 @@ private:
         case NONE:
             return sample;
         case ABS:
-            return std::fabs(sample);
+            return std::abs(sample);
         case INVERT_ABS:
-            return 1.0 - std::fabs(sample);
+            return 1.0 - std::abs(sample);
         case SQUARE:
             return sample * sample;
         case RIDGED_SHAPE:
         {
-            sample = std::fabs(sample);
+            sample = std::abs(sample);
             sample = 1.0 - sample;
             return sample * sample;
         }
