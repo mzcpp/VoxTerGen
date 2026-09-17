@@ -1,15 +1,15 @@
 #ifndef VECTOR_FIELD_WALKER_HPP
 #define VECTOR_FIELD_WALKER_HPP
 
+#include "VoxTerGenAlgorithms/utils/Common.hpp"
+#include "VoxTerGenAlgorithms/utils/Vec2.hpp"
+#include "VoxTerGenAlgorithms/utils/Vec3.hpp"
+
 #include <array>
 #include <cmath>
 #include <concepts>
 #include <cstdint>
 #include <random>
-
-#include "VoxTerGenAlgorithms/utils/Common.hpp"
-#include "VoxTerGenAlgorithms/utils/Vec2.hpp"
-#include "VoxTerGenAlgorithms/utils/Vec3.hpp"
 
 template<typename Field>
 concept Field2D = requires(const Field& f, double x, double y)
@@ -28,18 +28,17 @@ template <typename Field>
 class VectorFieldWalker
 {
 private:
-    std::uint64_t seed_;
     Field field_;
     std::array<double, 6> offsets_;
     double step_size_;
 
 public:
-    VectorFieldWalker(const Field& field, std::uint64_t seed, double step_size) : field_(field), seed_(seed), step_size_(step_size), offsets_(0.0)
+    VectorFieldWalker(const Field& field, std::uint64_t seed, double step_size) : field_(field), step_size_(step_size), offsets_(0.0)
     {
         constexpr double low_range = -1000.0;
         constexpr double high_range = 1000.0;
 
-        std::mt19937_64 mt64(seed_);
+        std::mt19937_64 mt64(seed);
         std::uniform_real_distribution<> distrib(low_range, high_range);
 
         for (std::size_t i = 0; i < offsets_.size(); ++i)
@@ -48,7 +47,7 @@ public:
         }
     }
 
-    dvec2 Step(const dvec2& start_pos) const noexcept requires Field2D<Field>
+    dvec2 Step(const dvec2& start_pos) const requires Field2D<Field>
     {
         const double new_pos_dir_x = field_.Sample(start_pos[0], start_pos[1]);
         const double new_pos_dir_y = field_.Sample(start_pos[0] + offsets_[0], start_pos[1] + offsets_[1]);
@@ -66,7 +65,7 @@ public:
         return { new_pos.x_, new_pos.y_ };
     }
 
-    dvec3 Step(const dvec3& start_pos) const noexcept requires Field3D<Field>
+    dvec3 Step(const dvec3& start_pos) const requires Field3D<Field>
     {
         const double new_pos_dir_x = field_.Sample(start_pos[0], start_pos[1], start_pos[2]);
         const double new_pos_dir_y = field_.Sample(start_pos[0] + offsets_[0], start_pos[1] + offsets_[1], start_pos[2] + offsets_[2]);
