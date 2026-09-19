@@ -7,6 +7,8 @@
 #include "VoxTerGenAlgorithms/noise/core/SimplexNoise.hpp"
 #include "VoxTerGenAlgorithms/noise/core/WorleyNoise.hpp"
 
+#include "VoxTerGenAlgorithms/noise/methods/FractionalBrownianMotion.hpp"
+
 #include "VoxTerGenAlgorithms/utils/Common.hpp"
 
 #include "world/Chunk.hpp"
@@ -20,9 +22,15 @@
 #include <cmath>
 #include <algorithm>
 
-TerrainGenerator::TerrainGenerator(NoiseType noise_type, std::uint64_t seed) : seed_(seed), noise_type_(noise_type)
+TerrainGenerator::TerrainGenerator(
+	NoiseType noise_type, 
+	std::uint64_t seed) 
+	: 
+	seed_(seed), 
+	noise_type_(noise_type)
 {
 	InitializeNoises();
+	fbm_ = FractionalBrownianMotion(GetCurrentNoise(), 4, 2.0, 0.5);
 }
 
 void TerrainGenerator::InitializeNoises()
@@ -39,10 +47,7 @@ void TerrainGenerator::GenerateChunkTerrainFromHeightMap(const std::shared_ptr<C
 	assert(chunk != nullptr);
 
 	const double frequency = 0.0025;
-	const auto noises_find_it = noises_.find(GetNoiseType());
-	assert(noises_find_it != noises_.end());
-
-	const std::unique_ptr<Noise>& noise = noises_find_it->second;
+	const Noise* noise = GetCurrentNoise();
 	const glm::ivec2 chunk_world_coords = chunk->WorldCoords();
 
 	for (int z = 0; z < constants::chunk::depth; ++z)
@@ -55,7 +60,10 @@ void TerrainGenerator::GenerateChunkTerrainFromHeightMap(const std::shared_ptr<C
 			const double nx = worldX * frequency;
 			const double nz = worldZ * frequency;
 
-			const double noise_sample = noise->Sample(nx, nz);
+			const double noise_sample = fbm_.Sample(nx, nz);
+
+			//const double noise_sample = noise->Sample(nx, nz);
+			
 			const double normalized_noise_sample = (noise_sample + 1.0) / 2.0;
 			constexpr double exponent = 4.00;
 			constexpr int max_terrain_height = 150;
@@ -113,14 +121,14 @@ double TerrainGenerator::GetWarpVector(const Noise* noise, double x)
 	return noise->Sample(x * warp_frequency);
 }
 
-glm::vec2 TerrainGenerator::GetWarpVector(const Noise* noise, double x, double z)
+glm::dvec2 TerrainGenerator::GetWarpVector(const Noise* noise, double x, double z)
 {
 	assert(noise != nullptr);
 
 	constexpr double warp_frequency = 0.001;
 	constexpr double offset_a = 1.8;
 
-	glm::vec2 warp_offset(0.0f);
+	glm::dvec2 warp_offset(0.0f);
 
 	warp_offset.x = noise->Sample(
 		x * warp_frequency,
@@ -135,7 +143,7 @@ glm::vec2 TerrainGenerator::GetWarpVector(const Noise* noise, double x, double z
 	return warp_offset;
 }
 
-glm::vec3 TerrainGenerator::GetWarpVector(const Noise* noise, double x, double y, double z)
+glm::dvec3 TerrainGenerator::GetWarpVector(const Noise* noise, double x, double y, double z)
 {
 	assert(noise != nullptr);
 
@@ -143,7 +151,7 @@ glm::vec3 TerrainGenerator::GetWarpVector(const Noise* noise, double x, double y
 	constexpr double offset_a = 2.0;
 	constexpr double offset_b = 2.3;
 
-	glm::vec3 warp_offset(0.0f);
+	glm::dvec3 warp_offset(0.0f);
 
 	warp_offset.x = noise->Sample(
 		x * warp_frequency,

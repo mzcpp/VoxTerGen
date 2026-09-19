@@ -3,6 +3,8 @@
 
 #include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
 
+#include "VoxTerGenAlgorithms/noise/methods/FractionalBrownianMotion.hpp"
+
 #include "VoxTerGenAlgorithms/utils/Common.hpp"
 
 #include <glm/vec2.hpp>
@@ -29,6 +31,8 @@ class TerrainGenerator
 private:
     NoiseType noise_type_;
     std::uint64_t seed_;
+
+    FractionalBrownianMotion fbm_;
     
     std::unordered_map<NoiseType, std::unique_ptr<Noise>> noises_;
 
@@ -41,6 +45,14 @@ public:
 
     // Getters
     NoiseType GetNoiseType() const noexcept { return noise_type_; }
+    
+    Noise* GetCurrentNoise() const noexcept
+    {
+        const auto noises_find_it = noises_.find(GetNoiseType());
+        assert(noises_find_it != noises_.end());
+
+        return noises_find_it->second.get();
+    }
 
     // Setters
     void SetNoiseType(NoiseType noise_type) noexcept { noise_type_ = noise_type; }
@@ -52,9 +64,9 @@ private:
 
     double GetWarpVector(const Noise* noise, double x);
 
-    glm::vec2 GetWarpVector(const Noise* noise, double x, double y);
+    glm::dvec2 GetWarpVector(const Noise* noise, double x, double y);
 
-    glm::vec3 GetWarpVector(const Noise* noise, double x, double y, double z);
+    glm::dvec3 GetWarpVector(const Noise* noise, double x, double y, double z);
 };
 
 #endif // TERRAIN_GENERATOR_HPP

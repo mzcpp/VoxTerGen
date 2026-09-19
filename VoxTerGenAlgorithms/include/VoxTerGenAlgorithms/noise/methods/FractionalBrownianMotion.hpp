@@ -1,6 +1,8 @@
 #ifndef FRACTIONAL_BROWNIAN_MOTION_HPP
 #define FRACTIONAL_BROWNIAN_MOTION_HPP
 
+#include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
+
 #include "VoxTerGenAlgorithms/utils/Common.hpp"
 
 #include <cmath>
@@ -15,88 +17,26 @@ enum class SignalTransform
     RIDGED_SHAPE
 };
 
-template <GenericNoise Noise>
 class FractionalBrownianMotion
 {
 private:
-    Noise noise_;
+    Noise* noise_;
     SignalTransform signal_transform_;
     int octaves_;
     double lacunarity_;
     double persistence_;
 
 public:
-    FractionalBrownianMotion(
-        Noise noise, 
-        int octaves, 
-        double lacunarity, 
-        double persistence)
-        : 
-        noise_(noise), 
-        signal_transform_(SignalTransform::NONE), 
-        octaves_(octaves), 
-        lacunarity_(lacunarity), 
-        persistence_(persistence)
-    {
-    }
+    FractionalBrownianMotion() = default;
 
-    double Sample(double x) const
-    {
-        double result = 0.0;
-        double frequency = 1.0;
-        double amplitude = 1.0;
-        double total_amplitude = 0.0;
+    FractionalBrownianMotion(Noise* noise, int octaves, double lacunarity, double persistence);
 
-        for (int octave = 0; octave < octaves_; ++octave)
-        {
-            result += amplitude * TransformSignal(noise_.Sample(x * frequency));
+    double Sample(double x) const;
 
-            frequency *= lacunarity_;
-            total_amplitude += amplitude;
-            amplitude *= persistence_;
-        }
+    double Sample(double x, double y) const;
 
-        return result / total_amplitude;
-    }
-
-    double Sample(double x, double y) const
-    {
-        double result = 0.0;
-        double frequency = 1.0;
-        double amplitude = 1.0;
-        double total_amplitude = 0.0;
-
-        for (int octave = 0; octave < octaves_; ++octave)
-        {
-            result += amplitude * TransformSignal(noise_.Sample(x * frequency, y * frequency));
-
-            frequency *= lacunarity_;
-            total_amplitude += amplitude;
-            amplitude *= persistence_;
-        }
-
-        return result / total_amplitude;
-    }
-
-    double Sample(double x, double y, double z) const
-    {
-        double result = 0.0;
-        double frequency = 1.0;
-        double amplitude = 1.0;
-        double total_amplitude = 0.0;
-
-        for (int octave = 0; octave < octaves_; ++octave)
-        {
-            result += amplitude * TransformSignal(noise_.Sample(x * frequency, y * frequency, z * frequency));
-
-            frequency *= lacunarity_;
-            total_amplitude += amplitude;
-            amplitude *= persistence_;
-        }
-
-        return result / total_amplitude;
-    }
-
+    double Sample(double x, double y, double z) const;
+    
     // Getters
     SignalTransform GetSignalTransform() const noexcept { return signal_transform_; }
 
@@ -104,28 +44,7 @@ public:
     void SetSignalTransform(SignalTransform signal_transform) { signal_transform_ = signal_transform; }
 
 private:
-    double TransformSignal(double sample)
-    {
-        switch (signal_transform_)
-        {
-        case SignalTransform::NONE:
-            return sample;
-        case SignalTransform::ABS:
-            return std::abs(sample);
-        case SignalTransform::INVERT_ABS:
-            return 1.0 - std::abs(sample);
-        case SignalTransform::SQUARE:
-            return sample * sample;
-        case SignalTransform::RIDGED_SHAPE:
-        {
-            sample = std::abs(sample);
-            sample = 1.0 - sample;
-            return sample * sample;
-        }
-        }
-
-        assert(false);
-    }
+    double TransformSignal(double sample) const;
 };
 
 #endif // FRACTIONAL_BROWNIAN_MOTION_HPP
