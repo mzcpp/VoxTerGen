@@ -81,11 +81,10 @@ double FractionalBrownianMotion::TransformSignal(double sample) const
     case SignalTransform::SQUARE:
         return sample * sample;
     case SignalTransform::RIDGED_SHAPE:
-    {
         sample = std::abs(sample);
         sample = 1.0 - sample;
+        
         return sample * sample;
-    }
     }
 
     assert(false);

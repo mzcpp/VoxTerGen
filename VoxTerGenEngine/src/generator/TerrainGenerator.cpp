@@ -47,7 +47,6 @@ void TerrainGenerator::GenerateChunkTerrainFromHeightMap(const std::shared_ptr<C
 	assert(chunk != nullptr);
 
 	const double frequency = 0.0025;
-	const Noise* noise = GetCurrentNoise();
 	const glm::ivec2 chunk_world_coords = chunk->WorldCoords();
 
 	for (int z = 0; z < constants::chunk::depth; ++z)
@@ -62,15 +61,16 @@ void TerrainGenerator::GenerateChunkTerrainFromHeightMap(const std::shared_ptr<C
 
 			const double noise_sample = fbm_.Sample(nx, nz);
 
-			//const double noise_sample = noise->Sample(nx, nz);
-			
 			const double normalized_noise_sample = (noise_sample + 1.0) / 2.0;
 			constexpr double exponent = 4.00;
-			constexpr int max_terrain_height = 150;
-			
-			// const int height = static_cast<int>(PowerCurve(normalized_noise_sample, exponent) * max_terrain_height);
-			const int height = static_cast<int>(LogisticSCurve(normalized_noise_sample, exponent) * max_terrain_height);
+			const double terrain_shape = PowerCurve(normalized_noise_sample, exponent);
+			//const double terrain_shape = LogisticSCurve(normalized_noise_sample, exponent);
 
+			constexpr int min_terrain_height = 192;
+			constexpr int max_terrain_height = 511;
+
+			const int height = static_cast<int>(min_terrain_height + terrain_shape * (max_terrain_height - min_terrain_height));
+			
 			for (int y = 0; y < constants::chunk::height; ++y)
 			{
 				if (y == 0)
