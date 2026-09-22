@@ -66,8 +66,8 @@ void TerrainGenerator::GenerateChunkTerrainFromHeightMap(const std::shared_ptr<C
 			const double terrain_shape = PowerCurve(normalized_noise_sample, exponent);
 			//const double terrain_shape = LogisticSCurve(normalized_noise_sample, exponent);
 
-			constexpr int min_terrain_height = 192;
-			constexpr int max_terrain_height = 511;
+			constexpr int min_terrain_height = 128;
+			constexpr int max_terrain_height = 383;
 
 			const int height = static_cast<int>(min_terrain_height + terrain_shape * (max_terrain_height - min_terrain_height));
 			
