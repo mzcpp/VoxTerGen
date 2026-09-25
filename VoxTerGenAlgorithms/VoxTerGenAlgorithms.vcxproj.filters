@@ -56,9 +56,6 @@
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Hash.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\VoxTerGenAlgorithms\noise\methods\Fractal.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\VoxTerGenAlgorithms\utils\Rng.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
