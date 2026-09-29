@@ -14,15 +14,6 @@
 #include <stop_token>
 #include <unordered_map>
 
-enum class NoiseType
-{
-    PERLIN, 
-    SIMPLEX, 
-    WORLEY, 
-    OPEN_SIMPLEX_2F, 
-    OPEN_SIMPLEX_2S
-};
-
 class Noise;
 class Chunk;
 

@@ -22,10 +22,7 @@
 #include <cmath>
 #include <algorithm>
 
-TerrainGenerator::TerrainGenerator(
-	NoiseType noise_type, 
-	std::uint64_t seed) 
-	: 
+TerrainGenerator::TerrainGenerator(NoiseType noise_type, std::uint64_t seed) : 
 	seed_(seed), 
 	noise_type_(noise_type)
 {

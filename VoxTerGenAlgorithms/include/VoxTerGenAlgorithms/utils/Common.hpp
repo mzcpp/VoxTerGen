@@ -31,4 +31,13 @@ concept GenericNoise = requires(Noise noise, double x, double y, double z)
     noise.Sample(x, y, z);
 };
 
+enum class NoiseType
+{
+	PERLIN,
+	SIMPLEX,
+	WORLEY,
+	OPEN_SIMPLEX_2F,
+	OPEN_SIMPLEX_2S
+};
+
 #endif
