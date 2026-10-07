@@ -1,5 +1,6 @@
 #include "world/ChunkManager.hpp"
 
+#include "generator/CaveGenerator.hpp"
 #include "generator/TerrainGenerator.hpp"
 
 #include "mesh/MeshBuilder.hpp"
@@ -28,7 +29,8 @@
 ChunkManager::ChunkManager(Observer& observer, ThreadPool& thread_pool) :
 	observer_(observer), 
 	thread_pool_(thread_pool), 
-	terrain_generator_(NoiseType::OPEN_SIMPLEX_2F, 1426728)
+	terrain_generator_(NoiseType::OPEN_SIMPLEX_2F, constants::world::seed), 
+	cave_generator_(CaveType::TUNNEL_CARVER, constants::world::seed)
 {	
 }
 
@@ -79,7 +81,7 @@ void ChunkManager::Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue)
 
 	ScheduleChunkTerrainBuild();
 
-	BuildChunkTerrains();
+	BuildChunksTerrainAndCaves();
 	BuildChunkMeshes(chunk_event_queue);
 }
 
@@ -257,7 +259,7 @@ void ChunkManager::ScheduleNeighborChunkMeshBuilds(glm::ivec2 observer_chunk_coo
 	}
 }
 
-void ChunkManager::BuildChunkTerrains()
+void ChunkManager::BuildChunksTerrainAndCaves()
 {
 	int jobs_submitted = 0;
 	const glm::ivec2 observer_chunk_coords = GetChunkCoords(observer_.Pos());

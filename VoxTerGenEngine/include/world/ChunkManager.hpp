@@ -1,6 +1,7 @@
 #ifndef CHUNK_MANAGER_HPP
 #define CHUNK_MANAGER_HPP
 
+#include "generator/CaveGenerator.hpp"
 #include "generator/TerrainGenerator.hpp"
 
 #include "graphics/Camera.hpp"
@@ -40,6 +41,7 @@ private:
 	std::vector<glm::ivec2> chunks_to_load_;
 	std::vector<glm::ivec2> chunks_to_unload_;
 	TerrainGenerator terrain_generator_;
+	CaveGenerator cave_generator_;
 
 public:
 	ChunkManager(Observer& observer, ThreadPool& thread_pool);
@@ -63,7 +65,7 @@ public:
 
 	void ScheduleNeighborChunkMeshBuilds(glm::ivec2 observer_chunk_coords, glm::ivec2 chunk_world_coords);
 
-	void BuildChunkTerrains();
+	void BuildChunksTerrainAndCaves();
 
 	void BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 

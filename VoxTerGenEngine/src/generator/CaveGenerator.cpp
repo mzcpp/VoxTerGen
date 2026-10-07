@@ -14,3 +14,9 @@ CaveGenerator::CaveGenerator(CaveType cave_type, std::uint64_t seed) : cave_type
 
 }
 
+void CaveGenerator::GenerateCarvedCave()
+{
+
+}
+
+

@@ -7,6 +7,7 @@
 
 enum class CaveType
 {
+    TUNNEL_CARVER, 
     VECTOR_FIELD_WALKER
 };
 
@@ -18,6 +19,14 @@ private:
 
 public:
     CaveGenerator(CaveType cave_type, std::uint64_t seed);
+
+    void GenerateCarvedCave();
+
+    // Getters
+    CaveType GetNoiseType() const noexcept { return cave_type_; }
+
+    // Setters
+    void SetCaveType(CaveType cave_type) noexcept { cave_type_ = cave_type; }
 };
 
 #endif // CAVE_GENERATOR_HPP

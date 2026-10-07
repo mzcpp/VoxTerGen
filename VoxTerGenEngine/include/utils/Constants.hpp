@@ -171,6 +171,14 @@ namespace constants
         inline constexpr int jobs_submitted_limit = 2048;
     } // namespace threading
 
+    /**
+    * @brief World constants such as seed.
+    */
+    namespace world
+    {
+        inline constexpr std::uint64_t seed = 2048;
+    } // namespace world
+
 } // namespace constants
 
 #endif // CONSTANTS_HPP
