@@ -24,17 +24,17 @@
 
 struct MaskCell
 {
-	BlockType block_type_;
-	Direction dir_;
-	std::uint8_t sun_light_;
-	std::uint8_t block_light_;
+	BlockType block_type_ = BlockType::Air;
+	Direction dir_ = Direction::PosX;
+	std::uint8_t sun_light_ = 0;
+	std::uint8_t block_light_ = 0;
 };
 
 struct MergedQuad
 {
-	glm::ivec2 bottom_left_;
-	int width_;
-	int height_;
+	glm::ivec2 bottom_left_ = glm::ivec2(0);
+	int width_ = 0;
+	int height_ = 0;
 };
 
 template <typename T>

@@ -18,6 +18,46 @@ The format follows Keep a Changelog and Semantic Versioning.
 
 ---
 
+## Changelog
+
+## [0.6.2] - 9 October 2026
+
+### Added
+
+- Introduced a unified `Noise` base class and `NoiseType` enum for selecting noise algorithms.
+- Added `FractionalBrownianMotion` with configurable octaves, lacunarity, persistence, and signal transformations, including absolute, squared, inverted absolute, and ridged shaping.
+- Added terrain and cave generator classes to establish a foundation for future procedural generation features and algorithm expansion.
+- Added heightmap-based terrain generation using fBm, configurable noise selection, terrain shaping curves, and bedrock placement.
+- Added `ThreadSafeDeque` with thread-safe front/back insertion and removal.
+- Added terrain-generation states and chunk readiness checks to coordinate terrain and mesh generation.
+- Added world seed and thread-pool job limit constants.
+
+### Changed
+
+- Refactored Perlin, Simplex, Worley, OpenSimplex2F, and OpenSimplex2S noise implementations to use the common `Noise` interface, making it easier to extend the engine with additional algorithms in the future.
+- Updated `VectorFieldWalker` to use a generic scalar field, configurable step size and frequency, and optional results for invalid or zero-length directions.
+- Reworked chunk generation to schedule terrain generation and mesh building separately, prioritizing nearby chunks.
+- Updated chunk lifecycle handling with terrain-generation tracking, stop-token synchronization, and atomic readiness transitions.
+- Added terrain dependency checks before scheduling chunk meshes and neighboring chunk mesh rebuilds.
+- Improved thread-pool exception handling with logging and explicit worker shutdown.
+- Increased chunk height from 128 to 384 blocks and the default render radius from 2 to 32 chunks.
+- Increased the observer's movement speed from 25 to 250.
+- Added default initialization for several mesh, raycast, camera, rendering, event, and block data structures.
+- Removed the previous chunk initialization workflow and retained a temporary flat-chunk filler for testing.
+
+### Removed
+
+- Replaced the generic `Fractal` implementation with `FractionalBrownianMotion`.
+- Removed the explicit world and chunk-manager initialization methods previously used to prepopulate chunks.
+
+### Future Expansion
+
+- Established a modular foundation for adding and comparing further noise algorithms, terrain-generation techniques, and cave-generation approaches.
+- Prepared the cave-generation interface for future implementation of tunnel carving and vector-field-based cave systems.
+- Added extensible terrain-shaping and coordinate-warping utilities to support more varied procedural landscapes.
+
+---
+
 ## [0.6.1] - 2 September 2026
 
 ### Added

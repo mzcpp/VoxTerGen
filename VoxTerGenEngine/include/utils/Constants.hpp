@@ -57,9 +57,9 @@ namespace constants
     {
         inline constexpr int width = 16;
         inline constexpr int depth = 16;
-        inline constexpr int height = 128;
+        inline constexpr int height = 384;
         inline constexpr int size = width * depth * height;
-        inline constexpr int default_radius = 2;
+        inline constexpr int default_radius = 32;
     } // namespace chunk
 
     /**
@@ -141,7 +141,7 @@ namespace constants
         inline constexpr float pitch = 0.0f;
         inline constexpr float pitch_min = -89.0f;
         inline constexpr float pitch_max = 89.0f;
-        inline constexpr double movement_speed = 25.0;
+        inline constexpr double movement_speed = 250.0;
         inline constexpr float move_sensitivity = 0.1f;
         inline constexpr double width = 0.6;
         inline constexpr double height = 1.8;
@@ -162,6 +162,22 @@ namespace constants
         inline constexpr int atlas_columns = 2;
         inline constexpr int atlas_rows = 4;
     } // namespace texture
+
+    /**
+    * @brief Threading-related constants such as limit for submitted jobs for thread pool.
+    */
+    namespace threading
+    {
+        inline constexpr int jobs_submitted_limit = 2048;
+    } // namespace threading
+
+    /**
+    * @brief World constants such as seed.
+    */
+    namespace world
+    {
+        inline constexpr std::uint64_t seed = 2048;
+    } // namespace world
 
 } // namespace constants
 

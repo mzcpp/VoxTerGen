@@ -1,6 +1,9 @@
 #ifndef WORLEY_NOISE_HPP
 #define WORLEY_NOISE_HPP
 
+#include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
+#include "VoxTerGenAlgorithms/utils/Common.hpp"
+
 #include <cstdint>
 #include <array>
 
@@ -32,13 +35,9 @@ enum class FeaturePointMode
 	WEIGHTED_RANDOM
 };
 
-using ivec3 = std::array<std::int64_t, 3>;
-using dvec3 = std::array<double, 3>;
-
-class WorleyNoise
+class WorleyNoise : public Noise
 {
 private:
-	std::uint64_t seed_;
 	DistanceMetric dist_metric_;
 	DistanceResultType dist_result_type_;
 	FeaturePointMode fp_mode_;
@@ -47,24 +46,24 @@ private:
 	int dimension_;
 
 public:
-	WorleyNoise(std::uint64_t seed, DistanceMetric dist_metric, DistanceResultType dist_result_type, FeaturePointMode fp_mode,
-		int n_feature_points, float minkowski_p, int dimension);
+	WorleyNoise(
+		std::uint64_t seed, 
+		DistanceMetric dist_metric = DistanceMetric::EUCLIDEAN_SQ, 
+		DistanceResultType dist_result_type = DistanceResultType::F1, 
+		FeaturePointMode fp_mode = FeaturePointMode::FIXED,
+		int n_feature_points = 1, 
+		float minkowski_p = 0.0001f, 
+		int dimension = 1);
 
-	double Sample(double x) const noexcept;
+	double Sample(double x) const noexcept override;
 
-	double Sample(double x, double y) const noexcept;
+	double Sample(double x, double y) const noexcept override;
 
-	double Sample(double x, double y, double z) const noexcept;
+	double Sample(double x, double y, double z) const noexcept override;
 
-	//double Sample(double x, double y, double z, double w) const noexcept;
+	double Sample(double x, double y, double z, double w) const noexcept override;
 
 	double NormalizeF1(double distance) const noexcept;
-
-	// Getters
-	std::uint64_t Seed() const noexcept { return seed_; }
-
-	// Setters
-	void SetSeed(std::uint64_t seed) noexcept { seed_ = seed; }
 
 private:
 	std::uint64_t HashCell(const ivec3& coords) const noexcept;

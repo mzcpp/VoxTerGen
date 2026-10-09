@@ -12,10 +12,10 @@ class Camera;
 
 struct CameraData
 {
-    glm::mat4 view_;
-	glm::mat4 projection_;
-    glm::vec3 pos_;
-    float padding_;
+    glm::mat4 view_ = glm::mat4(0.0f);
+	glm::mat4 projection_ = glm::mat4(0.0f);
+    glm::vec3 pos_ = glm::vec3(0.0f);
+    float padding_ = 0.0f;
 };
 
 class CameraUniformBuffer

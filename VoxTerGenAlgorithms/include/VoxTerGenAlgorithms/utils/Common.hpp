@@ -1,0 +1,43 @@
+#ifndef COMMON_HPP
+#define COMMON_HPP
+
+#include <array>
+#include <concepts>
+#include <cstdint>
+#include <tuple>
+#include <cmath>
+#include <algorithm>
+
+//namespace vtg
+//{
+	using ivec2 = std::array<std::int64_t, 2>;
+	using ivec3 = std::array<std::int64_t, 3>;
+	using ivec4 = std::array<std::int64_t, 4>;
+
+	using uivec2 = std::array<std::uint64_t, 2>;
+	using uivec3 = std::array<std::uint64_t, 3>;
+	using uivec4 = std::array<std::uint64_t, 4>;
+
+	using dvec2 = std::array<double, 2>;
+	using dvec3 = std::array<double, 3>;
+	using dvec4 = std::array<double, 4>;
+//} // namespace vtg
+
+template<typename Noise>
+concept GenericNoise = requires(Noise noise, double x, double y, double z)
+{
+    noise.Sample(x);
+    noise.Sample(x, y);
+    noise.Sample(x, y, z);
+};
+
+enum class NoiseType
+{
+	PERLIN,
+	SIMPLEX,
+	WORLEY,
+	OPEN_SIMPLEX_2F,
+	OPEN_SIMPLEX_2S
+};
+
+#endif

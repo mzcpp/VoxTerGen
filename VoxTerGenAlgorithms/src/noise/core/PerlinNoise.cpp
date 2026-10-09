@@ -1,6 +1,8 @@
 #include "pch.h"
 
 #include "VoxTerGenAlgorithms/noise/core/PerlinNoise.hpp"
+
+#include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
 #include "VoxTerGenAlgorithms/utils/Hash.hpp"
 #include "VoxTerGenAlgorithms/utils/Math.hpp"
 
@@ -13,7 +15,7 @@
  * 		 DotGrad functions were taken from: http://riven8192.blogspot.com/2010/08/calculate-perlinnoise-twice-as-fast.html
  */
 
-PerlinNoise::PerlinNoise(std::uint64_t seed) : seed_(seed)
+PerlinNoise::PerlinNoise(std::uint64_t seed) : Noise(seed)
 {
 }
 
@@ -86,7 +88,7 @@ double PerlinNoise::Sample(double x, double y, double z) const noexcept
 	return math::Lerp(y1, y2, w);
 }
 
-//double PerlinNoise::Sample(double x, double y, double z, double w) const noexcept
-//{
-//	return 0.0;
-//}
+double PerlinNoise::Sample(double x, double y, double z, double w) const noexcept
+{
+	return 0.0;
+}

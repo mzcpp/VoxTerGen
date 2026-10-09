@@ -29,8 +29,8 @@ struct ChunkRenderData
 
 struct TransparentChunkData
 {
-	const ChunkRenderData* render_data_;
-	double distance_squared_;
+	const ChunkRenderData* render_data_ = nullptr;
+	double distance_squared_ = 0.0;
 };
 
 #endif // RENDER_DATA_HPP

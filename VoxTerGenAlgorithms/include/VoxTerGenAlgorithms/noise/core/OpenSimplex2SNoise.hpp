@@ -1,6 +1,8 @@
 #ifndef OPEN_SIMPLEX2S_NOISE_HPP
 #define OPEN_SIMPLEX2S_NOISE_HPP
 
+#include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
+
 #include <cstdint>
 #include <array>
 
@@ -29,10 +31,9 @@ enum class Noise4DModifier
 	Fallback
 };
 
-class OpenSimplex2SNoise
+class OpenSimplex2SNoise : public Noise
 {
 private:
-	std::uint64_t seed_;
 	Noise2DModifier noise_2d_modifier_;
 	Noise3DModifier noise_3d_modifier_;
 	Noise4DModifier noise_4d_modifier_;
@@ -44,20 +45,20 @@ public:
 		Noise3DModifier noise_3d_modifier = Noise3DModifier::Default,
 		Noise4DModifier noise_4d_modifier = Noise4DModifier::Default);
 
-	double Sample(double x, double y) const noexcept;
+	double Sample(double x) const noexcept override;
+	
+	double Sample(double x, double y) const noexcept override;
 
-	double Sample(double x, double y, double z) const noexcept;
+	double Sample(double x, double y, double z) const noexcept override;
 
-	double Sample(double x, double y, double z, double w) const noexcept;
+	double Sample(double x, double y, double z, double w) const noexcept override;
 
 	// Getters
-	std::uint64_t Seed() const noexcept { return seed_; }
 	Noise2DModifier GetNoise2DModifier() const noexcept { return noise_2d_modifier_; }
 	Noise3DModifier GetNoise3DModifier() const noexcept { return noise_3d_modifier_; }
 	Noise4DModifier GetNoise4DModifier() const noexcept { return noise_4d_modifier_; }
 
 	// Setters
-	void SetSeed(std::uint64_t seed) noexcept { seed_ = seed; }
 	void SetNoise2DModifier(Noise2DModifier noise_2d_modifier) noexcept { noise_2d_modifier_ = noise_2d_modifier; }
 	void SetNoise3DModifier(Noise3DModifier noise_3d_modifier) noexcept { noise_3d_modifier_ = noise_3d_modifier; }
 	void SetNoise4DModifier(Noise4DModifier noise_4d_modifier) noexcept { noise_4d_modifier_ = noise_4d_modifier; }

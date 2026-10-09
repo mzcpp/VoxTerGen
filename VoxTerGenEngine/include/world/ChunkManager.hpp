@@ -1,10 +1,14 @@
 #ifndef CHUNK_MANAGER_HPP
 #define CHUNK_MANAGER_HPP
 
+#include "generator/CaveGenerator.hpp"
+#include "generator/TerrainGenerator.hpp"
+
 #include "graphics/Camera.hpp"
 
 #include "render/events/ChunkEvents.hpp"
 
+#include "threading/ThreadSafeDeque.hpp"
 #include "threading/ThreadSafeQueue.hpp"
 
 #include "utils/Hash.hpp"
@@ -30,17 +34,21 @@ private:
 	Observer& observer_;
 	ThreadPool& thread_pool_;
 	std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash> chunks_;
-	std::deque<std::shared_ptr<Chunk>> chunk_build_deque_;
+	std::deque<std::shared_ptr<Chunk>> chunk_terrain_build_deque_;
+	ThreadSafeDeque<std::shared_ptr<Chunk>> chunk_mesh_build_deque_;
 	ChunkID next_chunk_id_ = 1;
 	mutable std::shared_mutex chunks_shared_mutex_;
 	std::vector<glm::ivec2> chunks_to_load_;
 	std::vector<glm::ivec2> chunks_to_unload_;
+	TerrainGenerator terrain_generator_;
+	CaveGenerator cave_generator_;
 
 public:
 	ChunkManager(Observer& observer, ThreadPool& thread_pool);
+
+	// TODO: Remove later
+	void FillFlatChunkTmp(Chunk& chunk);
 	
-    void InitChunks(int chunk_radius);
-    
 	void Tick(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
 	void MarkChunksForUnload();
@@ -53,9 +61,11 @@ public:
 
 	void EnqueueChunkMeshBuild(const std::shared_ptr<Chunk>& chunk, double distance);
 
-	void ScheduleChunkMeshBuilds();
+	void ScheduleChunkTerrainBuild();
 
 	void ScheduleNeighborChunkMeshBuilds(glm::ivec2 observer_chunk_coords, glm::ivec2 chunk_world_coords);
+
+	void BuildChunksTerrainAndCaves();
 
 	void BuildChunkMeshes(ThreadSafeQueue<ChunkEvent>& chunk_event_queue);
 
@@ -75,8 +85,7 @@ public:
 
 	ChunkMeshDependencies GetMeshDependencies(glm::ivec2 coords) const;
 
-	// TODO: TEMPORARY CHUNK FILL - REMOVE LATER!
-	void FillChunkTmp(Chunk& chunk);
+	ChunkMeshDependencies GetMeshDependenciesUnlocked(glm::ivec2 chunk_coords) const;
 
 	// Getters
 	const std::unordered_map<glm::ivec2, std::shared_ptr<Chunk>, utils::ivec2_hash>& Chunks() const { return chunks_; }

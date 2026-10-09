@@ -1,6 +1,8 @@
 #include "pch.h"
 
 #include "VoxTerGenAlgorithms/noise/core/OpenSimplex2SNoise.hpp"
+
+#include "VoxTerGenAlgorithms/noise/core/Noise.hpp"
 #include "VoxTerGenAlgorithms/utils/Math.hpp"
 
 #include <cstdint>
@@ -623,14 +625,14 @@ namespace
 
 	struct LatticeVertex4D
 	{
-		double dx_;
-		double dy_;
-		double dz_;
-		double dw_;
-		std::int64_t xsvp_;
-		std::int64_t ysvp_;
-		std::int64_t zsvp_;
-		std::int64_t wsvp_;
+		double dx_ = 0.0;
+		double dy_ = 0.0;
+		double dz_ = 0.0;
+		double dw_ = 0.0;
+		std::int64_t xsvp_ = 0;
+		std::int64_t ysvp_ = 0;
+		std::int64_t zsvp_ = 0;
+		std::int64_t wsvp_ = 0;
 
 		LatticeVertex4D() = default;
 
@@ -744,11 +746,16 @@ OpenSimplex2SNoise::OpenSimplex2SNoise(
 	Noise3DModifier noise_3d_modifier,
 	Noise4DModifier noise_4d_modifier)
 	:
-	seed_(seed),
+	Noise(seed),
 	noise_2d_modifier_(noise_2d_modifier),
 	noise_3d_modifier_(noise_3d_modifier),
 	noise_4d_modifier_(noise_4d_modifier)
 {
+}
+
+double OpenSimplex2SNoise::Sample(double x) const noexcept
+{
+	return 0.0f;
 }
 
 double OpenSimplex2SNoise::Sample(double x, double y) const noexcept

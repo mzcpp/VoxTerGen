@@ -19,14 +19,14 @@ struct overloaded : Ts... { using Ts::operator()...; };
 
 struct ChunkMeshReady
 {
-    std::shared_ptr<Chunk> chunk_;
-    std::uint64_t mesh_id_;
-    std::unique_ptr<ChunkMesh> chunk_mesh_;
+    std::shared_ptr<Chunk> chunk_ = nullptr;
+    std::uint64_t mesh_id_ = 0;
+    std::unique_ptr<ChunkMesh> chunk_mesh_ = nullptr;
 };
 
 struct ChunkDestroyed
 {
-    ChunkID chunk_id_;
+    ChunkID chunk_id_ = 0;
 };
 
 using ChunkEvent = std::variant<ChunkMeshReady, ChunkDestroyed>;
