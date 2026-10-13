@@ -114,7 +114,6 @@ void WorldRenderer::RenderWorld(float alpha)
 
 	chunk_opaque_render_pass_.RenderOpaqueChunkMeshes(chunks_render_data_, resource_manager_);
 	block_highlight_render_pass_.RenderBlockHighlight(resource_manager_);
-	skybox_render_pass_.RenderSkybox(resource_manager_);
 	chunk_wireframe_render_pass_.RenderChunkWireframe(camera_, resource_manager_);
 	chunk_transparent_render_pass_.RenderTransparentChunkMeshes(transparent_chunks_data_, resource_manager_);
 	ui_render_pass_.RenderCrosshair(resource_manager_);

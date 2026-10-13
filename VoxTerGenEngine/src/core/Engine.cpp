@@ -68,7 +68,7 @@ void Engine::Tick()
 
 void Engine::Render(float alpha)
 {
-	glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+	glClearColor(0.682f, 0.831f, 0.929f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	world_renderer_.RenderWorld(alpha);
