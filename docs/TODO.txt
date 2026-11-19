@@ -1,0 +1,16 @@
+1. basic lighting & shadows
+2. Menu, settings, ui info, …
+3. Saving and loading worlds from disk
+4. TODO list & in code comments
+5. More advanced optimizations
+    1. compute shaders
+    2. Indirect rendering
+    3. Profile meshing, loading chunks
+    4. Optimize all multithreading/thread pool
+6. Advanced terrain & cave algorithms
+    1. Continentalness + Erosion + Peaks & Valleys + spline-based terrain shaping
+    2. Caves (basic carving)
+    3. ‘Perlin’ worms (Vector field based tunneling)
+7. Benchmarking project and benchmarking UI in Engine
+    1. Measuring time, memory, …
+8. Rework renderer to use Vulkan & DirectX based on platform
